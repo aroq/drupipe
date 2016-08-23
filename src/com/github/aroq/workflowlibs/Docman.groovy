@@ -16,3 +16,12 @@ def info(config) {
     echo "Requesting docman for config... DONE."
 }
 
+def info2(config) {
+    echo "Requesting docman for config..."
+    sh(
+            """#!/bin/bash -l
+            docman info full config.json
+            """
+    )
+    echo "Requesting docman for config... DONE."
+}
