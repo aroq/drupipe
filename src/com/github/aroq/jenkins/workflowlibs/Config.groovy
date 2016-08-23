@@ -9,5 +9,5 @@ def readGroovyConfig(text) {
 @NonCPS
 def groovyConfig(text) {
 //    new groovy.json.JsonSlurper().parseText(json)
-    ConfigSlurper.newInstance().parse(text)
+    return new HashMap<>(ConfigSlurper.newInstance().parse(text))
 }
