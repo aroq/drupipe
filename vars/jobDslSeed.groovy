@@ -18,7 +18,6 @@ def call(body) {
 
         config << test
         echo config.configRepo
-        test = null
 
 //        def config_defaults = [force: '0', configProvider: 'docman']
 //        config << readProperties(defaults: config_defaults, file: config.configFileName)

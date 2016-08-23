@@ -1,8 +1,9 @@
 package com.github.aroq.jenkins.workflowlibs
 
 def readGroovyConfig(filePath) {
-    echo "Groovy config at ${filePath}:"
     def text = readFile(filePath)
+    echo "Groovy config at ${filePath}:"
+    echo text
     groovyConfig(text)
 }
 
