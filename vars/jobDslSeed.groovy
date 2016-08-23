@@ -16,8 +16,9 @@ def call(body) {
         def configHelper = new com.github.aroq.jenkins.workflowlibs.Config()
         def test = configHelper.readGroovyConfig(config.configFileName)
 
-        echo test.configRepo
         config << test
+        echo config.configRepo
+        test = null
 
 //        def config_defaults = [force: '0', configProvider: 'docman']
 //        config << readProperties(defaults: config_defaults, file: config.configFileName)
