@@ -13,8 +13,7 @@ def call(body) {
     //      git url: 'https://github.com/...git', branch: 'master'
     //    }
 
-        def configHelper = new com.github.aroq.workflowlibs.Config()
-        def config = configHelper.readGroovyConfig(params.configFileName)
+        def config = (new com.github.aroq.workflowlibs.Config()).readGroovyConfig(params.configFileName)
         config << params
 
         if (config.configProvider == 'docman') {
