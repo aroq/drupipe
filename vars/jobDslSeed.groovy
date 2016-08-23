@@ -13,7 +13,7 @@ def call(body) {
     //      git url: 'https://github.com/...git', branch: 'master'
     //    }
 
-        def configHelper = new com.github.aroq.drucon.Config()
+        def configHelper = new com.github.aroq.jenkins.workflowlibs.Config()
         def test = configHelper.readGroovyConfig(config.configFileName)
 
         echo test.configRepo
