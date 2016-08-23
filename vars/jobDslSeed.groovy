@@ -14,7 +14,7 @@ def call(body) {
     //    }
 
         def configHelper = new com.github.aroq.jenkins.workflowlibs.Config()
-        def test = configHelper.readGroovyConfig(readFile(config.configFileName))
+        def test = configHelper.readGroovyConfig(config.configFileName)
 
         config << test
         echo config.configRepo
