@@ -37,8 +37,6 @@ def call(body) {
 
         stage 'seed'
 
-        echo config.jobsPattern
-
         jobDsl targets: [config.jobsPattern].join('\n'),
                removedJobAction: 'DELETE',
                removedViewAction: 'DELETE',
