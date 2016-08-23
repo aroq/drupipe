@@ -15,13 +15,13 @@ try {
     params.environment = 'jenkins'
     config = ConfigSlurper.newInstance(params.environment).parse(readFileFromWorkspace(configFilePath))
     docrootConfigJson = readFileFromWorkspace(config.docrootConfigJsonPath)
-    deployPipeline = readFileFromWorkspace('pipelines/deploy_pipeline.groovy')
+    deployPipeline = readFileFromWorkspace('pipelines/default.groovy')
 }
 catch (MissingPropertyException mpe) {
     params.environment = 'local'
     config = ConfigSlurper.newInstance(params.environment).parse(new File(configFilePath).text)
     docrootConfigJson = new File(System.properties.docrootConfigJsonPath).text
-    deployPipeline = new File('pipelines/deploy_pipeline.groovy').text
+    deployPipeline = new File('pipelines/default.groovy').text
 }
 
 // Create folder for trigger jobs.
