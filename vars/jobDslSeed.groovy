@@ -13,14 +13,13 @@ def call(body) {
     //      git url: 'https://github.com/...git', branch: 'master'
     //    }
 
-        def configHelper = new com.github.aroq.jenkins.workflowlibs.Config()
+        def configHelper = new com.github.aroq.workflowlibs.Config()
         def config = configHelper.readGroovyConfig(params.configFileName)
         config << params
-        echo config.configRepo
 
         if (config.configProvider == 'docman') {
-            def docmanHelper = new com.github.aroq.docman.Docman()
-            docmanHelper.info(config)
+            def docman = new com.github.aroq.workflowlibs.Docman()
+            docman.info(config)
         }
 
         stage 'seed'

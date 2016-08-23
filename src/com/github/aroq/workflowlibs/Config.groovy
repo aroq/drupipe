@@ -1,4 +1,4 @@
-package com.github.aroq.jenkins.workflowlibs
+package com.github.aroq.workflowlibs
 
 def readGroovyConfig(filePath) {
     def text = readFile(filePath)
