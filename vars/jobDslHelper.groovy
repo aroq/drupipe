@@ -18,9 +18,9 @@ def call(body) {
         n.test('test message')
 
         def config_defaults = [force: '0', configProvider: 'docman']
-        def config = readProperties defaults: config_defaults, file: 'config/config.groovy'
+        def configContainer = readProperties defaults: config_defaults, file: 'config/config.groovy'
 
-        if (config.configProvider == 'docman') {
+        if (configContainer.configProvider == 'docman') {
             echo "Requesting docman for config..."
             sh(
             """#!/bin/bash -l
@@ -28,7 +28,7 @@ def call(body) {
               FLAG="-f"
               rm -fR docroot
             fi
-            docman init docroot ${config.config_repo} -s
+            docman init docroot ${configContainer.config_repo} -s
             cd docroot
             docman info full config.json
             """
