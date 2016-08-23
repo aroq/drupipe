@@ -44,4 +44,5 @@ def call(body) {
                lookupStrategy: 'SEED_JOB',
     //           additionalClasspath: ['automation/src/main/groovy'].join('\n')
                additionalClasspath: ['src/main/groovy'].join('\n')
-  }
+    }
+}
