@@ -13,8 +13,10 @@ def call(body) {
     //      git url: 'https://github.com/...git', branch: 'master'
     //    }
 
-        def n = new com.github.aroq.drucon.Bar()
-        n.test('test message')
+        def configHelper = new com.github.aroq.drucon.Config()
+        def test = configHelper.readGroovyConfig(config.configFileName)
+
+        echo test.configRepo
 
         def config_defaults = [force: '0', configProvider: 'docman']
         config << readProperties(defaults: config_defaults, file: config.configFileName)
@@ -27,7 +29,7 @@ def call(body) {
               FLAG="-f"
               rm -fR docroot
             fi
-            docman init docroot ${config.config_repo} -s
+            docman init docroot ${config.configRepo} -s
             cd docroot
             docman info full config.json
             """
