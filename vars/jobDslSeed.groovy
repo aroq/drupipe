@@ -37,7 +37,7 @@ def call(body) {
 
         stage 'seed'
 
-        jobDsl targets: ['jobs/*.groovy'].join('\n'),
+        jobDsl targets: [config.jobs].join('\n'),
                removedJobAction: 'DELETE',
                removedViewAction: 'DELETE',
                lookupStrategy: 'SEED_JOB',
