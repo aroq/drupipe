@@ -27,7 +27,7 @@ def call(body) {
               FLAG="-f"
               rm -fR docroot
             fi
-            docman init docroot ${configContainer.config_repo} -s
+            docman init docroot ${config.config_repo} -s
             cd docroot
             docman info full config.json
             """
