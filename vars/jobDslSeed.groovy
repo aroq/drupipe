@@ -19,19 +19,8 @@ def call(body) {
         echo config.configRepo
 
         if (config.configProvider == 'docman') {
-            echo "Requesting docman for config..."
-            sh(
-            """#!/bin/bash -l
-            if [ "${force}" == "1" ]; then
-              FLAG="-f"
-              rm -fR docroot
-            fi
-            docman init docroot ${config.configRepo} -s
-            cd docroot
-            docman info full config.json
-            """
-            )
-            echo "Requesting docman for config... DONE."
+            def docmanHelper = new com.github.aroq.docman.Docman()
+            docmanHelper.info(config)
         }
 
         stage 'seed'
