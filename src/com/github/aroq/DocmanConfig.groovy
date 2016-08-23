@@ -1,4 +1,4 @@
-package com.github.aroq.docman
+package com.github.aroq
 
 import groovy.json.JsonSlurper
 
