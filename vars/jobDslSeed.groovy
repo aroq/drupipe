@@ -1,7 +1,7 @@
 def call(body) {
-    def config = [:]
+    def params = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
-    body.delegate = config
+    body.delegate = params
     body()
 
     node {
@@ -14,15 +14,9 @@ def call(body) {
     //    }
 
         def configHelper = new com.github.aroq.jenkins.workflowlibs.Config()
-        def fileConfig = configHelper.readGroovyConfig(config.configFileName)
-
-        def tempConfig = fileConfig
-        tempConfig << config
-        config = tempConfig
+        def config = configHelper.readGroovyConfig(params.configFileName)
+        config << params
         echo config.configRepo
-
-//        def config_defaults = [force: '0', configProvider: 'docman']
-//        config << readProperties(defaults: config_defaults, file: config.configFileName)
 
         if (config.configProvider == 'docman') {
             echo "Requesting docman for config..."
