@@ -17,9 +17,10 @@ def call(body) {
         def test = configHelper.readGroovyConfig(config.configFileName)
 
         echo test.configRepo
+        config << test
 
-        def config_defaults = [force: '0', configProvider: 'docman']
-        config << readProperties(defaults: config_defaults, file: config.configFileName)
+//        def config_defaults = [force: '0', configProvider: 'docman']
+//        config << readProperties(defaults: config_defaults, file: config.configFileName)
 
         if (config.configProvider == 'docman') {
             echo "Requesting docman for config..."
