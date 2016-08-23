@@ -1,4 +1,4 @@
-import com.github.aroq.docman.DocmanConfig
+import com.github.aroq.DocmanConfig
 
 // Init params
 def params = [:]
