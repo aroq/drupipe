@@ -4,7 +4,6 @@ def call(body) {
     body.delegate = config
     body()
 
-
     node {
         checkout scm
 
@@ -18,9 +17,9 @@ def call(body) {
         n.test('test message')
 
         def config_defaults = [force: '0', configProvider: 'docman']
-        def configContainer = readProperties defaults: config_defaults, file: 'config/config.groovy'
+        config << readProperties(defaults: config_defaults, file: config.configFileName)
 
-        if (configContainer.configProvider == 'docman') {
+        if (config.configProvider == 'docman') {
             echo "Requesting docman for config..."
             sh(
             """#!/bin/bash -l
