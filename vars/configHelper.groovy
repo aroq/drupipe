@@ -4,6 +4,7 @@ def call(body) {
     body.delegate = params
     body()
     params << params.params
+    params.remove('p')
 
     echo 'Config'
 

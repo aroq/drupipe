@@ -3,7 +3,8 @@ def call(body) {
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = params
     body()
-    params << params.params
+    params << params.p
+    params.remove('p')
 
     wrap([$class: 'AnsiColorBuildWrapper']) {
         stage "\u001B[31mINIT\u001B[0m"
@@ -14,7 +15,7 @@ def call(body) {
     }
 
     config = configHelper {
-        params = params
+        p = params
     }
 
     config
