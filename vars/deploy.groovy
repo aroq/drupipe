@@ -11,7 +11,7 @@ def call(body) {
 
         build {
             p = params
-            actions = ['Docman', 'Docman']
+            actions = ['Docman.deploy', 'Docman.info2']
         }
     }
 }
