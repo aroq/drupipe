@@ -17,7 +17,7 @@ def call(body) {
     config = configHelper {
         p = params
     }
-    
+
     if (config.configProvider == 'docman') {
         def docman = new com.github.aroq.workflowlibs.Docman()
         docman.info2(config)

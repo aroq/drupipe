@@ -4,7 +4,14 @@ def call(body) {
     body.delegate = params
     body()
 
-    build {
+    node {
+        checkout scm
+
+        config = initStage {
+            p = params
+        }
+
+        stage 'build'
 
     }
 }
