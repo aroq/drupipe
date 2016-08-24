@@ -2,7 +2,6 @@ def call(body) {
     def params = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = params
-    params << params.params
     body()
 
     echo 'Config'
