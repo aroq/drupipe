@@ -39,7 +39,7 @@ docmanConfig.states?.each { state ->
         logRotator(-1, 30)
         parameters {
             stringParam('executeCommand', 'deployFlow')
-            stringParam('projectName', 'default')
+            stringParam('projectName', 'common')
             stringParam('environment', state.value)
             stringParam('debug', '0')
             stringParam('simulate', '0')
