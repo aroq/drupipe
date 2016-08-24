@@ -6,7 +6,11 @@ def call(body) {
     params << params.p
     params.remove('p')
 
-    def config = (new com.github.aroq.workflowlibs.Config()).readGroovyConfig(params.configFileName)
+    def config = [:]
+
+    if (params.configFileName) {
+        config = (new com.github.aroq.workflowlibs.Config()).readGroovyConfig(params.configFileName)
+    }
     config << params
     echo "Dumping config values:"
     for (item in config) {
