@@ -3,7 +3,7 @@ def call(body) {
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = params
     body()
-    params << params.params
+    params << params.p
     params.remove('p')
 
     echo 'Config'
