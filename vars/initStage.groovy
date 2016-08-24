@@ -6,10 +6,8 @@ def call(body) {
     params << params.paramsTest
 
     wrap([$class: 'AnsiColorBuildWrapper']) {
-        // Just some echoes to show the ANSI color.
-        stage "\u001B[31mINIT"
+        stage "\u001B[31mINIT\u001B[0m"
     }
-    stage 'init'
 
     dir('library') {
         git url: 'https://github.com/aroq/jenkins-pipeline-library.git', branch: 'master'
