@@ -8,7 +8,7 @@ def call(body) {
         checkout scm
 
         config = initStage {
-            params = params
+            paramsTest = params
         }
 
         stage 'seed'
