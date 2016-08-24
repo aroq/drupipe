@@ -2,15 +2,10 @@ def call(body) {
     def params = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = params
+    params << params.params
     body()
 
-    stage 'config'
-
-    echo '--- CONFIG stage'
-
-    dir('library') {
-        git url: 'https://github.com/aroq/jenkins-pipeline-library.git', branch: 'master'
-    }
+    echo 'Config'
 
     def config = (new com.github.aroq.workflowlibs.Config()).readGroovyConfig(params.configFileName)
     config << params

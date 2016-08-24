@@ -7,8 +7,8 @@ def call(body) {
     node {
         checkout scm
 
-        config = configHelper {
-            configFileName = params.configFileName
+        config = initStage {
+            params = params
         }
 
         stage 'seed'

@@ -6,6 +6,4 @@ def call(body) {
 
     stage 'build'
 
-    echo '--- BUILD stage'
-
 }
