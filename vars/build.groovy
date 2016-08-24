@@ -12,6 +12,13 @@ def call(body) {
             def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${values[0]}", true, false )?.newInstance()
             def methodName = values[1]
             echo methodName
+
+            actionInstance.metaClass.methods.each { method ->
+                echo method.name
+                if (method.name == methodName) {
+                    method.invoke(actionInstance, 'bar')
+                }
+            }
             actionInstance."$methodName"()
             echo "OK: ${instance}"
         }
