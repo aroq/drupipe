@@ -6,14 +6,16 @@ def call(body) {
     params << params.p
     params.remove('p')
 
-    echo 'Config'
-
-    for (item in params) {
-        echo "${item.key} = ${item.value}"
-    }
 
     def config = (new com.github.aroq.workflowlibs.Config()).readGroovyConfig(params.configFileName)
     config << params
+    wrap([$class: 'AnsiColorBuildWrapper']) {
+        echo "\u001B[31mDumping config values...START"
+        for (item in config) {
+            echo "${item.key} = ${item.value}"
+        }
+        echo "Dumping config values...END\u001B[0m"
+    }
 
     if (config.configProvider == 'docman') {
         def docman = new com.github.aroq.workflowlibs.Docman()
