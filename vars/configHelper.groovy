@@ -8,7 +8,7 @@ def call(body) {
     echo 'Config'
 
     for (int i = 0; i < params.size(); ++i) {
-        echo params[i].value
+//        echo params[i].value
     }
 
     for (item in params) {
