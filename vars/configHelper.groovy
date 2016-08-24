@@ -7,7 +7,7 @@ def call(body) {
     stage 'config'
 
     echo '--- CONFIG stage'
-    
+
     dir('library') {
         git url: 'https://github.com/aroq/jenkins-pipeline-library.git', branch: 'master'
     }
@@ -20,4 +20,5 @@ def call(body) {
         docman.info2(config)
     }
 
+    config
 }
