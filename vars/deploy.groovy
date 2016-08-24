@@ -5,8 +5,6 @@ def call(body) {
     body()
 
     node {
-        checkout scm
-
         config = initStage {
             p = params
         }
