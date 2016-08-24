@@ -10,7 +10,7 @@ def call(body) {
         try {
             def values = action.split("\\.")
             def instance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${values[0]}", true, false )?.newInstance()
-            instance.${values[1]}()
+            instance."${values[1]}"()
             echo "OK: ${instance}"
         }
         catch (err) {
