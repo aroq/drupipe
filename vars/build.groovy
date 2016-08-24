@@ -8,8 +8,9 @@ def call(body) {
 
     for (action in params.actions) {
         try {
-//            actionObject = new(com.github.aroq.workflowlibs."${action}"())
-            def instance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${action}", true, false )?.newInstance()
+            def (className, methodName) = action.tokenize( '.' )
+            def instance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${className}", true, false )?.newInstance()
+            instance.${methodName}()
             echo "OK: ${instance}"
         }
         catch (err) {

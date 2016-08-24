@@ -1,6 +1,6 @@
 package com.github.aroq.workflowlibs
 
-def info(config) {
+def info(params) {
     echo "Requesting docman for config..."
     sh(
             """#!/bin/bash -l
@@ -8,7 +8,7 @@ def info(config) {
               FLAG="-f"
               rm -fR docroot
             fi
-            docman init docroot ${config.configRepo} -s
+            docman init docroot ${params.configRepo} -s
             cd docroot
             docman info full config.json
             """
@@ -16,7 +16,7 @@ def info(config) {
     echo "Requesting docman for config... DONE."
 }
 
-def info2(config) {
+def info2(params = nil) {
     echo "Requesting docman for config..."
     sh(
             """#!/bin/bash -l
@@ -26,6 +26,6 @@ def info2(config) {
     echo "Requesting docman for config... DONE."
 }
 
-def deploy() {
+def deploy(params = nil) {
     echo "Docman deploy"
 }

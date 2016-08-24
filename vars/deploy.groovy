@@ -5,13 +5,14 @@ def call(body) {
     body()
 
     node {
-        config = initStage {
+        c = initStage {
             p = params
         }
 
         build {
             p = params
-            actions = ['Docman', 'Docman2']
+            config = c
+            actions = ['Docman.deploy', 'Docman.info2']
         }
     }
 }
