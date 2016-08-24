@@ -16,7 +16,7 @@ def info(config) {
     echo "Requesting docman for config... DONE."
 }
 
-def info2(config) {
+def info2(config = nil) {
     echo "Requesting docman for config..."
     sh(
             """#!/bin/bash -l
@@ -26,6 +26,6 @@ def info2(config) {
     echo "Requesting docman for config... DONE."
 }
 
-def deploy() {
+def deploy(config = nil) {
     echo "Docman deploy"
 }
