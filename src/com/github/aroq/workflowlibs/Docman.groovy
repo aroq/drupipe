@@ -25,3 +25,7 @@ def info2(config) {
     )
     echo "Requesting docman for config... DONE."
 }
+
+def deploy() {
+    echo "Docman deploy"
+}

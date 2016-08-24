@@ -6,4 +6,15 @@ def call(body) {
 
     stage 'build'
 
+    for (action in params.actions) {
+        try {
+//            actionObject = new(com.github.aroq.workflowlibs."${action}"())
+            def instance = this.class.classLoader.loadClass(action, true, false )?.newInstance()
+            echo "OK: ${instance}"
+        }
+        catch (err) {
+            echo "Action ${action} is not exists."
+        }
+    }
+
 }

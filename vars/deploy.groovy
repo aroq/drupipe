@@ -9,7 +9,9 @@ def call(body) {
             p = params
         }
 
-        stage 'build'
-
+        build {
+            p = params
+            actions = ['Docman', 'Docman2']
+        }
     }
 }
