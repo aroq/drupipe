@@ -25,6 +25,7 @@ def call(body) {
         catch (err) {
             echo "Action ${action} is not exists."
             echo err.toString()
+            throw err
         }
     }
 
