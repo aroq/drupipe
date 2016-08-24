@@ -7,7 +7,9 @@ def call(body) {
 
     echo 'Config'
 
-    echo params
+    params.each {k, v ->
+        echo v
+    }
 
     def config = (new com.github.aroq.workflowlibs.Config()).readGroovyConfig(params.configFileName)
     config << params
