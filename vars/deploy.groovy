@@ -11,7 +11,6 @@ def call(body) {
 
         build {
             p = params
-            config = c
             actions = ['Docman.deploy', 'Docman.info2']
         }
     }
