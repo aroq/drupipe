@@ -20,7 +20,7 @@ def call(body) {
 //                }
 //            }
             actionInstance."$methodName"()
-            echo "OK: ${instance}"
+            echo "OK: ${actionInstance}"
         }
         catch (err) {
             echo "Action ${action} is not exists."
