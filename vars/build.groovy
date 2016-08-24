@@ -10,7 +10,7 @@ def call(body) {
         try {
             def (className, methodName) = action.tokenize( '.' )
             def instance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${className}", true, false )?.newInstance()
-            instance.${methodName}()
+//            instance.${methodName}()
             echo "OK: ${instance}"
         }
         catch (err) {

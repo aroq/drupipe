@@ -5,7 +5,7 @@ def call(body) {
     body()
 
     node {
-        c = initStage {
+        config = initStage {
             p = params
         }
 
