@@ -28,6 +28,5 @@ def call(body) {
                removedViewAction: 'DELETE',
                lookupStrategy: 'SEED_JOB',
                additionalClasspath: ['library/src'].join('\n')
-//               additionalClasspath: ['src/main/groovy'].join('\n')
     }
 }

@@ -2,7 +2,7 @@ import com.github.aroq.DocmanConfig
 
 // Init params
 def params = [:]
-configFilePath = 'jenkins.config.groovy'
+configFilePath = 'docroot.config'
 def config
 
 if (!System.properties.docrootConfigJsonPath) {
