@@ -9,9 +9,10 @@ def call(body) {
     for (action in params.actions) {
         try {
             def values = action.split("\\.")
-            def instance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${values[0]}", true, false )?.newInstance()
-            echo values[1]
-            instance."$values[1]"()
+            def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${values[0]}", true, false )?.newInstance()
+            def methodName = values[1]
+            echo methodName
+            actionInstance."$methodName"()
             echo "OK: ${instance}"
         }
         catch (err) {
