@@ -12,10 +12,7 @@ def call(body) {
         config = (new com.github.aroq.workflowlibs.Config()).readGroovyConfig(params.configFileName)
     }
     config << params
-    echo "Dumping config values:"
-    for (item in config) {
-        echo "${item.key} = ${item.value}"
-    }
+    dump(config, "Config")
 
     config
 }

@@ -9,6 +9,8 @@ def call(body) {
             p = params
         }
 
+        params << config
+
         build {
             p = params
             actions = ['Docman.deploy', 'Docman.info']
