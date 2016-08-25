@@ -1,9 +1,6 @@
 package com.github.aroq.workflowlibs
 
 def perform(params) {
-//    config = configHelper {
-//        p = params
-//    }
     def config = [:]
     if (params.configFileName) {
         config = readGroovyConfig(params.configFileName)
