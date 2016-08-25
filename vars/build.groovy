@@ -10,7 +10,7 @@ def call(body) {
 //    dump(config)
 
     stage 'build'
-    config2 = configHelper.config
+    config2 = acme.foo
 
     for (action in params.actions) {
         try {
