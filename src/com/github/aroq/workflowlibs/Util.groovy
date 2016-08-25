@@ -1,3 +1,5 @@
+package com.github.aroq.workflowlibs
+
 @Singleton
 class Util {
     int count(text) {
