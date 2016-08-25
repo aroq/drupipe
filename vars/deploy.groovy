@@ -7,7 +7,7 @@ def call(body) {
     node {
         params << executeStage('init') {
             p = params
-            actions = ['Library.perform', 'Config.perform']
+            actions = ['Config.perform']
         }
 
         params << executeStage('build') {
