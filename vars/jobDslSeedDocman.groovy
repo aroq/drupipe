@@ -7,13 +7,18 @@ def call(body) {
     node {
         checkout scm
 
-        config = initStage {
+        params << executeStage('init') {
             p = params
+            actions = ['Config.perform']
         }
+
+//        config = initStage {
+//            p = params
+//        }
 
         stage 'seed'
 
-        jobDsl targets: [config.jobsPattern].join('\n'),
+        jobDsl targets: [params.jobsPattern].join('\n'),
                removedJobAction: 'DELETE',
                removedViewAction: 'DELETE',
                lookupStrategy: 'SEED_JOB',
