@@ -4,13 +4,13 @@ def call(body) {
     body.delegate = params
     body()
 
-    HashMap pipeline = [
-            'init' : ['actions': ['Config.perform']],
-            'build': ['actions': ['Docman.deploy', 'Docman.info']],
-            'ops'  : ['actions': ['Druflow.deployFlow']]
-    ]
 
     node {
+        HashMap pipeline = [
+                'init' : ['actions': ['Config.perform']],
+                'build': ['actions': ['Docman.deploy', 'Docman.info']],
+                'ops'  : ['actions': ['Druflow.deployFlow']]
+        ]
         for (stage in pipeline) {
             params << executeStage(stage.key) {
                 p = params
