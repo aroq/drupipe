@@ -11,6 +11,4 @@ def call(body) {
     // Set global variables.
     env.WORKSPACE = pwd()
 
-
-
 }

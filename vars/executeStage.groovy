@@ -8,8 +8,8 @@ def call(name, body) {
 
     def result = params
 
-    for (action in params.actions) {
-        try {
+    try {
+        for (action in params.actions) {
             def values = action.split("\\.")
             def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${values[0]}", true, false )?.newInstance()
             def methodName = values[1]
@@ -19,13 +19,12 @@ def call(name, body) {
                result << actionResult
             }
             dump(result, "${action} action result")
-            return result
         }
-        catch (err) {
-            echo "Action ${action} is not exists or error in action."
-            echo err.toString()
-            throw err
-        }
+        result
     }
-
+    catch (err) {
+        echo "Action ${action} is not exists or error in action."
+        echo err.toString()
+        throw err
+    }
 }

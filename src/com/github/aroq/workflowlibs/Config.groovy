@@ -12,6 +12,6 @@ def perform(params) {
         docman.info(config)
     }
 
-    return config
+    config
 }
 
