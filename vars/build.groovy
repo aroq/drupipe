@@ -10,6 +10,7 @@ def call(body) {
 //    dump(config)
 
     stage 'build'
+    config2 = configHelper.config
 
     for (action in params.actions) {
         try {
