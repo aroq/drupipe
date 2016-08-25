@@ -1,10 +1,9 @@
-import com.github.aroq.workflowlibs.Utils
-
 def call(params, String dumpName = null) {
+    utils = new com.github.aroq.workflowlibs.Utils()
     if (dumpName) {
-        Utils.colorEcho "Dumping ${dumpName} values:"
+        utils.colorEcho "Dumping ${dumpName} values:"
     }
     for (item in params) {
-        Utils.colorEcho "${item.key} = ${item.value}"
+        utils.colorEcho "${item.key} = ${item.value}"
     }
 }
