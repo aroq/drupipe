@@ -5,7 +5,7 @@ def call(params, String dumpName = '') {
 
 @NonCPS
 def collectParams(params) {
-    def String result
+    def String result = ''
     for (item in params) {
         result = result + "${item.key} = ${item.value}\r\n"
     }
