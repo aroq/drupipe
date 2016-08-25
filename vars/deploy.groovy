@@ -5,11 +5,10 @@ def call(body) {
     body()
 
     node {
-        initResult = executeStage('init') {
+        params << executeStage('init') {
             p = params
             actions = ['Library.perform', 'Config.perform']
         }
-        dump(initResult, "init result")
 
         params << executeStage('build') {
             p = params
