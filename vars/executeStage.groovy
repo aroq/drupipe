@@ -1,10 +1,10 @@
-def call(body) {
+def call(name, body) {
     def params = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = params
     body()
 
-    stage 'build'
+    stage name
 
     for (action in params.actions) {
         try {

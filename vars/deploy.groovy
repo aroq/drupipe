@@ -11,7 +11,7 @@ def call(body) {
 
 //        params << config
 
-        build {
+        executeStage('build') {
             p = params
             actions = ['Docman.deploy', 'Docman.info']
         }
