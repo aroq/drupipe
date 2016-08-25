@@ -6,9 +6,6 @@ def call(body) {
     params << params.p
     params.remove('p')
 
-//    wrap([$class: 'AnsiColorBuildWrapper']) {
-//        stage "\u001B[31mINIT\u001B[0m"
-//    }
 
     stage 'Init'
 
