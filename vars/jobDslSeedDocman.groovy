@@ -9,7 +9,7 @@ def call(body) {
 
         params << executeStage('init') {
             p = params
-            actions = ['Config.perform']
+            actions = ['Config.perform', 'Config.perform']
         }
 
 //        config = initStage {
