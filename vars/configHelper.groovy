@@ -12,7 +12,7 @@ def call(body) {
         config = (new com.github.aroq.workflowlibs.Config()).readGroovyConfig(params.configFileName)
     }
     config << params
-    dump(config)
+    dump(config, 'Main config')
 
     config
 }
