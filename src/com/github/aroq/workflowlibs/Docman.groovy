@@ -18,7 +18,6 @@ def info(config = [:]) {
             docman init docroot ${config.configRepo} -s
             """
         )
-
     }
     sh(
         """#!/bin/bash -l
