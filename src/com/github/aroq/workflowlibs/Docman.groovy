@@ -1,7 +1,7 @@
 package com.github.aroq.workflowlibs
 
 def info(params = [:]) {
-    def config = configVault.get
+    def config = configVault.get()
     dump(config)
 
     echo "Requesting docman for config..."

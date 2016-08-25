@@ -4,7 +4,7 @@ def call(body) {
     body.delegate = params
     body()
 
-    def config = configVault.get
+    def config = configVault.get()
     config << params
     dump(config)
 
