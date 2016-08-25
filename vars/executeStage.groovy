@@ -5,6 +5,7 @@ def call(name, body) {
     body()
 
     params << params.p
+    params.remove('p')
 
     stage name
 
