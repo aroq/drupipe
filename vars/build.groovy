@@ -5,7 +5,7 @@ def call(body) {
     body()
 
 //    def config = configVault.config
-    config = configHelper.config
+//    config = configHelper.config
 //    config << params
 //    dump(config)
 
