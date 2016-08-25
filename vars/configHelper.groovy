@@ -13,7 +13,7 @@ def call(body) {
     }
     config << params
     dump(config, 'Main config')
-    configVault.config = config
+//    configVault.config = config
 
     config
 }
