@@ -1,8 +1,19 @@
 def setFoo(v) {
-    this.foo = v;
+    this.f = v;
+    echo '---------------------'
+    echo '---------------------'
+    echo '---------------------'
+    echo '---------------------'
+    echo '---------------------'
+    echo '---------------------'
+    echo '---------------------'
+    echo '---------------------'
+    echo '---------------------'
+    echo '---------------------'
+    dump this.f
 }
 def getFoo() {
-    return this.foo;
+    return this.f;
 }
 def say(name) {
     echo "Hello world, ${name}"
