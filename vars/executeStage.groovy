@@ -19,7 +19,7 @@ def call(name, body) {
                result << actionResult
             }
             dump(result, "${action} action result")
-            result
+            return result
         }
         catch (err) {
             echo "Action ${action} is not exists or error in action."
