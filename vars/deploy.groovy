@@ -11,10 +11,10 @@ def call(body) {
                 'ops'  : ['actions': ['Druflow.deployFlow']]
         ]
         for (stage in pipeline) {
-//            params << executeStage(stage.key) {
-//                p = params
+            params << executeStage(stage.key) {
+                p = params
 //                actions = stage.value['actions']
-//            }
+            }
 //            stage = null
         }
 //        pipeline = null
