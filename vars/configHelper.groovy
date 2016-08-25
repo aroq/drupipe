@@ -17,6 +17,12 @@ def call(body) {
     dump(config, 'Main config')
 //    configVault.config = config
 
+    echo '--------------------'
+    echo '--------------------'
+    echo '--------------------'
+    echo '--------------------'
+    echo '--------------------'
+
     c = config
 
     config
