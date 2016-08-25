@@ -12,16 +12,9 @@ def call(body) {
             actions = ['Library.perform', 'Config.perform']
         }
 
-//        config = initStage {
-//            p = params
-//        }
-
-        stage 'seed'
-
-        jobDsl targets: [params.jobsPattern].join('\n'),
-               removedJobAction: 'DELETE',
-               removedViewAction: 'DELETE',
-               lookupStrategy: 'SEED_JOB',
-               additionalClasspath: ['library/src'].join('\n')
+        params << executeStage('seed') {
+            p = params
+            actions = ['JobDslSeed.perform']
+        }
     }
 }
