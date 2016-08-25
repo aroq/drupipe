@@ -1,5 +1,3 @@
-c = [:]
-
 def call(body) {
     def params = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
@@ -17,13 +15,7 @@ def call(body) {
     dump(config, 'Main config')
 //    configVault.config = config
 
-    echo '--------------------'
-    echo '--------------------'
-    echo '--------------------'
-    echo '--------------------'
-    echo '--------------------'
-
-    c = config
+    this.c = config
 
     config
 }
