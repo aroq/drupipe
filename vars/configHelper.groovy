@@ -15,11 +15,11 @@ def call(body) {
     dump(config, 'Main config')
 //    configVault.config = config
 
-    this.config = config
+    this.c = config
 
     config
 }
 
 def getConfig() {
-    return this.config
+    return this.c
 }
