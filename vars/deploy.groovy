@@ -9,7 +9,7 @@ def call(body) {
             p = params
         }
 
-        params << config
+//        params << config
 
         build {
             p = params

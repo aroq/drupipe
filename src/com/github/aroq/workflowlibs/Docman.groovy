@@ -1,6 +1,9 @@
 package com.github.aroq.workflowlibs
 
-def info(config = [:]) {
+def info(params = [:]) {
+    def config = configVault.get
+    dump(config)
+
     echo "Requesting docman for config..."
     if (force == 1) {
         sh(
@@ -24,16 +27,6 @@ def info(config = [:]) {
         cd docroot
         docman info full config.json
         """
-    )
-    echo "Requesting docman for config... DONE."
-}
-
-def info2(config = [:]) {
-    echo "Requesting docman for config..."
-    sh(
-            """#!/bin/bash -l
-            #docman info full config.json
-            """
     )
     echo "Requesting docman for config... DONE."
 }

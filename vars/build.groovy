@@ -4,6 +4,10 @@ def call(body) {
     body.delegate = params
     body()
 
+    def config = configVault.get
+    config << params
+    dump(config)
+
     stage 'build'
 
     for (action in params.actions) {
@@ -11,8 +15,7 @@ def call(body) {
             def values = action.split("\\.")
             def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${values[0]}", true, false )?.newInstance()
             def methodName = values[1]
-            dump(params)
-            actionInstance."$methodName"(params)
+            actionInstance."$methodName"(config)
         }
         catch (err) {
             echo "Action ${action} is not exists."
