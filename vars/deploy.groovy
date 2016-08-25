@@ -4,20 +4,32 @@ def call(body) {
     body.delegate = params
     body()
 
+    pipeline = [
+            'init' : ['actions': ['Config.perform']],
+            'build': ['actions': ['Docman.deploy', 'Docman.info']],
+            'ops'  : ['actions': ['Druflow.deployFlow']]
+    ]
+
     node {
-        params << executeStage('init') {
-            p = params
-            actions = ['Config.perform']
+        for (stage in pipeline) {
+            params << executeStage(stage.key) {
+                p = params
+                actions = stage.value['actions']
+            }
         }
-
-        params << executeStage('build') {
-            p = params
-            actions = ['Docman.deploy', 'Docman.info']
-        }
-
-        params << executeStage('ops') {
-            p = params
-            actions = ['Druflow.deployFlow']
-        }
+//        params << executeStage('init') {
+//            p = params
+//            actions = ['Config.perform']
+//        }
+//
+//        params << executeStage('build') {
+//            p = params
+//            actions = ['Docman.deploy', 'Docman.info']
+//        }
+//
+//        params << executeStage('ops') {
+//            p = params
+//            actions = ['Druflow.deployFlow']
+//        }
     }
 }
