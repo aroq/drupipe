@@ -1,4 +1,4 @@
-this.c = [:]
+c = [:]
 
 def call(body) {
     def params = [:]
@@ -17,11 +17,11 @@ def call(body) {
     dump(config, 'Main config')
 //    configVault.config = config
 
-    this.c = config
+    c = config
 
     config
 }
 
 def getConfig() {
-    return this.c
+    return c
 }
