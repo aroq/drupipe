@@ -4,6 +4,8 @@ def call(name, body) {
     body.delegate = params
     body()
 
+    params << params.p
+
     stage name
 
     def result = params
