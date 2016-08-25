@@ -16,14 +16,14 @@ def call(body) {
         p = params
     }
 
-    acme.foo = "5";
+    acme.foo = config;
     echo '--------------------'
     echo '--------------------'
     echo '--------------------'
     echo '--------------------'
     echo '--------------------'
 
-    echo acme.foo;
+    test = acme.foo;
 
     if (config.configProvider == 'docman') {
         def docman = new com.github.aroq.workflowlibs.Docman()
