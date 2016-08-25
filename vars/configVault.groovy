@@ -1,16 +1,7 @@
-def set(config) {
+def setConfig(config) {
    this.config = config
 }
 
-def get() {
+def getConfig() {
    this.config
-}
-
-def get(name) {
-   if (this.config[name]) {
-      this.config[name]
-   }
-   else {
-      null
-   }
 }
