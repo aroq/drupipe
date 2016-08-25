@@ -13,7 +13,7 @@ def setFoo(v) {
     dump this.f
 }
 def getFoo() {
-    return this.f;
+    return this.binding['f'];
 }
 def say(name) {
     echo "Hello world, ${name}"
