@@ -14,5 +14,8 @@ def call(body) {
     config << params
     dump(config, 'Main config')
 
+    util = new com.github.aroq.workflowlibs.Util()
+    util.count("test")
+
     config
 }
