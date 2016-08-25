@@ -4,8 +4,7 @@ def call(body) {
     body.delegate = params
     body()
     params << params.p
-    params.remove('p')
-
+    params.p = null
 
     stage 'Init'
 
