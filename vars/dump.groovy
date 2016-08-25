@@ -3,7 +3,15 @@ def call(params, String dumpName = null) {
     if (dumpName) {
         utils.colorEcho "Dumping ${dumpName} values:"
     }
+
+    utils.colorEcho collectParams(params)
+}
+
+@NonCPS
+def collectParams(params) {
+    def String result
     for (item in params) {
-        utils.colorEcho "${item.key} = ${item.value}"
+        result += "${item.key} = ${item.value}\r\n"
     }
+    result
 }
