@@ -10,17 +10,17 @@ def call(body) {
 //        }
 //
 
-        params << executeStage('init') {
+        executeStage('init') {
             p = params
             actions = ['Library.perform', 'Config.perform']
         }
 
-        params << executeStage('build') {
+        executeStage('build') {
             p = params
             actions = ['Docman.deploy', 'Docman.info']
         }
 
-        params << executeStage('ops') {
+        executeStage('ops') {
             p = params
             actions = ['Druflow.deployFlow']
         }
