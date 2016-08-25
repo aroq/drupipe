@@ -5,18 +5,22 @@ def call(body) {
     body()
 
     node {
-        config = initStage {
+//        config = initStage {
+//            p = params
+//        }
+//
+
+        params << executeStage('init') {
             p = params
+            actions = ['Library.perform', 'Config.perform']
         }
 
-        params << config
-
-        executeStage('build') {
+        params << executeStage('build') {
             p = params
             actions = ['Docman.deploy', 'Docman.info']
         }
 
-        executeStage('ops') {
+        params << executeStage('ops') {
             p = params
             actions = ['Druflow.deployFlow']
         }
