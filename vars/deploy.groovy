@@ -17,6 +17,7 @@ def call(body) {
                 actions = stage.value['actions']
             }
         }
+        pipeline = null
 //        params << executeStage('init') {
 //            p = params
 //            actions = ['Config.perform']
