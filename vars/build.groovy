@@ -11,7 +11,7 @@ def call(body) {
             def values = action.split("\\.")
             def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${values[0]}", true, false )?.newInstance()
             def methodName = values[1]
-//            dump(params)
+            dump(params)
             actionInstance."$methodName"(params)
         }
         catch (err) {
