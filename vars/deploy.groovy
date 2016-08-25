@@ -16,6 +16,7 @@ def call(body) {
                 p = params
                 actions = stage.value['actions']
             }
+            stage = null
         }
         pipeline = null
 //        params << executeStage('init') {
