@@ -4,13 +4,7 @@ def call(body) {
     body.delegate = params
     body()
 
-//    def config = configVault.config
-//    config = configHelper.config
-//    config << params
-//    dump(config)
-
     stage 'build'
-    config2 = acme.foo
 
     for (action in params.actions) {
         try {

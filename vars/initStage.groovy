@@ -16,8 +16,6 @@ def call(body) {
         p = params
     }
 
-    acme.foo = 5;
-
     if (config.configProvider == 'docman') {
         def docman = new com.github.aroq.workflowlibs.Docman()
         config.initDocman = false

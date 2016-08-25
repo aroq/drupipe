@@ -13,13 +13,6 @@ def call(body) {
     }
     config << params
     dump(config, 'Main config')
-//    configVault.config = config
-
-    this.c = config
 
     config
-}
-
-def getConfig() {
-    return c
 }
