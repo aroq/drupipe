@@ -15,5 +15,11 @@ def call(body) {
     dump(config, 'Main config')
 //    configVault.config = config
 
+    this.config = config
+
     config
+}
+
+def getConfig() {
+    return this.config
 }
