@@ -22,6 +22,7 @@ def call(name, body) {
             }
             dump(result, "${action} action result")
         }
+        params.remove('actions')
         result
     }
     catch (err) {
