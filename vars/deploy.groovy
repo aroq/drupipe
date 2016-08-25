@@ -6,14 +6,14 @@ def call(body) {
 
     node {
         HashMap pipeline = [
-                'init' : ['actions': ['Config.perform']],
-                'build': ['actions': ['Docman.deploy', 'Docman.info']],
-                'ops'  : ['actions': ['Druflow.deployFlow']]
+                'init' : ['Config.perform'],
+                'build': ['Docman.deploy', 'Docman.info'],
+                'ops'  : ['Druflow.deployFlow']
         ]
         for (stage in pipeline) {
             params << executeStage(stage.key) {
                 p = params
-//                actions = stage.value['actions']
+                actions = stage.value
             }
 //            stage = null
         }
