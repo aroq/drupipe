@@ -9,22 +9,20 @@ def call(name, body) {
 
     stage name
 
-    def result = params
-
     try {
         for (action in params.actions) {
             def values = action.split("\\.")
             def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${values[0]}", true, false )?.newInstance()
             def methodName = values[1]
             dump(params, "${action} action params")
-            actionResult = actionInstance."$methodName"(result)
+            actionResult = actionInstance."$methodName"(params)
             if (actionResult) {
-               result << actionResult
+                params << actionResult
             }
-            dump(result, "${action} action result")
+            dump(params, "${action} action result")
         }
         params.remove('actions')
-        result
+        params
     }
     catch (err) {
         echo "Action ${action} is not exists or error in action."
