@@ -1,7 +1,7 @@
-def setConfig(config) {
-   this.config = config
+def setConfig(c) {
+   this.c = c
 }
 
 def getConfig() {
-   this.config
+   this.c
 }
