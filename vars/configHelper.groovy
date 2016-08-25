@@ -1,4 +1,4 @@
-thic.c = [:]
+this.c = [:]
 
 def call(body) {
     def params = [:]
