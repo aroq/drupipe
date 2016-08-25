@@ -8,6 +8,9 @@ def call(body) {
 
     stage 'Init'
 
+    // Set global variables.
+    env.WORKSPACE = pwd()
+
     dir('library') {
         git url: 'https://github.com/aroq/jenkins-pipeline-library.git', branch: 'master'
     }
@@ -15,6 +18,7 @@ def call(body) {
     config = configHelper {
         p = params
     }
+     config.workspace = pwd()
 
     if (config.configProvider == 'docman') {
         def docman = new com.github.aroq.workflowlibs.Docman()

@@ -15,5 +15,10 @@ def call(body) {
             p = params
             actions = ['Docman.deploy', 'Docman.info']
         }
+
+        executeStage('ops') {
+            p = params
+            actions = ['Druflow.deployFlow']
+        }
     }
 }
