@@ -15,16 +15,16 @@ def call(name, body) {
 
     try {
         for (action in params.stage.actionList) {
-            echo "Action: ${action}"
-            def values = action.split("\\.")
-            def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${values[0]}", true, false )?.newInstance()
-            def methodName = values[1]
-            dump(params, "${action} action params")
-            actionResult = actionInstance."$methodName"(params)
+            echo "Action class: ${action.getClass()}"
+//            def values = action.split("\\.")
+            def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${action.name}", true, false )?.newInstance()
+//            def methodName = values[1]
+            dump(params, "${action.name} action params")
+            actionResult = actionInstance."$action.methodName"(params)
             if (actionResult) {
                 params << actionResult
             }
-            dump(params, "${action} action result")
+            dump(params, "${action.name} action result")
         }
         params.remove('stage')
         params

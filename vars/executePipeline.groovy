@@ -37,13 +37,14 @@ def processPipeline(pipeline) {
 
         for (action in item.value) {
             if (action.getClass() == java.lang.String) {
-                actions << action
+                def values = action.split("\\.")
+                actions << new com.github.aroq.workflowlibs.Action(name: values[0], methodName: values[1])
             }
             else {
                 actions << action.action
             }
         }
-        result << new com.github.aroq.workflowlibs.Stage(name: item.key, actionList: actions)
+        result << new com.github.aroq.workflowlibs.Stage(name: item.key, actionList: actions, params: i)
     }
     result
 }
