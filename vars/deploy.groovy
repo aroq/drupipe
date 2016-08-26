@@ -17,7 +17,7 @@ def call(body) {
             String stageName = s.key
             ArrayList actionsList = s.value
 //            echo "LIST CLASS: " + ["Docman.deploy", "Docman.info"].getClass()
-            s = null
+//            s = null
 
             params << executeStage(s.key) {
                 p = params
