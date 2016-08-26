@@ -9,10 +9,12 @@ def call(body) {
 
     pipeline = pipelineParse(params.pipeline)
 
-    for (int i = 0; i < pipeline.size(); i++) {
-        params.stage = pipeline[i]
-        params << executeStage(pipeline[i].name) {
-            p = params
+    node {
+        for (int i = 0; i < pipeline.size(); i++) {
+            params.stage = pipeline[i]
+            params << executeStage(pipeline[i].name) {
+                p = params
+            }
         }
     }
 }

@@ -13,6 +13,11 @@ def call(body) {
 //        params.pipeline = pipeline
 
         executePipeline {
+            pipeline = [
+//                'init' : ['Config.perform'],
+//                'build': ['Docman.deploy', 'Docman.info'],
+//                'ops'  : ['Druflow.deployFlow']
+//        ]
             p = params
         }
 
