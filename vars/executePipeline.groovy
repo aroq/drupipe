@@ -41,7 +41,8 @@ def processPipeline(pipeline) {
                 actions << new com.github.aroq.workflowlibs.Action(name: values[0], methodName: values[1])
             }
             else {
-                actions << action.action
+                def values = action.action.split("\\.")
+                actions << new com.github.aroq.workflowlibs.Action(name: values[0], methodName: values[1], params: actions.params)
             }
         }
         result << new com.github.aroq.workflowlibs.Stage(name: item.key, actionList: actions)
