@@ -13,7 +13,7 @@ def call(name, body) {
 
     try {
         for (action in params.stage.actionList) {
-            dump(params, "${action.name} action params")
+            dump(params << action.params, "${action.name} action params")
             echo "PWD: ${pwd()}"
             fileName = 'docroot/config/pipelines/actions/' + action.name + '.groovy'
             echo "Action file name to check: ${fileName}"
