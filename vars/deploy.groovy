@@ -12,9 +12,8 @@ def call(body) {
 //        ]
         pipeline = get_map_entries(jsonParse('{"init": ["Config.perform"], "build": ["Docman.deploy", "Docman.info"]}'))
 
-
 //        for (s in pipeline) {
-        for (int i = 0; i < entries.size(); i++){
+        for (int i = 0; i < pipeline.size(); i++){
             String key = pipeline.get(i).key
             String value =  pipeline.get(i).value
             echo "Value ${value}"
