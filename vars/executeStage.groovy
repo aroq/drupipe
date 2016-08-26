@@ -19,7 +19,7 @@ def call(name, body) {
             echo "Action file name to check: ${fileName}"
             if (fileExists(fileName)) {
                 actionFile = load(fileName)
-                actionResult = actionFile."$action.methodName"
+                actionResult = actionFile."$action.methodName"(params << action.params)
             }
             else {
                 try {
