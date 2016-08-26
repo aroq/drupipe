@@ -12,15 +12,10 @@ def call(body) {
 //        ]
         pipeline = jsonParse('{"init": ["Config.perform"], "build": ["Docman.deploy", "Docman.info"]}')
 
-//        for (s in pipeline) {
-        for (int i = 0; i < pipeline.size(); i++) {
-            echo "IIIIIIIIIIIIIIIIIIIIIIII=" + pipeline.get(i)
-            String key = pipeline.get(i).key
-            String value =  pipeline.get(i).value
-            echo "Value ${value}"
-            params << executeStage(key) {
+        for (s in pipeline) {
+            params << executeStage(s.key) {
                 p = params
-                actions = get_map_entries(value)
+                actions = s.value
             }
         }
 
@@ -43,8 +38,8 @@ def call(body) {
 
 @NonCPS
 def jsonParse(String jsonText) {
-    final slurper = new groovy.json.JsonSlurper()
-    return new HashMap<>(slurper.parseText(jsonText))
+    slurper = new groovy.json.JsonSlurperClassic()
+    slurper.parseText(jsonText)
 }
 
 @NonCPS
