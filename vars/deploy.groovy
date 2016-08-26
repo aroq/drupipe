@@ -18,9 +18,11 @@ def call(body) {
 //            echo "Class: ${s.value.getClass()}"
             echo "Class: ${pipeline[i].getClass()}"
 
+            actionsList = pipeline[i].actionList
+
             params << executeStage(pipeline[i].name) {
                 p = params
-                actions = pipeline[i].actionList
+                s = pipeline[i]
             }
         }
 
