@@ -50,6 +50,6 @@ def call(name, body) {
     }
 }
 
-boolean isCollectionOrArray(object) {
+boolean isCollectionOrList(object) {
     object instanceof Collection || object instanceof List
 }
