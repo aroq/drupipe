@@ -45,17 +45,19 @@ def call(body) {
 def jsonParse(String jsonText) {
     slurper = new groovy.json.JsonSlurper()
     json = slurper.parseText(jsonText)
-    HashMap result = [:]
+    result = []
     for (item in json) {
 //        actions = []
 //        for (action in item.value) {
 //            actions << action
 //        }
-        result[item.key] = ['Config.perform']
+        result << new com.github.aroq.workflowlibs.Stage(name: 'init', actionList = ['Config.perform'])
+
     }
-    json = null
-    slurper = null
-    return new HashMap <> (result)
+//    json = null
+//    slurper = null
+//    return new HashMap <> (result)
+    result
 }
 
 @NonCPS
