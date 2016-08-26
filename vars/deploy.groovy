@@ -13,7 +13,8 @@ def call(body) {
         for (stage in pipeline) {
             params << executeStage(stage.key) {
                 p = params
-                actions = stage.value
+//                actions = stage.value
+                actions = ['Config.perform']
             }
 //            stage = null
         }
