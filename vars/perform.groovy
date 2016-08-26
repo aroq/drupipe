@@ -12,6 +12,10 @@ def call(body) {
                         [
                             action: 'Config.perform',
                             params: [param1: 'test2']
+                        ],
+                        [
+                            action: 'Operation.perform',
+                            params: [param1: 'test2']
                         ]
                     ],
                     'build': [
