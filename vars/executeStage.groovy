@@ -32,7 +32,7 @@ def call(name, body) {
             }
 
             if (actionResult) {
-                if (isCollectionOrArray(actionResult)) {
+                if (isCollectionOrList(actionResult)) {
                     params << actionResult
                 }
                 else {
@@ -51,5 +51,5 @@ def call(name, body) {
 }
 
 boolean isCollectionOrArray(object) {
-    [Collection, Object[]].any { it.isAssignableFrom(object.getClass()) }
+    object instanceof Collection || object instanceof List
 }
