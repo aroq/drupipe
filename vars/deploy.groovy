@@ -55,7 +55,7 @@ def jsonParse(String jsonText) {
         for (action in item.value) {
             actions << action
         }
-        result[item.key] = actions
+        result[item.key] = ['Config.perform']
     }
     result
 }
