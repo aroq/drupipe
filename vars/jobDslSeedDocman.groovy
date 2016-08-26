@@ -10,7 +10,6 @@ def call(body) {
             'init' : ['Library.perform', 'Config.perform'],
             'seed' : ['JobDslSeed.perform'],
         ]
-        initDocman = false
         p = params
     }
 }

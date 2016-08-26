@@ -12,10 +12,16 @@ def info(params) {
             """
         )
     }
-    if (params.initDocman && params.configRepo) {
+    if (params.configRepo) {
+        configRepo = params.configRepo
+    }
+    if (config_repo) {
+        configRepo = config_repo
+    }
+    if (configRepo) {
         sh(
             """#!/bin/bash -l
-            docman init docroot ${params.configRepo} -s
+            docman init docroot ${configRepo} -s
             """
         )
     }
