@@ -4,17 +4,25 @@ def call(body) {
     body.delegate = params
     body()
 
-    node {
-        checkout scm
-
-        params << executeStage('init') {
-            p = params
-            actions = ['Library.perform', 'Config.perform']
-        }
-
-        params << executeStage('seed') {
-            p = params
-            actions = ['JobDslSeed.perform']
-        }
+    executePipeline {
+        checkoutSCM = true
+        pipeline = [
+                'init' : ['Library.perform', 'Config.perform'],
+                'seed': ['JobDslSeed.perform'],
+        ]
     }
+
+//    node {
+//        checkout scm
+//
+//        params << executeStage('init') {
+//            p = params
+//            actions = ['Library.perform', 'Config.perform']
+//        }
+//
+//        params << executeStage('seed') {
+//            p = params
+//            actions = ['JobDslSeed.perform']
+//        }
+//    }
 }
