@@ -51,10 +51,10 @@ def jsonParse(String jsonText) {
     json = slurper.parseText(jsonText)
     result = [:]
     for (item in json) {
-        actions = []
-        for (action in item.value) {
-            actions << action
-        }
+//        actions = []
+//        for (action in item.value) {
+//            actions << action
+//        }
         result[item.key] = ['Config.perform']
     }
     result
