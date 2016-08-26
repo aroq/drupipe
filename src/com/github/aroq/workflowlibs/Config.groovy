@@ -3,7 +3,7 @@ package com.github.aroq.workflowlibs
 def perform(params) {
     def config = [:]
     if (params.configFileName) {
-        config = readGroovyConfig(configPath + '/' + params.configFileName)
+        config = readGroovyConfig(params.configFileName)
     }
     config.workspace = pwd()
     config << params
