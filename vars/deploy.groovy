@@ -16,7 +16,7 @@ def call(body) {
         for (s in pipeline) {
             params << executeStage(s.key) {
                 p = params
-                actions = s.value
+                actions = get_map_entries(s.value)
             }
         }
 
@@ -41,4 +41,9 @@ def call(body) {
 def jsonParse(String jsonText) {
     final slurper = new groovy.json.JsonSlurper()
     return new HashMap<>(slurper.parseText(jsonText))
+}
+
+@NonCPS
+List<List<Object>> get_map_entries(map) {
+    map.collect {k, v -> [k, v]}
 }
