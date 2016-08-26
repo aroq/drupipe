@@ -13,14 +13,16 @@ def call(body) {
         pipeline = jsonParse('{"init": ["Config.perform"], "build": ["Docman.deploy", "Docman.info"]}')
 
         for (s in pipeline) {
-            echo "Class: ${s.value.getClass()}"
+//            echo "Class: ${s.value.getClass()}"
             String stageName = s.key
-            echo "LIST CLASS: " + ["Docman.deploy", "Docman.info"].getClass()
+            ArrayList actionsList = s.value
+//            echo "LIST CLASS: " + ["Docman.deploy", "Docman.info"].getClass()
+            s = null
 
-//            params << executeStage(s.key) {
-//                p = params
-//                actions = s.value
-//            }
+            params << executeStage(s.key) {
+                p = params
+                actions = actionsList
+            }
         }
 
 //        params << executeStage('init') {
