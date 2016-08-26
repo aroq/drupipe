@@ -6,14 +6,7 @@ def call(body) {
 
     node {
         config = executePipeline {
-            pipeline = [
-                    'init' : [
-                                actions: 'Config.perform',
-                                params: [param1: 'test']
-                             ],
-//                    'build': ['Docman.deploy', 'Docman.info'],
-//                    'ops'  : ['Druflow.deployFlow']
-            ]
+            pipeline = ['init' : [[action: 'Config.perform', params: [param1: 'test2']]]]
             p = params
         }
         dump(config)

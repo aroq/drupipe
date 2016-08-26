@@ -35,14 +35,12 @@ def processPipeline(pipeline) {
     for (item in pipeline) {
         List<String> actions = []
 
-        if (item.value.getClass() == ArrayList) {
-            for (action in item.value) {
+        for (action in item.value) {
+            if (item.value.getClass == String) {
                 actions << action
             }
-        }
-        else {
-            for (action in item.value['actions']) {
-                actions << action
+            else {
+                actions << action.action
             }
         }
         result << new com.github.aroq.workflowlibs.Stage(name: item.key, actionList: actions)
