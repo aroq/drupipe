@@ -12,8 +12,7 @@ def call(body) {
     }
 
     pipeline = processPipeline(params.pipeline)
-
-    echo JsonOutput.prettyPrint(JsonOutput.toJson(pipeline))
+    jsonDump(pipeline)
 
     node {
         if (params.checkoutSCM) {

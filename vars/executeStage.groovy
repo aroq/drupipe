@@ -11,8 +11,6 @@ def call(name, body) {
 
     stage params.stage.name
 
-    echo "CLASS:" + params.stage.actionList.getClass()
-
     try {
         for (action in params.stage.actionList) {
             echo "Action class: ${action.getClass()}"
