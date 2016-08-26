@@ -44,7 +44,7 @@ def processPipeline(pipeline) {
                 actions << action.action
             }
         }
-        result << new com.github.aroq.workflowlibs.Stage(name: item.key, actionList: actions, params: i)
+        result << new com.github.aroq.workflowlibs.Stage(name: item.key, actionList: actions)
     }
     result
 }
