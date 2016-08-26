@@ -10,7 +10,7 @@ def call(name, body) {
     stage name
 
     try {
-//        for (action in params.actions) {
+        for (action in params.actions) {
 //            def values = action.split("\\.")
 //            def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${values[0]}", true, false )?.newInstance()
 //            def methodName = values[1]
@@ -20,7 +20,7 @@ def call(name, body) {
 //                params << actionResult
 //            }
 //            dump(params, "${action} action result")
-//        }
+        }
         params.remove('actions')
         params
     }
