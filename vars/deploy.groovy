@@ -18,9 +18,9 @@ def call(body) {
 //            echo "Class: ${s.value.getClass()}"
             echo "Class: ${pipeline[i].getClass()}"
 
-            params << executeStage('init') {
+            params << executeStage(pipeline[i].name) {
                 p = params
-                actions = ['Config.perform']
+                actions = pipeline[i].actionList
             }
         }
 
