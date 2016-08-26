@@ -11,7 +11,7 @@ def call(body) {
 //                'ops'  : ['Druflow.deployFlow']
 //        ]
         pipeline = jsonParse('{"init": ["Config.perform"], "build": ["Docman.deploy", "Docman.info"]}')
-//        echo "Pipeline class:${pipeline.getClass()}"
+        echo "Pipeline class:${pipeline.getClass()}"
 //
 //        for (s in pipeline) {
 //            echo "Class: ${s.value.getClass()}"
