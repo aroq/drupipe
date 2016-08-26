@@ -1,4 +1,4 @@
-package com.github.aroq.actions.workflowlibs
+package com.github.aroq.workflowlibs.actions
 
 def info(params) {
     echo "Requesting docman for config..."

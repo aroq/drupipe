@@ -1,4 +1,4 @@
-package com.github.aroq.actions.workflowlibs
+package com.github.aroq.workflowlibs.actions
 
 def perform(params) {
     jobDsl targets: [params.jobsPattern].join('\n'),
