@@ -36,7 +36,7 @@ def processPipeline(pipeline) {
         List<String> actions = []
 
         for (action in item.value) {
-            if (item.value.getClass() instanceof java.lang.String) {
+            if (action.getClass() == java.lang.String) {
                 actions << action
             }
             else {
