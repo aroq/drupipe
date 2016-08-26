@@ -15,16 +15,16 @@ def call(body) {
         for (s in pipeline) {
             echo "Class: ${s.value.getClass()}"
             String stageName = s.key
-            ArrayList actionsList = s.value
+//            ArrayList actionsList = s.value
 //            echo "LIST CLASS: " + ["Docman.deploy", "Docman.info"].getClass()
 //            s = null
 
-            params << executeStage(s.key) {
+//            actionList = null
+            params << executeStage(stageName) {
                 p = params
-                actions = actionsList
+                actions = ["Config.perform"]
             }
             s = null
-            actionList = null
             stageName = null
         }
 
