@@ -10,7 +10,7 @@ def call(body) {
 //                'build': ['Docman.deploy', 'Docman.info'],
 //                'ops'  : ['Druflow.deployFlow']
 //        ]
-        json = '{"a": 123, "b": "test"}'
+        json = jsonParse('{"a": 123, "b": "test"}')
 
         for (s in json) {
             echo s.key
@@ -44,6 +44,6 @@ def call(body) {
 
 @NonCPS
 def jsonParse(String jsonText) {
-    final slurper = new JsonSlurper()
+    final slurper = new groovy.json.JsonSlurper()
     return new HashMap<>(slurper.parseText(jsonText))
 }
