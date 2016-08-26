@@ -14,12 +14,12 @@ def call(name, body) {
             def values = action.split("\\.")
             def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${values[0]}", true, false )?.newInstance()
             def methodName = values[1]
-            dump(params, "${action} action params")
+//            dump(params, "${action} action params")
             actionResult = actionInstance."$methodName"(params)
             if (actionResult) {
-                params << actionResult
+//                params << actionResult
             }
-            dump(params, "${action} action result")
+//            dump(params, "${action} action result")
         }
         params.remove('actions')
         params
