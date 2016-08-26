@@ -52,5 +52,5 @@ def call(name, body) {
 }
 
 boolean isCollectionOrList(object) {
-    object instanceof Collection || object instanceof List
+    object instanceof java.util.Collection || object instanceof java.util.List
 }
