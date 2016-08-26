@@ -10,7 +10,7 @@ def call(body) {
 //                'build': ['Docman.deploy', 'Docman.info'],
 //                'ops'  : ['Druflow.deployFlow']
 //        ]
-        json = jsonParse('{"a": 123, "b": "test"}')
+        json = jsonParse('{"init": ["Config.perform"], "build": ["Docman.deploy", "Docman.info"]}')
 
         for (s in json) {
             echo s.key
