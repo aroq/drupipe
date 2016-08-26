@@ -50,11 +50,11 @@ def call(body) {
 def pipelineParse(pipeline) {
     List<com.github.aroq.workflowlibs.Stage> result = []
     for (item in pipeline) {
-//        actions = []
-//        for (action in item.value) {
-//            actions << action
-//        }
-        result << new com.github.aroq.workflowlibs.Stage(name: item.key, actionList: ['Config.perform'])
+        List<String> actions = []
+        for (action in item.value) {
+            actions << action
+        }
+        result << new com.github.aroq.workflowlibs.Stage(name: item.key, actionList: actions)
     }
     result
 }
