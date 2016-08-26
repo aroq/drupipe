@@ -5,12 +5,12 @@ def call(body) {
     body()
 
     node {
-        pipeline = [
-                'init' : ['Config.perform'],
-                'build': ['Docman.deploy', 'Docman.info'],
-                'ops'  : ['Druflow.deployFlow']
-        ]
-        params.pipeline = pipeline
+//        pipeline = [
+//                'init' : ['Config.perform'],
+//                'build': ['Docman.deploy', 'Docman.info'],
+//                'ops'  : ['Druflow.deployFlow']
+//        ]
+//        params.pipeline = pipeline
 
         executePipeline {
             p = params
