@@ -1,6 +1,6 @@
 package com.github.aroq.workflowlibs
 
-class Stage {
+class Stage implements Serializable {
     String name
     ArrayList actionList
 }
