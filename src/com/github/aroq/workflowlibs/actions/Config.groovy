@@ -9,7 +9,7 @@ def perform(params) {
     config << params
 
     if (config.configProvider == 'docman') {
-        def docman = new com.github.aroq.workflowlibs.Docman()
+        def docman = new com.github.aroq.workflowlibs.actions.Docman()
         config.initDocman = false
         docman.info(config)
     }
