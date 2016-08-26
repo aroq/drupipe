@@ -33,7 +33,7 @@ def call(body) {
 def processPipeline(pipeline) {
     List<com.github.aroq.workflowlibs.Stage> result = []
     for (item in pipeline) {
-        List<String> actions = []
+        List actions = []
 
         for (action in item.value) {
             if (action.getClass() == java.lang.String) {
