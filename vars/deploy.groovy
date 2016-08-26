@@ -54,8 +54,8 @@ def jsonParse(String jsonText) {
         result << new com.github.aroq.workflowlibs.Stage(name: 'init', actionList: ['Config.perform'])
 
     }
-//    json = null
-//    slurper = null
+    json = null
+    slurper = null
 //    return new HashMap <> (result)
     result
 }
