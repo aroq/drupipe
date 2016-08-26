@@ -6,10 +6,10 @@ def call(body) {
 
     if (params.p) {
         params << params.p
+        params.remove('p')
     }
-    params.remove('p')
 
-    pipeline = pipelineParse(params.pipeline)
+    pipeline = processPipeline(params.pipeline)
 
     node {
         for (int i = 0; i < pipeline.size(); i++) {
@@ -22,7 +22,7 @@ def call(body) {
 }
 
 @NonCPS
-def pipelineParse(pipeline) {
+def processPipeline(pipeline) {
     List<com.github.aroq.workflowlibs.Stage> result = []
     for (item in pipeline) {
         List<String> actions = []

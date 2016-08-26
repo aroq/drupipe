@@ -4,8 +4,10 @@ def call(name, body) {
     body.delegate = params
     body()
 
-    params << params.p
-    params.remove('p')
+    if (params.p) {
+        params << params.p
+        params.remove('p')
+    }
 
     stage params.stage.name
 
