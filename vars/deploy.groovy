@@ -10,7 +10,7 @@ def call(body) {
 //                'build': ['Docman.deploy', 'Docman.info'],
 //                'ops'  : ['Druflow.deployFlow']
 //        ]
-        pipeline = get_map_entries(jsonParse('{"init": ["Config.perform"], "build": ["Docman.deploy", "Docman.info"]}'))
+        pipeline = jsonParse('{"init": ["Config.perform"], "build": ["Docman.deploy", "Docman.info"]}')
 
 //        for (s in pipeline) {
         for (int i = 0; i < pipeline.size(); i++){
