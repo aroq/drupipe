@@ -38,7 +38,7 @@ def call(body) {
 
 @NonCPS
 def jsonParse(String jsonText) {
-    slurper = new groovy.json.JsonSlurperClassic()
+    slurper = new groovy.json.JsonSlurper()
     slurper.parseText(jsonText)
 }
 
