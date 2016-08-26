@@ -1,4 +1,4 @@
-package com.github.aroq.workflowlibs
+package com.github.aroq.actions.workflowlibs
 
 def deployFlow(params) {
     dump(params, 'Deploy Flow')
