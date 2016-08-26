@@ -5,7 +5,7 @@ def call(body) {
     body()
 
     node {
-        HashMap pipeline = [
+        pipeline = [
                 'init' : ['Config.perform'],
                 'build': ['Docman.deploy', 'Docman.info'],
                 'ops'  : ['Druflow.deployFlow']
