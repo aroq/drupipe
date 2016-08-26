@@ -15,6 +15,7 @@ def call(name, body) {
         for (action in params.stage.actionList) {
             dump(params << action.params, "${action.name} action params")
             echo "PWD: ${pwd()}"
+            // TODO: configure it:
             fileName = 'docroot/config/pipelines/actions/' + action.name + '.groovy'
             echo "Action file name to check: ${fileName}"
             if (fileExists(fileName)) {

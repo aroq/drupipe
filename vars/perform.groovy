@@ -18,13 +18,16 @@ def call(body) {
                         ],
                         [
                             action: 'Oper.perform',
-                            params: [param1: 'test2']
                         ]
                     ],
                     'build': [
                         [
                             action: 'Docman.deploy',
-                            params: [param1: 'test2']
+                        ],
+                    ],
+                    'ops': [
+                        [
+                            action: 'Druflow.deployFlow',
                         ],
                     ]
                 ]
