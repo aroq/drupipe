@@ -21,18 +21,18 @@ def call(body) {
 //            s = null
 //
 //            actionList = null
-//            params << executeStage(stageName) {
-//                p = params
-//                actions = ["Config.perform"]
-//            }
+            params << executeStage(stageName) {
+                p = params
+                actions = ["Config.perform"]
+            }
 //            s = null
 //            stageName = null
         }
 
-        params << executeStage('init') {
-            p = params
-            actions = ['Config.perform']
-        }
+//        params << executeStage('init') {
+//            p = params
+//            actions = ['Config.perform']
+//        }
 //
 //        params << executeStage('build') {
 //            p = params
