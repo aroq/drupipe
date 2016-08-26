@@ -50,7 +50,7 @@ def jsonParse(String jsonText) {
 //        for (action in item.value) {
 //            actions << action
 //        }
-        result << new com.github.aroq.workflowlibs.Stage(name: 'init', actionList: ['Config.perform'])
+        result << new com.github.aroq.workflowlibs.Stage(name: item.key, actionList: ['Config.perform'])
 
     }
     json = null
