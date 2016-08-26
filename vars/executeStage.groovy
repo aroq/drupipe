@@ -32,6 +32,7 @@ def call(name, body) {
             }
 
             if (actionResult) {
+                echo "Result type: ${actionResult.getClass()}"
                 if (isCollectionOrList(actionResult)) {
                     params << actionResult
                 }
