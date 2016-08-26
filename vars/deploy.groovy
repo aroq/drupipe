@@ -21,7 +21,7 @@ def call(body) {
 //            s = null
 //
 //            actionList = null
-            params << executeStage(stageName) {
+            params << executeStage('init') {
                 p = params
                 actions = ["Config.perform"]
             }
