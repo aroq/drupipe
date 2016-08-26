@@ -14,6 +14,9 @@ def call(body) {
 
         for (s in pipeline) {
             echo "Class: ${s.value.getClass()}"
+            String stageName = s.key
+            echo "LIST CLASS: " + ["Docman.deploy", "Docman.info"].getClass()
+
 //            params << executeStage(s.key) {
 //                p = params
 //                actions = s.value
