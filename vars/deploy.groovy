@@ -15,6 +15,7 @@ def call(body) {
         for (s in pipeline) {
             params << executeStage(s.key) {
                 p = params
+                echo "Class: ${s.value.getClass()}"
                 actions = s.value
             }
         }
