@@ -10,20 +10,15 @@ def call(body) {
 //                'build': ['Docman.deploy', 'Docman.info'],
 //                'ops'  : ['Druflow.deployFlow']
 //        ]
-        json = jsonParse('{"init": ["Config.perform"], "build": ["Docman.deploy", "Docman.info"]}')
+        pipeline = jsonParse('{"init": ["Config.perform"], "build": ["Docman.deploy", "Docman.info"]}')
 
-        for (s in json) {
-            echo s.key
+
+        for (s in pipeline) {
+            params << executeStage(s.key) {
+                p = params
+                actions = s.value
+            }
         }
-
-//        for (s in pipeline) {
-//            params << executeStage(s.key) {
-//                p = params
-//                actions = stage.value
-//                actions = ['Config.perform']
-//            }
-//            stage = null
-//        }
 
 //        params << executeStage('init') {
 //            p = params
