@@ -20,7 +20,7 @@ def call(name, body) {
             def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${action.name}", true, false )?.newInstance()
 //            def methodName = values[1]
             dump(params, "${action.name} action params")
-            actionResult = actionInstance."$action.methodName"(params)
+            actionResult = actionInstance."$action.methodName"(params << action.params)
             if (actionResult) {
                 params << actionResult
             }

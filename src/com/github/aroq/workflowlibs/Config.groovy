@@ -14,6 +14,8 @@ def perform(params) {
         docman.info(config)
     }
 
+    echo "Pass param test: ${params.param1}"
+
     config
 }
 
