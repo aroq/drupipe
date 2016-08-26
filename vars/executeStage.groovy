@@ -14,7 +14,7 @@ def call(name, body) {
     try {
         for (action in params.stage.actionList) {
             dump(params, "${action.name} action params")
-            fileName = 'docroot/config/pipelines/' + action.name
+            fileName = 'docroot/config/pipelines/actions/' + action.name
             if (fileExists(fileName)) {
                 actionFile = load(fileName)
                 actionResult = actionFile."$action.methodName"

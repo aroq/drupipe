@@ -14,7 +14,7 @@ def call(body) {
                             params: [param1: 'test2']
                         ],
                         [
-                            action: 'Operation.perform',
+                            action: 'Oper.perform',
                             params: [param1: 'test2']
                         ]
                     ],
