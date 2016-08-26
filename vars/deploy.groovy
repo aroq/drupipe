@@ -13,7 +13,7 @@ def call(body) {
         pipeline = jsonParse('{"init": ["Config.perform"], "build": ["Docman.deploy", "Docman.info"]}')
 
         for (s in pipeline) {
-//            echo "Class: ${s.value.getClass()}"
+            echo "Class: ${s.value.getClass()}"
             String stageName = s.key
             ArrayList actionsList = s.value
 //            echo "LIST CLASS: " + ["Docman.deploy", "Docman.info"].getClass()
@@ -23,6 +23,9 @@ def call(body) {
                 p = params
                 actions = actionsList
             }
+            s = null
+            actionList = null
+            stageName = null
         }
 
 //        params << executeStage('init') {
@@ -45,7 +48,16 @@ def call(body) {
 @NonCPS
 def jsonParse(String jsonText) {
     slurper = new groovy.json.JsonSlurper()
-    slurper.parseText(jsonText)
+    json = slurper.parseText(jsonText)
+    result = [:]
+    for (item in json) {
+        actions = []
+        for (action in item.value) {
+            actions << action
+        }
+        result[item.key] = actions
+    }
+    result
 }
 
 @NonCPS
