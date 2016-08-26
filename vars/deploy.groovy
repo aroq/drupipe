@@ -60,7 +60,7 @@ def jsonParse(String jsonText) {
     }
     json = null
     slurper = null
-    result
+    return new HashMap <> (result)
 }
 
 @NonCPS
