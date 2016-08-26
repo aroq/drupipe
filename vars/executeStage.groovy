@@ -15,6 +15,7 @@ def call(name, body) {
 
     try {
         for (action in params.stage.actionList) {
+            echo "Action: ${action}"
             def values = action.split("\\.")
             def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${values[0]}", true, false )?.newInstance()
             def methodName = values[1]
