@@ -5,20 +5,26 @@ def call(body) {
     body()
 
     node {
-        HashMap pipeline = [
-                'init' : ['Config.perform'],
-                'build': ['Docman.deploy', 'Docman.info'],
-                'ops'  : ['Druflow.deployFlow']
-        ]
-        for (s in pipeline) {
-            params << executeStage('init') {
-                p = params
-//                actions = stage.value
-                actions = ['Config.perform']
-            }
-//            stage = null
+//        HashMap pipeline = [
+//                'init' : ['Config.perform'],
+//                'build': ['Docman.deploy', 'Docman.info'],
+//                'ops'  : ['Druflow.deployFlow']
+//        ]
+        json = '{"a": 123, "b": "test"}'
+
+        for (s in json) {
+            echo s.key
         }
-//        pipeline = null
+
+//        for (s in pipeline) {
+//            params << executeStage(s.key) {
+//                p = params
+//                actions = stage.value
+//                actions = ['Config.perform']
+//            }
+//            stage = null
+//        }
+
 //        params << executeStage('init') {
 //            p = params
 //            actions = ['Config.perform']
@@ -34,4 +40,10 @@ def call(body) {
 //            actions = ['Druflow.deployFlow']
 //        }
     }
+}
+
+@NonCPS
+def jsonParse(String jsonText) {
+    final slurper = new JsonSlurper()
+    return new HashMap<>(slurper.parseText(jsonText))
 }
