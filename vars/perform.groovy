@@ -11,7 +11,7 @@ def call(body) {
                     'init': [
                         [
                             action: 'Config.perform',
-                            params: [param1: 'test2']
+                            params: [configProvider: 'docman']
                         ],
                         [
                             action: 'Oper.perform',
