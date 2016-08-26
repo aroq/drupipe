@@ -16,16 +16,15 @@ def call(name, body) {
             def methodName = values[1]
 //            dump(params, "${action} action params")
             actionResult = actionInstance."$methodName"(params)
-//            if (actionResult) {
-//                params << actionResult
-//            }
+            if (actionResult) {
+                params << actionResult
+            }
 //            dump(params, "${action} action result")
         }
         params.remove('actions')
         params
     }
     catch (err) {
-        echo "Action ${action} is not exists or error in action."
         echo err.toString()
         throw err
     }
