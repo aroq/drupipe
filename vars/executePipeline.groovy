@@ -4,7 +4,9 @@ def call(body) {
     body.delegate = params
     body()
 
-    params << params.p
+    if (params.p) {
+        params << params.p
+    }
     params.remove('p')
 
     pipeline = pipelineParse(params.pipeline)
