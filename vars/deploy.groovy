@@ -11,13 +11,9 @@ def call(body) {
 //                'ops'  : ['Druflow.deployFlow']
 //        ]
         pipeline = jsonParse('{"init": ["Config.perform"], "build": ["Docman.deploy", "Docman.info"]}')
-        echo "Pipeline class:${pipeline.getClass()}"
 
-        for(int i = 0; i < pipeline.size(); i++) {
-            echo "Class: ${pipeline[i].getClass()}"
-
+        for (int i = 0; i < pipeline.size(); i++) {
             params.stage = pipeline[i]
-
             params << executeStage(pipeline[i].name) {
                 p = params
             }
@@ -44,7 +40,7 @@ def call(body) {
 def jsonParse(String jsonText) {
     slurper = new groovy.json.JsonSlurper()
     json = slurper.parseText(jsonText)
-    result = []
+    List<com.github.aroq.workflowlibs.Stage> result = []
     for (item in json) {
 //        actions = []
 //        for (action in item.value) {
@@ -55,11 +51,6 @@ def jsonParse(String jsonText) {
     }
     json = null
     slurper = null
-//    return new HashMap <> (result)
     result
 }
 
-@NonCPS
-List<List<Object>> get_map_entries(map) {
-    map.collect {k, v -> [k, v]}
-}
