@@ -21,7 +21,12 @@ def call(name, body) {
                 actionResult = actionFile."$action.methodName"
             }
             else {
-                def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.actions.${action.name}", true, false )?.newInstance()
+                try {
+                    def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.actions.${action.name}", true, false )?.newInstance()
+                }
+                catch (err) {
+                    echo err.toString()
+                }
                 actionResult = actionInstance."$action.methodName"(params << action.params)
             }
 
