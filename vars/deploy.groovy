@@ -57,6 +57,8 @@ def jsonParse(String jsonText) {
 //        }
         result[item.key] = ['Config.perform']
     }
+    json = null
+    slurper = null
     result
 }
 
