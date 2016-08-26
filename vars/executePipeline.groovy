@@ -22,6 +22,7 @@ def call(body) {
             }
         }
     }
+    params
 }
 
 @NonCPS
