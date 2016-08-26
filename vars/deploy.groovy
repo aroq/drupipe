@@ -10,13 +10,17 @@ def call(body) {
 //                'build': ['Docman.deploy', 'Docman.info'],
 //                'ops'  : ['Druflow.deployFlow']
 //        ]
-        pipeline = jsonParse('{"init": ["Config.perform"], "build": ["Docman.deploy", "Docman.info"]}')
+        pipeline = get_map_entries(jsonParse('{"init": ["Config.perform"], "build": ["Docman.deploy", "Docman.info"]}'))
 
 
-        for (s in pipeline) {
-            params << executeStage(s.key) {
+//        for (s in pipeline) {
+        for (int i = 0; i < entries.size(); i++){
+            String key = pipeline.get(i).key
+            String value =  pipeline.get(i).value
+            echo "Value ${value}"
+            params << executeStage(key) {
                 p = params
-                actions = get_map_entries(s.value)
+                actions = get_map_entries(value)
             }
         }
 
