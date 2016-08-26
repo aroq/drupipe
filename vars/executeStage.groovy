@@ -17,7 +17,7 @@ def call(name, body) {
 //            dump(params, "${action} action params")
             actionResult = actionInstance."$methodName"(params)
 //            if (actionResult) {
-                params << actionResult
+//                params << actionResult
 //            }
 //            dump(params, "${action} action result")
         }
