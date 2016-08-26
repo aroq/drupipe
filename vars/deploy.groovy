@@ -10,8 +10,8 @@ def call(body) {
                 'build': ['Docman.deploy', 'Docman.info'],
                 'ops'  : ['Druflow.deployFlow']
         ]
-        for (stage in pipeline) {
-            params << executeStage(stage.key) {
+        for (s in pipeline) {
+            params << executeStage(s.key) {
                 p = params
 //                actions = stage.value
                 actions = ['Config.perform']
