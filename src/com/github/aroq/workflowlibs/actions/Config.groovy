@@ -10,7 +10,6 @@ def perform(params) {
 
     if (config.configProvider == 'docman') {
         def docman = new com.github.aroq.workflowlibs.actions.Docman()
-        config.initDocman = true
         docman.info(config)
     }
 
