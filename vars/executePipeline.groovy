@@ -1,4 +1,4 @@
-import groovy.json.JsonOutput.*
+import static groovy.json.JsonOutput
 
 def call(body) {
     def params = [:]
