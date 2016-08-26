@@ -23,7 +23,6 @@ def call(name, body) {
             }
             dump(params, "${action} action result")
         }
-        params.remove('actions')
         params.remove('stage')
         params
     }
