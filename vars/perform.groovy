@@ -11,7 +11,10 @@ def call(body) {
                     'init': [
                         [
                             action: 'Config.perform',
-                            params: [configProvider: 'docman', configFileName: 'docroot/config/docroot.config']
+                            params: [
+                                configProvider: 'docman',
+                                configFileName: 'docroot/config/docroot.config'
+                            ]
                         ],
                         [
                             action: 'Oper.perform',
@@ -21,10 +24,6 @@ def call(body) {
                     'build': [
                         [
                             action: 'Docman.deploy',
-                            params: [param1: 'test2']
-                        ],
-                        [
-                            action: 'Docman.info',
                             params: [param1: 'test2']
                         ],
                     ]
