@@ -56,6 +56,7 @@ def pipelineParse(pipeline) {
 //        }
         result << new com.github.aroq.workflowlibs.Stage(name: item.key, actionList: ['Config.perform'])
     }
+    result
 }
 
 @NonCPS
