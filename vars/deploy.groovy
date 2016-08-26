@@ -11,6 +11,7 @@ def call(body) {
 //                'ops'  : ['Druflow.deployFlow']
 //        ]
         pipeline = jsonParse('{"init": ["Config.perform"], "build": ["Docman.deploy", "Docman.info"]}')
+        echo "Pipeline class:${pipeline.getClass()}"
 
         for (s in pipeline) {
             echo "Class: ${s.value.getClass()}"
@@ -49,7 +50,7 @@ def call(body) {
 def jsonParse(String jsonText) {
     slurper = new groovy.json.JsonSlurper()
     json = slurper.parseText(jsonText)
-    result = [:]
+    HashMap result = [:]
     for (item in json) {
 //        actions = []
 //        for (action in item.value) {
