@@ -2,16 +2,20 @@ package com.github.aroq.workflowlibs.actions
 
 def perform(params) {
     def config = [:]
-    if (params.configFileName) {
-        config = readGroovyConfig(params.configFileName)
-    }
     config.workspace = pwd()
+
     config << params
 
     if (config.configProvider == 'docman') {
         def docman = new com.github.aroq.workflowlibs.actions.Docman()
         docman.info(config)
     }
+
+    if (params.configFileName) {
+        config = readGroovyConfig(params.configFileName)
+    }
+
+    config << params
 
     config
 }
