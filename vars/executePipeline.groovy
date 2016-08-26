@@ -1,3 +1,5 @@
+import groovy.json.JsonOutput.*
+
 def call(body) {
     def params = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
@@ -10,6 +12,8 @@ def call(body) {
     }
 
     pipeline = processPipeline(params.pipeline)
+
+    echo prettyPrint(toJson(pipeline))
 
     node {
         if (params.checkoutSCM) {
@@ -30,7 +34,8 @@ def processPipeline(pipeline) {
     List<com.github.aroq.workflowlibs.Stage> result = []
     for (item in pipeline) {
         List<String> actions = []
-        if (item.value.getClass == ArrayList) {
+
+        if (item.value.getClass() == ArrayList) {
             for (action in item.value) {
                 actions << action
             }
