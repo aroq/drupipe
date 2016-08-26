@@ -32,7 +32,12 @@ def call(name, body) {
             }
 
             if (actionResult) {
-                params << actionResult
+                if (isCollectionOrArray(actionResult)) {
+                    params << actionResult
+                }
+                else {
+                    params << ["${action.name}.${action.methodName}": actionResult]
+                }
             }
             dump(params, "${action.name} action result")
         }
@@ -43,4 +48,8 @@ def call(name, body) {
         echo err.toString()
         throw err
     }
+}
+
+boolean isCollectionOrArray(object) {
+    [Collection, Object[]].any { it.isAssignableFrom(object.getClass()) }
 }
