@@ -11,7 +11,7 @@ def call(body) {
                 'ops'  : ['Druflow.deployFlow']
         ]
         for (s in pipeline) {
-            params << executeStage(s.key) {
+            params << executeStage('init') {
                 p = params
 //                actions = stage.value
                 actions = ['Config.perform']
