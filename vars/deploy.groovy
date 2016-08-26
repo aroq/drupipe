@@ -13,16 +13,13 @@ def call(body) {
         pipeline = jsonParse('{"init": ["Config.perform"], "build": ["Docman.deploy", "Docman.info"]}')
         echo "Pipeline class:${pipeline.getClass()}"
 
-//        for (s in pipeline) {
         for(int i = 0; i < pipeline.size(); i++) {
-//            echo "Class: ${s.value.getClass()}"
             echo "Class: ${pipeline[i].getClass()}"
 
-            params.ss = pipeline[i]
+            params.stage = pipeline[i]
 
             params << executeStage(pipeline[i].name) {
                 p = params
-//                s = pipeline[i]
             }
         }
 
