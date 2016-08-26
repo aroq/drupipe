@@ -8,24 +8,22 @@ def call(body) {
         config = executePipeline {
             pipeline =
                 [
-                        'init':
-                                [
-                                        [
-                                                action: 'Config.perform',
-                                                params: [param1: 'test2']
-                                        ]
-                                ],
-                        'build':
-                                [
-                                        [
-                                                action: 'Docman.deploy',
-                                                params: [param1: 'test2']
-                                        ],
-                                        [
-                                                action: 'Docman.info',
-                                                params: [param1: 'test2']
-                                        ],
-                                ]
+                    'init': [
+                        [
+                            action: 'Config.perform',
+                            params: [param1: 'test2']
+                        ]
+                    ],
+                    'build': [
+                        [
+                            action: 'Docman.deploy',
+                            params: [param1: 'test2']
+                        ],
+                        [
+                            action: 'Docman.info',
+                            params: [param1: 'test2']
+                        ],
+                    ]
                 ]
             p = params
         }

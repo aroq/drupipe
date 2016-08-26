@@ -16,7 +16,7 @@ def call(name, body) {
     try {
         for (action in params.stage.actionList) {
             echo "Action class: ${action.getClass()}"
-            def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.${action.name}", true, false )?.newInstance()
+            def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.actions.${action.name}", true, false )?.newInstance()
             dump(params, "${action.name} action params")
             actionResult = actionInstance."$action.methodName"(params << action.params)
             if (actionResult) {
