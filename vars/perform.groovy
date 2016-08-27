@@ -10,32 +10,6 @@ def call(body) {
                 [
                     'init': [
                         [
-                            action: 'Source.add',
-                            params: [
-                                source: [
-                                    name: 'docmanDocroot',
-                                    type: 'docmanDocroot',
-                                    path: 'docroot',
-                                ]
-                            ]
-                        ],
-                        [
-                            action: 'Config.perform',
-                            params: [
-                                configProviders: [
-                                    action: 'Source.loadConfig',
-                                    params: [
-                                        sourceName: 'docmanDocroot',
-                                        configType: 'groovy',
-                                        configPath: 'config/docroot.config'
-                                    ]
-                                ]
-                            ]
-                        ],
-                        [
-                            action: 'Docman.info',
-                        ],
-                        [
                             action: 'Oper.perform',
                         ]
                     ],

@@ -20,7 +20,7 @@ def call(body) {
         }
         for (int i = 0; i < pipeline.size(); i++) {
             params.stage = pipeline[i]
-            params << executeStage(pipeline[i]) {
+            params << executeActionList(pipeline[i]) {
                 p = params
             }
         }
