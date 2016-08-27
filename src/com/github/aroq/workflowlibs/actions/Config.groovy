@@ -8,24 +8,19 @@ def perform(params) {
     config << params
 
     def providers = []
-    providers << [action: 'Library.perform', params: []]
+    source = [name: 'library', type: 'git', path: 'library', url: 'https://github.com/aroq/jenkins-pipeline-library.git', branch: 'master']
+    providers << [action: 'Source.perform', params: [source: source]]
     providers << [action: 'GroovyFileConfig.perform', params: [configFileName: 'library/config/config.groovy']]
     providers << params.configProviders
+    jsonDump(providers, 'config providers')
 
-    jsonDump(providers, 'providers')
-
-    dump(config, "before action list")
     for (int i = 0; i < providers.size(); i++) {
         action = utils.processPipelineAction(providers[i])
-        dump(config, "before action list" + i.toString())
         params << executeAction(action) {
             p = config
         }
         config << params
-        dump(config, "after action list" + i.toString())
     }
-    dump(config, "after action list")
-    dump(config, "before return")
 
     config
 }

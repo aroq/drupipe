@@ -51,3 +51,28 @@ def deploy(params) {
         """
     )
 }
+
+def init(params) {
+    echo "Docman init"
+    def flag = ''
+    if (force == 1) {
+        flag = '-f'
+    }
+    if (params.configRepo) {
+        configRepo = params.configRepo
+    }
+    if (config_repo) {
+        configRepo = config_repo
+    }
+    if (configRepo) {
+        sh(
+            """#!/bin/bash -l
+            docman init ${params.dir} ${configRepo} -s
+            """
+        )
+        params.dir
+    }
+    else {
+        null
+    }
+}
