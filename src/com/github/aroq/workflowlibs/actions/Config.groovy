@@ -12,11 +12,8 @@ def perform(params) {
         action = utils.processPipelineAction([
             action: 'Docman.info',
             params: [
-                configProvider: 'docman',
-                configFileName: 'docroot/config/docroot.config'
             ]
-        ]
-        )
+        ])
         params << executeAction(action) {
             p = params
         }
