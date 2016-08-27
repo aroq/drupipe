@@ -25,10 +25,8 @@ def call(Action action, body) {
         }
         else {
             try {
-                echo "Executing action: ${action.name} - start"
                 def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.actions.${action.name}", true, false )?.newInstance()
                 actionResult = actionInstance."$action.methodName"(params << action.params)
-                echo "Executing action: ${action.name} - end"
             }
             catch (err) {
                 echo err.toString()

@@ -1,9 +1,7 @@
 package com.github.aroq.workflowlibs.actions
 
 def load(params) {
-    echo "SourceConfig: start"
     configFilePath = sourcePath(params, params.sourceName, params.configPath)
-    echo "SourceConfig: Config file path: ${configFilePath}"
     utils = new com.github.aroq.workflowlibs.Utils()
 
     if (params.configType == 'groovy') {
