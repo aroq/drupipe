@@ -32,6 +32,7 @@ def call(Action action, body) {
             }
             catch (err) {
                 echo err.toString()
+                throw err
             }
         }
 
