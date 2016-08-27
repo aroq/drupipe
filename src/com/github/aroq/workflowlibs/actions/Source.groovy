@@ -6,9 +6,10 @@ def add(params) {
     dump(params, "source start")
     switch (source.type) {
         case 'git':
-            result = dir(params.source.path) {
-                git url: params.source.url, branch: params.source.branch
+            dir(source.path) {
+                git url: source.url, branch: source.branch
             }
+            result = source.path
             break
 
         case 'dir':
