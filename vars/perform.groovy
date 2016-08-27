@@ -12,7 +12,7 @@ def call(body) {
                         [
                             action: 'Config.perform',
                             params: [
-                                configProvider: 'docman',
+                                configProviders: [[name: 'docman'], [name: 'groovyFile', params: [configFileName: 'docroot/config/docroot.config']]],
                                 configFileName: 'docroot/config/docroot.config'
                             ]
                         ],
@@ -33,7 +33,7 @@ def call(body) {
                 ]
             p = params
         }
-        dump(config)
+        dump(config, 'pipeline result')
     }
 }
 
