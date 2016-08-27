@@ -10,6 +10,9 @@ def call(body) {
                 [
                     'init': [
                         [
+                            action: 'DocmanConfig.perform',
+                        ],
+                        [
                             action: 'Oper.perform',
                         ]
                     ],
