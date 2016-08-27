@@ -8,11 +8,13 @@ def perform(params) {
 
     config << params
 
-    for (int i = 0; i < params.configProviders.size(); i++) {
-        if (configProviders[i].name == 'docman') {
-            action = utils.processPipelineAction([action: 'Docman.info'])
-            params << executeAction(action) {
-                p = params
+    if (params.configProviders) {
+        for (int i = 0; i < params.configProviders.size(); i++) {
+            if (params.configProviders[i].name == 'docman') {
+                action = utils.processPipelineAction([action: 'Docman.info'])
+                params << executeAction(action) {
+                    p = params
+                }
             }
         }
     }

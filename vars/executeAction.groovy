@@ -20,6 +20,7 @@ def call(Action action, body) {
         // TODO: configure it:
         fileName = 'docroot/config/pipelines/actions/' + action.name + '.groovy'
         echo "Action file name to check: ${fileName}"
+//        def actionResult = null
         if (fileExists(fileName)) {
             actionFile = load(fileName)
             actionResult = actionFile."$action.methodName"(params << action.params)
