@@ -9,11 +9,7 @@ def perform(params) {
     config << params
 
     if (config.configProvider == 'docman') {
-        action = utils.processPipelineAction([
-            action: 'Docman.info',
-            params: [
-            ]
-        ])
+        action = utils.processPipelineAction([action: 'Docman.info'])
         params << executeAction(action) {
             p = params
         }
