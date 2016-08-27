@@ -17,12 +17,12 @@ def perform(params) {
         action = utils.processPipelineAction(providers[i])
         dump(config, "before action list" + i.toString())
         params << executeAction(action) {
-            p = params
+            p = config
         }
+        config << params
         dump(config, "after action list" + i.toString())
     }
     dump(config, "after action list")
-    config << params
     dump(config, "before return")
 
     config
