@@ -9,8 +9,8 @@ def perform(params) {
     config << params
 
     def providers = []
-    providers << [action: 'Library.perform', params: [configFileName: 'library/config/docroot.config']]
-    providers << [action: 'GroovyFileConfig.perform', params: [configFileName: 'library/config/docroot.config']]
+    providers << [action: 'Library.perform', params: []]
+    providers << [action: 'GroovyFileConfig.perform', params: [configFileName: 'library/config/config.groovy']]
     providers << params.configProviders
 
     for (int i = 0; i < providers.size(); i++) {
