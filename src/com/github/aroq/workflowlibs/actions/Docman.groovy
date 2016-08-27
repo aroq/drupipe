@@ -7,7 +7,7 @@ def info(params) {
             """#!/bin/bash -l
             if [ "${force}" == "1" ]; then
               FLAG="-f"
-              rm -fR docroot
+              rm -fR ${params.docrootDir}
             fi
             """
         )
@@ -21,13 +21,13 @@ def info(params) {
     if (configRepo) {
         sh(
             """#!/bin/bash -l
-            docman init docroot ${configRepo} -s
+            docman init ${params.docrootDir} ${configRepo} -s
             """
         )
     }
     sh(
         """#!/bin/bash -l
-        cd docroot
+        cd ${params.docrootDir}
         docman info full config.json
         """
     )
@@ -43,9 +43,9 @@ def deploy(params) {
     sh(
         """#!/bin/bash -l
         if [ "${force}" == "1" ]; then
-          rm -fR docroot
+          rm -fR ${params.docrootDir}
         fi
-        docman init docroot ${config_repo} -s
+        docman init ${params.docrootDir} ${config_repo} -s
         cd docroot
         docman deploy git_target ${projectName} branch ${version} ${flag}
         """

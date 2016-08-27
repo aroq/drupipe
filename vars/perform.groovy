@@ -22,8 +22,14 @@ def call(body) {
                         [
                             action: 'Config.perform',
                             params: [
-                                configProviders: [action: 'SourceConfig.load', params: [sourceName: 'docmanDocroot', configType: 'groovy', configPath: 'config/docroot.config']]
-//                                configProviders: [action: 'GroovyFileConfig.load', params: [configFileName: 'docroot/config/docroot.config']],
+                                configProviders: [
+                                    action: 'SourceConfig.load',
+                                    params: [
+                                        sourceName: 'docmanDocroot',
+                                        configType: 'groovy',
+                                        configPath: 'config/docroot.config'
+                                    ]
+                                ]
                             ]
                         ],
                         [
