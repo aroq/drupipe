@@ -12,36 +12,11 @@ def call(name, body) {
     stage params.stage.name
 
     try {
-        for (action in params.stage.actionList) {
-            dump(params << action.params, "${action.name} action params")
-            echo "PWD: ${pwd()}"
-            // TODO: configure it:
-            fileName = 'docroot/config/pipelines/actions/' + action.name + '.groovy'
-            echo "Action file name to check: ${fileName}"
-            if (fileExists(fileName)) {
-                actionFile = load(fileName)
-                actionResult = actionFile."$action.methodName"(params << action.params)
+        for (a in params.stage.actionList) {
+            params << executeAction {
+                action = a
+                p = params
             }
-            else {
-                try {
-                    def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.actions.${action.name}", true, false )?.newInstance()
-                    actionResult = actionInstance."$action.methodName"(params << action.params)
-                }
-                catch (err) {
-                    echo err.toString()
-                }
-            }
-
-            if (actionResult) {
-                echo "Result type: ${actionResult.getClass()}"
-                if (isCollectionOrList(actionResult)) {
-                    params << actionResult
-                }
-                else {
-                    params << ["${action.name}.${action.methodName}": actionResult]
-                }
-            }
-            dump(params, "${action.name} action result")
         }
         params.remove('stage')
         params
