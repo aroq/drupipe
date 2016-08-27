@@ -1,6 +1,6 @@
 package com.github.aroq.workflowlibs.actions
 
-def perform(params) {
+def load(params) {
     echo "SourceConfig: start"
     configFilePath = sourcePath(params, params.sourceName, params.configPath)
     echo "SourceConfig: Config file path: ${configFilePath}"
