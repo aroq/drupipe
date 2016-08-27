@@ -1,6 +1,6 @@
 package com.github.aroq.workflowlibs.actions
 
-def perform(params) {
+def add(params) {
     def source = params.source
     def result
     switch (source.type) {
@@ -11,11 +11,11 @@ def perform(params) {
             break
 
         case 'dir':
-            result = source.dir
+            result = source.path
             break
 
         case 'docmanDocroot':
-            result = executeAction(utils.processPipelineAction([action: 'Docman.init', params: [dir: 'docroot']])) {
+            result = executeAction(utils.processPipelineAction([action: 'Docman.init', params: [path: 'docroot']])) {
                 p = params
             }
             break
