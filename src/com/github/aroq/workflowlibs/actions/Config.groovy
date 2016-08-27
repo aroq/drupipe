@@ -4,9 +4,6 @@ def perform(params) {
     utils = new com.github.aroq.workflowlibs.Utils()
 
     def config = [:]
-    config.workspace = pwd()
-
-    config << params
 
     def providers = []
     providers << [action: 'Library.perform', params: []]
@@ -22,6 +19,7 @@ def perform(params) {
         }
     }
 
+    config.workspace = pwd()
     config << params
     config
 }
