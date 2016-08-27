@@ -1,6 +1,6 @@
 package com.github.aroq.workflowlibs.actions
 
-def perform(params) {
+def load(params) {
     if (params.configFileName) {
         params << readGroovyConfig(params.configFileName)
     }

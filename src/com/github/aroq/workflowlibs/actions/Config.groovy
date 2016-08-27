@@ -10,7 +10,7 @@ def perform(params) {
     def providers = []
     source = [name: 'library', type: 'git', path: 'library', url: 'https://github.com/aroq/jenkins-pipeline-library.git', branch: 'master']
     providers << [action: 'Source.add', params: [source: source]]
-    providers << [action: 'GroovyFileConfig.perform', params: [configFileName: sourcePath(params, 'library', 'config/config.groovy')]]
+    providers << [action: 'SourceConfig.load', params: [sourceName: 'library', type: 'groovy', path: 'config/config.groovy']]
     providers << params.configProviders
     jsonDump(providers, 'config providers')
 
