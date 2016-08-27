@@ -10,7 +10,7 @@ def perform(params) {
 
     if (config.configProvider == 'docman') {
         action = utils.processPipelineAction([
-            action: 'Config.perform',
+            action: 'Docman.info',
             params: [
                 configProvider: 'docman',
                 configFileName: 'docroot/config/docroot.config'
@@ -20,8 +20,6 @@ def perform(params) {
         params << executeAction(action) {
             p = params
         }
-//        def docman = new com.github.aroq.workflowlibs.actions.Docman()
-//        docman.info(config)
     }
 
     if (params.configFileName) {
