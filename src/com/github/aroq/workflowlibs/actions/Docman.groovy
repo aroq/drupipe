@@ -67,7 +67,7 @@ def init(params) {
     if (configRepo) {
         sh(
             """#!/bin/bash -l
-            docman init ${params.dir} ${configRepo} -s
+            docman init ${params.path} ${configRepo} -s
             """
         )
         params.dir
