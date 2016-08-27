@@ -9,6 +9,8 @@ def perform(params) {
     config << params
 
     if (params.configProviders) {
+        echo "Config providers class: ${params.configProviders.getClass()}"
+        echo "Config providers size: ${params.configProviders.size()}"
         for (int i = 0; i < params.configProviders.size(); i++) {
             echo "test"
             action = utils.processPipelineAction(params.configProviders[i])

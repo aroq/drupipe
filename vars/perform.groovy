@@ -12,7 +12,7 @@ def call(body) {
                         [
                             action: 'Config.perform',
                             params: [
-                                configProviders: [[action: 'docman'], [action: 'GroovyFileConfig', params: [configFileName: 'docroot/config/docroot.config']]],
+                                configProviders: [[action: 'Docman.info'], [action: 'GroovyFileConfig.perform', params: [configFileName: 'docroot/config/docroot.config']]],
                                 configFileName: 'docroot/config/docroot.config'
                             ]
                         ],
