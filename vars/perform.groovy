@@ -15,7 +15,7 @@ def call(body) {
                         [
                             action: 'Config.perform',
                             params: [
-                                configProviders: [action: 'GroovyFileConfig.perform', params: [configFileName: 'docroot/config/docroot.config']],
+                                configProviders: [action: 'GroovyFileConfig.load', params: [configFileName: 'docroot/config/docroot.config']],
                             ]
                         ],
                         [
