@@ -1,4 +1,4 @@
-def call(action, body) {
+def call(Action action, body) {
     def params = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = params

@@ -1,4 +1,4 @@
-def call(name, body) {
+def call(Stage stageInstance, body) {
     def params = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = params
@@ -9,15 +9,14 @@ def call(name, body) {
         params.remove('p')
     }
 
-    stage params.stage.name
+    stage stageInstance.name
 
     try {
-        for (action in params.stage.actionList) {
+        for (action in stageInstance.actionList) {
             params << executeAction(action) {
                 p = params
             }
         }
-        params.remove('stage')
         params
     }
     catch (err) {
