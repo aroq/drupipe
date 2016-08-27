@@ -12,9 +12,8 @@ def call(name, body) {
     stage params.stage.name
 
     try {
-        for (a in params.stage.actionList) {
-            params << executeAction {
-                action = a
+        for (action in params.stage.actionList) {
+            params << executeAction(action) {
                 p = params
             }
         }

@@ -1,4 +1,4 @@
-def call(name, body) {
+def call(action, body) {
     def params = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = params
@@ -10,7 +10,6 @@ def call(name, body) {
     }
 
     try {
-        action = params.action
         dump(params << action.params, "${action.name} action params")
         echo "PWD: ${pwd()}"
         // TODO: configure it:
