@@ -1,6 +1,4 @@
-import com.github.aroq.workflowlibs.Stage
-
-def call(Stage stageInstance, body) {
+def call(actionList, body) {
     def params = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = params
@@ -11,10 +9,8 @@ def call(Stage stageInstance, body) {
         params.remove('p')
     }
 
-    stage stageInstance.name
-
     try {
-        for (action in stageInstance.actionList) {
+        for (action in actionList) {
             params << executeAction(action) {
                 p = params
             }
@@ -25,4 +21,6 @@ def call(Stage stageInstance, body) {
         echo err.toString()
         throw err
     }
+
+    params
 }
