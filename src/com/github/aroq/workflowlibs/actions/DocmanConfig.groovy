@@ -31,7 +31,7 @@ def perform(params) {
     ]
 
     utils = new com.github.aroq.workflowlibs.Utils()
-    actionList = utils.processActionList(actions)
+    actionList = utils.processPipelineActionList(actions)
     jsonDump(actionList, 'DocmanConfig action list')
     params << executeActionList(actionList) {
         p = params
