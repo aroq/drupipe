@@ -33,6 +33,9 @@ def call(body) {
                             ]
                         ],
                         [
+                            action: 'Docman.info',
+                        ],
+                        [
                             action: 'Oper.perform',
                         ]
                     ],

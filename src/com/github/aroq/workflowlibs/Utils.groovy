@@ -34,25 +34,33 @@ def colorEcho(message, color = null) {
 def processPipeline(pipeline) {
     List<com.github.aroq.workflowlibs.Stage> result = []
     for (item in pipeline) {
-        List actions = []
-        for (action in item.value) {
-            actions << processPipelineAction(action)
-        }
+        actions = processPipelineActionList(item.value)
         result << new com.github.aroq.workflowlibs.Stage(name: item.key, actionList: actions)
     }
     result
 }
 
 @NonCPS
+def processPipelineActionList(actionList) {
+    List actions = []
+    for (action in actionList) {
+        actions << processPipelineAction(action)
+    }
+    actions
+}
+
+@NonCPS
 def processPipelineAction(action) {
     if (action.getClass() == java.lang.String) {
-        def values = action.split("\\.")
-        new com.github.aroq.workflowlibs.Action(name: values[0], methodName: values[1])
+        def actionName = action
+        def actionParams = [:]
     }
     else {
-        def values = action.action.split("\\.")
-        new com.github.aroq.workflowlibs.Action(name: values[0], methodName: values[1], params: action.params)
+        def actionName = action.action
+        def actionParams = action.params
     }
+    def values = actionName.split("\\.")
+    new com.github.aroq.workflowlibs.Action(name: values[0], methodName: values[1], params: actionParams)
 }
 
 return this
