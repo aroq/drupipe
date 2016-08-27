@@ -52,14 +52,14 @@ def processPipelineActionList(actionList) {
 @NonCPS
 def processPipelineAction(action) {
     if (action.getClass() == java.lang.String) {
-        def actionName = action
-        def actionParams = [:]
+        actionName = action
+        actionParams = [:]
     }
     else {
-        def actionName = action.action
-        def actionParams = action.params
+        actionName = action.action
+        actionParams = action.params
     }
-    def values = actionName.split("\\.")
+    values = actionName.split("\\.")
     new com.github.aroq.workflowlibs.Action(name: values[0], methodName: values[1], params: actionParams)
 }
 
