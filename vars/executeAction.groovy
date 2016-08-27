@@ -16,19 +16,19 @@ def call(Action action, body) {
             action.params = [:]
         }
         dump(params << action.params, "${action.name} action params")
-        echo "PWD: ${pwd()}"
         // TODO: configure it:
         fileName = 'docroot/config/pipelines/actions/' + action.name + '.groovy'
         echo "Action file name to check: ${fileName}"
-//        def actionResult = null
         if (fileExists(fileName)) {
             actionFile = load(fileName)
             actionResult = actionFile."$action.methodName"(params << action.params)
         }
         else {
             try {
+                echo "Executing action: ${action.name} - start"
                 def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.actions.${action.name}", true, false )?.newInstance()
                 actionResult = actionInstance."$action.methodName"(params << action.params)
+                echo "Executing action: ${action.name} - end"
             }
             catch (err) {
                 echo err.toString()
