@@ -25,7 +25,3 @@ def call(name, body) {
         throw err
     }
 }
-
-boolean isCollectionOrList(object) {
-    object instanceof java.util.Collection || object instanceof java.util.List || object instanceof java.util.LinkedHashMap || object instanceof java.util.HashMap
-}

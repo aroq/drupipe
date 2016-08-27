@@ -10,6 +10,9 @@ def call(action, body) {
     }
 
     try {
+        if (!action.params) {
+            action.params = [:]
+        }
         dump(params << action.params, "${action.name} action params")
         echo "PWD: ${pwd()}"
         // TODO: configure it:
