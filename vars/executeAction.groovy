@@ -1,3 +1,5 @@
+import com.github.aroq.workflowlibs.Action
+
 def call(Action action, body) {
     def params = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
