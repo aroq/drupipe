@@ -8,12 +8,15 @@ def perform(params) {
 
     config << params
 
-    if (params.configProviders) {
-        for (int i = 0; i < params.configProviders.size(); i++) {
-            action = utils.processPipelineAction(params.configProviders[i])
-            params << executeAction(action) {
-                p = params
-            }
+    def providers = [:]
+    providers << [action: 'Library.perform', params: [configFileName: 'library/config/docroot.config']]
+    providers << [action: 'GroovyFileConfig.perform', params: [configFileName: 'library/config/docroot.config']]
+    providers << params.configProviders
+
+    for (int i = 0; i < providers.size(); i++) {
+        action = utils.processPipelineAction(providers[i])
+        params << executeAction(action) {
+            p = params
         }
     }
 

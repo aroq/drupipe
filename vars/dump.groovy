@@ -1,5 +1,5 @@
 def call(params, String dumpName = '') {
-    colorEcho "Dumping ${dumpName} values:"
+    colorEcho "Dumping ${dumpName}:"
     colorEcho collectParams(params)
 }
 
