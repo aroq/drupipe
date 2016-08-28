@@ -21,13 +21,9 @@ def call(Action action, body) {
         def actionFile = null
         if (params.sourcesList) {
             echo "Sources class: ${params.sourcesList.getClass()}"
-//            sources = utils.processSources(params.sources)
-//            echo "Sources class: ${sources.getClass()}"
-//            dump(sources, 'SOURCES')
             for (i = 0; i < params.sourcesList.size(); i++) {
                 source = params.sourcesList[i]
-//                dump(source, 'SOURCE')
-                fileName = sourcePath(params, source.name, 'config/pipelines/actions/' + action.name + '.groovy')
+                fileName = sourcePath(params, source.name, 'pipelines/actions/' + action.name + '.groovy')
                 echo "Action file name to check: ${fileName}"
                 if (fileExists(fileName)) {
                     actionFile = load(fileName)

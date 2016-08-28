@@ -6,9 +6,9 @@ def perform(params) {
             action: 'Source.add',
             params: [
                 source: [
-                    name: 'docmanDocroot',
-                    type: 'docmanDocroot',
-                    path: 'docroot',
+                    name: 'docmanConfig',
+                    type: 'git',
+                    path: 'docroot/config',
                 ]
             ]
         ],
@@ -18,9 +18,9 @@ def perform(params) {
                 configProviders: [
                     action: 'Source.loadConfig',
                     params: [
-                        sourceName: 'docmanDocroot',
+                        sourceName: 'docmanConfig',
                         configType: 'groovy',
-                        configPath: 'config/docroot.config'
+                        configPath: 'docroot.config'
                     ]
                 ]
             ]
