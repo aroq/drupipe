@@ -3,7 +3,6 @@ package com.github.aroq.workflowlibs.actions
 def add(params) {
     def source = params.source
     def result
-    dump(params, "source start")
     switch (source.type) {
         case 'git':
             dir(source.path) {
@@ -25,11 +24,12 @@ def add(params) {
     if (!params.sources) {
         params.sources = [:]
     }
+    utils = new com.github.aroq.workflowlibs.Utils()
     if (result) {
-        params.sources[source.name] = source
+        params.sources[source.name] = new com.github.aroq.workflowlibs.Source(name: source.name, type: source.type, path: source.path)
+
     }
     params.remove('source')
-    dump(params, "source end")
     params
 }
 
