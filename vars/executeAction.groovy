@@ -24,8 +24,8 @@ def call(Action action, body) {
 //            sources = utils.processSources(params.sources)
 //            echo "Sources class: ${sources.getClass()}"
 //            dump(sources, 'SOURCES')
-            for (i = 0; i < sources.size(); i++) {
-                source = sources[i]
+            for (i = 0; i < params.sourcesList.size(); i++) {
+                source = params.sourcesList[i]
 //                dump(source, 'SOURCE')
                 fileName = sourcePath(params, source.name, 'config/pipelines/actions/' + action.name + '.groovy')
                 echo "Action file name to check: ${fileName}"
