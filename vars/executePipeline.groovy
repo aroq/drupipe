@@ -9,18 +9,15 @@ def call(body) {
         params.remove('p')
     }
 
-    if (force == '1') {
-        deleteDir {
-
-        }
-    }
-
     utils = new com.github.aroq.workflowlibs.Utils()
 
     pipeline = utils.processPipeline(params.pipeline)
     jsonDump(pipeline)
 
     node {
+        if (force == '1') {
+            deleteDir
+        }
         if (params.checkoutSCM) {
             checkout scm
         }
