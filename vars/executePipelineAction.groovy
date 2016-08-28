@@ -8,6 +8,7 @@ def call(action, body) {
         params.remove('p')
     }
 
+    utils = new com.github.aroq.workflowlibs.Utils()
     params << executeAction(utils.processPipelineAction(action)) {
         p = params
     }

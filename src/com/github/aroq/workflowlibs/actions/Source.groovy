@@ -35,7 +35,6 @@ def add(params) {
 
 def loadConfig(params) {
     configFilePath = sourcePath(params, params.sourceName, params.configPath)
-    utils = new com.github.aroq.workflowlibs.Utils()
 
     if (params.configType == 'groovy') {
         params << executePipelineAction(action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]) {
