@@ -23,10 +23,12 @@ def add(params) {
     }
     if (!params.sources) {
         params.sources = [:]
+        params.sourcesList = []
     }
     utils = new com.github.aroq.workflowlibs.Utils()
     if (result) {
         params.sources[source.name] = new com.github.aroq.workflowlibs.Source(name: source.name, type: source.type, path: source.path)
+        params.sourcesList << params.sources[source.name]
 
     }
     params.remove('source')

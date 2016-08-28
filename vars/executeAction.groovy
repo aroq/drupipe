@@ -19,8 +19,9 @@ def call(Action action, body) {
         dump(params << action.params, "${action.name} action params")
         // TODO: configure it:
         def actionFile = null
-        if (params.sources) {
-            sources = utils.processSources(params.sources)
+        if (params.sourcesList) {
+            echo "Sources class: ${params.sourcesList.getClass()}"
+//            sources = utils.processSources(params.sources)
 //            echo "Sources class: ${sources.getClass()}"
 //            dump(sources, 'SOURCES')
 //            for (i = 0; i < sources.size(); i++) {
