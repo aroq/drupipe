@@ -63,4 +63,10 @@ def processPipelineAction(action) {
     new com.github.aroq.workflowlibs.Action(name: values[0], methodName: values[1], params: actionParams)
 }
 
+@nonCPS
+def processSources(sources) {
+
+
+}
+
 return this
