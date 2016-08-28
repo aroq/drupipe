@@ -20,7 +20,7 @@ def call(Action action, body) {
         // TODO: configure it:
         def actionFile = null
         if (params.sources) {
-//            sources = utils.processSources(params.sources)
+            sources = utils.processSources(params.sources)
 //            echo "Sources class: ${sources.getClass()}"
 //            dump(sources, 'SOURCES')
 //            for (i = 0; i < sources.size(); i++) {
