@@ -27,10 +27,11 @@ def perform(params) {
                 ]
             ]
         ],
-        [
-            action: 'Docman.info',
-        ],
+//        [
+//            action: 'Docman.info',
+//        ],
     ]
+
     params << executePipelineActionList(actions) {
         p = params
     }

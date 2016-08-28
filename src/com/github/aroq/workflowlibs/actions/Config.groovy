@@ -3,7 +3,7 @@ package com.github.aroq.workflowlibs.actions
 def perform(params) {
     params.workspace = pwd()
 
-    def providers = [
+    providers = [
         [
             action: 'Source.add',
             params: [
@@ -24,12 +24,11 @@ def perform(params) {
                 configPath: 'config/config.groovy'
             ]
         ],
-    ] << params.configProviders
-//    source = [name: 'library', type: 'git', path: 'library', url: 'https://github.com/aroq/jenkins-pipeline-library.git', branch: 'master']
-//    providers << [action: 'Source.add', params: [source: source]]
-//    providers << [action: 'Source.loadConfig', params: [sourceName: 'library', configType: 'groovy', configPath: 'config/config.groovy']]
-//    providers << params.configProviders
-    jsonDump(providers, 'config providers')
+    ]
+
+    if (params.configProviders) {
+        providers << params.configProviders
+    }
 
     params << executePipelineActionList(providers) {
         p = params
