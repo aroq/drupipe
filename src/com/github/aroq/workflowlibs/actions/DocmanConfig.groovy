@@ -8,7 +8,9 @@ def perform(params) {
                 source: [
                     name: 'docmanConfig',
                     type: 'git',
+                    url: config_repo,
                     path: 'docroot/config',
+                    branch: 'master',
                 ]
             ]
         ],
