@@ -21,6 +21,8 @@ def call(Action action, body) {
         def actionFile = null
         if (params.sources) {
             sources = utils.processSources(params.sources)
+            dump(sources.getClass(), 'SOURCES class')
+            dump(sources, 'SOURCES')
             for (i = 0; i < sources.size(); i++) {
                 source = sources[i]
                 dump(source, 'SOURCE')
