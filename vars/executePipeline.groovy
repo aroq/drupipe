@@ -16,7 +16,7 @@ def call(body) {
 
     node {
         if (force == '1') {
-            deleteDir
+            deleteDir()
         }
         if (params.checkoutSCM) {
             checkout scm
