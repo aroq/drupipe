@@ -19,6 +19,7 @@ def call(Action action, body) {
         // TODO: configure it:
         def actionFile = null
         if (params.sources) {
+            sources = processSources(params.sources)
             for (i = 0; i < params.sources.size(); i++) {
                 dump(params.sources(i), 'SOURCE')
                 fileName = sourcePath(params, source.name, 'config/pipelines/actions/' + action.name + '.groovy')
