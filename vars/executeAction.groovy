@@ -15,11 +15,12 @@ def call(Action action, body) {
         if (!action.params) {
             action.params = [:]
         }
+        utils = new com.github.aroq.workflowlibs.Utils()
         dump(params << action.params, "${action.name} action params")
         // TODO: configure it:
         def actionFile = null
         if (params.sources) {
-            sources = processSources(params.sources)
+            sources = utils.processSources(params.sources)
             for (i = 0; i < params.sources.size(); i++) {
                 dump(params.sources(i), 'SOURCE')
                 fileName = sourcePath(params, source.name, 'config/pipelines/actions/' + action.name + '.groovy')
