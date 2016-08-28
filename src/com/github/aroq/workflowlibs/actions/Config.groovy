@@ -10,7 +10,7 @@ def perform(params) {
     providers << params.configProviders
     jsonDump(providers, 'config providers')
 
-    executePipelineActionList(providers) {
+    params << executePipelineActionList(providers) {
         p = params
     }
 

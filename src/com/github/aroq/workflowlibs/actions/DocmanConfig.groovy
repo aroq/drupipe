@@ -29,7 +29,7 @@ def perform(params) {
             action: 'Docman.info',
         ],
     ]
-    executePipelineActionList(actions) {
+    params << executePipelineActionList(actions) {
         p = params
     }
 
