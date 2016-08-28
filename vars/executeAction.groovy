@@ -19,6 +19,7 @@ def call(Action action, body) {
         // TODO: configure it:
         def actionFile = null
         for (source in params.sources) {
+            dump(source, 'SOURCE')
             fileName = sourcePath(params, source.name, 'config/pipelines/actions/' + action.name + '.groovy')
             echo "Action file name to check: ${fileName}"
             if (fileExists(fileName)) {
