@@ -65,7 +65,7 @@ def processPipelineAction(action) {
 
 @NonCPS
 def processSources(sources) {
-    collectEntries{k, v -> v}
+    sources.collectEntries{k, v -> v}
 }
 
 return this
