@@ -3,7 +3,6 @@ package com.github.aroq.workflowlibs.actions
 def add(params) {
     def source = params.source
     def result
-    utils = new com.github.aroq.workflowlibs.Utils()
     dump(params, "source start")
     switch (source.type) {
         case 'git':
@@ -18,7 +17,7 @@ def add(params) {
             break
 
         case 'docmanDocroot':
-            result = executeAction(utils.processPipelineAction([action: 'Docman.init', params: [path: 'docroot']])) {
+            result = executePipelineAction(action: 'Docman.init', params: [path: 'docroot']) {
                 p = params
             }
             break
@@ -39,7 +38,7 @@ def loadConfig(params) {
     utils = new com.github.aroq.workflowlibs.Utils()
 
     if (params.configType == 'groovy') {
-        params << executeAction(utils.processPipelineAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]])) {
+        params << executePipelineAction(action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]) {
             p = params
         }
     }
