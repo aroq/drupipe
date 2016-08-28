@@ -22,17 +22,17 @@ def call(Action action, body) {
         if (params.sources) {
             sources = utils.processSources(params.sources)
             dump(sources.getClass(), 'SOURCES class')
-            dump(sources, 'SOURCES')
-            for (i = 0; i < sources.size(); i++) {
-                source = sources[i]
-                dump(source, 'SOURCE')
-                fileName = sourcePath(params, source.name, 'config/pipelines/actions/' + action.name + '.groovy')
-                echo "Action file name to check: ${fileName}"
-                if (fileExists(fileName)) {
-                    actionFile = load(fileName)
-                    actionResult = actionFile."$action.methodName"(params << action.params)
-                }
-            }
+//            dump(sources, 'SOURCES')
+//            for (i = 0; i < sources.size(); i++) {
+//                source = sources[i]
+//                dump(source, 'SOURCE')
+//                fileName = sourcePath(params, source.name, 'config/pipelines/actions/' + action.name + '.groovy')
+//                echo "Action file name to check: ${fileName}"
+//                if (fileExists(fileName)) {
+//                    actionFile = load(fileName)
+//                    actionResult = actionFile."$action.methodName"(params << action.params)
+//                }
+//            }
         }
         if (!actionFile) {
             try {
