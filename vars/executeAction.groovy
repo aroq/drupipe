@@ -21,7 +21,7 @@ def call(Action action, body) {
         def actionFile = null
         if (params.sources) {
             sources = utils.processSources(params.sources)
-            dump(sources.getClass(), 'SOURCES class')
+            echo "Sources class: ${sources.getClass()}"
 //            dump(sources, 'SOURCES')
 //            for (i = 0; i < sources.size(); i++) {
 //                source = sources[i]
