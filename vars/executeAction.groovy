@@ -17,13 +17,15 @@ def call(Action action, body) {
         }
         dump(params << action.params, "${action.name} action params")
         // TODO: configure it:
-        fileName = 'docroot/config/pipelines/actions/' + action.name + '.groovy'
-        echo "Action file name to check: ${fileName}"
-        if (fileExists(fileName)) {
-            actionFile = load(fileName)
-            actionResult = actionFile."$action.methodName"(params << action.params)
+        for (source in params.sources) {
+            fileName = sourcePath(params, source.name, 'config/pipelines/actions/' + action.name + '.groovy')
+            echo "Action file name to check: ${fileName}"
+            if (fileExists(fileName)) {
+                actionFile = load(fileName)
+                actionResult = actionFile."$action.methodName"(params << action.params)
+            }
         }
-        else {
+        if (!actionfile) {
             try {
                 def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.actions.${action.name}", true, false )?.newInstance()
                 actionResult = actionInstance."$action.methodName"(params << action.params)
@@ -35,7 +37,6 @@ def call(Action action, body) {
         }
 
         if (actionResult) {
-            echo "Result type: ${actionResult.getClass()}"
             if (isCollectionOrList(actionResult)) {
                 params << actionResult
             }
