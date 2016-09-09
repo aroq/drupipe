@@ -26,6 +26,10 @@ def perform(params) {
         ],
     ]
 
+    if (debug != '0') {
+        params.debugEnabled = true
+    }
+
     if (params.configProviders) {
         providers << params.configProviders
     }
