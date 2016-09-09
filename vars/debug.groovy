@@ -4,7 +4,7 @@ def call(params, value, String dumpName = '', debugParams = [:]) {
             echo "${dumpName}: ${value}"
         }
         else {
-            if (debugParams?.debugMode == 'json') {
+            if (debugParams?.debugMode == 'json' || params.debugMode == 'json') {
                 jsonDump(value, dumpName)
             }
             else {
