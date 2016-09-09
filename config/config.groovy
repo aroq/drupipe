@@ -1,8 +1,8 @@
-debug = false
+debugEnabled = false
 docrootDir = 'docroot'
 actionParams = [
     Source: [
-        debug: true,
+        debugEnabled: true,
         debugMode: 'json',
     ],
     JobDslSeed: [
