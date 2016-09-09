@@ -1,8 +1,6 @@
-import org.codehaus.groovy.runtime.GStringImpl
-
 def call(params, value, dumpName = '', debugParams = [:]) {
-    if (params.debugEnabled && value) {
-        if (value instanceof java.lang.String || value instanceof GStringImpl) {
+    if (params.debugEnabled) {
+        if (value instanceof java.lang.String) {
             echo "${dumpName}: ${value}"
         }
         else {
