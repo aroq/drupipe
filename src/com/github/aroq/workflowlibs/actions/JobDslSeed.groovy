@@ -10,10 +10,10 @@ def perform(params) {
 
     dump(params.commandParams, 'Command params')
     jsonDump(params.action, 'Action')
-    dump(params.action.name, 'Action name')
+    echo params.action.name
 
     testParams = params.commandParams[params.action.name]
-    dump(testParams, 'Test params')
+    jsonDump(testParams, 'Test params')
     params << defaultParams << params
 
     jobDsl targets: [params.jobsPattern].join('\n'),
