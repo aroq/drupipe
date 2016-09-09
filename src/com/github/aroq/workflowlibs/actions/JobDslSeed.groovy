@@ -9,7 +9,7 @@ def perform(params) {
     ]
 
     dump(params.commandParams, 'Command params')
-    dump(params.action, 'Action')
+    jsonDump(params.action, 'Action')
     dump(params.action.name, 'Action name')
 
     testParams = params.commandParams[params.action.name]
