@@ -21,7 +21,7 @@ def call(Action action, body) {
             defaultParams = params.commandParams[action.name]
             params << defaultParams << params
         }
-        dump(params << action.params, "${action.name} action params")
+        debug(params << action.params, "${action.name} action params")
         // TODO: configure it:
         def actionFile = null
         if (params.sourcesList) {
@@ -55,7 +55,7 @@ def call(Action action, body) {
                 params << ["${action.name}.${action.methodName}": actionResult]
             }
         }
-        dump(params, "${action.name} action result")
+        debug(params, "${action.name} action result")
         params
     }
     catch (err) {

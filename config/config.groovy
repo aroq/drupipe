@@ -1,3 +1,4 @@
+debug = false
 docrootDir = 'docroot'
 commandParams = [
     JobDslSeed: [
