@@ -21,14 +21,14 @@ def call(Action action, body) {
             defaultParams = params.actionParams[action.name]
             params << defaultParams << params
         }
-//        debug(params << action.params, params, "${action.name} action params")
+        debug(params << action.params, params, "${action.name} action params")
         // TODO: configure it:
         def actionFile = null
         if (params.sourcesList) {
             for (i = 0; i < params.sourcesList.size(); i++) {
                 source = params.sourcesList[i]
                 fileName = sourcePath(params, source.name, 'pipelines/actions/' + action.name + '.groovy')
-//                debug(params, fileName, "Action file name to check")
+                debug(params, fileName, "Action file name to check")
                 if (fileExists(fileName)) {
                     actionFile = load(fileName)
                     actionResult = actionFile."$action.methodName"(params << action.params)
@@ -54,7 +54,7 @@ def call(Action action, body) {
                 params << ["${action.name}.${action.methodName}": actionResult]
             }
         }
-//        debug(params, params, "${action.name} action result")
+        debug(params, params, "${action.name} action result")
         params
     }
     catch (err) {
