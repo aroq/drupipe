@@ -54,7 +54,7 @@ def call(Action action, body) {
                 params << ["${action.name}.${action.methodName}": actionResult]
             }
         }
-        debug(params << [debugMode: 'json'], params, "${action.name} action result")
+        debug(params, params, "${action.name} action result", [debugMode: 'json'])
         params
     }
     catch (err) {
