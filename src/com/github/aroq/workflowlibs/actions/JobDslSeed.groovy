@@ -7,7 +7,7 @@ def perform(params) {
         lookupStrategy: 'SEED_JOB',
         additionalClasspath: ['library/src']
     ]
-    defaultParams << params
+    params << defaultParams << params
 
     jobDsl targets: [params.jobsPattern].join('\n'),
             removedJobAction: params.removedJobAction,
