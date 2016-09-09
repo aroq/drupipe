@@ -1,6 +1,6 @@
 docrootDir = 'docroot'
 commandParams = [
-    jobDslSeed : [
+    JobDslSeed: [
         removedJobAction: 'DELETE',
         removedViewAction: 'DELETE',
         lookupStrategy: 'SEED_JOB',
