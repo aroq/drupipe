@@ -16,6 +16,7 @@ def call(Action action, body) {
             action.params = [:]
         }
         utils = new com.github.aroq.workflowlibs.Utils()
+        params << ['action': action]
         dump(params << action.params, "${action.name} action params")
         // TODO: configure it:
         def actionFile = null
