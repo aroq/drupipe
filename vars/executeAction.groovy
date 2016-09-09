@@ -25,7 +25,6 @@ def call(Action action, body) {
         // TODO: configure it:
         def actionFile = null
         if (params.sourcesList) {
-            echo "Sources class: ${params.sourcesList.getClass()}"
             for (i = 0; i < params.sourcesList.size(); i++) {
                 source = params.sourcesList[i]
                 fileName = sourcePath(params, source.name, 'pipelines/actions/' + action.name + '.groovy')

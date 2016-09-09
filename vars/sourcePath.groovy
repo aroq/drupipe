@@ -1,6 +1,5 @@
 def call(params, sourceName, String path) {
-    echo "Source name: ${sourceName}"
-    debug(params, 'sourcePath')
+    debug "Source name: ${sourceName}"
     if (sourceName in params.sources) {
         params.sources[sourceName].path + '/' + path
     }
