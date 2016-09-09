@@ -7,6 +7,9 @@ def perform(params) {
         lookupStrategy: 'SEED_JOB',
         additionalClasspath: ['library/src']
     ]
+
+    dump(params.commandParams, 'Command params')
+
     testParams = params.commandParams[params.action.name]
     dump(testParams, 'Test params')
     params << defaultParams << params
