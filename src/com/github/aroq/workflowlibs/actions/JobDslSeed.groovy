@@ -5,7 +5,7 @@ def perform(params) {
         removedJobAction: 'DELETE',
         removedViewAction: 'DELETE',
         lookupStrategy: 'SEED_JOB',
-        additionalClasspath: ['library/src2']
+        additionalClasspath: ['library/src']
     ]
     defaultParams << params
 
