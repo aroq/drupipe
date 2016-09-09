@@ -12,6 +12,7 @@ def call(Action action, body) {
     }
 
     try {
+        echo ">>>>> Action name: ${action.name} <<<<<"
         if (!action.params) {
             action.params = [:]
         }
