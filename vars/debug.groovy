@@ -7,10 +7,10 @@ def call(params, value, String dumpName = '', debugParams = [:]) {
         }
         else {
             if (debugParams?.debugMode == 'json' || params.debugMode == 'json') {
-                jsonDump(value, dumpName)
+//                jsonDump(value, dumpName)
             }
             else {
-                dump(value, dumpName)
+//                dump(value, dumpName)
             }
         }
     }
