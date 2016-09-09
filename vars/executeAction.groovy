@@ -17,8 +17,8 @@ def call(Action action, body) {
         }
         utils = new com.github.aroq.workflowlibs.Utils()
         params << ['action': action]
-        if (action.name in params.commandParams) {
-            defaultParams = params.commandParams[action.name]
+        if (action.name in params.actionParams) {
+            defaultParams = params.actionParams[action.name]
             params << defaultParams << params
         }
         debug(params << action.params, params, "${action.name} action params")

@@ -1,9 +1,11 @@
 debug = false
 docrootDir = 'docroot'
-commandParams = [
-    JobDslSeed: [
+actionParams = [
+    Source: [
         debug: true,
         debugMode: 'json',
+    ],
+    JobDslSeed: [
         removedJobAction: 'DELETE',
         removedViewAction: 'DELETE',
         lookupStrategy: 'SEED_JOB',
