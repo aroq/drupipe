@@ -23,6 +23,7 @@ def call(Action action, body) {
             defaultParams = params.actionParams[action.name]
             actionParams << defaultParams << params
         }
+        debugLog(params, params, "Config params")
         actionParams << action.params
         debugLog(params, actionParams, "${action.name} action params")
         // TODO: configure it:
