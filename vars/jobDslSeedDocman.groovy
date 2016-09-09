@@ -14,7 +14,7 @@ def call(body) {
                         source: [
                             name: 'docmanConfig',
                             type: 'dir',
-                            path: 'docroot/config',
+                            path: 'config',
                         ]
                     ]
                 ],
