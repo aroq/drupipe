@@ -1,10 +1,10 @@
-def call(params, String dumpName = '') {
+def call(params, value, String dumpName = '') {
     if (params.debug) {
-        if (params instanceof java.lang.String) {
-            echo "${dumpName}: ${params}"
+        if (value instanceof java.lang.String) {
+            echo "${dumpName}: ${value}"
         }
         else {
-            jsonDump(params, dumpName)
+            jsonDump(value, dumpName)
         }
     }
 }
