@@ -34,7 +34,7 @@ def call(body) {
             ],
             'seed': [
                 [
-                    action: 'JobDslSeed.deploy',
+                    action: 'JobDslSeed.perform',
                 ],
             ],
         ]
