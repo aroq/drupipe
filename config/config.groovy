@@ -1,7 +1,7 @@
 debugEnabled = false
 docrootDir = 'docroot'
 actionParams = [
-    Source: [
+    Docman: [
         debugEnabled: true,
         debugMode: 'json',
     ],
