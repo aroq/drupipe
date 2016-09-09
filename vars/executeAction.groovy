@@ -12,17 +12,19 @@ def call(Action action, body) {
     }
 
     try {
-        echo ">>>>> Action name: ${action.name} <<<<<"
+        actionParams = params
+        echo ">>>>> Action name: ${action.name}"
         if (!action.params) {
             action.params = [:]
         }
         utils = new com.github.aroq.workflowlibs.Utils()
-        params << ['action': action]
+        actionParams << ['action': action]
         if (action.name in params.actionParams) {
             defaultParams = params.actionParams[action.name]
-            params << defaultParams << params
+            actionParams << defaultParams << params
         }
-        debugLog(params << action.params, params, "${action.name} action params")
+        actionParams << action.params
+        debugLog(params, actionParams, "${action.name} action params")
         // TODO: configure it:
         def actionFile = null
         if (params.sourcesList) {
@@ -32,14 +34,14 @@ def call(Action action, body) {
                 debugLog(params, fileName, "Action file name to check")
                 if (fileExists(fileName)) {
                     actionFile = load(fileName)
-                    actionResult = actionFile."$action.methodName"(params << action.params)
+                    actionResult = actionFile."$action.methodName"(actionParams)
                 }
             }
         }
         if (!actionFile) {
             try {
                 def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.actions.${action.name}", true, false )?.newInstance()
-                actionResult = actionInstance."$action.methodName"(params << action.params)
+                actionResult = actionInstance."$action.methodName"(actionParams)
             }
             catch (err) {
                 echo err.toString()
