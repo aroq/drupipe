@@ -28,7 +28,7 @@ def call(Action action, body) {
             for (i = 0; i < params.sourcesList.size(); i++) {
                 source = params.sourcesList[i]
                 fileName = sourcePath(params, source.name, 'pipelines/actions/' + action.name + '.groovy')
-                echo "Action file name to check: ${fileName}"
+                debug(params, fileName, "Action file name to check")
                 if (fileExists(fileName)) {
                     actionFile = load(fileName)
                     actionResult = actionFile."$action.methodName"(params << action.params)
