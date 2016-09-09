@@ -7,8 +7,36 @@ def call(body) {
     executePipeline {
         checkoutSCM = true
         pipeline = [
-            'init' : ['Library.perform', 'Config.perform'],
-            'seed' : ['JobDslSeed.perform'],
+            'init': [
+                [
+                    action: 'Source.add',
+                    params: [
+                        source: [
+                            name: 'docmanConfig',
+                            type: 'dir',
+                            path: 'docroot/config',
+                        ]
+                    ]
+                ],
+                [
+                    action: 'Config.perform',
+                    params: [
+                        configProviders: [
+                            action: 'Source.loadConfig',
+                            params: [
+                                sourceName: 'docmanConfig',
+                                configType: 'groovy',
+                                configPath: 'docroot.config'
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            'seed': [
+                [
+                    action: 'JobDslSeed.deploy',
+                ],
+            ],
         ]
         p = params
     }

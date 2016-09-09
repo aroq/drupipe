@@ -27,9 +27,6 @@ def perform(params) {
                 ]
             ]
         ],
-//        [
-//            action: 'Docman.info',
-//        ],
     ]
 
     params << executePipelineActionList(actions) {
