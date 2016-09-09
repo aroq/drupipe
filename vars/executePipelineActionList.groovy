@@ -10,7 +10,7 @@ def call(actions, body) {
 
     utils = new com.github.aroq.workflowlibs.Utils()
     actionList = utils.processPipelineActionList(actions)
-    jsonDump(actionList, 'action list')
+    debug(actionList, 'action list', [debugMode: 'json'])
     params << executeActionList(actionList) {
         p = params
     }
