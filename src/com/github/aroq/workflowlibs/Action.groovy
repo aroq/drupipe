@@ -4,4 +4,8 @@ class Action implements Serializable {
     String name
     String methodName
     HashMap params = [:]
+
+    String getFullname() {
+        "{$this.name}.${this.methodName}"
+    }
 }
