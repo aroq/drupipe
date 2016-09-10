@@ -9,6 +9,9 @@ actionParams = [
         debugEnabled: true,
         returnConfig: true
     ],
+    Source: [
+        returnConfig: true
+    ],
     Docman: [
         debugEnabled: true,
 //        debugMode: 'json',
