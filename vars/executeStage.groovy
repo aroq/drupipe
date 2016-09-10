@@ -12,6 +12,7 @@ def call(Stage stageInstance, body) {
     }
 
     stage stageInstance.name
+    params << ['stage': stageInstance]
 
     params << executeActionList(stageInstance.actionList) {
         p = params

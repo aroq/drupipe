@@ -14,7 +14,7 @@ def call(Action action, body) {
     def actionParams = [:]
 
     try {
-        echoDelimiter "-----> Action name: ${action.fullName} start <-"
+        echoDelimiter "-----> Stage: ${params.stage.name} | Action name: ${action.fullName} start <-"
         utils = new com.github.aroq.workflowlibs.Utils()
         actionParams << params
         if (!action.params) {
