@@ -2,10 +2,8 @@ debugEnabled = false
 docrootDir = 'docroot'
 actionParams = [
     Config: [
-        debugEnabled: true,
     ],
     DocmanConfig: [
-        debugEnabled: true,
     ],
     Source: [
     ],
