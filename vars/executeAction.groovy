@@ -11,8 +11,9 @@ def call(Action action, body) {
         params.remove('p')
     }
 
+    def actionParams = [:]
+
     try {
-        def actionParams = [:]
         actionsParams << params
         debugLog(params, params, "Config params before")
         echo ">>>>> Action name: ${action.name}"
