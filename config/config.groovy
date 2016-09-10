@@ -7,7 +7,7 @@ actionParams = [
     ],
     DocmanConfig: [
         debugEnabled: true,
-//        returnConfig: true
+        returnConfig: true
     ],
     Docman: [
         debugEnabled: true,
