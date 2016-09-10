@@ -10,7 +10,7 @@ actionParams = [
     GroovyFileConfig: [
     ],
     Docman: [
-        debugEnabled: true,
+//        debugEnabled: true,
 //        debugMode: 'json',
     ],
     JobDslSeed: [
