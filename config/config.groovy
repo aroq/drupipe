@@ -3,7 +3,7 @@ docrootDir = 'docroot'
 actionParams = [
     Docman: [
         debugEnabled: true,
-        debugMode: 'json',
+//        debugMode: 'json',
     ],
     JobDslSeed: [
         removedJobAction: 'DELETE',

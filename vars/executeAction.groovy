@@ -18,7 +18,7 @@ def call(Action action, body) {
         utils = new com.github.aroq.workflowlibs.Utils()
 
         actionParams << params
-        debugLog(params, params, "Config params before")
+//        debugLog(params, params, "Config params before")
         if (!action.params) {
             action.params = [:]
         }
