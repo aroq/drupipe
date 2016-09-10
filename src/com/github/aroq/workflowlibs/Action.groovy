@@ -5,7 +5,7 @@ class Action implements Serializable {
     String methodName
     HashMap params = [:]
 
-    String getFullname() {
+    String getFullName() {
         "${this.name}.${this.methodName}"
     }
 }
