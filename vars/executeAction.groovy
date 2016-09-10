@@ -22,7 +22,7 @@ def call(Action action, body) {
         }
         actionParams << ['action': action]
         defaultParams = [:]
-        for (actionName in [action.name, action.fullName]) {
+        for (actionName in [action.name, action.name + '_' + action.methodName]) {
             if (actionName in params.actionParams) {
                 defaultParams << params.actionParams[actionName]
             }

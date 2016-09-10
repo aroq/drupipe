@@ -13,7 +13,7 @@ actionParams = [
 //        debugEnabled: true,
 //        debugMode: 'json',
     ],
-    'Docman.info': [
+    Docman_info: [
         debugEnabled: true,
 //        debugMode: 'json',
     ],
