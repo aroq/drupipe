@@ -14,7 +14,7 @@ def call(Action action, body) {
     def actionParams = [:]
 
     try {
-        actionsParams << params
+        actionParams << params
         debugLog(params, params, "Config params before")
         echo ">>>>> Action name: ${action.name}"
         if (!action.params) {
