@@ -1,6 +1,6 @@
 def call(params, value, dumpName = '', debugParams = [:]) {
 //    echo "debugLog"
-    dump(params, 'Debug log params')
+//    dump(params, 'Debug log params')
     if (params.debugEnabled) {
 //        echo "debugEnabled"
         if (value instanceof java.lang.String) {
