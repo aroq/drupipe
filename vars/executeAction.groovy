@@ -24,6 +24,7 @@ def call(Action action, body) {
         actionParams << ['action': action]
         if (action.name in params.actionParams) {
             defaultParams = params.actionParams[action.name]
+            dump(defaultParams, 'Action default params')
             actionParams << defaultParams << params
         }
         debugLog(actionParams, params, "Config params")
