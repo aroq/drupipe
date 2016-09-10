@@ -15,11 +15,11 @@ def add(params) {
             result = source.path
             break
 
-        case 'docmanDocroot':
-            result = executePipelineAction(action: 'Docman.init', params: [path: 'docroot']) {
-                p = params
-            }
-            break
+//        case 'docmanDocroot':
+//            result = executePipelineAction(action: 'Docman.init', params: [path: 'docroot']) {
+//                p = params
+//            }
+//            break
     }
     if (!params.sources) {
         params.sources = [:]

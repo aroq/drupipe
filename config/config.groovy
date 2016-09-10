@@ -13,9 +13,9 @@ actionParams = [
 //        debugEnabled: true,
 //        debugMode: 'json',
     ],
+    // Dot is not allowed as key name, so used underscore here.
     Docman_info: [
         debugEnabled: true,
-//        debugMode: 'json',
     ],
     JobDslSeed: [
         removedJobAction: 'DELETE',
