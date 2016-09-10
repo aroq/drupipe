@@ -12,6 +12,9 @@ actionParams = [
     Source: [
         returnConfig: true
     ],
+    GroovyFileConfig: [
+        returnConfig: true
+    ],
     Docman: [
         debugEnabled: true,
 //        debugMode: 'json',
