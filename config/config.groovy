@@ -13,6 +13,10 @@ actionParams = [
 //        debugEnabled: true,
 //        debugMode: 'json',
     ],
+    'Docman.info': [
+        debugEnabled: true,
+//        debugMode: 'json',
+    ],
     JobDslSeed: [
         removedJobAction: 'DELETE',
         removedViewAction: 'DELETE',
