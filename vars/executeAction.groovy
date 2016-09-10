@@ -14,21 +14,22 @@ def call(Action action, body) {
     def actionParams = [:]
 
     try {
-        echoDelimiter ">>>>> Action name: ${action.fullName}"
+        echoDelimiter "-----> Action name: ${action.fullName} start <-"
         utils = new com.github.aroq.workflowlibs.Utils()
         actionParams << params
         if (!action.params) {
             action.params = [:]
         }
         actionParams << ['action': action]
-        if (action.name in params.actionParams) {
-            defaultParams = params.actionParams[action.name]
-            actionParams << params
-            actionParams << defaultParams << action.params
+        defaultParams = [:]
+        for (actionName in [action.name, action.fullName]) {
+            if (actionName in params.actionParams) {
+                defaultParams << params.actionParams[actionName]
+            }
         }
-        else {
-            actionParams << action.params
-        }
+        actionParams << params
+        actionParams << defaultParams << action.params
+
         debugLog(actionParams, actionParams, "${action.fullName} action params")
         // TODO: configure it:
         def actionFile = null
@@ -63,6 +64,7 @@ def call(Action action, body) {
             }
         }
         debugLog(actionParams, params, "${action.fullName} action result")
+        echoDelimiter "-----> Action name: ${action.fullName} end <-"
         params
     }
     catch (err) {
