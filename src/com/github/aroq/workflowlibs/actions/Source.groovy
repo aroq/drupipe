@@ -32,7 +32,7 @@ def add(params) {
 
     }
     params.remove('source')
-    params
+    params << [returnConfig: true]
 }
 
 def loadConfig(params) {

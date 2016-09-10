@@ -33,6 +33,6 @@ def perform(params) {
         p = params
     }
 
-    params
+    params << [returnConfig: true]
 }
 

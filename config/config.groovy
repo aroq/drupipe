@@ -3,17 +3,13 @@ docrootDir = 'docroot'
 actionParams = [
     Config: [
         debugEnabled: true,
-        returnConfig: true
     ],
     DocmanConfig: [
         debugEnabled: true,
-        returnConfig: true
     ],
     Source: [
-        returnConfig: true
     ],
     GroovyFileConfig: [
-        returnConfig: true
     ],
     Docman: [
         debugEnabled: true,

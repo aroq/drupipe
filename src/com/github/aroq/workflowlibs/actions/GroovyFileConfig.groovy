@@ -4,7 +4,7 @@ def load(params) {
     if (params.configFileName) {
         params << readGroovyConfig(params.configFileName)
     }
-    params
+    params << [returnConfig: true]
 }
 
 def readGroovyConfig(filePath) {
