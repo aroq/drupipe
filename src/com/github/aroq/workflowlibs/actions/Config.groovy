@@ -26,8 +26,12 @@ def perform(params) {
         ],
     ]
 
-    if (debug != '0') {
-        params.debugEnabled = true
+    try {
+        if (debug != '0') {
+            params.debugEnabled = true
+        }
+    }
+    catch (err) {
     }
 
     if (params.configProviders) {
