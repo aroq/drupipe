@@ -14,7 +14,7 @@ def call(Action action, body) {
     def actionParams = [:]
 
     try {
-        echo ">>>>> Action name: ${action.fullName}"
+        echoDelimiter ">>>>> Action name: ${action.fullName}"
         utils = new com.github.aroq.workflowlibs.Utils()
         actionParams << params
         if (!action.params) {
