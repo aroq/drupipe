@@ -64,7 +64,7 @@ def call(Action action, body) {
             }
         }
         debugLog(actionParams, params, "${action.fullName} action result")
-        echoDelimiter "-----> Action name: ${action.fullName} end <-"
+        echoDelimiter "-----> Stage: ${params.stage.name} | Action name: ${action.fullName} end <-"
         params
     }
     catch (err) {
