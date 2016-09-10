@@ -32,7 +32,7 @@ def call(Action action, body) {
             actionParams << action.params
         }
 //        debugLog(actionParams, params, "Config params")
-        debugLog(params, actionParams, "${action.fullName} action params")
+        debugLog(actionParams, actionParams, "${action.fullName} action params")
         // TODO: configure it:
         def actionFile = null
         if (params.sourcesList) {
