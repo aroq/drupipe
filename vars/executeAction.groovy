@@ -54,6 +54,7 @@ def call(Action action, body) {
             }
         }
 
+        dump(actionParams, "${action.fullName} params on result")
         if (actionResult && actionParams.returnConfig) {
             if (isCollectionOrList(actionResult)) {
                 params << actionResult
