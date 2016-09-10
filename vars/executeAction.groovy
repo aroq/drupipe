@@ -12,7 +12,7 @@ def call(Action action, body) {
     }
 
     try {
-        actionParams = [:]
+        def actionParams = [:]
         actionsParams << params
         debugLog(params, params, "Config params before")
         echo ">>>>> Action name: ${action.name}"
