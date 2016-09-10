@@ -16,7 +16,6 @@ def call(Action action, body) {
     try {
         echo ">>>>> Action name: ${action.fullName}"
         utils = new com.github.aroq.workflowlibs.Utils()
-
         actionParams << params
         if (!action.params) {
             action.params = [:]
@@ -24,14 +23,12 @@ def call(Action action, body) {
         actionParams << ['action': action]
         if (action.name in params.actionParams) {
             defaultParams = params.actionParams[action.name]
-//            dump(defaultParams, "${action.fullName} default params")
             actionParams << params
             actionParams << defaultParams << action.params
         }
         else {
             actionParams << action.params
         }
-//        debugLog(actionParams, params, "Config params")
         debugLog(actionParams, actionParams, "${action.fullName} action params")
         // TODO: configure it:
         def actionFile = null
@@ -57,7 +54,7 @@ def call(Action action, body) {
             }
         }
 
-        if (actionResult) {
+        if (actionResult && actionParams.returnConfig) {
             if (isCollectionOrList(actionResult)) {
                 params << actionResult
             }
