@@ -4,8 +4,6 @@ actionParams = [
     // TODO: add params subsections (that will be containerized inside common config).
     Config: [
     ],
-    DocmanConfig: [
-    ],
     // TODO: add private (that will not go into common config) params section.
     Source_loadConfig: [
 //        debugEnabled: true,
