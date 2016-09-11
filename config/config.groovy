@@ -1,17 +1,18 @@
 debugEnabled = false
 docrootDir = 'docroot'
 actionParams = [
+    // TODO: add params subsections (that will be containerized inside common config).
     Config: [
     ],
     DocmanConfig: [
     ],
+    // TODO: add private (that will not go into common config) params section.
     Source_loadConfig: [
-        debugEnabled: true,
+//        debugEnabled: true,
     ],
     GroovyFileConfig: [
     ],
     Docman: [
-//        debugEnabled: true,
 //        debugMode: 'json',
     ],
     // Dot is not allowed as key name, so used underscore here.
