@@ -26,7 +26,7 @@ def call(body) {
                             params: [
                                 sourceName: 'docmanConfig',
                                 configType: 'groovy',
-                                configPath: 'docroot.config'
+//                                configPath: 'docroot.config'
                             ]
                         ]
                     ]
