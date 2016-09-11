@@ -5,7 +5,8 @@ actionParams = [
     ],
     DocmanConfig: [
     ],
-    Source: [
+    Source_loadConfig: [
+        debugEnabled: true,
     ],
     GroovyFileConfig: [
     ],
