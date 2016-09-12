@@ -15,7 +15,7 @@ def call(body) {
     jsonDump(pipeline)
 
     node {
-        if (force == '1') {
+        if (jenkinsParam('force') == '1') {
             deleteDir()
         }
         if (params.checkoutSCM) {
