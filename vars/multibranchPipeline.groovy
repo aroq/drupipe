@@ -34,9 +34,9 @@ def call(body) {
                         action: 'Source.add',
                         params: [
                             source: [
-                                name: 'config',
+                                name: 'root',
                                 type: 'dir',
-                                path: '',
+                                path: '/',
                             ]
                         ]
                     ],
@@ -46,7 +46,7 @@ def call(body) {
                             configProviders: [
                                 action: 'Source.loadConfig',
                                 params: [
-                                    sourceName: 'config',
+                                    sourceName: 'root',
                                     configType: 'groovy',
                                 ]
                             ]
