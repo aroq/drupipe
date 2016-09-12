@@ -42,7 +42,7 @@ def call(body) {
                 ]
             ]
         )
-        executePipeline {
+        result = executePipeline {
             checkoutSCM = true
             pipeline = [
                 'init': [
@@ -77,7 +77,7 @@ def call(body) {
             ]
             p = params
         }
-        dump(params, 'pipeline result')
-        params
+        dump(result, 'pipeline result')
+        result
     }
 }
