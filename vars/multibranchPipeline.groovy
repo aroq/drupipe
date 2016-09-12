@@ -53,10 +53,10 @@ def call(body) {
                         ]
                     ]
                 ],
-                'seed': [
-//                [
-//                    action: 'JobDslSeed.perform',
-//                ],
+                'deploy': [
+                [
+                    action: 'deployBash.perform',
+                ],
                 ],
             ]
             p = params
