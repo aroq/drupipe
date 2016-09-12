@@ -36,7 +36,7 @@ def call(body) {
                             source: [
                                 name: 'root',
                                 type: 'dir',
-                                path: '/',
+                                path: './',
                             ]
                         ]
                     ],
