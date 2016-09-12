@@ -5,6 +5,16 @@ def call(body) {
     body()
 
     node {
+        def environment
+        switch (env.BRANCH_NAME) {
+            case 'develop':
+                environment = 'dev'
+                break
+            case 'master':
+                environment = 'test'
+                break
+
+        }
         properties(
             [
                 [
@@ -21,7 +31,13 @@ def call(body) {
                             $class: 'StringParameterDefinition',
                             defaultValue: '0',
                             description: 'Debug mode',
-                        ]
+                        ],
+                        [
+                            name : 'alias',
+                            $class: 'StringParameterDefinition',
+                            defaultValue: "@${environment}.default",
+                            description: 'Force mode',
+                        ],
                     ]
                 ]
             ]
