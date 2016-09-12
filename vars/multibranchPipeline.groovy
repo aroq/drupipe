@@ -5,7 +5,8 @@ def call(body) {
     body()
 
     node {
-        def environment
+        // Set environment based on branch name.
+        def environment = 'local'
         switch (env.BRANCH_NAME) {
             case 'develop':
                 environment = 'dev'
@@ -70,9 +71,9 @@ def call(body) {
                     ]
                 ],
                 'deploy': [
-                [
-                    action: 'deployBash.perform',
-                ],
+                    [
+                        action: 'deploy.perform',
+                    ],
                 ],
             ]
             p = params
