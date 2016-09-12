@@ -38,7 +38,7 @@ def call(body) {
             ],
         ]
         p = params
+        dump(params, 'pipeline result')
     }
-    dump(params, 'pipeline result')
     params
 }
