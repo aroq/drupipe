@@ -5,7 +5,27 @@ def call(body) {
     body()
 
     node {
-        properties([[$class: 'ParametersDefinitionProperty', parameterDefinitions: [[$class: 'StringParameterDefinition', defaultValue: '', description: 'Some Description', name : 'MY_PARAM'], [$class: 'StringParameterDefinition', defaultValue: '', description: 'Some Description', name: 'MY_PARAM2']]]])
+        properties(
+            [
+                [
+                    $class: 'ParametersDefinitionProperty',
+                    parameterDefinitions: [
+                        [
+                            name : 'force',
+                            $class: 'StringParameterDefinition',
+                            defaultValue: '0',
+                            description: 'Force mode',
+                        ],
+                        [
+                            name : 'debug',
+                            $class: 'StringParameterDefinition',
+                            defaultValue: '0',
+                            description: 'Debug mode',
+                        ]
+                    ]
+                ]
+            ]
+        )
         executePipeline {
             checkoutSCM = true
             pipeline = [
