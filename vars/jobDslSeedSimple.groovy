@@ -4,41 +4,43 @@ def call(body) {
     body.delegate = params
     body()
 
-    executePipeline {
-        checkoutSCM = true
-        pipeline = [
-            'init': [
-                [
-                    action: 'Source.add',
-                    params: [
-                        source: [
-                            name: 'config',
-                            type: 'dir',
-                            path: '',
+    node {
+        executePipeline {
+            checkoutSCM = true
+            pipeline = [
+                'init': [
+                    [
+                        action: 'Source.add',
+                        params: [
+                            source: [
+                                name: 'config',
+                                type: 'dir',
+                                path: '',
+                            ]
                         ]
-                    ]
-                ],
-                [
-                    action: 'Config.perform',
-                    params: [
-                        configProviders: [
-                            action: 'Source.loadConfig',
-                            params: [
-                                sourceName: 'config',
-                                configType: 'groovy',
+                    ],
+                    [
+                        action: 'Config.perform',
+                        params: [
+                            configProviders: [
+                                action: 'Source.loadConfig',
+                                params: [
+                                    sourceName: 'config',
+                                    configType: 'groovy',
+                                ]
                             ]
                         ]
                     ]
-                ]
-            ],
-            'seed': [
+                ],
+                'seed': [
 //                [
 //                    action: 'JobDslSeed.perform',
 //                ],
-            ],
-        ]
-        p = params
+                ],
+            ]
+            p = params
+        }
         dump(params, 'pipeline result')
+        params
     }
-    params
 }
