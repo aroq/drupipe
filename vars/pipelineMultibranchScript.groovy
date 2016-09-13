@@ -13,6 +13,7 @@ def call(body) {
                     params: [
                         script: params.script,
                         args: [
+                            '@dev.default',
                             jenkinsParam('alias')
                         ]
                     ]
