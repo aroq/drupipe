@@ -14,11 +14,11 @@ def config(params) {
         ]
     }
     else {
-        source = [source: [
+        source = [
             name: 'docmanConfig',
             type: 'dir',
             path: params.docmanConfigPath,
-        ]]
+        ]
     }
     actions = [
         [
