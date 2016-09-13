@@ -11,7 +11,18 @@ def call(body) {
 
     utils = new com.github.aroq.workflowlibs.Utils()
 
-    pipeline = utils.processPipeline(params.pipeline)
+    stages = []
+    stages << [
+        [
+            'config': [
+                [
+                    action: 'Config.perform',
+                ],
+            ],
+        ]
+    ]
+    stages << params.pipeline
+    pipeline = utils.processPipeline(stages)
     jsonDump(pipeline)
 
     node {
@@ -22,19 +33,6 @@ def call(body) {
             checkout scm
         }
 
-        stages = []
-
-        stages << [
-            [
-                'config': [
-                    [
-                        action: 'Config.perform',
-                    ],
-                ],
-            ]
-        ]
-
-        stages << pipeline
 
         for (int i = 0; i < stages.size(); i++) {
             params.stage = stages[i]
