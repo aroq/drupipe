@@ -34,6 +34,9 @@ def perform(params) {
     catch (err) {
     }
 
+
+    dump(params, 'Config params - 1')
+
     if (params.configProviders) {
         providers << params.configProviders
     }
@@ -42,7 +45,15 @@ def perform(params) {
         p = params
     }
 
-    dump(params, 'Config params')
+    try {
+        if (debug != '0') {
+            params.debugEnabled = true
+        }
+    }
+    catch (err) {
+    }
+
+    dump(params, 'Config params - 2')
 
     params << [returnConfig: true]
 }
