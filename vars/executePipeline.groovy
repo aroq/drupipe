@@ -11,22 +11,21 @@ def call(body) {
 
     utils = new com.github.aroq.workflowlibs.Utils()
 
-    stages = []
-    stages << [
-        [
-            'config': [
-                [
-                    action: 'Config.perform',
-                ],
-            ],
-        ]
-    ]
-    stages << params.pipeline
-    dump(stages, 'Stages')
-    pipeline = utils.processPipeline(stages)
-    jsonDump(pipeline)
-
     node {
+        stages = []
+        stages << [
+            [
+                'config': [
+                    [
+                        action: 'Config.perform',
+                    ],
+                ],
+            ]
+        ]
+        stages << params.pipeline
+        dump(stages, 'Stages')
+        pipeline = utils.processPipeline(stages)
+        jsonDump(pipeline)
         if (jenkinsParam('force') == '1') {
             deleteDir()
         }
