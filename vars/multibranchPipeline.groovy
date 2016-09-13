@@ -58,15 +58,10 @@ def call(body) {
                         ]
                     ],
                     [
-                        action: 'Config.perform',
+                        action: 'Source.loadConfig',
                         params: [
-                            configProviders: [
-                                action: 'Source.loadConfig',
-                                params: [
-                                    sourceName: 'root',
-                                    configType: 'groovy',
-                                ]
-                            ]
+                            sourceName: 'root',
+                            configType: 'groovy',
                         ]
                     ]
                 ],
