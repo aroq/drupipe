@@ -9,7 +9,7 @@ def config(params) {
                     name: 'docmanConfig',
                     type: 'git',
                     url: config_repo,
-                    path: "${params.docrootDir}/config",
+                    path: params.docmanConfigPath,
                     branch: 'master',
                 ]
             ]

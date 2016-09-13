@@ -9,27 +9,11 @@ def call(body) {
         pipeline = [
             'init': [
                 [
-                    action: 'Source.add',
+                    action: 'Docman.config',
                     params: [
-                        source: [
-                            name: 'docmanConfig',
-                            type: 'dir',
-                            path: 'config',
-                        ]
+                        docmanConfigPath: config
                     ]
                 ],
-                [
-                    action: 'Config.perform',
-                    params: [
-                        configProviders: [
-                            action: 'Source.loadConfig',
-                            params: [
-                                sourceName: 'docmanConfig',
-                                configType: 'groovy',
-                            ]
-                        ]
-                    ]
-                ]
             ],
             'seed': [
                 [

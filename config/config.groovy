@@ -6,15 +6,13 @@ actionParams = [
     ],
     // TODO: add private (that will not go into common config) params section.
     Source_loadConfig: [
-//        debugEnabled: true,
     ],
     GroovyFileConfig: [
     ],
     Docman_config: [
-        docmanConfigFile: 'docroot.config'
-//        debugMode: 'json',
+        docmanConfigPath: 'docroot/config',
+        docmanConfigFile: 'docroot.config',
     ],
-    // Dot is not allowed as key name, so used underscore here.
     Docman_info: [
         debugEnabled: true,
     ],
