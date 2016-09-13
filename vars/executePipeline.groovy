@@ -15,7 +15,7 @@ def call(body) {
         stages = [new com.github.aroq.workflowlibs.Stage(name: 'config', actionList: utils.processPipelineActionList([[action: 'Config.perform']]))]
 
         pipeline = utils.processPipeline(params.pipeline)
-        stages << pipeline.values()
+        stages += pipeline
 
         jsonDump(stages)
         if (jenkinsParam('force') == '1') {
