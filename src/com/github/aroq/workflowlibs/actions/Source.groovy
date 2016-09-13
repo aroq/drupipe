@@ -30,15 +30,17 @@ def add(params) {
 }
 
 def loadConfig(params) {
-    configFilePath = sourcePath(params, params.sourceName, params.configPath)
+    if (params.configPath) {
+        configFilePath = sourcePath(params, params.sourceName, params.configPath)
 
-    if (params.configType == 'groovy') {
-        params << executePipelineAction(action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]) {
-            p = params
+        if (params.configType == 'groovy') {
+            params << executePipelineAction(action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]) {
+                p = params
+            }
         }
+        params.remove('sourceName')
+        params.remove('configPath')
+        params.remove('configType')
     }
-    params.remove('sourceName')
-    params.remove('configPath')
-    params.remove('configType')
     params
 }
