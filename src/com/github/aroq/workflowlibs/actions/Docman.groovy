@@ -5,13 +5,13 @@ def config(params) {
         params.docmanConfigType = 'git'
     }
     if (params.docmanConfigType == 'git') {
-        source = [source: [
+        source = [
             name: 'docmanConfig',
             type: 'git',
             url: config_repo,
             path: params.docmanConfigPath,
             branch: 'master',
-        ]]
+        ]
     }
     else {
         source = [source: [
@@ -23,7 +23,7 @@ def config(params) {
     actions = [
         [
             action: 'Source.add',
-            params: [source]
+            params: [source: source]
         ],
         [
             action: 'Source.loadConfig',
