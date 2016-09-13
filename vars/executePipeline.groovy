@@ -21,6 +21,17 @@ def call(body) {
         if (params.checkoutSCM) {
             checkout scm
         }
+
+        configAction = [
+            action: 'Config.perform',
+            params: [
+            ]
+        ]
+
+        params << executePipelineAction(configAction) {
+            p = params
+        }
+
         for (int i = 0; i < pipeline.size(); i++) {
             params.stage = pipeline[i]
             params << executeStage(pipeline[i]) {

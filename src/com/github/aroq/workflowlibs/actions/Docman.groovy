@@ -15,18 +15,13 @@ def config(params) {
             ]
         ],
         [
-            action: 'Config.perform',
+            action: 'Source.loadConfig',
             params: [
-                configProviders: [
-                    action: 'Source.loadConfig',
-                    params: [
-                        sourceName: 'docmanConfig',
-                        configType: 'groovy',
-                        configPath: params.docmanConfigFile
-                    ]
-                ]
+                sourceName: 'docmanConfig',
+                configType: 'groovy',
+                configPath: params.docmanConfigFile
             ]
-        ],
+        ]
     ]
 
     params << executePipelineActionList(actions) {
