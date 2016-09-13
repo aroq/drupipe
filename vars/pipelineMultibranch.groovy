@@ -73,7 +73,5 @@ def call(body) {
             ]
             p = params
         }
-        dump(result, 'pipeline result')
-        result
     }
 }

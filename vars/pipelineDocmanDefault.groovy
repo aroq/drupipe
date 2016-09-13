@@ -26,7 +26,6 @@ def call(body) {
                 ]
             p = params
         }
-        dump(config, 'pipeline result')
     }
 }
 

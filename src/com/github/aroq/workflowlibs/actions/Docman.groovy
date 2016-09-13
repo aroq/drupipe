@@ -35,8 +35,6 @@ def config(params) {
         ]
     ]
 
-    jsonDump(actions, 'Actions')
-
     params << executePipelineActionList(actions) {
         p = params
     }
