@@ -22,13 +22,14 @@ def call(body) {
             checkout scm
         }
 
-        stage 'config'
-        configAction = [
-            action: 'Config.perform',
-            params: [
+        stageConfig = [
+            'config': [
+                [
+                    action: 'Config.perform',
+                ],
             ]
         ]
-        params << executePipelineAction(configAction) {
+        params << executeStage(stage) {
             p = params
         }
 
