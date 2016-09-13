@@ -29,7 +29,10 @@ def call(body) {
                 ],
             ]
         ]
-        params << executeStage(utils.processStage(stageConfig)) {
+
+        stage = utils.processStage(stageConfig)
+        dump(stage, 'Stage object')
+        params << executeStage(stage) {
             p = params
         }
 
