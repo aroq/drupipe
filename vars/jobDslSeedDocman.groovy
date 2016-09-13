@@ -12,7 +12,6 @@ def call(body) {
                     action: 'Docman.config',
                     params: [
                         docmanConfigType: 'dir',
-                        docmanConfigPath: config
                     ]
                 ],
             ],
