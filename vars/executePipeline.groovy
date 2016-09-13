@@ -22,6 +22,7 @@ def call(body) {
         ]
     ]
     stages << params.pipeline
+    dump(stages, 'Stages')
     pipeline = utils.processPipeline(stages)
     jsonDump(pipeline)
 
