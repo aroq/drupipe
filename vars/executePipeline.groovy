@@ -22,23 +22,21 @@ def call(body) {
             checkout scm
         }
 
-        stageConfig = [
+        stages = [:]
+
+        stages << [
             'config': [
                 [
                     action: 'Config.perform',
                 ],
-            ]
+            ],
         ]
 
-        stage = utils.processStage(stageConfig)
-        jsonDump(stage, 'Stage object')
-        params << executeStage(stage) {
-            p = params
-        }
+        stages << pipeline
 
-        for (int i = 0; i < pipeline.size(); i++) {
-            params.stage = pipeline[i]
-            params << executeStage(pipeline[i]) {
+        for (int i = 0; i < stages.size(); i++) {
+            params.stage = stages[i]
+            params << executeStage(stages[i]) {
                 p = params
             }
         }
