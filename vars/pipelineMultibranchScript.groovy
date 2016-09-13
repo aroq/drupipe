@@ -6,6 +6,9 @@ def call(body) {
 
     pipelineMultibranch {
         p = params
+        actions = {
+
+        }
     }
 
 }
