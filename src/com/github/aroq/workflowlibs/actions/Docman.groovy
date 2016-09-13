@@ -1,18 +1,29 @@
 package com.github.aroq.workflowlibs.actions
 
 def config(params) {
+    if (!params.docmanConfigType) {
+        params.docmanConfigType = 'git'
+    }
+    if (params.docmanConfigType == 'git') {
+        source = [source: [
+            name: 'docmanConfig',
+            type: 'git',
+            url: config_repo,
+            path: params.docmanConfigPath,
+            branch: 'master',
+        ]]
+    }
+    else {
+        source = [source: [
+            name: 'docmanConfig',
+            type: 'dir',
+            path: params.docmanConfigPath,
+        ]]
+    }
     actions = [
         [
             action: 'Source.add',
-            params: [
-                source: [
-                    name: 'docmanConfig',
-                    type: 'git',
-                    url: config_repo,
-                    path: params.docmanConfigPath,
-                    branch: 'master',
-                ]
-            ]
+            params: [source]
         ],
         [
             action: 'Source.loadConfig',
