@@ -4,11 +4,18 @@ def call(body) {
     body.delegate = params
     body()
 
-    pipelineMultibranch {
+    pipelineMultibranchBase {
         p = params
-        actions = {
-
-        }
+        stages = [
+            'ops': [
+                [
+                    action: 'Script.execute',
+                    params: [
+                        script: params.script,
+                    ]
+                ]
+            ]
+        ]
     }
 
 }

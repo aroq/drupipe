@@ -16,6 +16,7 @@ def call(body) {
 
         pipeline = utils.processPipeline(params.pipeline)
         stages += pipeline
+        stages += utils.processStages(params.stages)
 
         jsonDump(stages)
         if (jenkinsParam('force') == '1') {
