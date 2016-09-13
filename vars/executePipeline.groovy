@@ -29,7 +29,7 @@ def call(body) {
                 ],
             ]
         ]
-        params << executeStage(stage) {
+        params << executeStage(stageConfig) {
             p = params
         }
 
