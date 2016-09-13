@@ -9,7 +9,7 @@ def config(params) {
                     name: 'docmanConfig',
                     type: 'git',
                     url: config_repo,
-                    path: 'docroot/config',
+                    path: "${params.docrootDir}/config",
                     branch: 'master',
                 ]
             ]
@@ -22,7 +22,7 @@ def config(params) {
                     params: [
                         sourceName: 'docmanConfig',
                         configType: 'groovy',
-                        configPath: 'docroot.config'
+                        configPath: params.docmanConfigFile
                     ]
                 ]
             ]

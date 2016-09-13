@@ -10,7 +10,8 @@ actionParams = [
     ],
     GroovyFileConfig: [
     ],
-    Docman: [
+    Docman_config: [
+        docmanConfigFile: 'docroot.config'
 //        debugMode: 'json',
     ],
     // Dot is not allowed as key name, so used underscore here.
