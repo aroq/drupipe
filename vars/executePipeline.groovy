@@ -14,13 +14,11 @@ def call(body) {
     node {
         stages = []
         stages << [
-            [
-                'config': [
-                    [
-                        action: 'Config.perform',
-                    ],
+            'config': [
+                [
+                    action: 'Config.perform',
                 ],
-            ]
+            ],
         ]
         stages << params.pipeline
         dump(stages, 'Stages')
