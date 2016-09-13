@@ -12,6 +12,9 @@ def call(body) {
                     action: 'Script.execute',
                     params: [
                         script: params.script,
+                        args: [
+                            jenkinsParam('alias')
+                        ]
                     ]
                 ]
             ]
