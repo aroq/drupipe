@@ -31,7 +31,7 @@ def call(body) {
         ]
 
         stage = utils.processStage(stageConfig)
-        dump(stage, 'Stage object')
+        jsonDump(stage, 'Stage object')
         params << executeStage(stage) {
             p = params
         }
