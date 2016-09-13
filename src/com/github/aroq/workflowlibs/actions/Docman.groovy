@@ -23,7 +23,7 @@ def config(params) {
     actions = [
         [
             action: 'Source.add',
-            params: [source: source]
+            params: [source: sourceObject]
         ],
         [
             action: 'Source.loadConfig',
