@@ -12,7 +12,7 @@ def call(body) {
     utils = new com.github.aroq.workflowlibs.Utils()
 
     node {
-        stages = [new com.github.aroq.workflowlibs.Stage(name: 'config', actionList: utils.processPipelineActionList([[action: 'Docman.config']]))]
+        stages = [new com.github.aroq.workflowlibs.Stage(name: 'config', actionList: utils.processPipelineActionList([[action: 'Config.perform']]))]
 
         pipeline = utils.processPipeline(params.pipeline)
         stages << pipeline
