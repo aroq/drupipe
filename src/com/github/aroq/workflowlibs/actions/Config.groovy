@@ -42,6 +42,8 @@ def perform(params) {
         p = params
     }
 
+    dump(params, 'Config params')
+
     params << [returnConfig: true]
 }
 
