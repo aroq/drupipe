@@ -65,11 +65,6 @@ def call(body) {
                         ]
                     ]
                 ],
-                'deploy': [
-                    [
-                        action: 'deploy.perform',
-                    ],
-                ],
             ]
             p = params
         }
