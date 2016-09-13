@@ -22,14 +22,16 @@ def call(body) {
             checkout scm
         }
 
-        stages = [:]
+        stages = []
 
         stages << [
-            'config': [
-                [
-                    action: 'Config.perform',
+            [
+                'config': [
+                    [
+                        action: 'Config.perform',
+                    ],
                 ],
-            ],
+            ]
         ]
 
         stages << pipeline
