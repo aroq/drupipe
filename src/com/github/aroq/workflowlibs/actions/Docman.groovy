@@ -23,7 +23,7 @@ def config(params) {
     actions = [
         [
             action: 'Source.add',
-//            params: [source: source]
+            params: [source: source]
         ],
         [
             action: 'Source.loadConfig',
@@ -35,7 +35,7 @@ def config(params) {
         ]
     ]
 
-    dump(actions, 'Actions')
+    jsonDump(actions, 'Actions')
 
     params << executePipelineActionList(actions) {
         p = params
