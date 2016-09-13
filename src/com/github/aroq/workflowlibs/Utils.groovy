@@ -31,7 +31,7 @@ def colorEcho(message, color = null) {
 }
 
 @NonCPS
-def processPipeline(pipeline) {
+List<Stage> processPipeline(pipeline) {
     List<com.github.aroq.workflowlibs.Stage> result = []
     for (item in pipeline) {
         result << processStage(item)
@@ -40,13 +40,12 @@ def processPipeline(pipeline) {
 }
 
 @NonCPS
-def processStage(stage) {
-    actions = processPipelineActionList(item.stage)
-    new com.github.aroq.workflowlibs.Stage(name: stage.key, actionList: actions)
+Stage processStage(stage) {
+    new com.github.aroq.workflowlibs.Stage(name: stage.key, actionList: processPipelineActionList(stage.value))
 }
 
 @NonCPS
-def processPipelineActionList(actionList) {
+List processPipelineActionList(actionList) {
     List actions = []
     for (action in actionList) {
         actions << processPipelineAction(action)
