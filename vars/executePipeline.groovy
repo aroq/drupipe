@@ -12,25 +12,18 @@ def call(body) {
     utils = new com.github.aroq.workflowlibs.Utils()
 
     node {
-        stages = []
-        stages << [
-            'config': [
-                [
-                    action: 'Config.perform',
-                ],
-            ],
-        ]
-        stages << params.pipeline
-        dump(stages, 'Stages')
-        pipeline = utils.processPipeline(stages)
-        jsonDump(pipeline)
+        stages = [new com.github.aroq.workflowlibs.Stage(name: 'config', actionList: processPipelineActionList([[action: 'Docman.config']]))]
+
+        pipeline = utils.processPipeline(params.pipeline)
+        stages << pipeline
+
+        jsonDump(stages)
         if (jenkinsParam('force') == '1') {
             deleteDir()
         }
         if (params.checkoutSCM) {
             checkout scm
         }
-
 
         for (int i = 0; i < stages.size(); i++) {
             params.stage = stages[i]
