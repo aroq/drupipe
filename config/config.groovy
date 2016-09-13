@@ -16,6 +16,9 @@ actionParams = [
     Docman_info: [
         debugEnabled: true,
     ],
+    Script_execute: [
+        debugEnabled: true,
+    ],
     JobDslSeed: [
         removedJobAction: 'DELETE',
         removedViewAction: 'DELETE',
