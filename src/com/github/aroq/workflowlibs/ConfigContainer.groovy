@@ -1,10 +1,10 @@
 package com.github.aroq.workflowlibs
 
 class ConfigContainer implements Serializable {
-    HashMap params = [:]
+    HashMap params = [test4: 'test4']
 
     def addParams(p) {
-        this.params = [test: 'test']
+        this.params.param1 = 'test3'
    }
 
     def getParams() {
