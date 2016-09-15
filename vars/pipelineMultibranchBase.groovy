@@ -39,10 +39,14 @@ def call(body) {
                             defaultValue: "@${environment}.default",
                             description: 'Force mode',
                         ],
+                        [$class: 'StringParameterDefinition', defaultValue: '', description: '', name: 'payload']
                     ]
                 ]
             ]
         )
+
+        echo ("This build is built with the payload: $payload")
+
         result = executePipeline {
             checkoutSCM = true
             pipeline = [
