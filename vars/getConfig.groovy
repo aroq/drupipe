@@ -3,7 +3,7 @@ import groovy.transform.Field
 import com.github.aroq.workflowlibs.ConfigContainer
 
 @Field
-ContigContainer configContainer
+ConfigContainer configContainer
 
 def call() {
     if (!this.configContainer == 0) {
