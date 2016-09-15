@@ -4,7 +4,7 @@ class ConfigContainer implements Serializable {
     HashMap params = [:]
 
     def addParams(params) {
-//        this.params << params
+        this.params << params
     }
 
     def getParams() {
