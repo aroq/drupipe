@@ -67,7 +67,9 @@ def call(Action action, body) {
         echoDelimiter "-----> Stage: ${params.stage.name} | Action name: ${action.fullName} end <-"
 
         test = getConfig()
-        jsonDump(test.params, 'Test config')
+        if (test) {
+            jsonDump(test.params, 'Test config')
+        }
 
         params
     }
