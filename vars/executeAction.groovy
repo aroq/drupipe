@@ -68,7 +68,8 @@ def call(Action action, body) {
 
         test = getConfig()
         if (test) {
-            jsonDump(test.params, 'Test config')
+            echo('Test config test')
+            jsonDump(test.getParams, 'Test config')
         }
 
         params

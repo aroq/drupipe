@@ -6,6 +6,7 @@ import com.github.aroq.workflowlibs.ConfigContainer
 ConfigContainer configContainer
 
 def call() {
+    echo "getConfig()"
     if (!this.configContainer) {
         echo "Create new Config Container"
         this.configContainer = new ConfigContainer()

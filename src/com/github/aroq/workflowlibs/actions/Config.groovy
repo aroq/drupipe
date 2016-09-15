@@ -50,10 +50,11 @@ def perform(params) {
     catch (err) {
     }
 
+    echo "Config container test"
     configContainer = getConfig()
 //    jsonDump(configContainer, 'Config container')
     echo "Config container class:"
-    echo(configContainer.getClass().toString())
+//    echo(configContainer.getClass().toString())
 //    configContainer.addParams(params)
 
     params << [returnConfig: true]
