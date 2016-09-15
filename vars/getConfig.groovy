@@ -1,12 +1,12 @@
 import groovy.transform.Field
 
 @Field
-def config = [:]
+def configContainer = [:]
 
 def call() {
     if (this.config.size() == 0) {
-        this.config = new com.github.aroq.workflowlibs.actions.Config()
+//        this.configContainer = new com.github.aroq.workflowlibs.actions.Config()
     }
-    this.config
+    this.configContainer
 }
 
