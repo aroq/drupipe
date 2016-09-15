@@ -11,7 +11,19 @@ def call(body) {
                 [
                     action: 'Script.execute',
                     params: [
-                        script: params.script,
+                        script: params.deployScript,
+                        args: [
+                            '@dev.default',
+                            jenkinsParam('alias')
+                        ]
+                    ]
+                ]
+            ],
+            'test': [
+                [
+                    action: 'Script.execute',
+                    params: [
+                        script: params.testScript,
                         args: [
                             '@dev.default',
                             jenkinsParam('alias')
