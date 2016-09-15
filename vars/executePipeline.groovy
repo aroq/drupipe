@@ -13,6 +13,7 @@ def call(body) {
 
     node {
         test = getConfig()
+        jsonDump(test, 'Test config')
         stages = [new com.github.aroq.workflowlibs.Stage(name: 'config', actionList: utils.processPipelineActionList([[action: 'Config.perform']]))]
 
         pipeline = utils.processPipeline(params.pipeline)
