@@ -11,6 +11,7 @@ def call() {
     if (!this.configContainer) {
         echo "Create new Config Container"
         this.configContainer = new ConfigContainer(params: [asfasdf: 'asdfadfa'])
+        this.configContainer.addParams([test2: 'test2'])
         jsonDump(this.configContainer, 'after creation')
     }
     return this.configContainer
