@@ -18,6 +18,7 @@ def call(body) {
         }
         properties(
             [
+                [$class: 'GitLabConnectionProperty', gitLabConnection: 'Gitlab'],
                 [
                     $class: 'ParametersDefinitionProperty',
                     parameterDefinitions: [
