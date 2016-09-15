@@ -50,8 +50,8 @@ def perform(params) {
     catch (err) {
     }
 
-//    configContainer = getConfig().configContainer
-    getConfig().configContainer << params
+    configContainer = getConfig()
+    configContainer.addParams(params)
 
     params << [returnConfig: true]
 }
