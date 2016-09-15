@@ -9,17 +9,17 @@ ConfigContainer configContainer
 Integer callCount = 0
 
 def call() {
-    this.callCount++
-    echo "Call count: ${this.callCount}"
+    callCount++
+    echo "Call count: ${callCount}"
     echo "getConfig()"
-    jsonDump(this.configContainer, 'before creation')
-    if (!this.configContainer) {
+    jsonDump(configContainer, 'before creation')
+    if (!configContainer) {
         echo "Create new Config Container"
-        this.configContainer = new ConfigContainer(params: [asfasdf: 'asdfadfa'])
-        this.configContainer.params = [test2: 'test2']
-        this.configContainer.params.test5 = 'test5'
-        jsonDump(this.configContainer, 'after creation')
+        configContainer = new ConfigContainer(params: [asfasdf: 'asdfadfa'])
+//        this.configContainer.params = [test2: 'test2']
+//        this.configContainer.params.test5 = 'test4'
+        jsonDump(configContainer, 'after creation')
     }
-    return this.configContainer
+    return configContainer
 }
 
