@@ -7,8 +7,8 @@ ConfigContainer configContainer
 
 def call() {
     echo "getConfig()"
-    if (this.configContainer?.getParams()) {
-        jsonDump(this.configContainer, 'before creation')
+    jsonDump(this.configContainer, 'before creation')
+    if (!this.configContainer) {
         echo "Create new Config Container"
         this.configContainer = new ConfigContainer(params: [asfasdf: 'asdfadfa'])
         jsonDump(this.configContainer, 'after creation')
