@@ -3,11 +3,12 @@ import groovy.transform.Field
 import com.github.aroq.workflowlibs.ConfigContainer
 
 @Field
-ConfigContainer configContainer = new ConfigContainer()
+ConfigContainer configContainer
 
 def call() {
-    if (!this.configContainer == 0) {
-//        this.configContainer = new ConfigContainer()
+    if (!this.configContainer) {
+        echo "Create new Config Container"
+        this.configContainer = new ConfigContainer()
     }
     return this.configContainer
 }
