@@ -1,5 +1,10 @@
 package com.github.aroq.workflowlibs.actions
 
+import groovy.transform.Field
+
+@Field
+def config = [:]
+
 def perform(params) {
     params.workspace = pwd()
 
@@ -49,6 +54,8 @@ def perform(params) {
     }
     catch (err) {
     }
+
+    this.config = params
 
     params << [returnConfig: true]
 }
