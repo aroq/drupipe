@@ -51,7 +51,9 @@ def perform(params) {
     }
 
     configContainer = getConfig()
-    configContainer.addParams(params)
+    jsonDump(configContainer, 'Config container')
+    jsonDump(configContainer.getClass(), 'Config container class')
+//    configContainer.addParams(params)
 
     params << [returnConfig: true]
 }

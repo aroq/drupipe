@@ -1,11 +1,13 @@
 import groovy.transform.Field
 
+import com.github.aroq.workflowlibs.ConfigContainer
+
 @Field
-def configContainer = [:]
+ContigContainer configContainer
 
 def call() {
-    if (this.configContainer.size() == 0) {
-        this.configContainer = new com.github.aroq.workflowlibs.ConfigContainer()
+    if (!this.configContainer == 0) {
+        this.configContainer = new ConfigContainer()
     }
     this.configContainer
 }
