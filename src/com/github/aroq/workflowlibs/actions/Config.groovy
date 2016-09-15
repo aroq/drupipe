@@ -53,7 +53,7 @@ def perform(params) {
     configContainer = getConfig()
 //    jsonDump(configContainer, 'Config container')
     echo "Config container class:"
-    echo(configContainer.getClass())
+    echo(configContainer.class.toString())
 //    configContainer.addParams(params)
 
     params << [returnConfig: true]
