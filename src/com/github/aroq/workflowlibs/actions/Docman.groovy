@@ -57,12 +57,13 @@ def info(params) {
             """
         )
     }
-    if (params.configRepo) {
-        configRepo = params.configRepo
-    }
-    if (config_repo) {
-        configRepo = config_repo
-    }
+    configRepo = jsonParam(config_repo)
+//    if (params.configRepo) {
+//        configRepo = params.configRepo
+//    }
+//    if (config_repo) {
+//        configRepo = config_repo
+//    }
     if (configRepo) {
         sh(
             """#!/bin/bash -l
