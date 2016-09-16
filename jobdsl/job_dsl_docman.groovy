@@ -77,33 +77,33 @@ pipelineJob("${config.baseFolder}/trigger") {
 }
 
 // Create trigger jobs for each project & state defined in Docman config.
-docmanConfig.projects?.each { project ->
-    if (project.value['repo'] && project.value['trigger'] != false) {
-        project.value['states']?.each { stateName, state ->
-            String versionBranch = docmanConfig.getVersionBranch(project.key, stateName)
-            job("${config.baseFolder}/tools/${config.triggersFolder}/${project.key}-${stateName}") {
-                logRotator(-1, 30)
-                scm() {
-                    git {
-                        remote {
-                            url(project.value['repo'])
-                        }
-                        branch("*/${versionBranch}")
-                    }
-                }
-                steps {
-                    downstreamParameterized {
-                        // Trigger pipeline job for this state.
-                        trigger(config.baseFolder + '/' + stateName) {
-                            parameters {
-                                currentBuild()
-                                predefinedProp('projectName', project.key)
-                                predefinedProp('version', versionBranch)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+//docmanConfig.projects?.each { project ->
+//    if (project.value['repo'] && project.value['trigger'] != false) {
+//        project.value['states']?.each { stateName, state ->
+//            String versionBranch = docmanConfig.getVersionBranch(project.key, stateName)
+//            job("${config.baseFolder}/tools/${config.triggersFolder}/${project.key}-${stateName}") {
+//                logRotator(-1, 30)
+//                scm() {
+//                    git {
+//                        remote {
+//                            url(project.value['repo'])
+//                        }
+//                        branch("*/${versionBranch}")
+//                    }
+//                }
+//                steps {
+//                    downstreamParameterized {
+//                        // Trigger pipeline job for this state.
+//                        trigger(config.baseFolder + '/' + stateName) {
+//                            parameters {
+//                                currentBuild()
+//                                predefinedProp('projectName', project.key)
+//                                predefinedProp('version', versionBranch)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
