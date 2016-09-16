@@ -1,6 +1,12 @@
 def call(paramName) {
     try {
-        paramName
+        result = "${paramName}"
+        if (result != paramName) {
+            result
+        }
+        else {
+            false
+        }
     }
     catch (err) {
         false
