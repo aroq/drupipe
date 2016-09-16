@@ -1,6 +1,6 @@
 def call(paramName) {
     try {
-        "${paramName}"
+        paramName
     }
     catch (err) {
         false
