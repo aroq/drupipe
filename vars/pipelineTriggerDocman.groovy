@@ -19,6 +19,7 @@ def call(body) {
         echo "gitlabSourceNamespace: ${env.gitlabSourceNamespace}"
         echo "gitlabSourceRepoURL: ${env.gitlabSourceRepoURL}"
 
+        dump(params, 'Params')
 
         // TODO: Use docman config to set params.
         switch (env.gitlabSourceBranch) {
