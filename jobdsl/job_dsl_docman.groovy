@@ -16,12 +16,14 @@ try {
     config = ConfigSlurper.newInstance(params.environment).parse(readFileFromWorkspace(configFilePath))
     docrootConfigJson = readFileFromWorkspace(config.docrootConfigJsonPath)
     deployPipeline = readFileFromWorkspace(config.pipeline)
+    triggerPipeline = readFileFromWorkspace(config.triggerPipeline)
 }
 catch (MissingPropertyException mpe) {
     params.environment = 'local'
     config = ConfigSlurper.newInstance(params.environment).parse(new File(configFilePath).text)
     docrootConfigJson = new File(System.properties.docrootConfigJsonPath).text
     deployPipeline = new File(config.pipeline).text
+    triggerPipeline = new File(config.triggerPipeline).text
 }
 
 // Create folder for trigger jobs.
@@ -58,6 +60,18 @@ docmanConfig.states?.each { state ->
                 script(deployPipeline)
                 sandbox()
             }
+        }
+    }
+}
+
+pipelineJob("${config.baseFolder}/trigger") {
+    concurrentBuild(false)
+    logRotator(-1, 30)
+    definition {
+        cps {
+            // See the pipeline script.
+            script(triggerPipeline)
+            sandbox()
         }
     }
 }

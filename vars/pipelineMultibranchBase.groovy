@@ -46,8 +46,6 @@ def call(body) {
             ]
         )
 
-        echo ("This build is built with the payload: $payload")
-
         result = executePipeline {
             checkoutSCM = true
             pipeline = [
