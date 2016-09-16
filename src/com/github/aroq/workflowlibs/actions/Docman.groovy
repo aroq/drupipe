@@ -73,7 +73,7 @@ def info(params) {
     }
     sh(
         """#!/bin/bash -l
-//        cd ${params.docrootDir}
+        cd ${params.docrootDir}
         docman info full config.json
         """
     )
