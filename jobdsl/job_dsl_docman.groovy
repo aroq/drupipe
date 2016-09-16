@@ -62,6 +62,7 @@ docmanConfig.states?.each { state ->
     }
 }
 
+
 // Create trigger jobs for each project & state defined in Docman config.
 docmanConfig.projects?.each { project ->
     if (project.value['repo'] && project.value['trigger'] != false) {
