@@ -18,17 +18,17 @@ def call(body) {
             switch (env.gitlabSourceBranch) {
                 case 'develop':
                     buildJob = 'development'
-                    buildEnvironment = 'dev'
+                    buildEnvironment = 'predev'
                     buildVersionType = 'branch'
                     break
                 case 'master':
                     buildJob = 'staging'
-                    buildEnvironment = 'test'
+                    buildEnvironment = 'dev'
                     buildVersionType = 'branch'
                     break
                 case 'state_stable':
                     buildJob = 'stable'
-                    buildEnvironment = 'prod'
+                    buildEnvironment = 'test'
                     buildVersionType = 'tag'
                     break
             }

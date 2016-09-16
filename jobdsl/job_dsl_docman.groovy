@@ -46,7 +46,7 @@ docmanConfig.states?.each { state ->
             stringParam('docrootDir', 'docroot')
             stringParam('config_repo', config.configRepo)
             stringParam('type', 'branch')
-            stringParam('version', 'develop')
+            stringParam('version', '')
             stringParam('force', '0')
             stringParam('skip_stage_build', '0')
             stringParam('skip_stage_operations', '0')
