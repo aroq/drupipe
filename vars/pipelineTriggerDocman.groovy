@@ -41,7 +41,7 @@ def call(body) {
 
         build job: buildJob, parameters: [
             string(name: 'executeCommand', value: 'deployFlow'),
-            string(name: 'projectName', value: ${env.gitlabSourceRepoName}),
+            string(name: 'projectName', value: env.gitlabSourceRepoName),
             string(name: 'environment', value: buildEnvironment),
             string(name: 'debug', value: '0'),
             string(name: 'simulate', value: '0'),
