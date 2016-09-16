@@ -66,12 +66,6 @@ def call(Action action, body) {
         debugLog(actionParams, params, "${action.fullName} action result")
         echoDelimiter "-----> Stage: ${params.stage.name} | Action name: ${action.fullName} end <-"
 
-        test = getConfig()
-        if (test) {
-            echo('Test config test')
-            jsonDump(test, 'Test config')
-        }
-
         params
     }
     catch (err) {
