@@ -22,7 +22,7 @@ def call(body) {
                     buildVersionType = 'branch'
                     break
                 case 'master':
-                    buildJob = 'master'
+                    buildJob = 'staging'
                     buildEnvironment = 'test'
                     buildVersionType = 'branch'
                     break
