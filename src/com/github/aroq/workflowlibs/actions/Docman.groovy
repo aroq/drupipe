@@ -22,6 +22,9 @@ def config(params) {
     }
     actions = [
         [
+            action: 'Docman.info',
+        ],
+        [
             action: 'Source.add',
             params: [source: sourceObject]
         ],
