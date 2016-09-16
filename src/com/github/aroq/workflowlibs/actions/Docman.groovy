@@ -57,7 +57,16 @@ def info(params) {
             """
         )
     }
-    configRepo = jenkinsParam('config_repo')
+
+    try {
+        if (config_repo) {
+            configRepo = config_repo
+        }
+    }
+    catch (err) {
+
+    }
+//    configRepo = jenkinsParam('config_repo')
 //    if (params.configRepo) {
 //        configRepo = params.configRepo
 //    }
