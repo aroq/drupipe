@@ -75,6 +75,7 @@ pipelineJob("${config.baseFolder}/trigger") {
     triggers {
         gitlabPush {
             buildOnPushEvents()
+            buildOnMergeRequestEvents(false)
             enableCiSkip()
             useCiFeatures()
         }
