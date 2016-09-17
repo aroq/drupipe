@@ -12,12 +12,12 @@ actionParams = [
     Docman_config: [
         docmanConfigPath: 'docroot/config',
         docmanConfigFile: 'docroot.config',
+        debugEnabled: true,
     ],
     Docman_info: [
         debugEnabled: true,
     ],
     Script_execute: [
-        debugEnabled: true,
     ],
     JobDslSeed: [
         removedJobAction: 'DELETE',
