@@ -11,6 +11,7 @@ def call(body) {
                     'init': [
                         [
                             action: 'Docman.config',
+                            params: [docrootDir: './']
                         ],
                     ],
                     'build': [
