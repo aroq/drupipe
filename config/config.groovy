@@ -24,5 +24,8 @@ actionParams = [
         removedViewAction: 'DELETE',
         lookupStrategy: 'SEED_JOB',
         additionalClasspath: ['library/src']
-    ]
+    ],
+    Druflow_deployFlow: [
+        propertiesFile: 'docroot/master/version.properties'
+    ],
 ]
