@@ -13,6 +13,7 @@ def call(body) {
                     params: [
                         docmanConfigType: 'dir',
                         docmanConfigPath: 'config',
+                        docrootDir: './'
                     ]
                 ],
             ],
