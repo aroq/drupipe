@@ -1,7 +1,7 @@
 package com.github.aroq.workflowlibs.actions
 
 def deployFlow(params) {
-    timeout(time: 1, unit: 'MINUTES') {
+    timeout(time: 10, unit: 'MINUTES') {
       input 'Deploy to Production?'
     }
 

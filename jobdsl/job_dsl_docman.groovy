@@ -67,9 +67,16 @@ pipelineJob("${config.baseFolder}/trigger") {
     logRotator(-1, 30)
     definition {
         cps {
-            // See the pipeline script.
+            // See the trigger pipeline script.
             script(triggerPipeline)
             sandbox()
+        }
+    }
+    triggers {
+        gitlabPush {
+            buildOnPushEvents()
+            enableCiSkip()
+            useCiFeatures()
         }
     }
 }
