@@ -58,6 +58,7 @@ def info(params) {
         )
     }
 
+    configRepo = false
     try {
         if (config_repo) {
             configRepo = config_repo
