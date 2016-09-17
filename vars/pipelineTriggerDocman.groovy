@@ -4,8 +4,9 @@ def call(body) {
     body.delegate = params
     body()
 
+    properties[pipelineTriggers([]), buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '30')), disableConcurrentBuilds(), [$class: 'GitLabConnectionProperty', gitLabConnection: 'Gitlab'], [$class: 'RebuildSettings', autoRebuild: false, rebuildDisabled: false]]
+
     node {
-        properties[pipelineTriggers([]), buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '', numToKeepStr: '30')), disableConcurrentBuilds(), [$class: 'GitLabConnectionProperty', gitLabConnection: 'Gitlab'], [$class: 'RebuildSettings', autoRebuild: false, rebuildDisabled: false]]
 
         stage 'trigger'
         gitlabCommitStatus {
