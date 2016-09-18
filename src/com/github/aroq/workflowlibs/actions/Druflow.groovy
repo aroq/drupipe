@@ -9,13 +9,20 @@ def deployFlow(params) {
 
     debugLog(params, params, 'Deploy Flow')
 
+    if (params.deployFlowEnvironment) {
+        deployEnvironment = params.deployFlowEnvironment
+    }
+    else {
+        deployEnvironment = environment
+    }
+
     options = ''
     if (fileExists(file: params.propertiesFile)) {
         options = getOptions(readProperties(file: params.propertiesFile))
     }
     dir('druflow') {
         git 'https://github.com/aroq/druflow.git'
-        sh "./gradlew app -Ddebug=${debug} -DprojectName=${projectName} -Denv=${environment} -DexecuteCommand=${executeCommand} -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}${options}"
+        sh "./gradlew app -Ddebug=${debug} -DprojectName=${projectName} -Denv=${deployEnvironment} -DexecuteCommand=${executeCommand} -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}${options}"
     }
 }
 
