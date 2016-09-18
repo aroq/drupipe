@@ -13,7 +13,7 @@ mkdir -p ../../../reports
                 else {
                     echo "Behat config file not found: ../code/common/behat.${environment}.yml"
                 }
-            }
+//            }
 //            catch (err) {
 //                currentBuild.result = 'UNSTABLE'
 //            }
