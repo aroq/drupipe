@@ -8,6 +8,9 @@ def deployFlow(params) {
         deployEnvironment = environment
     }
 
+    echo("deployEnvironment: ${deployEnvironment}")
+    echo("params.deployFlowConfirm?.environment: ${params.deployFlowConfirm?.environment}")
+
     if (deployEnvironment == params.deployFlowConfirm?.environment) {
         timeout(time: 10, unit: 'MINUTES') {
             input params.deployFlowConfirm?.message
