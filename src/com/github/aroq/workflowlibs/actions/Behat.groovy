@@ -3,7 +3,7 @@ package com.github.aroq.workflowlibs.actions
 def perform(params) {
     dir('docroot/master/docroot') {
         if (fileExists('../bin/behat')) {
-            try {
+//            try {
                 if (fileExists("../code/common/behat.${environment}.yml")) {
                     sh """#!/bin/bash -l
 mkdir -p ../../../reports
@@ -14,9 +14,9 @@ mkdir -p ../../../reports
                     echo "Behat config file not found: ../code/common/behat.${environment}.yml"
                 }
             }
-            catch (err) {
-                currentBuild.result = 'UNSTABLE'
-            }
+//            catch (err) {
+//                currentBuild.result = 'UNSTABLE'
+//            }
         }
         else {
             echo "Behat execution file doesn't present"
