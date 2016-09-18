@@ -1,19 +1,17 @@
 package com.github.aroq.workflowlibs.actions
 
 def deployFlow(params) {
-    if (environment == params.deployFlowConfirm?.environment) {
-        timeout(time: 10, unit: 'MINUTES') {
-            input params.deployFlowConfirm?.message
-        }
-    }
-
-    debugLog(params, params, 'Deploy Flow')
-
     if (params.deployFlowEnvironment) {
         deployEnvironment = params.deployFlowEnvironment
     }
     else {
         deployEnvironment = environment
+    }
+
+    if (deployEnvironment == params.deployFlowConfirm?.environment) {
+        timeout(time: 10, unit: 'MINUTES') {
+            input params.deployFlowConfirm?.message
+        }
     }
 
     options = ''
