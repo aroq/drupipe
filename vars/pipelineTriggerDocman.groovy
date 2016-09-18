@@ -29,7 +29,7 @@ def call(body) {
                     break
                 case 'state_stable':
                     buildJob = 'stable'
-                    buildEnvironment = 'test'
+                    buildEnvironment = 'dev'
                     buildVersionType = 'tag'
                     break
             }

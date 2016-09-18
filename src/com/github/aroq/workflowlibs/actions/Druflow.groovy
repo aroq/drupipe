@@ -3,7 +3,7 @@ package com.github.aroq.workflowlibs.actions
 def deployFlow(params) {
     if (environment == params.deployFlowConfirm?.environment) {
         timeout(time: 10, unit: 'MINUTES') {
-            input params.deployFlowConfirm?.environment
+            input params.deployFlowConfirm?.message
         }
     }
 
