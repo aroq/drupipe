@@ -19,6 +19,9 @@ actionParams = [
     ],
     Script_execute: [
     ],
+    Publish_junit: [
+        reportsPath: 'reports/*.xml'
+    ],
     JobDslSeed: [
         removedJobAction: 'DELETE',
         removedViewAction: 'DELETE',
