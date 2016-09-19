@@ -11,13 +11,17 @@ def perform(params) {
     if (params.features) {
         features = params.features
     }
+    tags = ''
+    if (params.tags) {
+        tags = "--tags=${params.tags}"
+    }
 
     dir('docroot/master/docroot') {
         if (fileExists('../bin/behat')) {
             if (fileExists("../code/common/behat.${testEnvironment}.yml")) {
                 sh """#!/bin/bash -l
 mkdir -p ../../../reports
-../bin/behat --config=../code/common/behat.${testEnvironment}.yml --format=pretty --out=std --format=junit --out=../../../reports ${features}
+../bin/behat --config=../code/common/behat.${testEnvironment}.yml --format=pretty --out=std --format=junit --out=../../../reports ${tags} ${features}
 """
             }
             else {
