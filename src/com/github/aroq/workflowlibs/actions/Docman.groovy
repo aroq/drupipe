@@ -96,6 +96,7 @@ def deploy(params) {
     if (force == 1) {
         flag = '-f'
     }
+    echo "Executing: docman deploy git_target ${projectName} branch ${version} ${flag}"
     sh(
         """#!/bin/bash -l
         if [ "${force}" == "1" ]; then

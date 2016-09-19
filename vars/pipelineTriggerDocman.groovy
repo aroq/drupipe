@@ -30,7 +30,7 @@ def call(body) {
                 case 'state_stable':
                     buildJob = 'release'
                     buildEnvironment = 'dev'
-                    buildVersionType = 'tag'
+                    buildVersionType = 'branch'
                     break
             }
             if (buildJob) {
