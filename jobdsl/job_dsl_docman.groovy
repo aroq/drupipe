@@ -16,6 +16,7 @@ try {
     config = ConfigSlurper.newInstance(params.environment).parse(readFileFromWorkspace(configFilePath))
     docrootConfigJson = readFileFromWorkspace(config.docrootConfigJsonPath)
     deployPipeline = readFileFromWorkspace(config.pipeline)
+    releasePipeline = readFileFromWorkspace(config.releasePipeline)
     triggerPipeline = readFileFromWorkspace(config.triggerPipeline)
 }
 catch (MissingPropertyException mpe) {
@@ -23,6 +24,7 @@ catch (MissingPropertyException mpe) {
     config = ConfigSlurper.newInstance(params.environment).parse(new File(configFilePath).text)
     docrootConfigJson = new File(System.properties.docrootConfigJsonPath).text
     deployPipeline = new File(config.pipeline).text
+    releasePipeline = new File(config.releasePipeline).text
     triggerPipeline = new File(config.triggerPipeline).text
 }
 
@@ -33,31 +35,55 @@ folder("${config.baseFolder}")
 def docmanConfig = new DocmanConfig(docrootConfigJson: docrootConfigJson)
 
 // Create pipeline jobs for each state defined in Docman config.
-docmanConfig.states?.each { state ->
-    pipelineJob("${config.baseFolder}/${state.key}") {
-        concurrentBuild(false)
-        logRotator(-1, 30)
-        parameters {
-            stringParam('executeCommand', 'deployFlow')
-            stringParam('projectName', 'common')
-            stringParam('environment', state.value)
-            stringParam('debug', '0')
-            stringParam('simulate', '0')
-            stringParam('docrootDir', 'docroot')
-            stringParam('config_repo', config.configRepo)
-            stringParam('type', 'branch')
-            stringParam('version', '')
-            stringParam('force', '0')
-            stringParam('skip_stage_build', '0')
-            stringParam('skip_stage_operations', '0')
-            stringParam('skip_stage_test', '0')
-        }
-        definition {
-            cps {
-                // See the pipeline script.
-                script(deployPipeline)
-                sandbox()
-            }
+//docmanConfig.states?.each { state ->
+//    pipelineJob("${config.baseFolder}/${state.key}") {
+//        concurrentBuild(false)
+//        logRotator(-1, 30)
+//        parameters {
+//            stringParam('executeCommand', 'deployFlow')
+//            stringParam('projectName', 'common')
+//            stringParam('environment', state.value)
+//            stringParam('debug', '0')
+//            stringParam('simulate', '0')
+//            stringParam('docrootDir', 'docroot')
+//            stringParam('config_repo', config.configRepo)
+//            stringParam('type', 'branch')
+//            stringParam('version', '')
+//            stringParam('force', '0')
+//            stringParam('skip_stage_build', '0')
+//            stringParam('skip_stage_operations', '0')
+//            stringParam('skip_stage_test', '0')
+//        }
+//        definition {
+//            cps {
+//                // See the pipeline script.
+//                script(deployPipeline)
+//                sandbox()
+//            }
+//        }
+//    }
+//}
+
+pipelineJob("${config.baseFolder}/release") {
+    concurrentBuild(false)
+    logRotator(-1, 30)
+    parameters {
+        stringParam('executeCommand', 'deployFlow')
+        stringParam('projectName', 'common')
+//        stringParam('environment', state.value)
+        stringParam('debug', '0')
+        stringParam('force', '0')
+        stringParam('simulate', '0')
+        stringParam('docrootDir', 'docroot')
+        stringParam('config_repo', config.configRepo)
+        stringParam('type', 'tag')
+        stringParam('version', '')
+    }
+    definition {
+        cps {
+            // See the pipeline script.
+            script(releasePipeline)
+            sandbox()
         }
     }
 }

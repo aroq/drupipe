@@ -17,18 +17,18 @@ def call(body) {
 
             // TODO: Use docman config to set params.
             switch (env.gitlabSourceBranch) {
-                case 'develop':
-                    buildJob = 'development'
-                    buildEnvironment = 'predev'
-                    buildVersionType = 'branch'
-                    break
-                case 'master':
-                    buildJob = 'staging'
-                    buildEnvironment = 'dev'
-                    buildVersionType = 'branch'
-                    break
+//                case 'develop':
+//                    buildJob = 'development'
+//                    buildEnvironment = 'predev'
+//                    buildVersionType = 'branch'
+//                    break
+//                case 'master':
+//                    buildJob = 'staging'
+//                    buildEnvironment = 'dev'
+//                    buildVersionType = 'branch'
+//                    break
                 case 'state_stable':
-                    buildJob = 'stable'
+                    buildJob = 'release'
                     buildEnvironment = 'dev'
                     buildVersionType = 'tag'
                     break
