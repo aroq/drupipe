@@ -76,8 +76,8 @@ pipelineJob("${config.baseFolder}/release") {
         stringParam('simulate', '0')
         stringParam('docrootDir', 'docroot')
         stringParam('config_repo', config.configRepo)
-        stringParam('type', 'tag')
-        stringParam('version', '')
+        stringParam('type', 'branch')
+        stringParam('version', 'state_stable')
     }
     definition {
         cps {
