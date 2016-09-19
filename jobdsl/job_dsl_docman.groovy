@@ -86,6 +86,15 @@ pipelineJob("${config.baseFolder}/release") {
             sandbox()
         }
     }
+    triggers {
+        gitlabPush {
+            buildOnPushEvents()
+            buildOnMergeRequestEvents(false)
+            enableCiSkip()
+            useCiFeatures()
+            includeBranches('state_stable')
+        }
+    }
 }
 
 pipelineJob("${config.baseFolder}/trigger") {
