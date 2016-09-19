@@ -7,12 +7,17 @@ def perform(params) {
     else {
         testEnvironment = environment
     }
+    features = ''
+    if (params.features) {
+        features = params.features
+    }
+
     dir('docroot/master/docroot') {
         if (fileExists('../bin/behat')) {
             if (fileExists("../code/common/behat.${testEnvironment}.yml")) {
                 sh """#!/bin/bash -l
 mkdir -p ../../../reports
-../bin/behat --config=../code/common/behat.${testEnvironment}.yml --format=pretty --out=std --format=junit --out=../../../reports
+../bin/behat --config=../code/common/behat.${testEnvironment}.yml --format=pretty --out=std --format=junit --out=../../../reports ${features}
 """
             }
             else {
