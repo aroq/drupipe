@@ -44,6 +44,7 @@ class DocmanConfig {
         init()
         String result = null
         docmanConfig.projects?.each { project ->
+            result += " ${project.key} = ${project.value['repo']} : ${groupName} - ${repoName}"
             if (project.value['repo']?.contains("${groupName}/${repoName}")) {
                 result = project.key
             }
