@@ -42,7 +42,13 @@ class DocmanConfig {
 
     def projectNameByGroupAndRepoName(groupName, repoName) {
         init()
-        docmanConfig['projects']
+        String result = null
+        for (project in docmanConfig['projects']) {
+            if ("${groupName}/${repoName}" in project.value['repo']) {
+                result = project.key
+            }
+        }
+        result
     }
 
 }
