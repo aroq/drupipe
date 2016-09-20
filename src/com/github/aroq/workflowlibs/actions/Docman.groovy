@@ -145,7 +145,13 @@ def init(params) {
 
 @NonCPS
 def projectNameByGroupAndRepoName(docrootConfigJson, groupName, repoName) {
-    def docmanConfig = new com.github.aroq.DocmanConfig(docrootConfigJson: docrootConfigJson)
+//    def docmanConfig = new com.github.aroq.DocmanConfig(docrootConfigJson: docrootConfigJson)
+    docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
     docmanConfig.projectNameByGroupAndRepoName(groupName, repoName)
+    result = ''
+    docmanConfig.projects.each { project ->
+        result += project
+    }
+    result
 }
 
