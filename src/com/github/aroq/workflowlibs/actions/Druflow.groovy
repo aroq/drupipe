@@ -33,6 +33,13 @@ def deployFlow(params) {
     }
 }
 
+def copySite(params) {
+    dir('druflow') {
+        git 'https://github.com/aroq/druflow.git'
+        sh "./gradlew app -Ddebug=${debug} -Denv=${fromEnvironment} -DtoEnv=${toEnvironment} -Dfrom=${params.workspace} -Dsite=${site} -DexecuteCommand=copySite -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}${options}"
+    }
+}
+
 @NonCPS
 def getOptions(props) {
     result = ''
