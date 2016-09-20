@@ -38,6 +38,8 @@ def config(params) {
         ]
     ]
 
+    jsonDump(projectNameByGroupAndRepoName(env.gitlabSourceGroupName, env.gitlabSourceRepoName), 'Docman projects')
+
     params << executePipelineActionList(actions) {
         p = params
     }
@@ -111,10 +113,6 @@ def deploy(params) {
 
 def init(params) {
     echo "Docman init"
-    def flag = ''
-    if (force == 1) {
-        flag = '-f'
-    }
     if (params.configRepo) {
         configRepo = params.configRepo
     }
@@ -133,3 +131,10 @@ def init(params) {
         null
     }
 }
+
+@NonCPS
+def projectNameByGroupAndRepoName(groupName, repoName) {
+    def docmanConfig = new DocmanConfig(docrootConfigJson: "${params.docrootDir}/${params.docrootConfigJsonPath}")
+    docmanConfig.projectNameByGroupAndRepoName(groupName, repoName)
+}
+

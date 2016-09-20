@@ -39,4 +39,10 @@ class DocmanConfig {
             docmanConfig.projects[project]['states'][stateName]['source']['branch']
         }
     }
+
+    def projectNameByGroupAndRepoName(groupName, repoName) {
+        init()
+        docmanConfig['projects']
+    }
+
 }
