@@ -38,7 +38,7 @@ def config(params) {
         ]
     ]
 
-    jsonDump(projectNameByGroupAndRepoName(env.gitlabSourceGroupName, env.gitlabSourceRepoName), 'Docman projects')
+    jsonDump(projectNameByGroupAndRepoName("${params.docrootDir}/${params.docrootConfigJsonPath}", env.gitlabSourceGroupName, env.gitlabSourceRepoName), 'Docman projects')
 
     params << executePipelineActionList(actions) {
         p = params
@@ -133,8 +133,8 @@ def init(params) {
 }
 
 @NonCPS
-def projectNameByGroupAndRepoName(groupName, repoName) {
-    def docmanConfig = new com.github.aroq.DocmanConfig(docrootConfigJson: "${params.docrootDir}/${params.docrootConfigJsonPath}")
+def projectNameByGroupAndRepoName(docrootConfigJsonPath, groupName, repoName) {
+    def docmanConfig = new com.github.aroq.DocmanConfig(docrootConfigJson: docrootConfigJsonPath)
     docmanConfig.projectNameByGroupAndRepoName(groupName, repoName)
 }
 
