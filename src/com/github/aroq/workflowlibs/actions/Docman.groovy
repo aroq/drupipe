@@ -1,5 +1,7 @@
 package com.github.aroq.workflowlibs.actions
 
+import groovy.json.JsonSlurper
+
 def config(params) {
     if (!params.docmanConfigType) {
         params.docmanConfigType = 'git'
