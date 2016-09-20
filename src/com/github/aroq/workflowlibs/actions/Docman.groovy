@@ -40,7 +40,12 @@ def config(params) {
 
     docrootConfigJson = readFile("${params.docmanConfigPath}/${params.docmanJsonConfigFile}")
 
-    jsonDump(projectNameByGroupAndRepoName(docrootConfigJson, env.gitlabSourceGroupName, env.gitlabSourceRepoName), 'Docman projects')
+    echo "gitlabSourceBranch: ${env.gitlabSourceBranch}"
+    echo "gitlabSourceRepoName: ${env.gitlabSourceRepoName}"
+    echo "gitlabSourceNamespace: ${env.gitlabSourceNamespace}"
+
+
+    jsonDump(projectNameByGroupAndRepoName(docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName), 'Docman projects')
 
     params << executePipelineActionList(actions) {
         p = params
