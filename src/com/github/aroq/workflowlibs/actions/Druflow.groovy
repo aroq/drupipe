@@ -36,7 +36,7 @@ def deployFlow(params) {
 def copySite(params) {
     dir('druflow') {
         git 'https://github.com/aroq/druflow.git'
-        sh "./gradlew app -Ddebug=${debug} -Denv=${params.fromEnvironment} -DtoEnv=${params.toEnvironment} -Dfrom=${params.workspace} -Dsite=${params.site} -DexecuteCommand=copySite -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"
+        sh "./gradlew app -Ddebug=${debug} -Denv=${params.fromEnvironment} -DtoEnv=${params.toEnvironment} -Dfrom=${params.workspace}/${params.docrootDir} -Dsite=${params.site} -DexecuteCommand=copySite -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"
     }
 }
 
