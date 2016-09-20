@@ -55,7 +55,7 @@ def jsonConfig(params) {
     echo "gitlabSourceRepoName: ${env.gitlabSourceRepoName}"
     echo "gitlabSourceNamespace: ${env.gitlabSourceNamespace}"
 
-    projectName = jsonDump(projectNameByGroupAndRepoName(docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName), 'Docman projects')
+    projectName = projectNameByGroupAndRepoName(docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
     if (projectName) {
         params.projectName = projectName
     }
