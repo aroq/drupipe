@@ -44,7 +44,7 @@ class DocmanConfig {
         init()
         String result = ''
         def count = 0
-        docmanConfig.projects?.each { project ->
+        docmanConfig.projects.each { project ->
             count++
             result += count
 //            if (project.value['repo']) {
