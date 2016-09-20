@@ -7,6 +7,12 @@ def deployFlow(params) {
     else {
         deployEnvironment = environment
     }
+    if (params.projectName) {
+        deployProjectName = params.projectName
+    }
+    else {
+        deployProjectName = projectName
+    }
 
     echo("deployEnvironment: ${deployEnvironment}")
     echo("params.deployFlowConfirm?.environment: ${params.deployFlowConfirm?.environment}")
@@ -23,7 +29,7 @@ def deployFlow(params) {
     }
     dir('druflow') {
         git 'https://github.com/aroq/druflow.git'
-        sh "./gradlew app -Ddebug=${debug} -DprojectName=${projectName} -Denv=${deployEnvironment} -DexecuteCommand=${executeCommand} -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}${options}"
+        sh "./gradlew app -Ddebug=${debug} -DprojectName=${deployProjectName} -Denv=${deployEnvironment} -DexecuteCommand=${executeCommand} -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}${options}"
     }
 }
 

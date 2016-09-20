@@ -55,7 +55,10 @@ def jsonConfig(params) {
     echo "gitlabSourceRepoName: ${env.gitlabSourceRepoName}"
     echo "gitlabSourceNamespace: ${env.gitlabSourceNamespace}"
 
-    jsonDump(projectNameByGroupAndRepoName(docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName), 'Docman projects')
+    projectName = jsonDump(projectNameByGroupAndRepoName(docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName), 'Docman projects')
+    if (projectName) {
+        params.projectName = projectName
+    }
 
     params << [returnConfig: true]
 }
@@ -147,18 +150,12 @@ def init(params) {
 
 @NonCPS
 def projectNameByGroupAndRepoName(docrootConfigJson, groupName, repoName) {
-//    def docmanConfig = new com.github.aroq.DocmanConfig(docrootConfigJson: docrootConfigJson)
     docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
-//    docmanConfig.projectNameByGroupAndRepoName(groupName, repoName)
     result = ''
     docmanConfig.projects.each { project ->
-//        if (project.value['repo']) {
-//
-//        }
         if (project.value['repo']?.contains("${groupName}/${repoName}")) {
             result = project.value['name']
         }
-//        result += project
     }
     result
 }
