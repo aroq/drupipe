@@ -134,7 +134,7 @@ def init(params) {
 
 @NonCPS
 def projectNameByGroupAndRepoName(groupName, repoName) {
-    def docmanConfig = new DocmanConfig(docrootConfigJson: "${params.docrootDir}/${params.docrootConfigJsonPath}")
+    def docmanConfig = new com.github.aroq.workflowlibs.DocmanConfig(docrootConfigJson: "${params.docrootDir}/${params.docrootConfigJsonPath}")
     docmanConfig.projectNameByGroupAndRepoName(groupName, repoName)
 }
 
