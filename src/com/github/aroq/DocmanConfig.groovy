@@ -43,8 +43,10 @@ class DocmanConfig {
     def projectNameByGroupAndRepoName(groupName, repoName) {
         init()
         String result = ''
+        count = 0
         docmanConfig.projects?.each { project ->
-            result += project.value
+            count++
+            result += count + project.value
 //            if (project.value['repo']) {
 //                result += " ${projectName} - ${project} : ${groupName} - ${repoName}"
 //            }
