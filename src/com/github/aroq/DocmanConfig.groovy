@@ -43,10 +43,11 @@ class DocmanConfig {
     def projectNameByGroupAndRepoName(groupName, repoName) {
         init()
         String result = ''
-        docmanConfig.projects?.each { projectName, project ->
-            if (project.repo) {
-                result += " ${projectName} - ${project} : ${groupName} - ${repoName}"
-            }
+        docmanConfig.projects?.each { project ->
+            result += project.value
+//            if (project.value['repo']) {
+//                result += " ${projectName} - ${project} : ${groupName} - ${repoName}"
+//            }
 //            if (project['repo']?.contains("${groupName}/${repoName}")) {
 //                result = projectName
 //            }
