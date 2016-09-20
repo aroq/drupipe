@@ -44,12 +44,15 @@ class DocmanConfig {
         init()
         String result = ''
         docmanConfig.projects?.each { projectName, project ->
-            result += " ${projectName} - ${project} : ${groupName} - ${repoName}"
+            if (project.repo) {
+                result += " ${projectName} - ${project} : ${groupName} - ${repoName}"
+            }
 //            if (project['repo']?.contains("${groupName}/${repoName}")) {
 //                result = projectName
 //            }
         }
-        docmanConfig.projects
+//        docmanConfig.projects
+        result
     }
 
 }
