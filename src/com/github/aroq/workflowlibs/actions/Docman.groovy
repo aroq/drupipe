@@ -155,8 +155,8 @@ def projectNameByGroupAndRepoName(docrootConfigJson, groupName, repoName) {
 //        if (project.value['repo']) {
 //
 //        }
-        if (project['repo']?.contains("${groupName}/${repoName}")) {
-            result = projectName
+        if (project.value['repo']?.contains("${groupName}/${repoName}")) {
+            result = project.value['name']
         }
 //        result += project
     }
