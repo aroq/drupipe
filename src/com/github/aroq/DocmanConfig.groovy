@@ -49,7 +49,7 @@ class DocmanConfig {
 //                result = projectName
 //            }
         }
-        result
+        docmanConfig.projects
     }
 
 }
