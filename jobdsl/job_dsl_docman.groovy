@@ -95,6 +95,11 @@ pipelineJob("${config.baseFolder}/release") {
             includeBranches('state_stable')
         }
     }
+    properties {
+        gitLabConnectionProperty {
+            gitLabConnection('Gitlab')
+        }
+    }
 }
 
 pipelineJob("${config.baseFolder}/trigger") {
