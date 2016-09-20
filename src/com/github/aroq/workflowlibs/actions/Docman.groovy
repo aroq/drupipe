@@ -152,7 +152,13 @@ def projectNameByGroupAndRepoName(docrootConfigJson, groupName, repoName) {
 //    docmanConfig.projectNameByGroupAndRepoName(groupName, repoName)
     result = ''
     docmanConfig.projects.each { project ->
-        result += project
+//        if (project.value['repo']) {
+//
+//        }
+        if (project['repo']?.contains("${groupName}/${repoName}")) {
+            result = projectName
+        }
+//        result += project
     }
     result
 }
