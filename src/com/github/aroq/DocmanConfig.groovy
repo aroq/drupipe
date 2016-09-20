@@ -43,7 +43,7 @@ class DocmanConfig {
     def projectNameByGroupAndRepoName(groupName, repoName) {
         init()
         String result = ''
-        count = 0
+        def count = 0
         docmanConfig.projects?.each { project ->
             count++
             result += count + project.value
