@@ -149,7 +149,7 @@ def init(params) {
 def projectNameByGroupAndRepoName(docrootConfigJson, groupName, repoName) {
 //    def docmanConfig = new com.github.aroq.DocmanConfig(docrootConfigJson: docrootConfigJson)
     docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
-    docmanConfig.projectNameByGroupAndRepoName(groupName, repoName)
+//    docmanConfig.projectNameByGroupAndRepoName(groupName, repoName)
     result = ''
     docmanConfig.projects.each { project ->
         result += project
