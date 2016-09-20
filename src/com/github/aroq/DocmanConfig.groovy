@@ -44,7 +44,7 @@ class DocmanConfig {
         init()
         String result = null
         for (project in docmanConfig['projects']) {
-            if ("${groupName}/${repoName}" in project.value['repo']) {
+            if (project.value['repo'].contains("${groupName}/${repoName}")) {
                 result = project.key
             }
         }
