@@ -114,7 +114,15 @@ def deploy(params) {
     if (force == 1) {
         flag = '-f'
     }
-    echo "Executing: docman deploy git_target ${projectName} branch ${version} ${flag}"
+
+    if (params.projectName) {
+        deployProjectName = params.projectName
+    }
+    else {
+        deployProjectName = projectName
+    }
+
+    echo "Executing: docman deploy git_target ${deployProjectName} branch ${version} ${flag}"
     sh(
         """#!/bin/bash -l
         if [ "${force}" == "1" ]; then
@@ -122,7 +130,7 @@ def deploy(params) {
         fi
         docman init ${params.docrootDir} ${config_repo} -s
         cd docroot
-        docman deploy git_target ${projectName} branch ${version} ${flag}
+        docman deploy git_target ${deployProjectName} branch ${version} ${flag}
         """
     )
 }
