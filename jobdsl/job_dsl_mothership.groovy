@@ -7,7 +7,7 @@ projects.each {project ->
 
     folder(project)
 
-    pipelineJob("${project.key}/seed") {
+    pipelineJob("${project}/seed") {
         concurrentBuild(false)
         logRotator(-1, 30)
         parameters {
