@@ -4,43 +4,44 @@ projects = JsonSlurper.newInstance().parseText(readFileFromWorkspace('projects.j
 
 projects.each {project ->
     def subDir = project.value['subDir'] ? project.value['subDir'] : ''
-    folder(project.key)
 
-    pipelineJob("${project.key}/seed") {
-        concurrentBuild(false)
-        logRotator(-1, 30)
-        parameters {
-            stringParam('debug', '0')
-            stringParam('force', '0')
-        }
-        definition {
-            cpsScm {
-                scm {
-                    git() {
-                        remote {
-                            name('origin')
-                            url(project.value['repo'])
+    if (project.value['type' == 'Jenkinsfile']) {
+        pipelineJob("seed") {
+            concurrentBuild(false)
+            logRotator(-1, 30)
+            parameters {
+                stringParam('debug', '0')
+                stringParam('force', '0')
+            }
+            definition {
+                cpsScm {
+                    scm {
+                        git() {
+                            remote {
+                                name('origin')
+                                url(project.value['repo'])
+                            }
+                            extensions {
+                                relativeTargetDirectory(subDir)
+                            }
                         }
-                        extensions {
-                            relativeTargetDirectory(subDir)
-                        }
+                        scriptPath('Jenkinsfile')
                     }
-                    scriptPath('Jenkinsfile')
                 }
             }
-        }
-        triggers {
-            gitlabPush {
-                buildOnPushEvents()
-                buildOnMergeRequestEvents(false)
-                enableCiSkip()
-                useCiFeatures()
-                includeBranches('master')
+            triggers {
+                gitlabPush {
+                    buildOnPushEvents()
+                    buildOnMergeRequestEvents(false)
+                    enableCiSkip()
+                    useCiFeatures()
+                    includeBranches('master')
+                }
             }
-        }
-        properties {
-            gitLabConnectionProperty {
-                gitLabConnection('Gitlab')
+            properties {
+                gitLabConnectionProperty {
+                    gitLabConnection('Gitlab')
+                }
             }
         }
     }
