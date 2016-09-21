@@ -66,7 +66,7 @@ def jsonConfig(params) {
 def info(params) {
     echo "Requesting docman for config..."
     echo "Force: ${force}"
-    if (force == 1) {
+    if (force == '1') {
         echo "Force mode"
         sh(
             """#!/bin/bash -l
