@@ -28,7 +28,7 @@ catch (MissingPropertyException mpe) {
     triggerPipeline = new File(config.triggerPipeline).text
 }
 
-folder("${config.baseFolder}")
+//folder("${config.baseFolder}")
 //folder("${config.baseFolder}/tools")
 
 // Retrieve Docman config from json file (prepared by "docman info" command).
@@ -64,13 +64,12 @@ def docmanConfig = new DocmanConfig(docrootConfigJson: docrootConfigJson)
 //    }
 //}
 
-pipelineJob("${config.baseFolder}/release") {
+pipelineJob("release") {
     concurrentBuild(false)
     logRotator(-1, 30)
     parameters {
         stringParam('executeCommand', 'deployFlow')
         stringParam('projectName', 'common')
-//        stringParam('environment', state.value)
         stringParam('debug', '0')
         stringParam('force', '0')
         stringParam('simulate', '0')
@@ -81,7 +80,6 @@ pipelineJob("${config.baseFolder}/release") {
     }
     definition {
         cps {
-            // See the pipeline script.
             script(releasePipeline)
             sandbox()
         }
