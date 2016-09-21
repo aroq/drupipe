@@ -136,6 +136,7 @@ def init(params) {
     if (config_repo) {
         configRepo = config_repo
     }
+    echo "docman init ${params.path} ${configRepo} -s"
     if (configRepo) {
         sh(
             """#!/bin/bash -l
