@@ -85,6 +85,7 @@ def info(params) {
     catch (err) {
 
     }
+    echo "docman init ${params.docrootDir} ${configRepo} -s"
     if (configRepo) {
         sh(
             """#!/bin/bash -l
@@ -115,7 +116,6 @@ def deploy(params) {
         deployProjectName = projectName
     }
 
-    echo "Executing: docman deploy git_target ${deployProjectName} branch ${version} ${flag}"
     sh(
         """#!/bin/bash -l
         if [ "${force}" == "1" ]; then
