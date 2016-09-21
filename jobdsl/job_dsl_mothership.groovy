@@ -3,8 +3,7 @@ import groovy.json.JsonSlurper
 projects = JsonSlurper.newInstance().parseText(readFileFromWorkspace('projects.json')).projects
 
 projects.each {project ->
-    pipeline = ''
-
+    def subDir = project.value['subDir'] ? project.value['subDir'] : ''
     folder(project.key)
 
     pipelineJob("${project.key}/seed") {
@@ -17,7 +16,15 @@ projects.each {project ->
         definition {
             cpsScm {
                 scm {
-                    git(project.value['repo'])
+                    git() {
+                        remote {
+                            name('origin')
+                            url(project.value['repo'])
+                        }
+                        extensions {
+                            relativeTargetDirectory(subDir)
+                        }
+                    }
                     scriptPath('Jenkinsfile')
                 }
             }
