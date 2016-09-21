@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 projects = JsonSlurper.newInstance().parseText(readFileFromWorkspace('projects.json'))
 
 projects.each {project ->
