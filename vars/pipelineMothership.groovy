@@ -10,7 +10,7 @@ def call(body) {
                 [
                     'seed': [
                         [
-                            action: 'JobDSLSeed.perform',
+                            action: 'JobDslSeed.perform',
                         ],
                     ],
                 ]
