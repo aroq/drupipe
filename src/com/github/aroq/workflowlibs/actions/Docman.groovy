@@ -65,11 +65,12 @@ def jsonConfig(params) {
 
 def info(params) {
     echo "Requesting docman for config..."
+    echo "Force: ${force}"
     if (force == 1) {
+        echo "Force mode"
         sh(
             """#!/bin/bash -l
             if [ "${force}" == "1" ]; then
-              FLAG="-f"
               rm -fR ${params.docrootDir}
             fi
             """
