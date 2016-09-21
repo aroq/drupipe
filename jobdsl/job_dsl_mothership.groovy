@@ -4,9 +4,10 @@ projects = JsonSlurper.newInstance().parseText(readFileFromWorkspace('projects.j
 
 projects.each {project ->
     def subDir = project.value['subDir'] ? project.value['subDir'] : ''
+    folder(project.key)
 
     if (project.value['type'] == 'Jenkinsfile') {
-        pipelineJob("seed") {
+        pipelineJob("${project.key}/seed") {
             concurrentBuild(false)
             logRotator(-1, 30)
             parameters {
