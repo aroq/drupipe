@@ -102,23 +102,3 @@ pipelineJob("${config.baseFolder}/release") {
     }
 }
 
-pipelineJob("${config.baseFolder}/trigger") {
-    concurrentBuild(false)
-    logRotator(-1, 30)
-    definition {
-        cps {
-            // See the trigger pipeline script.
-            script(triggerPipeline)
-            sandbox()
-        }
-    }
-    triggers {
-        gitlabPush {
-            buildOnPushEvents()
-            buildOnMergeRequestEvents(false)
-            enableCiSkip()
-            useCiFeatures()
-        }
-    }
-}
-
