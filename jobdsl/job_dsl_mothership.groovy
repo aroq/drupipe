@@ -5,7 +5,7 @@ projects = JsonSlurper.newInstance().parseText(readFileFromWorkspace('projects.j
 projects.each {project ->
     pipeline = ''
 
-    folder(project.key)
+    folder(project)
 
     pipelineJob("${project.key}/seed") {
         concurrentBuild(false)
@@ -13,7 +13,7 @@ projects.each {project ->
         parameters {
             stringParam('debug', '0')
             stringParam('force', '0')
-            stringParam('type', project.value['type'])
+//            stringParam('type', project.value['type'])
         }
         definition {
             cps {
