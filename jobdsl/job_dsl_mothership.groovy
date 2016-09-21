@@ -17,6 +17,7 @@ projects.each {project ->
             cpsScm {
                 scm {
                     git(project.value['repo'])
+                    scriptPath(Jenkinsfile)
                 }
             }
         }
