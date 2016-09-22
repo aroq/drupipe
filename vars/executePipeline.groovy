@@ -27,6 +27,7 @@ def call(body) {
         }
 
         for (int i = 0; i < pipelinestages.size(); i++) {
+            echo(pipelinestages[i].getClass().toString())
             jsonDump(pipelinestages[i])
 //            params.stage = pipelinestages[i]
 //            params << executeStage(pipelinestages[i]) {
