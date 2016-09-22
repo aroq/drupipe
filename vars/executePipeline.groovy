@@ -30,9 +30,9 @@ def call(body) {
         for (int i = 0; i < pipelineStages.size(); i++) {
             jsonDump(pipelineStages[i])
             params.stage = pipelineStages[i]
-            params << executeStage(pipelineStages[i]) {
-                p = params
-            }
+//            params << executeStage(pipelineStages[i]) {
+//                p = params
+//            }
         }
     }
     params
