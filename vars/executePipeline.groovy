@@ -15,7 +15,8 @@ def call(body) {
         stages = [new com.github.aroq.workflowlibs.Stage(name: 'config', actionList: utils.processPipelineActionList([[action: 'Config.perform']]))]
 
         pipeline = utils.processPipeline(params.pipeline)
-//        stages += pipeline
+        jsonDump(pipeline, "Pipeline")
+        stages += pipeline
         stages += utils.processStages(params.stages)
 
         jsonDump(stages, "Pipeline stages")
