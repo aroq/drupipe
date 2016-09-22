@@ -33,7 +33,6 @@ def colorEcho(message, color = null) {
 @NonCPS
 List<com.github.aroq.workflowlibs.Stage> processPipeline(pipeline) {
     processStages(pipeline)
-    return []
 }
 
 @NonCPS
