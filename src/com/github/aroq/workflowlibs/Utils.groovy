@@ -36,9 +36,9 @@ List<Stage> processPipeline(pipeline) {
 }
 
 @NonCPS
-List<Stage> processStages(stages) {
+List<Stage> processStages(pipelinestages) {
     List<Stage> result = []
-    for (item in stages) {
+    for (item in pipelinestages) {
         result << processStage(item)
     }
     result
