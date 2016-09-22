@@ -31,9 +31,9 @@ def call(body) {
             echo(stages[i].getClass().toString())
             jsonDump(stages[i])
             params.stage = stages[i]
-            params << executeStage(stages[i]) {
-                p = params
-            }
+//            params << executeStage(stages[i]) {
+//                p = params
+//            }
         }
     }
     params
