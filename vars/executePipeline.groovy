@@ -18,7 +18,7 @@ def call(body) {
         pipelinestages += pipeline
         pipelinestages += utils.processStages(params.pipelinestages)
 
-        jsonDump(pipelinestages)
+        jsonDump(pipelinestages, "Pipeline stages")
         if (jenkinsParam('force') == '1') {
             deleteDir()
         }
