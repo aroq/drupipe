@@ -36,9 +36,9 @@ List<Stage> processPipeline(pipeline) {
 }
 
 @NonCPS
-List<Stage> processStages(pipelinestages) {
+List<Stage> processStages(stages) {
     List<Stage> result = []
-    for (item in pipelinestages) {
+    for (item in stages) {
         result << processStage(item)
     }
     result
@@ -46,7 +46,7 @@ List<Stage> processStages(pipelinestages) {
 
 @NonCPS
 Stage processStage(stage) {
-    new Stage(name: stage.key, actionList: processPipelineActionList(stage.value))
+    new com.github.aroq.workflowlibs.Stage(name: stage.key, actionList: processPipelineActionList(stage.value))
 }
 
 @NonCPS

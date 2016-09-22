@@ -6,7 +6,7 @@ def call(body) {
 
     pipelineMultibranchBase {
         p = params
-        pipelinestages = [
+        stages = [
             'ops': [
                 [
                     action: 'Script.execute',
