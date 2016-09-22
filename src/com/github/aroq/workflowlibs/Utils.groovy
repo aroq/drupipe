@@ -39,7 +39,7 @@ List<com.github.aroq.workflowlibs.Stage> processPipeline(pipeline) {
 List<com.github.aroq.workflowlibs.Stage> processStages(stages) {
     List<com.github.aroq.workflowlibs.Stage> result = []
     for (item in stages) {
-        result <<new com.github.aroq.workflowlibs.Stage(name: 'config')
+//        result <<new com.github.aroq.workflowlibs.Stage(name: 'config')
 //        result << processStage(item)
     }
     result
