@@ -1,6 +1,6 @@
 import com.github.aroq.workflowlibs.Stage
 
-def call(Stage stageInstance, body) {
+def call(com.github.aroq.workflowlibs.Stage stageInstance, body) {
     def params = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = params
