@@ -18,7 +18,8 @@ def call(body) {
         pipelineStages += pipeline
         pipelineStages += utils.processStages(params.stages)
 
-        jsonDump(pipelineStages)
+        echo pipelineStages
+        jsonDump(pipelineStages, "Pipeline stages")
         if (jenkinsParam('force') == '1') {
             deleteDir()
         }
@@ -27,6 +28,7 @@ def call(body) {
         }
 
         for (int i = 0; i < pipelineStages.size(); i++) {
+            jsonDump(pipelineStages[i])
             params.stage = pipelineStages[i]
             params << executeStage(pipelineStages[i]) {
                 p = params
