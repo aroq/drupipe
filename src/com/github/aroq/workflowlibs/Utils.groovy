@@ -46,7 +46,7 @@ List<Stage> processStages(stages) {
 
 @NonCPS
 Stage processStage(stage) {
-    new com.github.aroq.workflowlibs.Stage(name: stage.key, actionList: processPipelineActionList(stage.value))
+    new Stage(name: stage.key, actionList: processPipelineActionList(stage.value))
 }
 
 @NonCPS
