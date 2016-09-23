@@ -50,10 +50,6 @@ def config(params) {
 def jsonConfig(params) {
     docrootConfigJson = readFile("${params.docmanConfigPath}/${params.docmanJsonConfigFile}")
 
-    debugLog("gitlabSourceBranch: ${env.gitlabSourceBranch}")
-    debugLog( "gitlabSourceRepoName: ${env.gitlabSourceRepoName}")
-    debugLog("gitlabSourceNamespace: ${env.gitlabSourceNamespace}")
-
     projectName = projectNameByGroupAndRepoName(docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
     if (projectName) {
         params.projectName = projectName
