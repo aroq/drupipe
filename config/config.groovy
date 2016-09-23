@@ -13,16 +13,16 @@ actionParams = [
         docmanConfigPath: 'docroot/config',
         docmanConfigFile: 'docroot.config',
         docmanJsonConfigFile: 'config.json',
-        debugEnabled: true,
+//        debugEnabled: true,
     ],
     Docman_jsonConfig: [
         docmanConfigPath: 'docroot/config',
         docmanConfigFile: 'docroot.config',
         docmanJsonConfigFile: 'config.json',
-        debugEnabled: true,
+//        debugEnabled: true,
     ],
     Docman_info: [
-        debugEnabled: true,
+//        debugEnabled: true,
     ],
     Script_execute: [
     ],

@@ -40,7 +40,6 @@ def config(params) {
         ]
     ]
 
-
     params << executePipelineActionList(actions) {
         p = params
     }
@@ -64,8 +63,6 @@ def jsonConfig(params) {
 }
 
 def info(params) {
-    echo "Requesting docman for config..."
-    echo "Force: ${force}"
     if (force == '1') {
         echo "Force mode"
         sh(
@@ -100,7 +97,6 @@ def info(params) {
         docman info full config.json
         """
     )
-    echo "Requesting docman for config... DONE."
 }
 
 def deploy(params) {
@@ -137,7 +133,6 @@ def init(params) {
     if (config_repo) {
         configRepo = config_repo
     }
-    echo "docman init ${params.path} ${configRepo} -s"
     if (configRepo) {
         sh(
             """#!/bin/bash -l
