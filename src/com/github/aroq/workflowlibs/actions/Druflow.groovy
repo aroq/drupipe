@@ -14,9 +14,6 @@ def deployFlow(params) {
         deployProjectName = projectName
     }
 
-    debugLog("deployEnvironment: ${deployEnvironment}")
-    debugLog("params.deployFlowConfirm?.environment: ${params.deployFlowConfirm?.environment}")
-
     if (deployEnvironment == params.deployFlowConfirm?.environment) {
         timeout(time: 10, unit: 'MINUTES') {
             input params.deployFlowConfirm?.message
