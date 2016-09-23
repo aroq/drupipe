@@ -50,9 +50,9 @@ def config(params) {
 def jsonConfig(params) {
     docrootConfigJson = readFile("${params.docmanConfigPath}/${params.docmanJsonConfigFile}")
 
-    echo "gitlabSourceBranch: ${env.gitlabSourceBranch}"
-    echo "gitlabSourceRepoName: ${env.gitlabSourceRepoName}"
-    echo "gitlabSourceNamespace: ${env.gitlabSourceNamespace}"
+    debugLog "gitlabSourceBranch: ${env.gitlabSourceBranch}"
+    debugLog "gitlabSourceRepoName: ${env.gitlabSourceRepoName}"
+    debugLog "gitlabSourceNamespace: ${env.gitlabSourceNamespace}"
 
     projectName = projectNameByGroupAndRepoName(docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
     if (projectName) {
@@ -83,7 +83,6 @@ def info(params) {
     catch (err) {
 
     }
-    echo "docman init ${params.docrootDir} ${configRepo} -s"
     if (configRepo) {
         sh(
             """#!/bin/bash -l
@@ -100,7 +99,6 @@ def info(params) {
 }
 
 def deploy(params) {
-    echo "Docman deploy"
     def flag = ''
     if (force == 1) {
         flag = '-f'
@@ -126,7 +124,6 @@ def deploy(params) {
 }
 
 def init(params) {
-    echo "Docman init"
     if (params.configRepo) {
         configRepo = params.configRepo
     }
