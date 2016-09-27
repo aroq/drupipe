@@ -37,6 +37,13 @@ def copySite(params) {
     }
 }
 
+def dbBackupSite(params) {
+    dir('druflow') {
+        git 'https://github.com/aroq/druflow.git'
+        sh "./gradlew app -Ddebug=${debug} -Dsite=default -Denv=${params.fromEnvironment} -Dargument=${params.db} -DexecuteCommand=dbBackupSite -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"
+    }
+}
+
 @NonCPS
 def getOptions(props) {
     result = ''
