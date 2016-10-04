@@ -60,7 +60,7 @@ pipelineJob("merge") {
     }
     definition {
         cps {
-            script(releasePipeline)
+            script(mergePipeline)
             sandbox()
         }
     }
