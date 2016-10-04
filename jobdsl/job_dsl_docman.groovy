@@ -70,7 +70,6 @@ pipelineJob("merge") {
             buildOnMergeRequestEvents(true)
             enableCiSkip()
             useCiFeatures()
-            includeBranches('master')
         }
     }
     properties {
