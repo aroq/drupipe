@@ -26,21 +26,21 @@ def deployFlow(params) {
     }
     dir('druflow') {
         git 'https://github.com/aroq/druflow.git'
-        sh "./gradlew app -Ddebug=${debug} -DprojectName=${deployProjectName} -Denv=${deployEnvironment} -DexecuteCommand=${executeCommand} -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}${options}"
+        sh "cd druflow && ./gradlew app -Ddebug=${debug} -DprojectName=${deployProjectName} -Denv=${deployEnvironment} -DexecuteCommand=${executeCommand} -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}${options}"
     }
 }
 
 def copySite(params) {
     dir('druflow') {
         git 'https://github.com/aroq/druflow.git'
-        sh "./gradlew app -Ddebug=${debug} -Dsite=default -Denv=${params.fromEnvironment} -Dargument='${params.db} ${params.toEnvironment}' -DexecuteCommand=dbCopyAC -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"
+        sh "cd druflow && ./gradlew app -Ddebug=${debug} -Dsite=default -Denv=${params.fromEnvironment} -Dargument='${params.db} ${params.toEnvironment}' -DexecuteCommand=dbCopyAC -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"
     }
 }
 
 def dbBackupSite(params) {
     dir('druflow') {
         git 'https://github.com/aroq/druflow.git'
-        sh "./gradlew app -Ddebug=${debug} -Dsite=default -Denv=${params.fromEnvironment} -Dargument=${params.db} -DexecuteCommand=dbBackupSite -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"
+        sh "cd druflow && ./gradlew app -Ddebug=${debug} -Dsite=default -Denv=${params.fromEnvironment} -Dargument=${params.db} -DexecuteCommand=dbBackupSite -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"
     }
 }
 
