@@ -6,6 +6,8 @@ def config(params) {
     if (!params.docmanConfigType) {
         params.docmanConfigType = 'git'
     }
+    echo "Docman config"
+    sh('ls -al')
     if (params.docmanConfigType == 'git') {
         sourceObject = [
             name: 'docmanConfig',
