@@ -23,8 +23,6 @@ def call(body) {
 }
 
 def _executePipeline(params) {
-    echo "TEST"
-    sh('ls -al')
     stages = [new com.github.aroq.workflowlibs.Stage(name: 'config', actionList: utils.processPipelineActionList([[action: 'Config.perform']]))]
 
     stages += utils.processPipeline(params.pipeline)
