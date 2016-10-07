@@ -1,9 +1,5 @@
-// Init params
-def params = [:]
 configFilePath = 'config/docroot.config'
-def config
-
-config = ConfigSlurper.newInstance(params.environment).parse(readFileFromWorkspace(configFilePath))
+def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace(configFilePath))
 deployPipeline = readFileFromWorkspace(config.pipeline)
 releasePipeline = readFileFromWorkspace(config.releasePipeline)
 mergePipeline = readFileFromWorkspace(config.mergePipeline)
