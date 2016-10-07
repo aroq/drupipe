@@ -11,6 +11,7 @@ def call(body) {
 
     utils = new com.github.aroq.workflowlibs.Utils()
     if (params.noNode) {
+        echo "noNode"
         params << _executePipeline(params)
     }
     else {
