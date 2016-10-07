@@ -8,8 +8,6 @@ def call(body) {
         params << params.p
         params.remove('p')
     }
-    echo "TEST"
-    sh('ls -al')
 
     utils = new com.github.aroq.workflowlibs.Utils()
     if (params.noNode) {
@@ -39,6 +37,8 @@ def _executePipeline(params) {
 
     for (int i = 0; i < stages.size(); i++) {
         params.stage = stages[i]
+        echo "TEST"
+        sh('ls -al')
         params << executeStage(stages[i]) {
             p = params
         }
