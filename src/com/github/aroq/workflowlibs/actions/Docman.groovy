@@ -80,12 +80,15 @@ def info(params) {
 
     }
     if (configRepo) {
+        echo 'Docman init'
+        sh('ls -l')
         sh(
             """#!/bin/bash -l
             docman init ${params.docrootDir} ${configRepo} -s
             """
         )
     }
+    echo 'Docman info'
     sh(
         """#!/bin/bash -l
         cd ${params.docrootDir}
