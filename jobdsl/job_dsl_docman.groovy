@@ -27,6 +27,20 @@ pipelineJob("release") {
             script(releasePipeline)
             sandbox()
         }
+        cpsSCM {
+            scm {
+                git() {
+                    remote {
+                        name('origin')
+                        url(config.configRepo)
+                    }
+                    extensions {
+                        relativeTargetDirectory('docroot/config')
+                    }
+                }
+                scriptPath('docroot/config/pipelines/release.groovy')
+            }
+        }
     }
     triggers {
         gitlabPush {
