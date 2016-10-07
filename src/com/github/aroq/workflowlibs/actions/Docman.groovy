@@ -81,20 +81,20 @@ def info(params) {
     }
     if (configRepo) {
         echo 'Docman init'
-        sh('ls -l')
-        sh(
-            """#!/bin/bash -l
-            docman init ${params.docrootDir} ${configRepo} -s
-            """
-        )
+        sh('ls -al')
+//        sh(
+//            """#!/bin/bash -l
+//            docman init ${params.docrootDir} ${configRepo} -s
+//            """
+//        )
     }
     echo 'Docman info'
-    sh(
-        """#!/bin/bash -l
-        cd ${params.docrootDir}
-        docman info full config.json
-        """
-    )
+//    sh(
+//        """#!/bin/bash -l
+//        cd ${params.docrootDir}
+//        docman info full config.json
+//        """
+//    )
 }
 
 def deploy(params) {
