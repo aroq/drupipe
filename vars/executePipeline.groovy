@@ -8,6 +8,8 @@ def call(body) {
         params << params.p
         params.remove('p')
     }
+    echo "TEST"
+    sh('ls -al')
 
     utils = new com.github.aroq.workflowlibs.Utils()
     if (params.noNode) {
