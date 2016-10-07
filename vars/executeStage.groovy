@@ -12,6 +12,8 @@ def call(Stage stageInstance, body) {
     }
 
     stage(stageInstance.name) {
+        echo "TEST"
+        sh('ls -al')
         gitlabCommitStatus(stageInstance.name) {
             params << ['stage': stageInstance]
 
