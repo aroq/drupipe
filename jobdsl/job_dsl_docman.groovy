@@ -23,10 +23,6 @@ pipelineJob("release") {
         stringParam('version', 'state_stable')
     }
     definition {
-        cps {
-            script(releasePipeline)
-            sandbox()
-        }
         cpsSCM {
             scm {
                 git() {
