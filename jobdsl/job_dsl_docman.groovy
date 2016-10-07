@@ -23,7 +23,7 @@ pipelineJob("release") {
         stringParam('version', 'state_stable')
     }
     definition {
-        cpsSCM {
+        cpsScm {
             scm {
                 git() {
                     remote {
