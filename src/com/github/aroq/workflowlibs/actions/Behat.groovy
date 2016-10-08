@@ -25,8 +25,8 @@ def perform(params) {
             if (fileExists("docroot/master/code/common/behat.${testEnvironment}.yml")) {
                 sh """#!/bin/bash -l
 cd docroot/master/docroot
-mkdir -p reports
-docroot/master/bin/behat --config=docroot/master/code/common/behat.${testEnvironment}.yml --format=pretty --out=std --format=junit --out=reports ${tags} ${features}
+mkdir -p ../../../reports
+../bin/behat --config=../code/common/behat.${testEnvironment}.yml --format=pretty --out=std --format=junit --out=../../../reports ${tags} ${features}
 """
             }
             else {
