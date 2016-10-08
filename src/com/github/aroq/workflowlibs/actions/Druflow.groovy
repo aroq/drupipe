@@ -36,6 +36,8 @@ def copySite(params) {
         git 'https://github.com/aroq/druflow.git'
     }
     sh """#!/bin/bash -l
+    groovy --version"""
+    sh """#!/bin/bash -l
     cd druflow && gradle app -Ddebug=${debug} -Dsite=default -Denv=${params.fromEnvironment} -Dargument='${params.db} ${params.toEnvironment}' -DexecuteCommand=dbCopyAC -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"""
 }
 
