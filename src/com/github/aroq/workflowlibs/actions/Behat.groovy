@@ -16,12 +16,13 @@ def perform(params) {
         tags = "--tags=${params.tags}"
     }
 
-    dir('docroot/master/docroot') {
-        if (fileExists('../bin/behat')) {
+//    dir('docroot/master/docroot') {
+        if (fileExists('docroot/bin/behat')) {
             if (fileExists("../code/common/behat.${testEnvironment}.yml")) {
                 sh """#!/bin/bash -l
+cd docroot/master/docroot
 mkdir -p ../../../reports
-../bin/behat --config=../code/common/behat.${testEnvironment}.yml --format=pretty --out=std --format=junit --out=../../../reports ${tags} ${features}
+docroot/bin/behat --config=../code/common/behat.${testEnvironment}.yml --format=pretty --out=std --format=junit --out=../../../reports ${tags} ${features}
 """
             }
             else {
@@ -31,7 +32,7 @@ mkdir -p ../../../reports
         else {
             echo "Behat execution file doesn't present"
         }
-    }
+//    }
 }
 
 
