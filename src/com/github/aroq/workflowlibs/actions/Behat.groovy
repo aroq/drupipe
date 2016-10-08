@@ -17,6 +17,10 @@ def perform(params) {
     }
 
 //    dir('docroot/master/docroot') {
+    sh('ls -al')
+    sh('ls docroot -al')
+    sh('ls docroot/master -al')
+    sh('ls docroot/master/bin/behat -al')
         if (fileExists('docroot/master/bin/behat')) {
             if (fileExists("docroot/master/code/common/behat.${testEnvironment}.yml")) {
                 sh """#!/bin/bash -l
