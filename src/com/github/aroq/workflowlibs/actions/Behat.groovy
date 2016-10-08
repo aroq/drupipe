@@ -18,15 +18,15 @@ def perform(params) {
 
 //    dir('docroot/master/docroot') {
         if (fileExists('docroot/bin/behat')) {
-            if (fileExists("../code/common/behat.${testEnvironment}.yml")) {
+            if (fileExists("docroot/code/common/behat.${testEnvironment}.yml")) {
                 sh """#!/bin/bash -l
 cd docroot/master/docroot
-mkdir -p ../../../reports
-docroot/bin/behat --config=../code/common/behat.${testEnvironment}.yml --format=pretty --out=std --format=junit --out=../../../reports ${tags} ${features}
+mkdir -p reports
+docroot/bin/behat --config=docroot/code/common/behat.${testEnvironment}.yml --format=pretty --out=std --format=junit --out=reports ${tags} ${features}
 """
             }
             else {
-                echo "Behat config file not found: ../code/common/behat.${testEnvironment}.yml"
+                echo "Behat config file not found: docroot/code/common/behat.${testEnvironment}.yml"
             }
         }
         else {
