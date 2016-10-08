@@ -16,27 +16,21 @@ def perform(params) {
         tags = "--tags=${params.tags}"
     }
 
-//    dir('docroot/master/docroot') {
-    sh('ls -al')
-    sh('ls docroot -al')
-    sh('ls docroot/master -al')
-    sh('ls docroot/master/bin/behat -al')
-        if (fileExists('docroot/master/bin/behat')) {
-            if (fileExists("docroot/master/code/common/behat.${testEnvironment}.yml")) {
-                sh """#!/bin/bash -l
+    if (fileExists('docroot/master/bin/behat')) {
+        if (fileExists("docroot/master/code/common/behat.${testEnvironment}.yml")) {
+            sh """#!/bin/bash -l
 cd docroot/master/docroot
 mkdir -p ../../../reports
 ../bin/behat --config=../code/common/behat.${testEnvironment}.yml --format=pretty --out=std --format=junit --out=../../../reports ${tags} ${features}
 """
-            }
-            else {
-                echo "Behat config file not found: docroot/master/code/common/behat.${testEnvironment}.yml"
-            }
         }
         else {
-            echo "Behat execution file doesn't present"
+            echo "Behat config file not found: docroot/master/code/common/behat.${testEnvironment}.yml"
         }
-//    }
+    }
+    else {
+        echo "Behat execution file doesn't present"
+    }
 }
 
 
