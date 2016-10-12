@@ -6,7 +6,12 @@ def add(params) {
     switch (source.type) {
         case 'git':
             dir(source.path) {
-                git url: source.url, branch: source.branch
+                if (params.gitCredentialsID) {
+                    git credentialsId: params.gitCredentialsID, url: source.url, branch: source.branch
+                }
+                else {
+                    git url: source.url, branch: source.branch
+                }
             }
             result = source.path
             break
