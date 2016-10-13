@@ -11,7 +11,7 @@ def docmanConfig = new DocmanConfig(docrootConfigJson: docrootConfigJson)
 
 // Create pipeline jobs for each state defined in Docman config.
 docmanConfig.states?.each { state ->
-    pipelineJob("${config.baseFolder}/${state.key}") {
+    pipelineJob(state.key) {
         concurrentBuild(false)
         logRotator(-1, 30)
         parameters {
