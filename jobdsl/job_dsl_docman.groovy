@@ -35,7 +35,7 @@ docmanConfig.states?.each { state ->
             stringParam('docrootDir', 'docroot')
             stringParam('config_repo', config.configRepo)
             stringParam('type', 'branch')
-            stringParam('version', branches[state].branch)
+            stringParam('version', branches[state.key]?.branch)
         }
         definition {
             cpsScm {
