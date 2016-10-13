@@ -9,6 +9,10 @@ def call(body) {
         params.remove('p')
     }
 
+    if (!params.projectName) {
+        params.projectName = env.gitlabSourceRepoName
+    }
+
     utils = new com.github.aroq.workflowlibs.Utils()
     if (params.noNode) {
         params << _executePipeline(params)
