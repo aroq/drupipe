@@ -11,13 +11,16 @@ def docmanConfig = new DocmanConfig(docrootConfigJson: docrootConfigJson)
 
 def branches = [
     development: [
-        'branch': 'develop',
+        branch: 'develop',
+        pipeline: 'deploy',
     ],
     staging: [
         'branch': 'master',
+        'pipeline': 'deploy',
     ],
     stable: [
         'branch': 'state_stable',
+        'pipeline': 'release',
     ],
 ]
 
@@ -28,7 +31,7 @@ docmanConfig.states?.each { state ->
         logRotator(-1, 30)
         parameters {
             stringParam('executeCommand', 'deployFlow')
-            stringParam('projectName', 'common')
+            stringParam('projectName', '')
             stringParam('debug', '0')
             stringParam('force', '0')
             stringParam('simulate', '0')
@@ -49,7 +52,7 @@ docmanConfig.states?.each { state ->
                             relativeTargetDirectory('docroot/config')
                         }
                     }
-                    scriptPath("docroot/config/pipelines/${state.key}.groovy")
+                    scriptPath("docroot/config/pipelines/${branches[state.key]?.pipeline}.groovy")
                 }
             }
         }
