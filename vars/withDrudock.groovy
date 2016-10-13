@@ -10,11 +10,11 @@ def call(params = [:], body) {
             def drudock = docker.image('aroq/drudock:1.0.1')
             drudock.pull()
             drudock.inside('--user root:root') {
-                sshagent([params.gitCredentialsID]) {
+                sshagent([params.credentialsID]) {
                     if (params.pipeline) {
                         params = executePipeline {
                             noNode = true
-                            gitCredentialsID = params.gitCredentialsID
+                            credentialsID = params.credentialsID
                             pipeline = params.pipeline
                         }
                     }
