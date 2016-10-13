@@ -1,8 +1,60 @@
 configFilePath = 'config/docroot.config'
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace(configFilePath))
-deployPipeline = readFileFromWorkspace(config.pipeline)
-releasePipeline = readFileFromWorkspace(config.releasePipeline)
 mergePipeline = readFileFromWorkspace(config.mergePipeline)
+
+docrootConfigJson = readFileFromWorkspace(config.docrootConfigJsonPath)
+
+// Retrieve Docman config from json file (prepared by "docman info" command).
+def docmanConfig = new DocmanConfig(docrootConfigJson: docrootConfigJson)
+
+// Create pipeline jobs for each state defined in Docman config.
+docmanConfig.states?.each { state ->
+    pipelineJob("${config.baseFolder}/${state.key}") {
+        concurrentBuild(false)
+        logRotator(-1, 30)
+        parameters {
+            stringParam('executeCommand', 'deployFlow')
+            stringParam('projectName', 'common')
+            stringParam('debug', '0')
+            stringParam('force', '0')
+            stringParam('simulate', '0')
+            stringParam('docrootDir', 'docroot')
+            stringParam('config_repo', config.configRepo)
+            stringParam('type', 'branch')
+            stringParam('version', 'state_stable')
+        }
+        definition {
+            cpsScm {
+                scm {
+                    git() {
+                        remote {
+                            name('origin')
+                            url(config.configRepo)
+                        }
+                        extensions {
+                            relativeTargetDirectory('docroot/config')
+                        }
+                    }
+                    scriptPath('docroot/config/pipelines/release.groovy')
+                }
+            }
+        }
+        triggers {
+            gitlabPush {
+                buildOnPushEvents()
+                buildOnMergeRequestEvents(false)
+                enableCiSkip()
+                useCiFeatures()
+                includeBranches('state_stable')
+            }
+        }
+        properties {
+            gitLabConnectionProperty {
+                gitLabConnection('Gitlab')
+            }
+        }
+    }
+}
 
 pipelineJob("release") {
     concurrentBuild(false)
