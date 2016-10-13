@@ -1,7 +1,4 @@
-def call(body) {
-    def params = [:]
-    body.resolveStrategy = Closure.DELEGATE_FIRST
-    body.delegate = params
+def call(params = [:], body) {
 
     if (params.p) {
         params << params.p
