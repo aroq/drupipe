@@ -2,7 +2,6 @@ def call(body) {
     def params = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = params
-    body()
 
     if (params.p) {
         params << params.p
@@ -15,11 +14,14 @@ def call(body) {
             drudock.pull()
             drudock.inside('--user root:root') {
                 sshagent([params.gitCredentialsID]) {
-                    params = executePipeline {
-                        noNode = true
-                        gitCredentialsID = params.gitCredentialsID
-                        pipeline = params.pipeline
+                    if (params.pipeline) {
+                        params = executePipeline {
+                            noNode = true
+                            gitCredentialsID = params.gitCredentialsID
+                            pipeline = params.pipeline
+                        }
                     }
+                    body()
                 }
             }
         }
