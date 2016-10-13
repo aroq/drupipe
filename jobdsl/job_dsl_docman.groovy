@@ -1,3 +1,5 @@
+import com.github.aroq.DocmanConfig
+
 configFilePath = 'config/docroot.config'
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace(configFilePath))
 mergePipeline = readFileFromWorkspace(config.mergePipeline)
