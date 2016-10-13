@@ -49,7 +49,7 @@ docmanConfig.states?.each { state ->
                             relativeTargetDirectory('docroot/config')
                         }
                     }
-                    scriptPath('docroot/config/pipelines/release.groovy')
+                    scriptPath("docroot/config/pipelines/${state.key}.groovy")
                 }
             }
         }
@@ -59,59 +59,13 @@ docmanConfig.states?.each { state ->
                 buildOnMergeRequestEvents(false)
                 enableCiSkip()
                 useCiFeatures()
-                includeBranches('state_stable')
+                includeBranches(branches[state.key]?.branch)
             }
         }
         properties {
             gitLabConnectionProperty {
                 gitLabConnection('Gitlab')
             }
-        }
-    }
-}
-
-pipelineJob("release") {
-    concurrentBuild(false)
-    logRotator(-1, 30)
-    parameters {
-        stringParam('executeCommand', 'deployFlow')
-        stringParam('projectName', 'common')
-        stringParam('debug', '0')
-        stringParam('force', '0')
-        stringParam('simulate', '0')
-        stringParam('docrootDir', 'docroot')
-        stringParam('config_repo', config.configRepo)
-        stringParam('type', 'branch')
-        stringParam('version', 'state_stable')
-    }
-    definition {
-        cpsScm {
-            scm {
-                git() {
-                    remote {
-                        name('origin')
-                        url(config.configRepo)
-                    }
-                    extensions {
-                        relativeTargetDirectory('docroot/config')
-                    }
-                }
-                scriptPath('docroot/config/pipelines/release.groovy')
-            }
-        }
-    }
-    triggers {
-        gitlabPush {
-            buildOnPushEvents()
-            buildOnMergeRequestEvents(false)
-            enableCiSkip()
-            useCiFeatures()
-            includeBranches('state_stable')
-        }
-    }
-    properties {
-        gitLabConnectionProperty {
-            gitLabConnection('Gitlab')
         }
     }
 }
