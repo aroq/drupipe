@@ -9,6 +9,18 @@ docrootConfigJson = readFileFromWorkspace(config.docrootConfigJsonPath)
 // Retrieve Docman config from json file (prepared by "docman info" command).
 def docmanConfig = new DocmanConfig(docrootConfigJson: docrootConfigJson)
 
+def branches = [
+    development: [
+        'branch': 'develop',
+    ],
+    staging: [
+        'branch': 'master',
+    ],
+    stable: [
+        'branch': 'state_stable',
+    ],
+]
+
 // Create pipeline jobs for each state defined in Docman config.
 docmanConfig.states?.each { state ->
     pipelineJob(state.key) {
@@ -23,7 +35,7 @@ docmanConfig.states?.each { state ->
             stringParam('docrootDir', 'docroot')
             stringParam('config_repo', config.configRepo)
             stringParam('type', 'branch')
-            stringParam('version', 'state_stable')
+            stringParam('version', branches[state].branch)
         }
         definition {
             cpsScm {
