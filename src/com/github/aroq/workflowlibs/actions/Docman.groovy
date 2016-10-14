@@ -3,25 +3,25 @@ package com.github.aroq.workflowlibs.actions
 import groovy.json.JsonSlurper
 
 def config(params) {
-    if (!params.docmanConfigType) {
-        params.docmanConfigType = 'git'
-    }
-    if (params.docmanConfigType == 'git') {
-        sourceObject = [
-            name: 'docmanConfig',
-            type: 'git',
-            url: config_repo,
-            path: params.docmanConfigPath,
-            branch: 'master',
-        ]
-    }
-    else {
-        sourceObject = [
-            name: 'docmanConfig',
-            type: 'dir',
-            path: params.docmanConfigPath,
-        ]
-    }
+//    if (!params.docmanConfigType) {
+//        params.docmanConfigType = 'git'
+//    }
+//    if (params.docmanConfigType == 'git') {
+//        sourceObject = [
+//            name: 'docmanConfig',
+//            type: 'git',
+//            url: config_repo,
+//            path: params.docmanConfigPath,
+//            branch: 'master',
+//        ]
+//    }
+//    else {
+//    }
+    sourceObject = [
+        name: 'docmanConfig',
+        type: 'dir',
+        path: params.docmanConfigPath,
+    ]
     actions = [
         [
             action: 'Docman.info',
