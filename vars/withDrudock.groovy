@@ -5,6 +5,8 @@ def call(params = [:], body) {
         params.remove('p')
     }
 
+    echo "Credentials: ${params.credentialsID}"
+
     node(params.nodeName) {
         withCredentials([[$class: 'FileBinding', credentialsId: 'id_rsa', variable: 'ID_RSA_FILE']]) {
             def drudock = docker.image('aroq/drudock:1.0.1')
@@ -14,6 +16,7 @@ def call(params = [:], body) {
                     if (params.pipeline) {
                         params = executePipeline {
                             noNode = true
+                            echo "Credentials: ${params.credentialsID}"
                             credentialsID = params.credentialsID
                             pipeline = params.pipeline
                         }
