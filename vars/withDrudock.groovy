@@ -16,10 +16,11 @@ def call(params = [:], body) {
             drudock.inside('--user root:root') {
                 echo "Credentials4: ${params.credentialsID}"
                 sshagent([params.credentialsID]) {
+                    echo "Credentials5: ${params.credentialsID}"
                     if (params.pipeline) {
+                        echo "Credentials6: ${params.credentialsID}"
                         params = executePipeline {
                             noNode = true
-                            echo "Credentials inside drudock: ${params.credentialsID}"
                             credentialsID = params.credentialsID
                             pipeline = params.pipeline
                         }
