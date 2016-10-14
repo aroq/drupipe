@@ -7,9 +7,11 @@ def add(params) {
         case 'git':
             dir(source.path) {
                 if (params.credentialsID) {
+                    echo "With credentials: ${params.credentialsID}"
                     git credentialsId: params.credentialsID, url: source.url, branch: source.branch
                 }
                 else {
+                    echo "Without credentials"
                     git url: source.url, branch: source.branch
                 }
             }
