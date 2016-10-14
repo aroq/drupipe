@@ -1,4 +1,4 @@
-debugEnabled = false
+debugEnabled = true
 docrootDir = 'docroot'
 actionParams = [
     // TODO: add params subsections (that will be containerized inside common config).
