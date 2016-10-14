@@ -16,7 +16,7 @@ def call(params = [:], body) {
                     if (params.pipeline) {
                         params = executePipeline {
                             noNode = true
-                            echo "Credentials: ${params.credentialsID}"
+                            echo "Credentials inside drudock: ${params.credentialsID}"
                             credentialsID = params.credentialsID
                             pipeline = params.pipeline
                         }
