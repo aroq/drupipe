@@ -5,7 +5,7 @@ def call(body) {
     body()
 
     try {
-        _pipelineNotify('STARTED')
+        _pipelineNotify(params)
         if (params.p) {
             params << params.p
             params.remove('p')
@@ -33,12 +33,12 @@ def call(body) {
         throw e
     }
     finally {
-        _pipelineNotify(currentBuild.result)
+        _pipelineNotify(params, currentBuild.result)
     }
 
 }
 
-def _pipelineNotify(String buildStatus = 'STARTED') {
+def _pipelineNotify(params, String buildStatus = 'STARTED') {
     // build status of null means successful
     buildStatus =  buildStatus ?: 'SUCCESSFUL'
 
@@ -63,14 +63,20 @@ def _pipelineNotify(String buildStatus = 'STARTED') {
     }
 
     // Send notifications
-    slackSend (color: colorCode, message: summary, channel: '#faurecia')
+    slackSend (color: colorCode, message: summary, channel: params.slackChannel)
 
     // hipchatSend (color: color, notify: true, message: summary)
+
+    def to = emailextrecipients([
+        [$class: 'CulpritsRecipientProvider'],
+        [$class: 'DevelopersRecipientProvider'],
+        [$class: 'RequesterRecipientProvider']
+    ])
 
     emailext (
         subject: subject,
         body: details,
-        recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+        to: to
     )
 }
 
