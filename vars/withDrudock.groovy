@@ -6,7 +6,7 @@ def call(params = [:], body) {
     }
 
     node(params.nodeName) {
-        withCredentials([[$class: 'FileBinding', credentialsId: 'id_rsa', variable: 'ID_RSA_FILE']]) {
+//        withCredentials([[$class: 'FileBinding', credentialsId: 'id_rsa', variable: 'ID_RSA_FILE']]) {
             def drudock = docker.image('aroq/drudock:1.0.1')
             drudock.pull()
             drudock.inside('--user root:root') {
@@ -22,7 +22,7 @@ def call(params = [:], body) {
                 }
             }
         }
-    }
+//    }
 
     params
 }
