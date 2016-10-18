@@ -11,11 +11,11 @@ def call(body) {
             params.remove('p')
         }
 
+        // Refactor it to retrieve project name from repo address instead of name.
         if (!params.projectName) {
             params.projectName = env.gitlabSourceRepoName
         }
 
-        utils = new com.github.aroq.workflowlibs.Utils()
         if (params.noNode) {
             params << _executePipeline(params)
         }
@@ -24,9 +24,6 @@ def call(body) {
                 params << _executePipeline(params)
             }
         }
-
-        params
-
     }
     catch (e) {
         currentBuild.result = "FAILED"
@@ -34,8 +31,32 @@ def call(body) {
     }
     finally {
         _pipelineNotify(params, currentBuild.result)
+        params
     }
 
+}
+
+def _executePipeline(params) {
+    utils = new com.github.aroq.workflowlibs.Utils()
+    stages = [new com.github.aroq.workflowlibs.Stage(name: 'config', actionList: utils.processPipelineActionList([[action: 'Config.perform']]))]
+
+    stages += utils.processPipeline(params.pipeline)
+    stages += utils.processStages(params.stages)
+
+    if (jenkinsParam('force') == '1') {
+        deleteDir()
+    }
+    if (params.checkoutSCM) {
+        checkout scm
+    }
+
+    for (int i = 0; i < stages.size(); i++) {
+        params.stage = stages[i]
+        params << executeStage(stages[i]) {
+            p = params
+        }
+    }
+    params
 }
 
 def _pipelineNotify(params, String buildStatus = 'STARTED') {
@@ -79,28 +100,4 @@ def _pipelineNotify(params, String buildStatus = 'STARTED') {
         to: to
     )
 }
-
-def _executePipeline(params) {
-    stages = [new com.github.aroq.workflowlibs.Stage(name: 'config', actionList: utils.processPipelineActionList([[action: 'Config.perform']]))]
-
-    stages += utils.processPipeline(params.pipeline)
-    stages += utils.processStages(params.stages)
-
-    if (jenkinsParam('force') == '1') {
-        deleteDir()
-    }
-    if (params.checkoutSCM) {
-        checkout scm
-    }
-
-    for (int i = 0; i < stages.size(); i++) {
-        params.stage = stages[i]
-        params << executeStage(stages[i]) {
-            p = params
-        }
-    }
-    params
-}
-
-
 
