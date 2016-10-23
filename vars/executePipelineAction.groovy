@@ -4,6 +4,8 @@ def call(action, body) {
     body.delegate = params
     body()
 
+    jsonDump(params.p, 'params.p')
+
     if (params.p) {
         params << params.p
         params.remove('p')
