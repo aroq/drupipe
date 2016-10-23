@@ -51,13 +51,14 @@ def _executePipeline(params) {
         echo 'checkout scm'
         echo "params.checkoutSCM: ${params.checkoutSCM}"
 //        echo "scm.userRemoteConfigs: ${scm.userRemoteConfigs}"
-        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'zebra', url: 'git@code.adyax.com:CI-Sample-Multirepo/config.git']]])
+//        checkout([$class: 'GitSCM', branches: scm.branches, doGenerateSubmoduleConfigurations: false, extensions: scm.extensions, submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'zebra', url: 'git@code.adyax.com:CI-Sample-Multirepo/config.git']]])
 //        checkout([
 //           $class: 'GitSCM',
 //           branches: scm.branches,
 //           extensions: scm.extensions,
 //           userRemoteConfigs: scm.userRemoteConfigs + [[credentialsId: 'zebra']]
 //       ])
+        checkout scm
     }
 
     for (int i = 0; i < stages.size(); i++) {
