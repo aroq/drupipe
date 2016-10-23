@@ -11,6 +11,7 @@ def call(body) {
                     'seed': [
                         [
                             action: 'JobDslSeed.perform',
+                            params: [lookupStrategy: 'JENKINS_ROOT']
                         ],
                     ],
                 ]
