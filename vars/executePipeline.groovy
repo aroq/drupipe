@@ -49,6 +49,7 @@ def _executePipeline(params) {
     if (params.checkoutSCM) {
         echo 'checkout scm'
         echo "params.checkoutSCM: ${params.checkoutSCM}"
+        sh "pwd"
         sh "ls -l"
         checkout scm
     }
