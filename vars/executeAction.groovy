@@ -6,6 +6,7 @@ def call(Action action, body) {
     body.delegate = params
     body()
 
+
     if (params.p) {
         params << params.p
         params.remove('p')

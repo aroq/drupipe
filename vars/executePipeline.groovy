@@ -43,10 +43,12 @@ def _executePipeline(params) {
     stages += utils.processPipeline(params.pipeline)
     stages += utils.processStages(params.stages)
 
-    if (jenkinsParam('force') == '1') {
+    if (force == '1') {
+        echo 'FORCE REMOVE DIR'
         deleteDir()
     }
     if (params.checkoutSCM) {
+        echo "params.checkoutSCM: ${params.checkoutSCM}"
         checkout scm
     }
 
@@ -94,10 +96,10 @@ def _pipelineNotify(params, String buildStatus = 'STARTED') {
         [$class: 'RequesterRecipientProvider']
     ])
 
-    emailext (
-        subject: subject,
-        body: details,
-        to: to
-    )
+//    emailext (
+//        subject: subject,
+//        body: details,
+//        to: to
+//    )
 }
 
