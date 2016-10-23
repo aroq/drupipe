@@ -17,11 +17,6 @@ def call(body) {
                     ]
                 ],
             ],
-            'seed': [
-                [
-                    action: 'JobDslSeed.perform',
-                ],
-            ],
         ]
         p = params
     }
