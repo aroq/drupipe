@@ -52,7 +52,7 @@ def _executePipeline(params) {
         echo "params.checkoutSCM: ${params.checkoutSCM}"
         sh "pwd"
         sh "ls -l"
-        sh 'ls -l/jenkins/workspace/multirepo/seed/config'
+        sh 'ls -l config'
         checkout scm
     }
 
