@@ -7,6 +7,7 @@ def call(Action action, body) {
     body()
 
     jsonDump(params.p, 'params.p')
+    jsonDump(p, 'p')
 
     if (params.p) {
         params << params.p
