@@ -29,11 +29,12 @@ actionParams = [
     Publish_junit: [
         reportsPath: 'reports/*.xml'
     ],
-    JobDslSeed: [
+    JobDslSeed_perform: [
         removedJobAction: 'DELETE',
         removedViewAction: 'DELETE',
         lookupStrategy: 'SEED_JOB',
-        additionalClasspath: ['library/src']
+        additionalClasspath: ['library/src'],
+        debugEnabled: true,
     ],
     Druflow_deployFlow: [
         propertiesFile: 'docroot/master/version.properties'

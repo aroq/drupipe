@@ -12,11 +12,9 @@ def call(Action action, body) {
         params.remove('p')
     }
 
-    jsonDump(params, 'executeAction1')
     def actionParams = [:]
 
     try {
-        jsonDump(params, 'executeAction2')
         utils = new com.github.aroq.workflowlibs.Utils()
         actionParams << params
         if (!action.params) {
