@@ -96,10 +96,10 @@ def _pipelineNotify(params, String buildStatus = 'STARTED') {
         [$class: 'RequesterRecipientProvider']
     ])
 
-    emailext (
-        subject: subject,
-        body: details,
-        to: to
-    )
+//    emailext (
+//        subject: subject,
+//        body: details,
+//        to: to
+//    )
 }
 
