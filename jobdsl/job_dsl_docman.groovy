@@ -6,7 +6,7 @@ def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace(configFileP
 docrootConfigJson = readFileFromWorkspace(config.docrootConfigJsonPath)
 
 // Retrieve Docman config from json file (prepared by "docman info" command).
-def docmanConfig = new DocmanConfig(docrootConfigJson: docrootConfigJson)
+//def docmanConfig = new DocmanConfig(docrootConfigJson: docrootConfigJson)
 
 def branches = [
     development: [
