@@ -11,6 +11,7 @@ def call(params = [:], body) {
             drudock.pull()
             drudock.inside('--user root:root') {
                 sshagent([params.credentialsID]) {
+                    checkout scm
                     if (params.pipeline) {
                         params = executePipeline {
                             noNode = true
