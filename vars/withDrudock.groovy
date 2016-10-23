@@ -15,8 +15,8 @@ def call(params = [:], body) {
                     echo 'ssh'
                     sh "ssh -v git@code.adyax.com"
 
-                    echo 'git without credentials'
-                    git url: 'git@code.adyax.com:CI-Sample-Multirepo/config.git', branch: 'master'
+                    //echo 'git without credentials'
+                    //git url: 'git@code.adyax.com:CI-Sample-Multirepo/config.git', branch: 'master'
 
                     echo 'git with credentials'
                     git credentialsId: params.credentialsID, url: 'git@code.adyax.com:CI-Sample-Multirepo/config.git', branch: 'master'
