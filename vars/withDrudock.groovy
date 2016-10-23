@@ -10,7 +10,9 @@ def call(params = [:], body) {
             def drudock = docker.image('aroq/drudock:1.0.1')
             drudock.pull()
             drudock.inside('--user root:root') {
+                echo "Credentials: ${params.credentialsID}"
                 sshagent([params.credentialsID]) {
+                    'echo ssh'
                     sh "ssh -v git@code.adyax.com"
                     checkout scm
                     if (params.pipeline) {
