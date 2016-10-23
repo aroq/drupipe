@@ -20,7 +20,7 @@ def call(params = [:], body) {
                     }
                 }
                 jsonDump(params, 'before body')
-                body()
+                params << body()
                 jsonDump(params, 'after body')
             }
         }
