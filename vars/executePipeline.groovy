@@ -50,12 +50,14 @@ def _executePipeline(params) {
     if (params.checkoutSCM) {
         echo 'checkout scm'
         echo "params.checkoutSCM: ${params.checkoutSCM}"
-         checkout([
-            $class: 'GitSCM',
-            branches: scm.branches,
-            extensions: scm.extensions,
-            userRemoteConfigs: scm.userRemoteConfigs + [[credentialsId: 'zebra']]
-        ])
+//        echo "scm.userRemoteConfigs: ${scm.userRemoteConfigs}"
+        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'zebra', url: 'git@code.adyax.com:CI-Sample-Multirepo/config.git']]])
+//        checkout([
+//           $class: 'GitSCM',
+//           branches: scm.branches,
+//           extensions: scm.extensions,
+//           userRemoteConfigs: scm.userRemoteConfigs + [[credentialsId: 'zebra']]
+//       ])
     }
 
     for (int i = 0; i < stages.size(); i++) {
