@@ -47,6 +47,7 @@ def _executePipeline(params) {
         deleteDir()
     }
     if (params.checkoutSCM) {
+        echo 'checkout scm'
         checkout scm
     }
 
