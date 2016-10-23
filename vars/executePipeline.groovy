@@ -48,16 +48,7 @@ def _executePipeline(params) {
         deleteDir()
     }
     if (params.checkoutSCM) {
-        echo 'checkout scm'
         echo "params.checkoutSCM: ${params.checkoutSCM}"
-//        echo "scm.userRemoteConfigs: ${scm.userRemoteConfigs}"
-//        checkout([$class: 'GitSCM', branches: scm.branches, doGenerateSubmoduleConfigurations: false, extensions: scm.extensions, submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'zebra', url: 'git@code.adyax.com:CI-Sample-Multirepo/config.git']]])
-//        checkout([
-//           $class: 'GitSCM',
-//           branches: scm.branches,
-//           extensions: scm.extensions,
-//           userRemoteConfigs: scm.userRemoteConfigs + [[credentialsId: 'zebra']]
-//       ])
         checkout scm
     }
 
