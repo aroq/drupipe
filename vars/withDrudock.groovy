@@ -5,6 +5,8 @@ def call(params = [:], body) {
         params.remove('p')
     }
 
+    jsonDump(params, 'BEFORE')
+
     node(params.nodeName) {
         def drudock = docker.image('aroq/drudock:1.0.1')
         drudock.pull()
@@ -17,10 +19,13 @@ def call(params = [:], body) {
                         pipeline = params.pipeline
                     }
                 }
+                jsonDump(params, 'before body')
                 body()
+                jsonDump(params, 'after body')
             }
         }
     }
+    jsonDump(params, 'AFTER')
 
     params
 }
