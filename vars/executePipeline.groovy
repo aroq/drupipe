@@ -53,8 +53,8 @@ def _executePipeline(params) {
          checkout([
             $class: 'GitSCM',
             branches: scm.branches,
-            extensions: scm.extensions + [[credentialsID: 'zebra']],
-            userRemoteConfigs: scm.userRemoteConfigs
+            extensions: scm.extensions,
+            userRemoteConfigs: scm.userRemoteConfigs + [[credentialsId: 'zebra']]
         ])
     }
 
