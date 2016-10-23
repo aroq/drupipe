@@ -14,6 +14,7 @@ def call(Action action, body) {
     def actionParams = [:]
 
     try {
+        jsonDump(params, 'executeAction')
         echoDelimiter "-----> Stage: ${params.stage.name} | Action name: ${action.fullName} start <-"
         utils = new com.github.aroq.workflowlibs.Utils()
         actionParams << params
