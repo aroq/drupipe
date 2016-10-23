@@ -32,6 +32,7 @@ def call(Action action, body) {
         echoDelimiter "-----> Stage: ${actionParams.stage.name} | Action name: ${action.fullName} start <-"
 
         debugLog(actionParams, actionParams, "${action.fullName} action params")
+        jsonDump(actionParams, 'actionParams')
         // TODO: configure it:
         def actionFile = null
         if (params.sourcesList) {
