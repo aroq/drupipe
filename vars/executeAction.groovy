@@ -6,15 +6,17 @@ def call(Action action, body) {
     body.delegate = params
     body()
 
+
     if (params.p) {
         params << params.p
         params.remove('p')
     }
 
+    jsonDump(params, 'executeAction1')
     def actionParams = [:]
 
     try {
-        echoDelimiter "-----> Stage: ${params.stage.name} | Action name: ${action.fullName} start <-"
+        jsonDump(params, 'executeAction2')
         utils = new com.github.aroq.workflowlibs.Utils()
         actionParams << params
         if (!action.params) {
@@ -29,6 +31,7 @@ def call(Action action, body) {
         }
         actionParams << params
         actionParams << defaultParams << action.params
+        echoDelimiter "-----> Stage: ${actionParams.stage.name} | Action name: ${action.fullName} start <-"
 
         debugLog(actionParams, actionParams, "${action.fullName} action params")
         // TODO: configure it:
