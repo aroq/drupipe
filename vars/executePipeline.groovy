@@ -43,7 +43,7 @@ def _executePipeline(params) {
     stages += utils.processPipeline(params.pipeline)
     stages += utils.processStages(params.stages)
 
-    if (jenkinsParam('force') == '1') {
+    if (force == '1') {
         sh 'FORCE REMOVE DIR'
         deleteDir()
     }
