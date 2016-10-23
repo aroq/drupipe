@@ -15,6 +15,7 @@ def call(Action action, body) {
     def actionParams = [:]
 
     try {
+        echoDelimiter "-----> Stage: ${params.stage.name} | Action name: ${action.fullName} start <-"
         utils = new com.github.aroq.workflowlibs.Utils()
         actionParams << params
         if (!action.params) {
@@ -29,10 +30,8 @@ def call(Action action, body) {
         }
         actionParams << params
         actionParams << defaultParams << action.params
-        echoDelimiter "-----> Stage: ${actionParams.stage.name} | Action name: ${action.fullName} start <-"
 
         debugLog(actionParams, actionParams, "${action.fullName} action params")
-        jsonDump(actionParams, 'actionParams')
         // TODO: configure it:
         def actionFile = null
         if (params.sourcesList) {
