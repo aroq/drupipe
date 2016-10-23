@@ -50,9 +50,12 @@ def _executePipeline(params) {
     if (params.checkoutSCM) {
         echo 'checkout scm'
         echo "params.checkoutSCM: ${params.checkoutSCM}"
-        sh "pwd"
-        sh "ls -l"
-        checkout scm
+         checkout([
+            $class: 'GitSCM',
+            branches: scm.branches,
+            extensions: scm.extensions + [[credentialsID: 'zebra']],
+            userRemoteConfigs: scm.userRemoteConfigs
+        ])
     }
 
     for (int i = 0; i < stages.size(); i++) {
