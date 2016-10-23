@@ -44,7 +44,7 @@ def _executePipeline(params) {
     stages += utils.processStages(params.stages)
 
     if (force == '1') {
-        sh 'FORCE REMOVE DIR'
+        echo 'FORCE REMOVE DIR'
         deleteDir()
     }
     if (params.checkoutSCM) {
