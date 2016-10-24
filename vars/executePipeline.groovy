@@ -86,7 +86,19 @@ def _pipelineNotify(params, String buildStatus = 'STARTED') {
     }
 
     // Send notifications
-    slackSend (color: colorCode, message: summary, channel: params.slackChannel)
+    try {
+        slackSend (color: colorCode, message: summary, channel: params.slackChannel)
+    }
+    catch (e) {
+        echo 'Unable to sent Slack notification'
+    }
+
+    try {
+        mattermostSend (color: colorCode, message: summary, channel: params.slackChannel)
+    }
+    catch (e) {
+        echo 'Unable to sent Mattermost notification'
+    }
 
     // hipchatSend (color: color, notify: true, message: summary)
 
@@ -96,10 +108,10 @@ def _pipelineNotify(params, String buildStatus = 'STARTED') {
         [$class: 'RequesterRecipientProvider']
     ])
 
-//    emailext (
-//        subject: subject,
-//        body: details,
-//        to: to
-//    )
+    emailext (
+        subject: subject,
+        body: details,
+        to: to
+    )
 }
 
