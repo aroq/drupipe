@@ -9,11 +9,6 @@ def call(params = [:], body) {
         def drudock = docker.image('aroq/drudock:1.0.1')
         drudock.pull()
         drudock.inside('--user root:root') {
-            if (force) {
-                echo 'FORCE REMOVE DIR (drudock)'
-                deleteDir()
-                force = 0
-            }
             sshagent([params.credentialsID]) {
                 if (params.pipeline) {
                     params = executePipeline {
