@@ -21,7 +21,7 @@ projects.each {project ->
                             remote {
                                 name('origin')
                                 url(project.value['repo'])
-                                credentialsId(project.value['credentialsId'])
+                                credentials(project.value['credentialsId'])
                             }
                             branch('master')
                             extensions {
