@@ -22,6 +22,8 @@ projects.each {project ->
                                 name('origin')
                                 url(project.value['repo'])
                             }
+                            branch('master')
+                            credentialsId(project.value['credentialsId'])
                             extensions {
                                 relativeTargetDirectory(subDir)
                             }
