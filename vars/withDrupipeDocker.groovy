@@ -1,10 +1,5 @@
 def call(params = [:], body) {
 
-    if (params.p) {
-        params << params.p
-        params.remove('p')
-    }
-
     defaultParams = [imageName: 'aroq/drudock:1.0.1', args: '--user root:root']
 
     params << defaultParams << params
