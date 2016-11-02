@@ -51,12 +51,9 @@ projects.each {project ->
     else if (project.value['type'] == 'multibranch') {
         multibranchPipelineJob(project.key) {
             branchSources {
-                git() {
-                    remote {
-                        name('origin')
-                        url(project.value['repo'])
-                        credentials(project.value['credentialsId'])
-                    }
+                git {
+                    remote(project.value['repo'])
+                    credentialsId(project.value['credentialsId'])
                 }
             }
         }
