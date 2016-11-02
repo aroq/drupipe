@@ -3,7 +3,7 @@ def call(params = [:], body) {
     defaultParams = [imageName: 'aroq/drudock:1.0.1', args: '--user root:root']
 
     jsonDump(params, 'params BEFORE')
-    params << defaultParams << params
+    params << (defaultParams << params)
     jsonDump(params, 'params AFTER')
 
     node(params.nodeName) {
