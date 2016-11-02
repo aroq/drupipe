@@ -46,8 +46,8 @@ docmanConfig.states?.each { state ->
                         remote {
                             name('origin')
                             url(config.configRepo)
+                            credentials(config.credentialsId)
                         }
-                        credentialsId(config.credentialsId)
                         extensions {
                             relativeTargetDirectory('docroot/config')
                         }
