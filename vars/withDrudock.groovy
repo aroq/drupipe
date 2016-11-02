@@ -5,14 +5,10 @@ def call(params = [:], body) {
         params.remove('p')
     }
 
-    defaultParams = [imageName: 'aroq/drudock:1.0.1', args: '--user root:root']
-
-    params << defaultParams << params
-
     node(params.nodeName) {
-        def drudock = docker.image(params.imageName)
+        def drudock = docker.image('aroq/drudock:1.0.1')
         drudock.pull()
-        drudock.inside(params.args) {
+        drudock.inside('--user root:root') {
             sshagent([params.credentialsID]) {
                 if (params.pipeline) {
                     params = executePipeline {
