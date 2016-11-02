@@ -5,7 +5,7 @@ def call(params = [:], body) {
         params.remove('p')
     }
 
-    defaultParams = [imageName: 'aroq/drudock:dev', args: '--user root:root']
+    defaultParams = [imageName: 'aroq/drudock:1.0.1', args: '--user root:root']
 
     params << defaultParams << params
 
