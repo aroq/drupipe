@@ -1,13 +1,10 @@
 def call(params = [:], body) {
 
-    if (params.p) {
-        params << params.p
-        params.remove('p')
-    }
+    defaultParams = [imageName: 'aroq/drudock:1.0.1', args: '--user root:root']
 
-    defaultParams = [imageName: 'aroq/drudock:dev', args: '--user root:root']
-
-    params << defaultParams << params
+    jsonDump(params, 'params BEFORE')
+    params << (defaultParams << params)
+    jsonDump(params, 'params AFTER')
 
     node(params.nodeName) {
         def image = docker.image(params.imageName)
@@ -21,7 +18,10 @@ def call(params = [:], body) {
                         pipeline = params.pipeline
                     }
                 }
-                params << body()
+                result = body()
+                if (result) {
+                    params << result
+                }
             }
         }
     }
