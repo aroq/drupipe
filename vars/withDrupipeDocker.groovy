@@ -18,7 +18,10 @@ def call(params = [:], body) {
                         pipeline = params.pipeline
                     }
                 }
-                params << body()
+                result = body()
+                if (result) {
+                    params << result
+                }
             }
         }
     }
