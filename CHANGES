@@ -1,3 +1,11 @@
+Version 0.1.1:
+ - Added VERSION and CHANGES files, Version bump to v0.1.0
+ - Merge branch 'master' of github.com:aroq/jenkins-pipeline-library
+ - Merge branch 'develop'
+ - Added VERSION and CHANGES files, Version bump to v0.1.0
+ - Merge pull request #2 from aroq/develop
+ - Merge pull request #1 from aroq/develop
+
 Version 0.1.0
  - Merge branch 'master' of github.com:aroq/jenkins-pipeline-library
  - Merge branch 'develop'
