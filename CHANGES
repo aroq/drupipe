@@ -1,0 +1,865 @@
+Version 0.1.0
+ - Formatting
+ - Removed debug info
+ - Removed empty line
+ - Removed debug info
+ - Added TODO
+ - Merge branch 'master' into develop
+ - Debug
+ - Debug
+ - Debug
+ - Debug
+ - Refactored withDrupipeDocker
+ - changed drudock version to 1.0.1
+ - Merge branch 'develop'
+ - Merge branch 'master' into develop
+ - vars/withDockerContainer.groovy -> vars/withDrupipeDocker.groovy
+ - Revered withDrudock
+ - added withDockerContainer
+ - Added credentials to multibranch jobs
+ - Added credentials to multibranch jobs
+ - Added debug
+ - Changed credentialsId handling
+ - Changed credentialsId handling
+ - Merge branch 'develop'
+ - Added credentials to scm
+ - Fixed mattermost channel
+ - Added mattermost & email notifications
+ - Removed force remove in drudock
+ - Added force remove in drudock
+ - Changed execute pipeline Action call & refactored code
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - Changed job dsl seed docman
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - Debug
+ - Changed lookupStrategy for the mothership job
+ - Refactored execute pipeline code
+ - Refactored execute pipeline code
+ - Added notifications
+ - Debug
+ - Debug
+ - Debug
+ - Debug
+ - Debug
+ - Debug
+ - Debug
+ - Debug
+ - Debug
+ - Added import for DocmanConfig on job dsl
+ - Added import for DocmanConfig on job dsl
+ - Added import for DocmanConfig on job dsl
+ - Added import for DocmanConfig on job dsl
+ - Added import for DocmanConfig on job dsl
+ - Added import for DocmanConfig on job dsl
+ - Added import for DocmanConfig on job dsl
+ - Added import for DocmanConfig on job dsl
+ - Added import for DocmanConfig on job dsl
+ - Added import for DocmanConfig on job dsl
+ - Added import for DocmanConfig on job dsl
+ - Added import for DocmanConfig on job dsl
+ - Added import for DocmanConfig on job dsl
+ - Added import for DocmanConfig on job dsl
+ - Added job dsl docman states pipelines
+ - Added Git credentials
+ - Changed gradlew to gradle to test: REVERTED
+ - Changed gradlew to gradle to test
+ - Changed gradlew to gradle to test
+ - Changed gradlew to gradle to test
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Changed seed job for docman type
+ - Added debug info for noNode
+ - Added noNode param
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Fixed subdir for seed job
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Merge branch 'master' of github.com:aroq/jenkins-pipeline-library
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Merge branch 'master' of github.com:aroq/jenkins-pipeline-library
+ - Initial commit
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changes
+ - Changed src path
+ - Added sourcecode
+ - Initial commit
+
