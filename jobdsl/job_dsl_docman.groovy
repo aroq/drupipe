@@ -13,14 +13,16 @@ def branches = [
     development: [
         branch: 'develop',
         pipeline: 'deploy',
+        environment: 'dev',
     ],
     staging: [
-        'branch': 'master',
-        'pipeline': 'deploy',
+        branch: 'master',
+        pipeline: 'deploy',
+        environment: 'test',
     ],
     stable: [
-        'branch': 'state_stable',
-        'pipeline': 'release',
+        branch: 'state_stable',
+        pipeline: 'release',
     ],
 ]
 
@@ -38,6 +40,9 @@ docmanConfig.states?.each { state ->
             stringParam('docrootDir', 'docroot')
             stringParam('config_repo', config.configRepo)
             stringParam('type', 'branch')
+            if (branches[state.key]?.environment) {
+              stringParam('environment', branches[state.key]?.environment)
+            }
             stringParam('version', branches[state.key]?.branch)
         }
         definition {
