@@ -86,32 +86,38 @@ def _pipelineNotify(params, String buildStatus = 'STARTED') {
     }
 
     // Send notifications
-    try {
-        slackSend (color: colorCode, message: summary, channel: params.slackChannel)
-    }
-    catch (e) {
-        echo 'Unable to sent Slack notification'
+    if (params.notificationsSlack) {
+        try {
+            slackSend (color: colorCode, message: summary, channel: params.slackChannel)
+        }
+        catch (e) {
+            echo 'Unable to sent Slack notification'
+        }
     }
 
-    try {
-        mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel)
-    }
-    catch (e) {
-        echo 'Unable to sent Mattermost notification'
+    if (params.notificationsMattermost) {
+      try {
+          mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel)
+      }
+      catch (e) {
+          echo 'Unable to sent Mattermost notification'
+      }
     }
 
     // hipchatSend (color: color, notify: true, message: summary)
 
-    def to = emailextrecipients([
-        [$class: 'CulpritsRecipientProvider'],
-        [$class: 'DevelopersRecipientProvider'],
-        [$class: 'RequesterRecipientProvider']
-    ])
+    if (params.notificationsEmailExt) {
+      def to = emailextrecipients([
+          [$class: 'CulpritsRecipientProvider'],
+          [$class: 'DevelopersRecipientProvider'],
+          [$class: 'RequesterRecipientProvider']
+      ])
 
-//    emailext (
-//        subject: subject,
-//        body: details,
-//        to: to
-//    )
+      emailext (
+          subject: subject,
+          body: details,
+          to: to
+      )
+    }
 }
 
