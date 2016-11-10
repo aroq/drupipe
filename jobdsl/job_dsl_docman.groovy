@@ -36,7 +36,6 @@ docmanConfig.states?.each { state ->
             stringParam('projectName', '')
             stringParam('debug', '0')
             stringParam('force', '0')
-            stringParam('environment', branches[state.key]?.environment)
             stringParam('simulate', '0')
             stringParam('docrootDir', 'docroot')
             stringParam('config_repo', config.configRepo)
