@@ -10,6 +10,18 @@ def call(body) {
                 [
                     'seed': [
                         [
+                            action: 'Source.add',
+                            params: [
+                                source: [
+                                      name: 'library',
+                                      type: 'git',
+                                      path: 'library',
+                                      url: 'https://github.com/aroq/drupipe.git',
+                                      branch: 'develop'
+                                ]
+                            ]
+                        ],
+                        [
                             action: 'JobDslSeed.perform',
                             params: [lookupStrategy: 'JENKINS_ROOT']
                         ],

@@ -3,6 +3,22 @@ docrootDir = 'docroot'
 actionParams = [
     // TODO: add params subsections (that will be containerized inside common config).
     Config: [
+        projectConfigPath: 'docroot/config',
+        projectConfigFile: 'docroot.config',
+    ],
+    Behat: [
+        masterPath: 'docroot/master',
+        masterRelativePath: '..',
+        behatExecutable: 'bin/behat',
+        pathToEnvironmentConfig: 'code/common',
+        workspaceRelativePath: '../../..',
+        behat_args: '--format=pretty --out=std --format=junit',
+        debugEnabled: true,
+    ],
+    withDrupipeDocker: [
+        drupipeDockerImageName: 'aroq/drudock:1.1.0',
+        drupipeDockerArgs: '--user root:root',
+        noNode: true,
     ],
     // TODO: add private (that will not go into common config) params section.
     Source_loadConfig: [
@@ -13,16 +29,13 @@ actionParams = [
         docmanConfigPath: 'docroot/config',
         docmanConfigFile: 'docroot.config',
         docmanJsonConfigFile: 'config.json',
-//        debugEnabled: true,
     ],
     Docman_jsonConfig: [
         docmanConfigPath: 'docroot/config',
         docmanConfigFile: 'docroot.config',
         docmanJsonConfigFile: 'config.json',
-//        debugEnabled: true,
     ],
     Docman_info: [
-//        debugEnabled: true,
     ],
     Script_execute: [
     ],
@@ -37,6 +50,7 @@ actionParams = [
         debugEnabled: true,
     ],
     Druflow_deployFlow: [
-        propertiesFile: 'docroot/master/version.properties'
+        propertiesFile: 'docroot/master/version.properties',
+        executeCommand: 'deployFlow'
     ],
 ]

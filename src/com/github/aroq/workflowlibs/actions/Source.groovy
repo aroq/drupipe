@@ -47,5 +47,5 @@ def loadConfig(params) {
         params.remove('configPath')
         params.remove('configType')
     }
-    params
+    params << [returnConfig: true]
 }

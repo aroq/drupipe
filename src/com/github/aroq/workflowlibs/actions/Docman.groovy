@@ -2,52 +2,8 @@ package com.github.aroq.workflowlibs.actions
 
 import groovy.json.JsonSlurper
 
-def config(params) {
-    if (!params.docmanConfigType) {
-        params.docmanConfigType = 'dir'
-    }
-    if (params.docmanConfigType == 'git') {
-        sourceObject = [
-            name: 'docmanConfig',
-            type: 'git',
-            url: config_repo,
-            path: params.docmanConfigPath,
-            branch: 'master',
-        ]
-    }
-    else {
-    }
-    sourceObject = [
-        name: 'docmanConfig',
-        type: 'dir',
-        path: params.docmanConfigPath,
-    ]
-    actions = [
-        [
-            action: 'Docman.info',
-        ],
-        [
-            action: 'Source.add',
-            params: [source: sourceObject]
-        ],
-        [
-            action: 'Source.loadConfig',
-            params: [
-                sourceName: 'docmanConfig',
-                configType: 'groovy',
-                configPath: params.docmanConfigFile
-            ]
-        ]
-    ]
-
-    params << executePipelineActionList(actions) {
-        p = params
-    }
-
-    params << [returnConfig: true]
-}
-
 def jsonConfig(params) {
+    info(params)
     docrootConfigJson = readFile("${params.docmanConfigPath}/${params.docmanJsonConfigFile}")
 
     projectName = projectNameByGroupAndRepoName(docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
@@ -59,11 +15,11 @@ def jsonConfig(params) {
 }
 
 def info(params) {
-    if (force == '1') {
+    if (params.force == '1') {
         echo "Force mode"
         sh(
             """#!/bin/bash -l
-            if [ "${force}" == "1" ]; then
+            if [ "${params.force}" == "1" ]; then
               rm -fR ${params.docrootDir}
             fi
             """
@@ -81,7 +37,7 @@ def info(params) {
     }
     if (configRepo) {
         echo 'Docman init'
-        sh('ls -al')
+        sh('ls -l')
         sh(
             """#!/bin/bash -l
             docman init ${params.docrootDir} ${configRepo} -s
@@ -99,7 +55,7 @@ def info(params) {
 
 def deploy(params) {
     def flag = ''
-    if (force == 1) {
+    if (params.force == 1) {
         flag = '-f'
     }
 
@@ -112,7 +68,7 @@ def deploy(params) {
 
     sh(
         """#!/bin/bash -l
-        if [ "${force}" == "1" ]; then
+        if [ "${params.force}" == "1" ]; then
           rm -fR ${params.docrootDir}
         fi
         docman init ${params.docrootDir} ${config_repo} -s

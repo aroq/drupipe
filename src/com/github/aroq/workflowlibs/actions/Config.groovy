@@ -1,55 +1,58 @@
 package com.github.aroq.workflowlibs.actions
 
-def perform(params) {
-    params.workspace = pwd()
+def perform(commandParams) {
+    if (commandParams['Config_perform']) {
+      return commandParams
+    }
+    commandParams.workspace = pwd()
+
+    providers = [
+        [
+            action: 'GroovyFileConfig.groovyConfigFromLibraryResource', params: [resource: 'com/github/aroq/drupipe/config.groovy']
+        ],
+        [
+            action: "Config.projectConfig"
+        ],
+    ]
+
+    if (commandParams.configProviders) {
+        providers << commandParams.configProviders
+    }
+
+    checkout scm
+
+    commandParams << executePipelineActionList(providers) {
+        p = commandParams
+    }
+
+    commandParams << ['Config_perform': true, returnConfig: true]
+}
+
+def projectConfig(commandParams) {
+    sourceObject = [
+        name: 'projectConfig',
+        type: 'dir',
+        path: commandParams.projectConfigPath,
+    ]
 
     providers = [
         [
             action: 'Source.add',
-            params: [
-                source: [
-                    name: 'library',
-                    type: 'git',
-                    url: 'https://github.com/aroq/jenkins-pipeline-library.git',
-                    path: 'library',
-                    branch: 'master',
-                ]
-            ]
+            params: [source: sourceObject]
         ],
         [
             action: 'Source.loadConfig',
             params: [
-                sourceName: 'library',
+                sourceName: 'projectConfig',
                 configType: 'groovy',
-                configPath: 'config/config.groovy'
+                configPath: commandParams.projectConfigFile
             ]
-        ],
+        ]
     ]
 
-    try {
-        if (debug != '0') {
-            params.debugEnabled = true
-        }
-    }
-    catch (err) {
+    commandParams << executePipelineActionList(providers) {
+        p = commandParams
     }
 
-    if (params.configProviders) {
-        providers << params.configProviders
-    }
-
-    params << executePipelineActionList(providers) {
-        p = params
-    }
-
-    try {
-        if (debug != '0') {
-            params.debugEnabled = true
-        }
-    }
-    catch (err) {
-    }
-
-    params << [returnConfig: true]
+    commandParams << [returnConfig: true]
 }
-

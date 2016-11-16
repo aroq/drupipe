@@ -14,7 +14,15 @@ def call(Action action, body) {
     def actionParams = [:]
 
     try {
-        echoDelimiter "-----> Stage: ${params.stage.name} | Action name: ${action.fullName} start <-"
+        String drupipeStagename
+        if (params.stage) {
+            drupipeStageName = "${params.stage.name}"
+        }
+        else {
+            drupipeStageName = 'config'
+        }
+
+        echoDelimiter("-----> Stage: ${drupipeStageName} | Action name: ${action.fullName} start <-")
         utils = new com.github.aroq.workflowlibs.Utils()
         actionParams << params
         if (!action.params) {
@@ -60,11 +68,13 @@ def call(Action action, body) {
                 params << actionResult
             }
             else {
+                // TODO: check if this should be in else clause.
                 params << ["${action.name}.${action.methodName}": actionResult]
             }
         }
         debugLog(actionParams, params, "${action.fullName} action result")
-        echoDelimiter "-----> Stage: ${params.stage.name} | Action name: ${action.fullName} end <-"
+        params.returnConfig = false
+        echoDelimiter "-----> Stage: ${drupipeStageName} | Action name: ${action.fullName} end <-"
 
         params
     }

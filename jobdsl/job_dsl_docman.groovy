@@ -1,6 +1,6 @@
 import com.github.aroq.DocmanConfig
 
-configFilePath = 'config/docroot.config'
+configFilePath = 'docroot/config/docroot.config'
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace(configFilePath))
 
 docrootConfigJson = readFileFromWorkspace(config.docrootConfigJsonPath)
@@ -28,13 +28,13 @@ def branches = [
 
 // Create pipeline jobs for each state defined in Docman config.
 docmanConfig.states?.each { state ->
+    println "Processing state: ${state.key}"
     pipelineJob(state.key) {
         concurrentBuild(false)
         logRotator(-1, 30)
         parameters {
-            stringParam('executeCommand', 'deployFlow')
             stringParam('projectName', '')
-            stringParam('debug', '0')
+            stringParam('debugEnabled', '0')
             stringParam('force', '0')
             stringParam('simulate', '0')
             stringParam('docrootDir', 'docroot')
@@ -52,7 +52,7 @@ docmanConfig.states?.each { state ->
                         remote {
                             name('origin')
                             url(config.configRepo)
-                            credentials(config.credentialsId)
+                            credentials(config.credentialsID)
                         }
                         extensions {
                             relativeTargetDirectory('docroot/config')
@@ -78,38 +78,3 @@ docmanConfig.states?.each { state ->
         }
     }
 }
-
-//pipelineJob("merge") {
-//    concurrentBuild(false)
-//    logRotator(-1, 30)
-//    parameters {
-//        stringParam('executeCommand', 'deployFlow')
-//        stringParam('projectName', 'common')
-//        stringParam('debug', '0')
-//        stringParam('force', '0')
-//        stringParam('simulate', '0')
-//        stringParam('docrootDir', 'docroot')
-//        stringParam('config_repo', config.configRepo)
-//        stringParam('type', 'branch')
-//        stringParam('version', 'state_stable')
-//    }
-//    definition {
-//        cps {
-//            script(mergePipeline)
-//            sandbox()
-//        }
-//    }
-//    triggers {
-//        gitlabPush {
-//            buildOnPushEvents(false)
-//            buildOnMergeRequestEvents(true)
-//            enableCiSkip()
-//            useCiFeatures()
-//        }
-//    }
-//    properties {
-//        gitLabConnectionProperty {
-//            gitLabConnection('Gitlab')
-//        }
-//    }
-//}

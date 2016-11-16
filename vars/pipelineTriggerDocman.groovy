@@ -38,7 +38,7 @@ def call(body) {
                     string(name: 'executeCommand', value: 'deployFlow'),
                     string(name: 'projectName', value: env.gitlabSourceRepoName),
                     string(name: 'environment', value: buildEnvironment),
-                    string(name: 'debug', value: '0'),
+                    string(name: 'debugEnabled', value: '0'),
                     string(name: 'simulate', value: '0'),
                     string(name: 'docrootDir', value: 'docroot'),
                     string(name: 'config_repo', value: params.configRepo),

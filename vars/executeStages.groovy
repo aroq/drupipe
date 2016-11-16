@@ -1,9 +1,4 @@
-def call(body) {
-    def params = [:]
-    body.resolveStrategy = Closure.DELEGATE_FIRST
-    body.delegate = params
-    body()
-
+def call(params = [:]) {
     try {
         _pipelineNotify(params)
         if (params.p) {
@@ -16,14 +11,7 @@ def call(body) {
             params.projectName = env.gitlabSourceRepoName
         }
 
-        if (params.noNode) {
-            params << _executePipeline(params)
-        }
-        else {
-            node {
-                params << _executePipeline(params)
-            }
-        }
+        params << _executePipeline(params)
     }
     catch (e) {
         currentBuild.result = "FAILED"
@@ -87,38 +75,32 @@ def _pipelineNotify(params, String buildStatus = 'STARTED') {
     }
 
     // Send notifications
-    if (params.notificationsSlack) {
-        try {
-            slackSend (color: colorCode, message: summary, channel: params.slackChannel)
-        }
-        catch (e) {
-            echo 'Unable to sent Slack notification'
-        }
+    try {
+        slackSend (color: colorCode, message: summary, channel: params.slackChannel)
+    }
+    catch (e) {
+        echo 'Unable to sent Slack notification'
     }
 
-    if (params.notificationsMattermost) {
-      try {
-          mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel)
-      }
-      catch (e) {
-          echo 'Unable to sent Mattermost notification'
-      }
+    try {
+        mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel)
+    }
+    catch (e) {
+        echo 'Unable to sent Mattermost notification'
     }
 
     // hipchatSend (color: color, notify: true, message: summary)
 
-    if (params.notificationsEmailExt) {
-      def to = emailextrecipients([
-          [$class: 'CulpritsRecipientProvider'],
-          [$class: 'DevelopersRecipientProvider'],
-          [$class: 'RequesterRecipientProvider']
-      ])
+    def to = emailextrecipients([
+        [$class: 'CulpritsRecipientProvider'],
+        [$class: 'DevelopersRecipientProvider'],
+        [$class: 'RequesterRecipientProvider']
+    ])
 
-      emailext (
-          subject: subject,
-          body: details,
-          to: to
-      )
-    }
+//    emailext (
+//        subject: subject,
+//        body: details,
+//        to: to
+//    )
 }
 

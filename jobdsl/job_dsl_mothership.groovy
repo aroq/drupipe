@@ -11,7 +11,7 @@ projects.each {project ->
             concurrentBuild(false)
             logRotator(-1, 30)
             parameters {
-                stringParam('debug', '0')
+                stringParam('debugEnabled', '0')
                 stringParam('force', '0')
             }
             definition {

@@ -1,27 +1,19 @@
-def call(params = [:], body) {
+def call(commandParams = [:], body) {
+    node(commandParams.nodeName) {
+        configParams = executePipelineAction([action: 'Config.perform'], commandParams.clone() << params)
+        commandParams << ((configParams << configParams.actionParams['withDrupipeDocker']) << commandParams)
 
-    defaultParams = [imageName: 'aroq/drudock:1.0.1', args: '--user root:root']
-    params << (defaultParams << params)
-
-    node(params.nodeName) {
-        def image = docker.image(params.imageName)
+        def image = docker.image(commandParams.drupipeDockerImageName)
         image.pull()
-        image.inside(params.args) {
-            sshagent([params.credentialsID]) {
-                if (params.pipeline) {
-                    params = executePipeline {
-                        noNode = true
-                        credentialsID = params.credentialsID
-                        pipeline = params.pipeline
-                    }
-                }
-                result = body()
+        image.inside(commandParams.drupipeDockerArgs) {
+            sshagent([commandParams.credentialsID]) {
+                result = body(commandParams)
                 if (result) {
-                    params << result
+                    commandParams << result
                 }
             }
         }
     }
 
-    params
+    commandParams
 }

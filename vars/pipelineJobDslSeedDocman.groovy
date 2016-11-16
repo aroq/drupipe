@@ -9,11 +9,18 @@ def call(body) {
         pipeline = [
             'init': [
                 [
-                    action: 'Docman.config',
+                    action: 'Docman.info',
+                ],
+                [
+                    action: 'Source.add',
                     params: [
-                        docmanConfigType: 'dir',
-                        docmanConfigPath: 'config',
-                        docrootDir: './'
+                        source: [
+                              name: 'library',
+                              type: 'git',
+                              path: 'library',
+                              url: 'https://github.com/aroq/drupipe.git',
+                              branch: 'develop'
+                        ]
                     ]
                 ],
             ],

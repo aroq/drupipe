@@ -16,20 +16,21 @@ def perform(params) {
         tags = "--tags=${params.tags}"
     }
 
-    if (fileExists('docroot/master/bin/behat')) {
-        if (fileExists("docroot/master/code/common/behat.${testEnvironment}.yml")) {
+    // TODO: Add settings to exit with error on Behat errors.
+    if (fileExists("${params.masterPath}/${params.behatExecutable}")) {
+        if (fileExists("${params.masterPath}/${params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml")) {
             sh """#!/bin/bash -l
-cd docroot/master/docroot
-mkdir -p ../../../reports
-../bin/behat --config=../code/common/behat.${testEnvironment}.yml --format=pretty --out=std --format=junit --out=../../../reports ${tags} ${features}
+cd ${params.masterPath}/${params.docrootDir}
+mkdir -p ${params.workspaceRelativePath}/reports
+${params.masterRelativePath}/${params.behatExecutable} --config=${params.masterRelativePath}/${params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml ${params.behat_args} --out=${params.workspaceRelativePath}/reports ${tags} ${features}
 """
         }
         else {
-            echo "Behat config file not found: docroot/master/code/common/behat.${testEnvironment}.yml"
+            throw new Exception("Behat config file not found: ${params.masterPath}/${params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml")
         }
     }
     else {
-        echo "Behat execution file doesn't present"
+        throw new Exception("Behat execution file doesn't present: ${params.masterPath}/${params.behatExecutable}")
     }
 }
 

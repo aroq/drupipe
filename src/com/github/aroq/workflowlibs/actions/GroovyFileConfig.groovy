@@ -1,7 +1,7 @@
 package com.github.aroq.workflowlibs.actions
 
 def load(params) {
-    if (params.configFileName) {
+    if (params.configFileName && fileExists(params.configFileName)) {
         params << readGroovyConfig(params.configFileName)
     }
     params << [returnConfig: true]
@@ -10,6 +10,11 @@ def load(params) {
 def readGroovyConfig(filePath) {
     def text = readFile(filePath)
     groovyConfig(text)
+}
+
+def groovyConfigFromLibraryResource(params) {
+    params << groovyConfig(libraryResource(params.resource))
+    params << [returnConfig: true]
 }
 
 @NonCPS
