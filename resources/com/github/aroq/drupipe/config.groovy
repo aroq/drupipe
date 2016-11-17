@@ -1,5 +1,7 @@
 debugEnabled = false
 docrootDir = 'docroot'
+jobsPattern = 'library/jobdsl/job_dsl_docman.groovy'
+
 actionParams = [
     // TODO: add params subsections (that will be containerized inside common config).
     Config: [
@@ -48,6 +50,8 @@ actionParams = [
         lookupStrategy: 'SEED_JOB',
         additionalClasspath: ['library/src'],
         debugEnabled: true,
+        // TODO: Need another way of providing dsl scripts.
+        jobsPattern: 'library/jobdsl/job_dsl_docman.groovy',
     ],
     Druflow_deployFlow: [
         propertiesFile: 'docroot/master/version.properties',

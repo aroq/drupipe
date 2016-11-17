@@ -1,9 +1,11 @@
 import com.github.aroq.DocmanConfig
 
-configFilePath = 'docroot/config/docroot.config'
+def configFilePath = 'docroot/config/docroot.config'
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace(configFilePath))
 
-docrootConfigJson = readFileFromWorkspace(config.docrootConfigJsonPath)
+docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : 'docroot/config/config.json'
+
+docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 
 // Retrieve Docman config from json file (prepared by "docman info" command).
 def docmanConfig = new DocmanConfig(docrootConfigJson: docrootConfigJson)
