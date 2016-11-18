@@ -3,10 +3,10 @@ def call(commandParams = [:], body) {
         configParams = executePipelineAction([action: 'Config.perform'], commandParams.clone() << params)
         commandParams << ((configParams << configParams.actionParams['withDrupipeDocker']) << commandParams)
         if (commandParams.dockerfile) {
-            def image = docker.build(commandParams.dockerfile, 'docroot/config')
+            image = docker.build(commandParams.dockerfile, 'docroot/config')
         }
         else {
-            def image = docker.image(commandParams.drupipeDockerImageName)
+            image = docker.image(commandParams.drupipeDockerImageName)
         }
         image.pull()
         image.inside(commandParams.drupipeDockerArgs) {
