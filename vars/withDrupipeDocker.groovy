@@ -7,8 +7,8 @@ def call(commandParams = [:], body) {
         }
         else {
             image = docker.image(commandParams.drupipeDockerImageName)
+            image.pull()
         }
-        image.pull()
         image.inside(commandParams.drupipeDockerArgs) {
             sshagent([commandParams.credentialsID]) {
                 result = body(commandParams)
