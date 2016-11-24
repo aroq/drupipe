@@ -11,6 +11,8 @@ class DocmanConfig {
 
     def docmanConfig
 
+    def script
+
     def init() {
         docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
     }
@@ -31,6 +33,7 @@ class DocmanConfig {
     }
 
     def getVersionBranch(project, stateName) {
+        script.println "DocmanConfig test"
         init()
         if (docmanConfig.projects[project]['states'][stateName]['version']) {
             docmanConfig.projects[project]['states'][stateName]['version']
