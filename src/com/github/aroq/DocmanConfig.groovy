@@ -27,13 +27,17 @@ class DocmanConfig {
         docmanConfig['states']
     }
 
+    def getEnvironmentByState(String stateName) {
+        environments = docmanConfig['environments']
+        environments?[stateName]
+    }
+
     def getEnvironments() {
         init()
         docmanConfig['environments']
     }
 
     def getVersionBranch(project, stateName) {
-        script.println "DocmanConfig test"
         init()
         if (docmanConfig.projects[project]['states'][stateName]['version']) {
             docmanConfig.projects[project]['states'][stateName]['version']
