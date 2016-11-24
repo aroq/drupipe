@@ -8,22 +8,17 @@ docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonP
 docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 
 // Retrieve Docman config from json file (prepared by "docman info" command).
-def docmanConfig = new DocmanConfig(docrootConfigJson: docrootConfigJson)
+def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
 
 // TODO: Use docman config to retrieve info.
 def branches = [
     development: [
-        branch: 'develop',
         pipeline: 'deploy',
-        environment: 'dev',
     ],
     staging: [
-        branch: 'master',
         pipeline: 'deploy',
-        environment: 'test',
     ],
     stable: [
-        branch: 'state_stable',
         pipeline: 'release',
     ],
 ]
@@ -31,6 +26,10 @@ def branches = [
 // Create pipeline jobs for each state defined in Docman config.
 docmanConfig.states?.each { state ->
     println "Processing state: ${state.key}"
+    branch = docmanConfig.getVersionBranch('rh', state.key)
+    println "DocmanConfig: getVersionBranch: ${branch}"
+    environment = docmanConfig.getEnvironmentByState(state.key)
+    println "Environment: ${environment}"
     pipelineJob(state.key) {
         concurrentBuild(false)
         logRotator(-1, 30)
@@ -45,7 +44,7 @@ docmanConfig.states?.each { state ->
             if (branches[state.key]?.environment) {
               stringParam('environment', branches[state.key]?.environment)
             }
-            stringParam('version', branches[state.key]?.branch)
+            stringParam('version', branch)
         }
         definition {
             cpsScm {
@@ -70,7 +69,7 @@ docmanConfig.states?.each { state ->
                 buildOnMergeRequestEvents(false)
                 enableCiSkip()
                 useCiFeatures()
-                includeBranches(branches[state.key]?.branch)
+                includeBranches(branch)
             }
         }
         properties {

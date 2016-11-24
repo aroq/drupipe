@@ -11,6 +11,8 @@ class DocmanConfig {
 
     def docmanConfig
 
+    def script
+
     def init() {
         docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
     }
@@ -23,6 +25,11 @@ class DocmanConfig {
     def getStates() {
         init()
         docmanConfig['states']
+    }
+
+    def getEnvironmentByState(String stateName) {
+        def states = getStates()
+        states[stateName]
     }
 
     def getEnvironments() {
