@@ -35,7 +35,7 @@ docmanConfig.states?.each { state ->
     states = docmanConfig.getStates()
     println "DocmanConfig: getVersionBranch: ${branch}"
     environment = docmanConfig.getEnvironmentByState(state.key)
-    prinlt "Environment:${environment}"
+    prinltn "Environment:${environment}"
     pipelineJob(state.key) {
         concurrentBuild(false)
         logRotator(-1, 30)
