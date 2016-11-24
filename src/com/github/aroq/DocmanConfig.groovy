@@ -28,7 +28,7 @@ class DocmanConfig {
     }
 
     def getEnvironmentByState(String stateName) {
-        envs = docmanConfig['environments']
+        def envs = docmanConfig['environments']
         envs[stateName]
     }
 
