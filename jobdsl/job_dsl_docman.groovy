@@ -14,11 +14,9 @@ def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConf
 def branches = [
     development: [
         pipeline: 'deploy',
-        environment: 'dev',
     ],
     staging: [
         pipeline: 'deploy',
-        environment: 'test',
     ],
     stable: [
         pipeline: 'release',
