@@ -13,17 +13,14 @@ def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConf
 // TODO: Use docman config to retrieve info.
 def branches = [
     development: [
-        branch: 'develop',
         pipeline: 'deploy',
         environment: 'dev',
     ],
     staging: [
-        branch: 'master',
         pipeline: 'deploy',
         environment: 'test',
     ],
     stable: [
-        branch: 'state_stable',
         pipeline: 'release',
     ],
 ]
@@ -32,10 +29,9 @@ def branches = [
 docmanConfig.states?.each { state ->
     println "Processing state: ${state.key}"
     branch = docmanConfig.getVersionBranch('rh', state.key)
-    states = docmanConfig.getStates()
     println "DocmanConfig: getVersionBranch: ${branch}"
     environment = docmanConfig.getEnvironmentByState(state.key)
-    prinltn "Environment:${environment}"
+    prinltn "Environment: ${environment}".toString()
     pipelineJob(state.key) {
         concurrentBuild(false)
         logRotator(-1, 30)
