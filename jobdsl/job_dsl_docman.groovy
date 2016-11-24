@@ -47,7 +47,7 @@ docmanConfig.states?.each { state ->
             if (branches[state.key]?.environment) {
               stringParam('environment', branches[state.key]?.environment)
             }
-            stringParam('version', branches[state.key]?.branch)
+            stringParam('version', branch)
         }
         definition {
             cpsScm {
