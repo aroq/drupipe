@@ -9,7 +9,6 @@ docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 
 // Retrieve Docman config from json file (prepared by "docman info" command).
 def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
-println 
 
 // TODO: Use docman config to retrieve info.
 def branches = [
