@@ -34,7 +34,7 @@ docmanConfig.states?.each { state ->
     branch = docmanConfig.getVersionBranch('rh', state.key)
     states = docmanConfig.getStates()
     println "DocmanConfig: getVersionBranch: ${branch}"
-    environment = getEnvironmentByState(state.key)
+    environment = docmanConfig.getEnvironmentByState(state.key)
     prinlt "Environment:${environment}"
     pipelineJob(state.key) {
         concurrentBuild(false)
