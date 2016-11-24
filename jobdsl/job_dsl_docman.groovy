@@ -69,7 +69,7 @@ docmanConfig.states?.each { state ->
                 buildOnMergeRequestEvents(false)
                 enableCiSkip()
                 useCiFeatures()
-                includeBranches(branches[state.key]?.branch)
+                includeBranches(branch)
             }
         }
         properties {
