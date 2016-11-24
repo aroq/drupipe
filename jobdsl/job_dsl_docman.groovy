@@ -9,6 +9,7 @@ docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 
 // Retrieve Docman config from json file (prepared by "docman info" command).
 def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
+println 
 
 // TODO: Use docman config to retrieve info.
 def branches = [
@@ -31,6 +32,8 @@ def branches = [
 // Create pipeline jobs for each state defined in Docman config.
 docmanConfig.states?.each { state ->
     println "Processing state: ${state.key}"
+    branch = ${getVersionBranch('rh',state.key)
+    println "DocmanConfig: getVersionBranch: ${branch}"
     pipelineJob(state.key) {
         concurrentBuild(false)
         logRotator(-1, 30)
