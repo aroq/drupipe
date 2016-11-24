@@ -31,8 +31,11 @@ def branches = [
 // Create pipeline jobs for each state defined in Docman config.
 docmanConfig.states?.each { state ->
     println "Processing state: ${state.key}"
-    branch = docmanConfig.getVersionBranch('rh',state.key)
+    branch = docmanConfig.getVersionBranch('rh', state.key)
+    states = docmanConfig.getStates()
     println "DocmanConfig: getVersionBranch: ${branch}"
+    environment = getEnvironmentByState(state.key)
+    prinlt "Environment:${environment}"
     pipelineJob(state.key) {
         concurrentBuild(false)
         logRotator(-1, 30)
