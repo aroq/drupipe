@@ -27,11 +27,6 @@ def deployFlow(params) {
     dir('druflow') {
         git 'https://github.com/aroq/druflow.git'
     }
-<<<<<<< HEAD
-=======
-    echo "Debug flag: ${debugFlag()}"
-    echo "Debug enabled: ${debugEnabled}"
->>>>>>> develop
     sh "cd druflow && ./gradlew app -Ddebug=${debugFlag()} -DprojectName=${deployProjectName} -Denv=${deployEnvironment} -DexecuteCommand=${params.executeCommand} -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}${options}"
 }
 
