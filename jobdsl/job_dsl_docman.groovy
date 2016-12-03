@@ -37,7 +37,7 @@ docmanConfig.states?.each { state ->
       branch = docmanConfig.getVersionBranch('', state.key)
     }
     println "DocmanConfig: getVersionBranch: ${branch}"
-    environment = docmanConfig.getEnvironmentByState(state.key)
+    buildEnvironment = docmanConfig.getEnvironmentByState(state.key)
     println "Environment: ${environment}"
     pipelineJob(state.key) {
         concurrentBuild(false)
@@ -50,11 +50,8 @@ docmanConfig.states?.each { state ->
             stringParam('docrootDir', 'docroot')
             stringParam('config_repo', config.configRepo)
             stringParam('type', 'branch')
-            if (config.branches[state.key]?.environment) {
-              stringParam('environment', branches[state.key]?.environment)
-            }
-            //stringParam('version', branch)
-            stringParam('version', '')
+            stringParam('environment', buildEnvironment)
+            stringParam('version', branch)
         }
         definition {
             cpsScm {
