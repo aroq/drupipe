@@ -26,8 +26,8 @@ def branches = [
 // Create pipeline jobs for each state defined in Docman config.
 docmanConfig.states?.each { state ->
     println "Processing state: ${state.key}"
-    branch = docmanConfig.getVersionBranch('rh', state.key)
-    println "DocmanConfig: getVersionBranch: ${branch}"
+    //branch = docmanConfig.getVersionBranch('rh', state.key)
+    //println "DocmanConfig: getVersionBranch: ${branch}"
     environment = docmanConfig.getEnvironmentByState(state.key)
     println "Environment: ${environment}"
     pipelineJob(state.key) {
@@ -44,6 +44,7 @@ docmanConfig.states?.each { state ->
             if (branches[state.key]?.environment) {
               stringParam('environment', branches[state.key]?.environment)
             }
+            //stringParam('version', branch)
             stringParam('version', branch)
         }
         definition {
