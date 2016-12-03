@@ -1,7 +1,7 @@
 package com.github.aroq.workflowlibs.actions
 
 def deployFlow(params) {
-    if (params.deployFlowEnvironment) {
+   if (params.deployFlowEnvironment) {
         deployEnvironment = params.deployFlowEnvironment
     }
     else {
