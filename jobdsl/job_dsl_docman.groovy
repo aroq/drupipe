@@ -11,7 +11,7 @@ docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
 
 // TODO: Use docman config to retrieve info.
-def branches = [
+branches = [
     development: [
         pipeline: 'deploy',
     ],
@@ -23,11 +23,20 @@ def branches = [
     ],
 ]
 
+if (config.branches) {
+  branches << config.branches
+}
+
 // Create pipeline jobs for each state defined in Docman config.
 docmanConfig.states?.each { state ->
     println "Processing state: ${state.key}"
-    //branch = docmanConfig.getVersionBranch('rh', state.key)
-    //println "DocmanConfig: getVersionBranch: ${branch}"
+    if (branches[state.key]?.branch) {
+      branch = branches[state.key]?.branch
+    }
+    else {
+      branch = docmanConfig.getVersionBranch('', state.key)
+    }
+    println "DocmanConfig: getVersionBranch: ${branch}"
     environment = docmanConfig.getEnvironmentByState(state.key)
     println "Environment: ${environment}"
     pipelineJob(state.key) {
@@ -41,7 +50,7 @@ docmanConfig.states?.each { state ->
             stringParam('docrootDir', 'docroot')
             stringParam('config_repo', config.configRepo)
             stringParam('type', 'branch')
-            if (branches[state.key]?.environment) {
+            if (config.branches[state.key]?.environment) {
               stringParam('environment', branches[state.key]?.environment)
             }
             //stringParam('version', branch)

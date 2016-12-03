@@ -39,6 +39,12 @@ class DocmanConfig {
 
     def getVersionBranch(project, stateName) {
         init()
+        if (!project) {
+          // TODO: retrieve first project from docman config.
+          def projectMap = docmanConfig.projects.find { it.value.containsKey('states') }
+          project = projectMap.key
+          script.println "First project name: ${project}"
+        }
         if (docmanConfig.projects[project]['states'][stateName]['version']) {
             docmanConfig.projects[project]['states'][stateName]['version']
         }
