@@ -1,4 +1,4 @@
-d_pef call(params = [:]) {
+def call(params = [:]) {
     try {
         _pipelineNotify(params)
         if (params.p) {
