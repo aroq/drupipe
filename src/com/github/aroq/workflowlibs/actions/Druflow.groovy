@@ -49,8 +49,8 @@ def prepareDruflowCommand(params, overrides) {
 
     options = ''
     options += getOptions(commandParams)
-    if (commandParams.propertiesFile && fileExists(file: commandParams.propertiesFile)) {
-        options += getOptions(readProperties(file: commandParams.propertiesFile))
+    if (params.propertiesFile && fileExists(file: params.propertiesFile)) {
+        options += getOptions(readProperties(file: params.propertiesFile))
     }
 
     "cd ${params.druflowDir} && ./gradlew app ${options}"
