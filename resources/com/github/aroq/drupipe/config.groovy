@@ -53,8 +53,12 @@ actionParams = [
         // TODO: Need another way of providing dsl scripts.
         jobsPattern: 'library/jobdsl/job_dsl_docman.groovy',
     ],
+    Druflow: [
+        druflowDir: 'druflow',
+        druflowRepo: 'https://github.com/aroq/druflow.git',
+    ],
     Druflow_deployFlow: [
         propertiesFile: 'docroot/master/version.properties',
-        executeCommand: 'deployFlow'
+        executeCommand: 'deployFlow',
     ],
 ]
