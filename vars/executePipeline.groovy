@@ -12,9 +12,9 @@ def call(body) {
         }
 
         // TODO: Refactor it to retrieve project name from repo address instead of name.
-        if (!params.projectName) {
-            params.projectName = env.gitlabSourceRepoName
-        }
+        // if (!params.projectName) {
+            // params.projectName = env.gitlabSourceRepoName
+        // }
 
         if (params.noNode) {
             params << _executePipeline(params)
@@ -72,7 +72,7 @@ def _pipelineNotify(params, String buildStatus = 'STARTED') {
     def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
     def summary = "${subject} (${env.BUILD_URL})"
     def details = """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-    <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
+    <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>"""
 
     // Override default values based on build status
     if (buildStatus == 'STARTED') {
