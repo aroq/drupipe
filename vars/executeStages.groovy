@@ -7,9 +7,9 @@ def call(params = [:]) {
         }
 
         // TODO: Refactor it to retrieve project name from repo address instead of name.
-        if (!params.projectName) {
-            params.projectName = env.gitlabSourceRepoName
-        }
+        // if (!params.projectName) {
+            // params.projectName = env.gitlabSourceRepoName
+        // }
 
         params << _executePipeline(params)
     }
