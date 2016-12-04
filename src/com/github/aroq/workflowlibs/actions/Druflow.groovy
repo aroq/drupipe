@@ -36,10 +36,10 @@ def prepareDruflowCommandParams(params, overrides = [:]) {
     def commandParams = params
     defaultParams = [
         debug: debugFlag(),
-        executeCommand: commandParams.executeCommand
-        workspace: params.workspace
+        executeCommand: commandParams.executeCommand,
+        workspace: params.workspace,
         // TODO: review this parameter handling.
-        docrootDir: docrootDir
+        docrootDir: docrootDir,
     ]
     commandParams << defaultParams
     commandParams << overrides
