@@ -15,7 +15,6 @@ actionParams = [
         pathToEnvironmentConfig: 'code/common',
         workspaceRelativePath: '../../..',
         behat_args: '--format=pretty --out=std --format=junit',
-        debugEnabled: true,
     ],
     withDrupipeDocker: [
         drupipeDockerImageName: 'aroq/drudock:1.1.0',
