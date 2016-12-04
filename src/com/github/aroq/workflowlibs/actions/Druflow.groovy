@@ -15,7 +15,7 @@ def deployFlow(params) {
     }
 
     if (deployEnvironment == params.deployFlowConfirm?.environment) {
-        timeout(time: 10, unit: 'MINUTES') {
+        timeout(time: 60, unit: 'MINUTES') {
             input params.deployFlowConfirm?.message
         }
     }
@@ -24,24 +24,28 @@ def deployFlow(params) {
     if (fileExists(file: params.propertiesFile)) {
         options = getOptions(readProperties(file: params.propertiesFile))
     }
-    dir('druflow') {
-        git 'https://github.com/aroq/druflow.git'
-    }
-    sh "cd druflow && ./gradlew app -Ddebug=${debugFlag()} -DprojectName=${deployProjectName} -Denv=${deployEnvironment} -DexecuteCommand=${params.executeCommand} -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}${options}"
+
+    druflowGet(params)
+
+    sh "cd ${params.druflowDir} && ./gradlew app -Ddebug=${debugFlag()} -DprojectName=${deployProjectName} -Denv=${deployEnvironment} -DexecuteCommand=${params.executeCommand} -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}${options}"
 }
 
 def copySite(params) {
-    dir('druflow') {
-        git 'https://github.com/aroq/druflow.git'
-    }
+    druflowGet(params)
+
     sh "cd druflow && ./gradlew app -Ddebug=${debugFlag()} -Dsite=default -Denv=${params.fromEnvironment} -Dargument='${params.db} ${params.toEnvironment}' -DexecuteCommand=dbCopyAC -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"
 }
 
 def dbBackupSite(params) {
-    dir('druflow') {
-        git 'https://github.com/aroq/druflow.git'
-    }
+    druflowGet(params)
+
     sh "cd druflow && ./gradlew app -Ddebug=${debugFlag()} -Dsite=default -Denv=${params.fromEnvironment} -Dargument=${params.db} -DexecuteCommand=dbBackupSite -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"
+}
+
+def druflowGet(params) {
+    dir(params.druflowDir) {
+        git params.druflowRepo
+    }
 }
 
 @NonCPS
