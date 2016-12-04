@@ -11,11 +11,6 @@ def call(body) {
             params.remove('p')
         }
 
-        // TODO: Refactor it to retrieve project name from repo address instead of name.
-        // if (!params.projectName) {
-            // params.projectName = env.gitlabSourceRepoName
-        // }
-
         if (params.noNode) {
             params << _executePipeline(params)
         }
