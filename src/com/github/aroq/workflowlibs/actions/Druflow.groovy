@@ -64,7 +64,7 @@ def executeDruflowCommand(params, argument = '', overrides = [:]) {
 }
 
 def copySite(params) {
-    executeDruflowCommand(params, "${params.db} ${params.toEnvironment}, [env: params.executeEnvironment, site: 'default'])
+    executeDruflowCommand(params, "${params.db} ${params.toEnvironment}", [env: params.executeEnvironment, site: 'default'])
     // druflowGet(params)
 
     // sh "cd druflow && ./gradlew app -Ddebug=${debugFlag()} -Dsite=default -Denv=${params.executeEnvironment} -Dargument='${params.db} ${params.toEnvironment}' -DexecuteCommand=dbCopyAC -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"
