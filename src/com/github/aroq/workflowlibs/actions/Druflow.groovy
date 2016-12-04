@@ -55,6 +55,7 @@ def druflowGet(params) {
 
 def copySite(params) {
     def dbs = []
+    echo "TYPE: ${params.db.getClass()}"
     if (params.db instanceof java.lang.String) {
         echo "SINGLE DB"
         dbs << params.db
