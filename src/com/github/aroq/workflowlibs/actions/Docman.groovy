@@ -106,7 +106,8 @@ def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName
     docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
     result = ''
     docmanConfig.projects.each { project ->
-        script.echo "TEST: ${project.value['name']}"
+        script.echo "TEST: ${project.value['repo']}"
+        script.echo "TEST2: ${groupName}/${repoName}"
         if (project.value['repo']?.contains("${groupName}/${repoName}")) {
             result = project.value['name']
         }
