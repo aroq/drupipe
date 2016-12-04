@@ -62,7 +62,7 @@ def copySite(params) {
     }
     else {
         echo "MULTIPLE DBS"
-        dbs << params.db
+        dbs = params.db
     }
     for (db in dbs) {
         echo "DB: ${db}"
