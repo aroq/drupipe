@@ -105,7 +105,7 @@ def _pipelineNotify(params, String buildStatus = 'STARTED') {
       emailext (
           subject: subject,
           body: details,
-          to: toe,
+          to: to,
           mimeType: 'text/html',
           attachLog: true,
       )
