@@ -64,6 +64,7 @@ def copySite(params) {
         dbs << params.db
     }
     for (db in dbs) {
+        echo "DB: ${db}"
         executeDruflowCommand(params, [argument: "'${db} ${params.toEnvironment}'", env: params.executeEnvironment, site: 'default'])
     }
 }
