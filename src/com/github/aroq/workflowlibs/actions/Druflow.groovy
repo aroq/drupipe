@@ -14,21 +14,6 @@ def deployFlow(params) {
         deployProjectName = projectName
     }
 
-    if (executeEnvironment == params.deployFlowConfirm?.environment) {
-        timeout(time: 60, unit: 'MINUTES') {
-            input params.deployFlowConfirm?.message
-        }
-    }
-
-    // options = ''
-    // if (fileExists(file: params.propertiesFile)) {
-        // options = getOptions(readProperties(file: params.propertiesFile))
-    // }
-
-    // druflowGet(params)
-
-    // sh "cd ${params.druflowDir} && ./gradlew app -Ddebug=${debugFlag()} -DprojectName=${deployProjectName} -Denv=${executeEnvironment} -DexecuteCommand=${params.executeCommand} -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}${options}"
-
     executeDruflowCommand(params, [env: executeEnvironment, projectName: deployProjectName])
 }
 
@@ -62,24 +47,18 @@ def executeDruflowCommand(params, overrides = [:]) {
     sh(druflowCommand)
 }
 
-def copySite(params) {
-    executeDruflowCommand(params, [argument: "'${params.db} ${params.toEnvironment}'", env: params.executeEnvironment, site: 'default'])
-    // druflowGet(params)
-
-    // sh "cd druflow && ./gradlew app -Ddebug=${debugFlag()} -Dsite=default -Denv=${params.executeEnvironment} -Dargument='${params.db} ${params.toEnvironment}' -DexecuteCommand=dbCopyAC -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"
-}
-
-def dbBackupSite(params) {
-    executeDruflowCommand(params, [argument: params.db, env: params.executeEnvironment, site: 'default'])
-    // druflowGet(params)
-
-    // sh "cd druflow && ./gradlew app -Ddebug=${debugFlag()} -Dsite=default -Denv=${params.executeEnvironment} -Dargument=${params.db} -DexecuteCommand=dbBackupSite -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"
-}
-
 def druflowGet(params) {
     dir(params.druflowDir) {
         git params.druflowRepo
     }
+}
+
+def copySite(params) {
+    executeDruflowCommand(params, [argument: "'${params.db} ${params.toEnvironment}'", env: params.executeEnvironment, site: 'default'])
+}
+
+def dbBackupSite(params) {
+    executeDruflowCommand(params, [argument: params.db, env: params.executeEnvironment, site: 'default'])
 }
 
 @NonCPS

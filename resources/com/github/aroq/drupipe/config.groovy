@@ -67,4 +67,7 @@ actionParams = [
     Druflow_dbBackupSite: [
         executeCommand: 'dbBackupSite',
     ],
+    Common_confirm: [
+        timeToConfirm: 60,
+    ],
 ]
