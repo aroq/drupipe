@@ -103,12 +103,14 @@ def init(params) {
 
 @NonCPS
 def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName) {
+    groupName = groupName.toLowerCase()
+    repoName = repoName.toLowerCase()
     docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
     result = ''
     docmanConfig.projects.each { project ->
         script.echo "TEST: ${project.value['repo']}"
         script.echo "TEST2: ${groupName}/${repoName}"
-        if (project.value['repo']?.contains("${groupName}/${repoName}")) {
+        if (project.value['repo']?.toLowerCase().contains("${groupName}/${repoName}")) {
             result = project.value['name']
         }
     }
