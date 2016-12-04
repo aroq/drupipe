@@ -56,9 +56,11 @@ def druflowGet(params) {
 def copySite(params) {
     def dbs = []
     if (params.db instanceof java.lang.String) {
+        echo "SINGLE DB"
         dbs << params.db
     }
     else {
+        echo "MULTIPLE DBS"
         dbs << params.db
     }
     for (db in dbs) {
