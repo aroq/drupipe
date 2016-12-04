@@ -7,6 +7,9 @@ def jsonConfig(params) {
     docrootConfigJson = readFile("${params.docmanConfigPath}/${params.docmanJsonConfigFile}")
 
     projectName = projectNameByGroupAndRepoName(docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
+
+    echo "PROJECT NAME: ${projectName}"
+
     if (projectName) {
         params.projectName = projectName
     }
