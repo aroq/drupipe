@@ -1,11 +1,11 @@
 package com.github.aroq.workflowlibs.actions
 
 def deployFlow(params) {
-   if (params.deployFlowEnvironment) {
-        deployEnvironment = params.deployFlowEnvironment
+   if (params.executeEnvironment) {
+        executeEnvironment = params.executeEnvironment
     }
     else {
-        deployEnvironment = environment
+        executeEnvironment = environment
     }
     if (params.projectName) {
         deployProjectName = params.projectName
@@ -14,38 +14,51 @@ def deployFlow(params) {
         deployProjectName = projectName
     }
 
-    if (deployEnvironment == params.deployFlowConfirm?.environment) {
-        timeout(time: 60, unit: 'MINUTES') {
-            input params.deployFlowConfirm?.message
-        }
-    }
+    executeDruflowCommand(params, [env: executeEnvironment, projectName: deployProjectName])
+}
+
+def prepareDruflowCommandParams(params, overrides = [:]) {
+    defaultParams = [
+        debug: debugFlag(),
+        executeCommand: params.executeCommand,
+        workspace: params.workspace,
+        // TODO: review this parameter handling.
+        docrootDir: docrootDir,
+    ]
+    commandParams = defaultParams
+    commandParams << overrides
+}
+
+def prepareDruflowCommand(params, overrides) {
+    commandParams = prepareDruflowCommandParams(params, overrides)
 
     options = ''
-    if (fileExists(file: params.propertiesFile)) {
-        options = getOptions(readProperties(file: params.propertiesFile))
+    options += getOptions(commandParams)
+    if (params.propertiesFile && fileExists(file: params.propertiesFile)) {
+        options += getOptions(readProperties(file: params.propertiesFile))
     }
 
-    druflowGet(params)
-
-    sh "cd ${params.druflowDir} && ./gradlew app -Ddebug=${debugFlag()} -DprojectName=${deployProjectName} -Denv=${deployEnvironment} -DexecuteCommand=${params.executeCommand} -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}${options}"
+    "cd ${params.druflowDir} && ./gradlew app ${options}"
 }
 
-def copySite(params) {
+def executeDruflowCommand(params, overrides = [:]) {
+    def druflowCommand = prepareDruflowCommand(params, overrides)
     druflowGet(params)
-
-    sh "cd druflow && ./gradlew app -Ddebug=${debugFlag()} -Dsite=default -Denv=${params.fromEnvironment} -Dargument='${params.db} ${params.toEnvironment}' -DexecuteCommand=dbCopyAC -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"
-}
-
-def dbBackupSite(params) {
-    druflowGet(params)
-
-    sh "cd druflow && ./gradlew app -Ddebug=${debugFlag()} -Dsite=default -Denv=${params.fromEnvironment} -Dargument=${params.db} -DexecuteCommand=dbBackupSite -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"
+    sh(druflowCommand)
 }
 
 def druflowGet(params) {
     dir(params.druflowDir) {
         git params.druflowRepo
     }
+}
+
+def copySite(params) {
+    executeDruflowCommand(params, [argument: "'${params.db} ${params.toEnvironment}'", env: params.executeEnvironment, site: 'default'])
+}
+
+def dbBackupSite(params) {
+    executeDruflowCommand(params, [argument: params.db, env: params.executeEnvironment, site: 'default'])
 }
 
 @NonCPS

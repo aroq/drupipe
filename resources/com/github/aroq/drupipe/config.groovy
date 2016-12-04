@@ -61,4 +61,13 @@ actionParams = [
         propertiesFile: 'docroot/master/version.properties',
         executeCommand: 'deployFlow',
     ],
+    Druflow_copySite: [
+        executeCommand: 'dbCopyAC',
+    ],
+    Druflow_dbBackupSite: [
+        executeCommand: 'dbBackupSite',
+    ],
+    Common_confirm: [
+        timeToConfirm: 60,
+    ],
 ]
