@@ -35,7 +35,7 @@ def deployFlow(params) {
 def prepareDruflowCommandParams(params, overrides = [:]) {
     defaultParams = [
         debug: debugFlag(),
-        executeCommand: commandParams.executeCommand,
+        executeCommand: params.executeCommand,
         workspace: params.workspace,
         // TODO: review this parameter handling.
         docrootDir: docrootDir,
