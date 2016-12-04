@@ -44,7 +44,7 @@ def prepareDruflowCommandParams(params, overrides = [:]) {
     commandParams << overrides
 }
 
-def prepareDruflowCommand(params, argument, overrides) {
+def prepareDruflowCommand(params, overrides) {
     commandParams = prepareDruflowCommandParams(params, overrides)
 
     options = ''
@@ -53,24 +53,24 @@ def prepareDruflowCommand(params, argument, overrides) {
         options += getOptions(readProperties(file: commandParams.propertiesFile))
     }
 
-    "cd ${params.druflowDir} && ./gradlew app '${argument}' ${options}"
+    "cd ${params.druflowDir} && ./gradlew app ${options}"
 }
 
-def executeDruflowCommand(params, argument = '', overrides = [:]) {
-    def druflowCommand = prepareDruflowCommand(params, argument, overrides)
+def executeDruflowCommand(params, overrides = [:]) {
+    def druflowCommand = prepareDruflowCommand(params, overrides)
     druflowGet(params)
     sh(druflowCommand)
 }
 
 def copySite(params) {
-    executeDruflowCommand(params, '', [argument: "${params.db} ${params.toEnvironment}", env: params.executeEnvironment, site: 'default'])
+    executeDruflowCommand(params, [argument: "'${params.db} ${params.toEnvironment}'", env: params.executeEnvironment, site: 'default'])
     // druflowGet(params)
 
     // sh "cd druflow && ./gradlew app -Ddebug=${debugFlag()} -Dsite=default -Denv=${params.executeEnvironment} -Dargument='${params.db} ${params.toEnvironment}' -DexecuteCommand=dbCopyAC -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"
 }
 
 def dbBackupSite(params) {
-    executeDruflowCommand(params, '', [argument: params.db, env: params.executeEnvironment, site: 'default'])
+    executeDruflowCommand(params, [argument: params.db, env: params.executeEnvironment, site: 'default'])
     // druflowGet(params)
 
     // sh "cd druflow && ./gradlew app -Ddebug=${debugFlag()} -Dsite=default -Denv=${params.executeEnvironment} -Dargument=${params.db} -DexecuteCommand=dbBackupSite -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}"
