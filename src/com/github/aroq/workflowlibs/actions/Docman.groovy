@@ -6,7 +6,7 @@ def jsonConfig(params) {
     info(params)
     docrootConfigJson = readFile("${params.docmanConfigPath}/${params.docmanJsonConfigFile}")
 
-    projectName = projectNameByGroupAndRepoName(docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
+    projectName = projectNameByGroupAndRepoName(this, docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
 
     echo "PROJECT NAME: ${projectName}"
 
@@ -102,7 +102,8 @@ def init(params) {
 }
 
 @NonCPS
-def projectNameByGroupAndRepoName(docrootConfigJson, groupName, repoName) {
+def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName) {
+    script.echo "TESTTESTTEST"
     docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
     result = ''
     docmanConfig.projects.each { project ->
