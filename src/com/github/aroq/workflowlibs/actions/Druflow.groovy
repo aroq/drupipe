@@ -29,7 +29,7 @@ def deployFlow(params) {
 
     // sh "cd ${params.druflowDir} && ./gradlew app -Ddebug=${debugFlag()} -DprojectName=${deployProjectName} -Denv=${executeEnvironment} -DexecuteCommand=${params.executeCommand} -Dworkspace=${params.workspace} -DdocrootDir=${docrootDir}${options}"
 
-    executeDruflowCommand(params, '', [env: executeEnvironment, projectName: deployProjectName])
+    executeDruflowCommand(params, [env: executeEnvironment, projectName: deployProjectName])
 }
 
 def prepareDruflowCommandParams(params, overrides = [:]) {
