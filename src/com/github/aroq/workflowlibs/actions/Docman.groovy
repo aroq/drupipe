@@ -8,8 +8,6 @@ def jsonConfig(params) {
 
     projectName = projectNameByGroupAndRepoName(this, docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
 
-    echo "PROJECT NAME: ${projectName}"
-
     if (projectName) {
         params.projectName = projectName
     }
@@ -103,13 +101,12 @@ def init(params) {
 
 @NonCPS
 def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName) {
+    // TODO: Refactor it.
     groupName = groupName.toLowerCase()
     repoName = repoName.toLowerCase()
     docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
     result = ''
     docmanConfig.projects.each { project ->
-        script.echo "TEST: ${project.value['repo']}"
-        script.echo "TEST2: ${groupName}/${repoName}"
         def repo = project.value['repo'];
         if (repo) {
             if (repo.toLowerCase().contains("${groupName}/${repoName}")) {
