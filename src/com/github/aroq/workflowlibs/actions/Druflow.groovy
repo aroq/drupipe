@@ -33,7 +33,6 @@ def deployFlow(params) {
 }
 
 def prepareDruflowCommandParams(params, overrides = [:]) {
-    def commandParams = params
     defaultParams = [
         debug: debugFlag(),
         executeCommand: commandParams.executeCommand,
@@ -41,7 +40,7 @@ def prepareDruflowCommandParams(params, overrides = [:]) {
         // TODO: review this parameter handling.
         docrootDir: docrootDir,
     ]
-    commandParams << defaultParams
+    commandParams = defaultParams
     commandParams << overrides
 }
 
