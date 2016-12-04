@@ -55,23 +55,28 @@ def druflowGet(params) {
 
 def copySite(params) {
     def dbs = []
-    echo "TYPE: ${params.db.getClass()}"
     if (params.db instanceof java.lang.String) {
-        echo "SINGLE DB"
         dbs << params.db
     }
     else {
-        echo "MULTIPLE DBS"
         dbs = params.db
     }
     for (db in dbs) {
-        echo "DB: ${db}"
         executeDruflowCommand(params, [argument: "'${db} ${params.toEnvironment}'", env: params.executeEnvironment, site: 'default'])
     }
 }
 
 def dbBackupSite(params) {
-    executeDruflowCommand(params, [argument: params.db, env: params.executeEnvironment, site: 'default'])
+    def dbs = []
+    if (params.db instanceof java.lang.String) {
+        dbs << params.db
+    }
+    else {
+        dbs = params.db
+    }
+    for (db in dbs) {
+        executeDruflowCommand(params, [argument: db, env: params.executeEnvironment, site: 'default'])
+    }
 }
 
 @NonCPS
