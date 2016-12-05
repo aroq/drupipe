@@ -54,11 +54,29 @@ def druflowGet(params) {
 }
 
 def copySite(params) {
-    executeDruflowCommand(params, [argument: "'${params.db} ${params.toEnvironment}'", env: params.executeEnvironment, site: 'default'])
+    def dbs = []
+    if (params.db instanceof java.lang.String) {
+        dbs << params.db
+    }
+    else {
+        dbs = params.db
+    }
+    for (db in dbs) {
+        executeDruflowCommand(params, [argument: "'${db} ${params.toEnvironment}'", env: params.executeEnvironment, site: 'default'])
+    }
 }
 
 def dbBackupSite(params) {
-    executeDruflowCommand(params, [argument: params.db, env: params.executeEnvironment, site: 'default'])
+    def dbs = []
+    if (params.db instanceof java.lang.String) {
+        dbs << params.db
+    }
+    else {
+        dbs = params.db
+    }
+    for (db in dbs) {
+        executeDruflowCommand(params, [argument: db, env: params.executeEnvironment, site: 'default'])
+    }
 }
 
 @NonCPS
