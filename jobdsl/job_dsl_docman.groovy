@@ -40,6 +40,9 @@ docmanConfig.states?.each { state ->
     buildEnvironment = docmanConfig.getEnvironmentByState(state.key)
     println "Environment: ${buildEnvironment}"
     pipelineJob(state.key) {
+        if (config.quietPeriodSeconds) {
+            quietPeriod(config.quietPeriodSeconds)
+        }
         concurrentBuild(false)
         logRotator(-1, 30)
         parameters {
