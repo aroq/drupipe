@@ -22,6 +22,7 @@ def jsonConfig(params) {
         // TODO: refactor it
         params.projectName = 'common'
     }
+    echo "PROJECT NAME: ${params.projectName}"
 
     params << [returnConfig: true]
 }
