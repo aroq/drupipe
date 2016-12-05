@@ -121,12 +121,10 @@ def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName
     docmanConfig.projects.each { project ->
         def repo = project.value['repo'];
         if (repo) {
-            script.echo "REPO: ${repo.toLowerCase()}"
-            script.echo "GITLAB: ${groupName}/${repoName}"
-            if (repo) {
-                if (repo.toLowerCase().contains("${groupName}/${repoName}")) {
-                    result = project.value['name']
-                }
+        script.echo "REPO: ${repo.toLowerCase()}"
+        script.echo "GITLAB: ${groupName}/${repoName}"
+            if (repo.toLowerCase().contains("${groupName}/${repoName}")) {
+                result = project.value['name']
             }
         }
     }
