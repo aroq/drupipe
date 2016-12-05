@@ -6,11 +6,23 @@ def jsonConfig(params) {
     info(params)
     docrootConfigJson = readFile("${params.docmanConfigPath}/${params.docmanJsonConfigFile}")
 
-    projectName = projectNameByGroupAndRepoName(this, docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
+    def pn = ''
 
-    if (projectName) {
+    if (env.gitlabSourceNamespace) {
+       pn = projectNameByGroupAndRepoName(this, docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
+    }
+
+    if (pn) {
+        params.projectName = pn
+    }
+    else if (projectName) {
         params.projectName = projectName
     }
+    else {
+        // TODO: refactor it
+        params.projectName = 'common'
+    }
+    echo "PROJECT NAME: ${params.projectName}"
 
     params << [returnConfig: true]
 }
@@ -108,6 +120,8 @@ def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName
     result = ''
     docmanConfig.projects.each { project ->
         def repo = project.value['repo'];
+        script.echo "REPO: ${repo.toLowerCase()}"
+        script.echo "GITLAB: ${groupName}/${repoName}"
         if (repo) {
             if (repo.toLowerCase().contains("${groupName}/${repoName}")) {
                 result = project.value['name']
