@@ -81,6 +81,8 @@ def deploy(params) {
         deployProjectName = projectName
     }
 
+    echo "docman deploy git_target ${deployProjectName} branch ${version} ${flag}"
+
     sh(
         """#!/bin/bash -l
         if [ "${params.force}" == "1" ]; then
