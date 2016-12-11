@@ -27,7 +27,7 @@ def _executePipeline(params) {
     stages = utils.processPipeline(params.pipeline)
     stages += utils.processStages(params.stages)
 
-    if (params.force == '1') {
+    if (params.force == '11') {
         echo 'FORCE REMOVE DIR'
         deleteDir()
     }
