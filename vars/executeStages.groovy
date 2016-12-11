@@ -1,20 +1,21 @@
-def call(params = [:]) {
+def call(commandParams = [:]) {
+    def p = commandParams.params
     try {
-        _pipelineNotify(params)
-        if (params.p) {
-            params << params.p
-            params.remove('p')
+        _pipelineNotify(p)
+        if (p.p) {
+            p << p.p
+            p.remove('p')
         }
 
-        params << _executePipeline(params)
+        p << _executePipeline(p)
     }
     catch (e) {
         currentBuild.result = "FAILED"
         throw e
     }
     finally {
-        _pipelineNotify(params, currentBuild.result)
-        params
+        _pipelineNotify(p, currentBuild.result)
+        p
     }
 
 }

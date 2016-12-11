@@ -68,7 +68,7 @@ def info(params) {
 
 def deploy(params) {
     echo "FORCE MODE PARAMS: ${params}"
-    echo "FORCE MODE: ${params.params.force}"
+    echo "FORCE MODE: ${params.force}"
     def flag = ''
     if (params.force == '1') {
         flag = '-f'
