@@ -38,6 +38,9 @@ actionParams = [
     ],
     Docman_info: [
     ],
+    Docman_deploy: [
+        debugEnabled: true,
+    ],
     Script_execute: [
     ],
     Publish_junit: [
