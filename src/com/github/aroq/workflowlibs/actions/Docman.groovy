@@ -68,7 +68,7 @@ def info(params) {
 
 def deploy(params) {
     def flag = ''
-    if (params.force == 1) {
+    if (params.force == '1') {
         flag = '-f'
     }
 
