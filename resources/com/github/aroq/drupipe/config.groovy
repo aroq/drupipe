@@ -17,7 +17,7 @@ actionParams = [
         behat_args: '--format=pretty --out=std --format=junit',
     ],
     withDrupipeDocker: [
-        drupipeDockerImageName: 'aroq/drudock:1.1.0',
+        drupipeDockerImageName: 'aroq/drudock:1.2.0',
         drupipeDockerArgs: '--user root:root',
         noNode: true,
     ],
