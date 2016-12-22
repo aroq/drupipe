@@ -31,10 +31,10 @@ if (config.branches) {
 docmanConfig.states?.each { state ->
     println "Processing state: ${state.key}"
     if (branches[state.key]?.branch) {
-      branch = branches[state.key]?.branch
+        branch = branches[state.key]?.branch
     }
     else {
-      branch = docmanConfig.getVersionBranch('', state.key)
+        branch = docmanConfig.getVersionBranch('', state.key)
     }
     println "DocmanConfig: getVersionBranch: ${branch}"
     buildEnvironment = docmanConfig.getEnvironmentByState(state.key)
