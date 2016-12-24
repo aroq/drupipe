@@ -15,6 +15,8 @@ def add(params) {
                     git url: source.url, branch: source.branch
                 }
             }
+            echo 'SHOW DSL'
+            sh 'ls -l docroot/config/pipelines/jobdsl'
             result = source.path
             break
 
