@@ -3,10 +3,13 @@ def call(body) {
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = params
     body()
+    if (params.params) {
+        params << params.params
+        params.remove('params')
+    }
 
-    executePipeline {
-        checkoutSCM = true
-        pipeline = [
+    def drupipePipeline =
+        [
             'init': [
                 [
                     action: 'Docman.info',
@@ -18,13 +21,15 @@ def call(body) {
                               name: 'library',
                               type: 'git',
                               path: 'library',
-                              url: 'https://github.com/aroq/drupipe.git',
-                              branch: 'master'
-                        ]
-                    ]
+                              url: params.drupipeLibraryUrl,
+                              branch: params.drupipeLibraryBranch,
+                        ],
+                    ],
                 ],
             ],
         ]
-        p = params
-    }
+
+    executeStages([
+        pipeline: drupipePipeline
+    ])
 }

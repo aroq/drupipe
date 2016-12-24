@@ -4,16 +4,11 @@ import groovy.json.JsonSlurper
 
 def jsonConfig(params) {
     info(params)
+
+    utils = new com.github.aroq.workflowlibs.Utils()
     docrootConfigJson = readFile("${params.docmanConfigPath}/${params.docmanJsonConfigFile}")
-
-    def pn = ''
-
     if (env.gitlabSourceNamespace) {
-       pn = projectNameByGroupAndRepoName(this, docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
-    }
-
-    if (pn) {
-        params.projectName = pn
+       params.projectName = utils.projectNameByGroupAndRepoName(this, docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
     }
     else if (projectName) {
         params.projectName = projectName
@@ -113,25 +108,5 @@ def init(params) {
     else {
         null
     }
-}
-
-@NonCPS
-def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName) {
-    // TODO: Refactor it.
-    groupName = groupName.toLowerCase()
-    repoName = repoName.toLowerCase()
-    docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
-    result = ''
-    docmanConfig.projects.each { project ->
-        def repo = project.value['repo'];
-        if (repo) {
-        script.echo "REPO: ${repo.toLowerCase()}"
-        script.echo "GITLAB: ${groupName}/${repoName}"
-            if (repo.toLowerCase().contains("${groupName}/${repoName}")) {
-                result = project.value['name']
-            }
-        }
-    }
-    result
 }
 

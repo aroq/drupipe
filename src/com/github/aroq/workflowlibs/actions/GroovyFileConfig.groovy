@@ -19,6 +19,6 @@ def groovyConfigFromLibraryResource(params) {
 
 @NonCPS
 def groovyConfig(text) {
-    return new HashMap<>(ConfigSlurper.newInstance().parse(text))
+    return new HashMap<>(ConfigSlurper.newInstance(env.drupipeEnvironment).parse(text))
 }
 

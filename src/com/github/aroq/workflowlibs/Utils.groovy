@@ -1,5 +1,7 @@
 package com.github.aroq.workflowlibs
 
+import groovy.json.JsonSlurper
+
 def colorEcho(message, color = null) {
     if (!color) {
         color = 'green'
@@ -70,6 +72,26 @@ Action processPipelineAction(action) {
     }
     values = actionName.split("\\.")
     new Action(name: values[0], methodName: values[1], params: actionParams)
+}
+
+@NonCPS
+def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName) {
+    // TODO: Refactor it.
+    groupName = groupName.toLowerCase()
+    repoName = repoName.toLowerCase()
+    docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
+    result = ''
+    docmanConfig.projects.each { project ->
+        def repo = project.value['repo'];
+        if (repo) {
+        script.echo "REPO: ${repo.toLowerCase()}"
+        script.echo "GITLAB: ${groupName}/${repoName}"
+            if (repo.toLowerCase().contains("${groupName}/${repoName}")) {
+                result = project.value['name']
+            }
+        }
+    }
+    result
 }
 
 return this

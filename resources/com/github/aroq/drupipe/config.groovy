@@ -1,6 +1,24 @@
 debugEnabled = false
 docrootDir = 'docroot'
-jobsPattern = 'library/jobdsl/job_dsl_docman.groovy'
+docmanConfigPath = 'docroot/config'
+docmanConfigFile = 'docroot.config'
+docmanJsonConfigFile = 'config.json'
+
+drupipeLibraryUrl = 'https://github.com/aroq/drupipe.git'
+drupipeLibraryBranch = 'master'
+
+// Environments section.
+environments {
+    dev {
+        drupipeLibraryBranch = 'develop'
+    }
+    test {
+        drupipeLibraryBranch = 'master'
+    }
+    prod {
+        drupipeLibraryBranch = '0.1.6'
+    }
+}
 
 actionParams = [
     // TODO: add params subsections (that will be containerized inside common config).
@@ -22,26 +40,8 @@ actionParams = [
         noNode: true,
     ],
     // TODO: add private (that will not go into common config) params section.
-    Source_loadConfig: [
-    ],
-    GroovyFileConfig: [
-    ],
     Docman_config: [
-        docmanConfigPath: 'docroot/config',
-        docmanConfigFile: 'docroot.config',
         docmanJsonConfigFile: 'config.json',
-    ],
-    Docman_jsonConfig: [
-        docmanConfigPath: 'docroot/config',
-        docmanConfigFile: 'docroot.config',
-        docmanJsonConfigFile: 'config.json',
-    ],
-    Docman_info: [
-    ],
-    Docman_deploy: [
-        debugEnabled: true,
-    ],
-    Script_execute: [
     ],
     Publish_junit: [
         reportsPath: 'reports/*.xml'
@@ -53,7 +53,10 @@ actionParams = [
         additionalClasspath: ['library/src'],
         debugEnabled: true,
         // TODO: Need another way of providing dsl scripts.
-        jobsPattern: 'library/jobdsl/job_dsl_docman.groovy',
+        jobsPattern: ['library/jobdsl/job_dsl_docman.groovy'],
+    ],
+    Nexus: [
+        nexusReleaseType: 'release',
     ],
     Druflow: [
         druflowDir: 'druflow',

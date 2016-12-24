@@ -14,34 +14,42 @@ def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConf
 branches = [
     development: [
         pipeline: 'deploy',
+        quietPeriodSeconds: 5,
     ],
     staging: [
         pipeline: 'deploy',
+        quietPeriodSeconds: 5,
     ],
     stable: [
         pipeline: 'release',
+        quietPeriodSeconds: 5,
     ],
 ]
 
 if (config.branches) {
-  branches << config.branches
+  branches = merge(branches, config.branches)
 }
 
 // Create pipeline jobs for each state defined in Docman config.
 docmanConfig.states?.each { state ->
+    def params = config
     println "Processing state: ${state.key}"
+    if (branches[state.key]) {
+        params = merge(config, branches[state.key])
+    }
     if (branches[state.key]?.branch) {
         branch = branches[state.key]?.branch
     }
     else {
         branch = docmanConfig.getVersionBranch('', state.key)
     }
+    println "Params: ${params}"
     println "DocmanConfig: getVersionBranch: ${branch}"
     buildEnvironment = docmanConfig.getEnvironmentByState(state.key)
     println "Environment: ${buildEnvironment}"
     pipelineJob(state.key) {
-        if (config.quietPeriodSeconds) {
-            quietPeriod(config.quietPeriodSeconds)
+        if (params.quietPeriodSeconds) {
+            quietPeriod(params.quietPeriodSeconds)
         }
         concurrentBuild(false)
         logRotator(-1, 30)
@@ -51,7 +59,7 @@ docmanConfig.states?.each { state ->
             stringParam('force', '0')
             stringParam('simulate', '0')
             stringParam('docrootDir', 'docroot')
-            stringParam('config_repo', config.configRepo)
+            stringParam('config_repo', params.configRepo)
             stringParam('type', 'branch')
             stringParam('environment', buildEnvironment)
             stringParam('version', branch)
@@ -62,14 +70,14 @@ docmanConfig.states?.each { state ->
                     git() {
                         remote {
                             name('origin')
-                            url(config.configRepo)
-                            credentials(config.credentialsID)
+                            url(params.configRepo)
+                            credentials(params.credentialsID)
                         }
                         extensions {
                             relativeTargetDirectory('docroot/config')
                         }
                     }
-                    scriptPath("docroot/config/pipelines/${branches[state.key]?.pipeline}.groovy")
+                    scriptPath("docroot/config/pipelines/${params.pipeline}.groovy")
                 }
             }
         }
@@ -87,5 +95,17 @@ docmanConfig.states?.each { state ->
                 gitLabConnection('Gitlab')
             }
         }
+    }
+}
+
+Map merge(Map[] sources) {
+    if (sources.length == 0) return [:]
+    if (sources.length == 1) return sources[0]
+
+    sources.inject([:]) { result, source ->
+        source.each { k, v ->
+            result[k] = result[k] instanceof Map ? merge(result[k], v) : v
+        }
+        result
     }
 }
