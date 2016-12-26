@@ -6,6 +6,7 @@ def add(params) {
     switch (source.type) {
         case 'git':
             dir(source.path) {
+                deleteDir()
                 if (params.credentialsID) {
                     echo "With credentials: ${params.credentialsID}"
                     git credentialsId: params.credentialsID, url: source.url, branch: source.branch
@@ -15,8 +16,6 @@ def add(params) {
                     git url: source.url, branch: source.branch
                 }
             }
-            echo 'SHOW DSL'
-            sh 'ls -l docroot/config/pipelines/jobdsl'
             result = source.path
             break
 
