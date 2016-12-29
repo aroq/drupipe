@@ -109,7 +109,7 @@ def envToMap() {
 
 def dumpConfigFile(config, fileName = 'config.dump.groovy') {
     writeFile(file: fileName, text: configToSlurperFile(config))
-    // sh "cat ${fileName}"
+    sh "cat ${fileName}"
 }
 
 @NonCPS
