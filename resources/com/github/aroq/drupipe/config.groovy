@@ -25,6 +25,7 @@ actionParams = [
     Config: [
         projectConfigPath: 'docroot/config',
         projectConfigFile: 'docroot.config',
+        mothershipConfigFile: 'mothership.config',
     ],
     Behat: [
         masterPath: 'docroot/master',

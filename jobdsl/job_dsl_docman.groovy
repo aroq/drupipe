@@ -1,14 +1,15 @@
 import com.github.aroq.DocmanConfig
+import com.github.aroq.GitlabHelper
 
-def configFilePath = 'docroot/config/docroot.config'
-def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace(configFilePath))
+def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 
 docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : 'docroot/config/config.json'
-
 docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 
 // Retrieve Docman config from json file (prepared by "docman info" command).
 def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
+
+def gitlabHelper = new GitlabHelper(script: this, config: config)
 
 // TODO: Use docman config to retrieve info.
 branches = [
@@ -43,10 +44,7 @@ docmanConfig.states?.each { state ->
     else {
         branch = docmanConfig.getVersionBranch('', state.key)
     }
-    println "Params: ${params}"
-    println "DocmanConfig: getVersionBranch: ${branch}"
     buildEnvironment = docmanConfig.getEnvironmentByState(state.key)
-    println "Environment: ${buildEnvironment}"
     pipelineJob(state.key) {
         if (params.quietPeriodSeconds) {
             quietPeriod(params.quietPeriodSeconds)
@@ -96,6 +94,19 @@ docmanConfig.states?.each { state ->
             }
         }
     }
+    docmanConfig.projects?.each { project ->
+        if (project.value.repo && isGitlabRepo(project.value.repo, config)) {
+            if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                gitlabHelper.addWebhook(project.value.repo, state)
+                hooks = gitlabHelper.getWebhooks(project.value.repo)
+                //println "HOOKS: ${hooks}"
+            }
+        }
+    }
+}
+
+def isGitlabRepo(repo, config) {
+    config.env.GITLAB_HOST && repo.contains(config.env.GITLAB_HOST)
 }
 
 Map merge(Map[] sources) {
@@ -104,7 +115,7 @@ Map merge(Map[] sources) {
 
     sources.inject([:]) { result, source ->
         source.each { k, v ->
-            result[k] = result[k] instanceof Map ? merge(result[k], v) : v
+            result[k] = result[k] instanceof Map && v instanceof Map ? merge(result[k], v) : v
         }
         result
     }

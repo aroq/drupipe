@@ -4,8 +4,9 @@ def call(body) {
     body.delegate = params
     body()
 
-    node {
+    node('master') {
         config = executePipeline {
+            noNode = true
             pipeline =
                 [
                     'seed': [

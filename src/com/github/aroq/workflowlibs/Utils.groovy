@@ -94,4 +94,70 @@ def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName
     result
 }
 
+def writeEnvFile() {
+    sh 'env > env.txt'
+    writeFile(file: 'ENV.groovy', text: envConfig(readFile('env.txt')))
+    sh 'rm -fR env.txt'
+}
+
+def envToMap() {
+    sh 'env > env.txt'
+    def result = envTextToMap(readFile('env.txt'))
+    sh 'rm -fR env.txt'
+    result
+}
+
+def dumpConfigFile(config, fileName = 'config.dump.groovy') {
+    writeFile(file: fileName, text: configToSlurperFile(config))
+    // sh "cat ${fileName}"
+}
+
+@NonCPS
+String envConfig(env) {
+    def co = new ConfigObject()
+    env.split("\r?\n").each {
+        co.put(it.substring(0, it.indexOf('=')), it.substring(it.indexOf('=') + 1))
+    }
+    def sw = new StringWriter()
+    co.writeTo(sw)
+    sw.toString()
+}
+
+@NonCPS
+def envTextToMap(env) {
+    def result = [:]
+    env.split("\r?\n").each {
+        result.put(it.substring(0, it.indexOf('=')), it.substring(it.indexOf('=') + 1))
+    }
+    result
+}
+
+@NonCPS
+String configToSlurperFile(config) {
+    def co = new ConfigObject()
+    skipConfigKeys = ['action', 'sources', 'sourcesList', 'stage']
+    config.each { entry ->
+        if (!skipConfigKeys.contains(entry.key)) {
+            co.put(entry.key, entry.value)
+        }
+    }
+    def sw = new StringWriter()
+    co.writeTo(sw)
+    sw.toString()
+}
+
+String getJenkinsFolderName(String buildUrl) {
+    (buildUrl =~ $/job/(.+)/job/(.+)/.*/$)[ 0 ] [ 1 ]
+}
+
+String getJenkinsJobName(String buildUrl) {
+    (buildUrl =~ $/job/(.+)/job/(.+)/.*/$)[ 0 ] [ 2 ]
+}
+
+@NonCPS
+def getMothershipProjectParams(config, json) {
+    def projects = JsonSlurper.newInstance().parseText(json).projects
+    projects[config.jenkinsFolderName]
+}
+
 return this
