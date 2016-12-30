@@ -10,7 +10,7 @@ docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
 
 if (config.env.GITLAB_API_TOKEN_TEXT) {
-    def gitlabHelper = new GitlabHelper(script: this, config: config)
+    gitlabHelper = new GitlabHelper(script: this, config: config)
 }
 
 // TODO: Use docman config to retrieve info.
