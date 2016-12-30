@@ -1,6 +1,6 @@
 def call(commandParams = [:], body) {
     node(commandParams.nodeName) {
-        timestamper {
+        timestamps {
             configParams = executePipelineAction([action: 'Config.perform'], commandParams.clone() << params)
             commandParams << ((configParams << configParams.actionParams['withDrupipeDocker']) << commandParams)
             if (commandParams.dockerfile) {
