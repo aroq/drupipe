@@ -22,9 +22,8 @@ class GitlabHelper {
         config.repoParams.projectID     = "${config.repoParams.groupName}%2F${config.repoParams.projectName}"
     }
 
-    def addWebhook(String repo, state) {
+    def addWebhook(String repo, url) {
         setRepoProperties(repo)
-        def url = "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${state.key}"
         def hook_id = null
         getWebhooks(repo).each { hook ->
             if (hook.url.contains(url)) {

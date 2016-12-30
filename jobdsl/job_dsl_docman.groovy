@@ -9,7 +9,9 @@ docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 // Retrieve Docman config from json file (prepared by "docman info" command).
 def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
 
-def gitlabHelper = new GitlabHelper(script: this, config: config)
+if (config.env.GITLAB_API_TOKEN_TEXT) {
+    def gitlabHelper = new GitlabHelper(script: this, config: config)
+}
 
 // TODO: Use docman config to retrieve info.
 branches = [
@@ -94,12 +96,15 @@ docmanConfig.states?.each { state ->
             }
         }
     }
-    docmanConfig.projects?.each { project ->
-        if (project.value.repo && isGitlabRepo(project.value.repo, config)) {
-            if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
-                gitlabHelper.addWebhook(project.value.repo, state)
-                hooks = gitlabHelper.getWebhooks(project.value.repo)
-                //println "HOOKS: ${hooks}"
+    if (config.env.GITLAB_API_TOKEN_TEXT) {
+        docmanConfig.projects?.each { project ->
+            if (project.value.repo && isGitlabRepo(project.value.repo, config)) {
+                if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                    gitlabHelper.addWebhook(
+                        project.value.repo,
+                        "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${state.key}"
+                    )
+                }
             }
         }
     }

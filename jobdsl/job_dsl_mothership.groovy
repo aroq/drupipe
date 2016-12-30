@@ -4,6 +4,8 @@ import com.github.aroq.GitlabHelper
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 def projects = JsonSlurper.newInstance().parseText(readFileFromWorkspace('projects.json')).projects
 
+def gitlabHelper = new GitlabHelper(script: this, config: config)
+
 projects.each { project ->
     String subDir = project.value['subDir'] ? project.value['subDir'] + '/' : ''
     if (project.value['type'] == 'Jenkinsfile') {
@@ -13,7 +15,6 @@ projects.each { project ->
         // TODO: Add condition checking if permissions should be set based on Gitlab permissions.
         // TODO: Add condition checking if repo is in Gitlab.
         if (config.env.GITLAB_API_TOKEN_TEXT) {
-            def gitlabHelper = new GitlabHelper(script: this, config: config)
             users = gitlabHelper.getUsers(project.value['repo'])
             println "USERS: ${users}"
         }
@@ -73,6 +74,12 @@ projects.each { project ->
                     gitLabConnection('Gitlab')
                 }
             }
+        }
+        if (config.env.GITLAB_API_TOKEN_TEXT) {
+            gitlabHelper.addWebhook(
+                project.value.repo,
+                "${config.env.JENKINS_URL}project/${project.key}/seed"
+            )
         }
     }
     else if (project.value['type'] == 'multibranch') {
