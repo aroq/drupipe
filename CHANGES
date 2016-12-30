@@ -1,3 +1,18 @@
+Version 0.1.7:
+ - Set library version to 0.1.7
+ - Added timestamps & timeout
+ - Gitlab helper debug
+ - Gitlab procedures changes
+ - debug
+ - Set drupipe version
+ - Squashed commit of the following:
+ - Removed debug echos
+ - Revert "debug"
+ - debug
+ - Debug
+ - Added nexus & refactored configs
+ - Fixed formatting
+
 Version 0.1.6:
  - Changed default drudock version to 1.2.0
 
