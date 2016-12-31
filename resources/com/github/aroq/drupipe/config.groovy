@@ -16,7 +16,7 @@ environments {
         drupipeLibraryBranch = 'master'
     }
     prod {
-        drupipeLibraryBranch = '0.1.8'
+        drupipeLibraryBranch = 'v0.1.9'
     }
 }
 
