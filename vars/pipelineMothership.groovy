@@ -17,8 +17,8 @@ def call(body) {
                                       name: 'library',
                                       type: 'git',
                                       path: 'library',
-                                      url: 'https://github.com/aroq/drupipe.git',
-                                      branch: 'develop'
+                                      url: params.drupipeLibraryUrl,
+                                      branch: params.drupipeLibraryBranch,
                                 ]
                             ]
                         ],

@@ -52,7 +52,6 @@ actionParams = [
         removedViewAction: 'DELETE',
         lookupStrategy: 'SEED_JOB',
         additionalClasspath: ['library/src'],
-        debugEnabled: true,
         // TODO: Need another way of providing dsl scripts.
         jobsPattern: ['library/jobdsl/job_dsl_docman.groovy'],
     ],

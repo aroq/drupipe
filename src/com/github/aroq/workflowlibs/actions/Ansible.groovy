@@ -2,17 +2,18 @@ package com.github.aroq.workflowlibs.actions
 
 def deployWithGit(params) {
     executePipelineAction([
-	action: 'Source.add',
-	params: [
-	    source: [
-		ansible_name: 'library',
-		ansible_type: 'git',
-		ansible_path: 'library',
-		ansible_url: params.drupipeLibraryUrl,
-		ansible_branch: params.drupipeLibraryBranch,
-	    ]
-	]
+        action: 'Source.add',
+        params: [
+            source: [
+                ansible_name: 'library',
+                ansible_type: 'git',
+                ansible_path: 'library',
+                ansible_url: params.drupipeLibraryUrl,
+                ansible_branch: params.drupipeLibraryBranch,
+            ],
+        ],
     ], params)
+    // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
     // params.ansible << [:]
     executeAnsiblePlaybook(params)
 }
