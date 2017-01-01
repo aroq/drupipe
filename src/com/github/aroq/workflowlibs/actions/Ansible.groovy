@@ -14,14 +14,16 @@ def deployWithGit(params) {
 }
 
 def executeAnsiblePlaybook(params) {
-sh"""#!/bin/bash -l
-ansible-playbook ${params.ansible.playbook} \
--i ${params.ansible.hostsFile} \
--e 'target=${params.ansible.target} \
-user=${params.ansible.user} \
-repo=${params.ansible.repo} \
-reference=${params.ansible.repo} \
-deploy_to=${params.ansible.deploy_to}'
-"""
+    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
+        sh"""#!/bin/bash -l
+        ansible-playbook ${params.ansible.playbook} \
+        -i ${params.ansible.hostsFile} \
+        -e 'target=${params.ansible.target} \
+        user=${params.ansible.user} \
+        repo=${params.ansible.repo} \
+        reference=${params.ansible.repo} \
+        deploy_to=${params.ansible.deploy_to}'
+        """
+    }
 }
 
