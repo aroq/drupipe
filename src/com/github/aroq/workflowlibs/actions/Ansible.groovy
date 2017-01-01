@@ -21,7 +21,7 @@ def executeAnsiblePlaybook(params, environmentVariables = [:]) {
     def command =
         "ansible-playbook ${params.ansible_playbook} \
         -i ${params.ansible_hostsFile} \
-        -e 'target=${params_ansible_target} \
+        -e 'target=${params.ansible_target} \
         user=${params.ansible_user} \
         repo=${params.ansible_repo} \
         reference=${params.ansible_reference} \
