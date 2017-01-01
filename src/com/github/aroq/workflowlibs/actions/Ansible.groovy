@@ -21,7 +21,7 @@ def executeAnsiblePlaybook(params) {
         -e 'target=${params.ansible.target} \
         user=${params.ansible.user} \
         repo=${params.ansible.repo} \
-        reference=${params.ansible.repo} \
+        reference=${params.ansible.reference} \
         deploy_to=${params.ansible.deploy_to}'
         """
     }
