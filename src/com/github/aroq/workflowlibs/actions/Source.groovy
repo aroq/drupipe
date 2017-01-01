@@ -5,6 +5,8 @@ def add(params) {
     def result
     switch (source.type) {
         case 'git':
+            echo "Source add: git"
+            jsonDump(source)
             dir(source.path) {
                 deleteDir()
                 if (params.credentialsID) {
@@ -20,6 +22,7 @@ def add(params) {
             break
 
         case 'dir':
+            echo "Source add: dir"
             result = source.path
             break
     }
