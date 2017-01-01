@@ -1,12 +1,10 @@
 package com.github.aroq.workflowlibs.actions
 
 def add(params) {
-    echo "Source add"
     def source = params.source
     def result
     switch (source.type) {
         case 'git':
-            echo "Source add: git"
             jsonDump(source)
             dir(source.path) {
                 deleteDir()
@@ -15,7 +13,6 @@ def add(params) {
                     git credentialsId: params.credentialsID, url: source.url, branch: source.branch
                 }
                 else {
-                    echo "Without credentials"
                     git url: source.url, branch: source.branch
                 }
             }
@@ -23,7 +20,6 @@ def add(params) {
             break
 
         case 'dir':
-            echo "Source add: dir"
             result = source.path
             break
     }
