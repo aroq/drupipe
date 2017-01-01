@@ -1,6 +1,18 @@
 package com.github.aroq.workflowlibs.actions
 
 def deployWithGit(params) {
+    executePipelineAction([
+	action: 'Source.add',
+	params: [
+	    source: [
+		name: 'library',
+		type: 'git',
+		path: 'library',
+		url: params.drupipeLibraryUrl,
+		branch: params.drupipeLibraryBranch,
+	    ]
+	]
+    ], params)
     params.ansible = [
         playbook: 'library/ansible/deployWithGit.yml',
         reference: 'develop',
