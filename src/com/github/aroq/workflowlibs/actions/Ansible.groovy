@@ -14,9 +14,6 @@ def deployWithGit(params) {
 	]
     ], params)
     params.ansible << [
-        playbook: 'library/ansible/deployWithGit.yml',
-        reference: 'develop',
-        deploy_to: '/var/www/dev'
     ]
     executeAnsiblePlaybook(params)
 }
