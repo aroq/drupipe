@@ -13,6 +13,7 @@ def add(params) {
                     git credentialsId: params.credentialsID, url: source.url, branch: source.branch
                 }
                 else {
+                    echo "Without credentials"
                     git url: source.url, branch: source.branch
                 }
             }
