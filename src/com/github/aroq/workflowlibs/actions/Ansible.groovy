@@ -22,8 +22,8 @@ def deployWithGit(params) {
 }
 
 def executeAnsiblePlaybook(params, environmentVariables = [:]) {
-    def command = "
-        ansible-playbook ${params.ansible.playbook} \
+    def command =
+        "ansible-playbook ${params.ansible.playbook} \
         -i ${params.ansible.hostsFile} \
         -e 'target=${params.ansible.target} \
         user=${params.ansible.user} \
