@@ -5,11 +5,11 @@ def deployWithGit(params) {
 	action: 'Source.add',
 	params: [
 	    source: [
-		name: 'library',
-		type: 'git',
-		path: 'library',
-		url: params.drupipeLibraryUrl,
-		branch: params.drupipeLibraryBranch,
+		ansible_name: 'library',
+		ansible_type: 'git',
+		ansible_path: 'library',
+		ansible_url: params.drupipeLibraryUrl,
+		ansible_branch: params.drupipeLibraryBranch,
 	    ]
 	]
     ], params)
@@ -19,13 +19,13 @@ def deployWithGit(params) {
 
 def executeAnsiblePlaybook(params, environmentVariables = [:]) {
     def command =
-        "ansible-playbook ${params.ansible.playbook} \
-        -i ${params.ansible.hostsFile} \
-        -e 'target=${params.ansible.target} \
-        user=${params.ansible.user} \
-        repo=${params.ansible.repo} \
-        reference=${params.ansible.reference} \
-        deploy_to=${params.ansible.deploy_to}'"
+        "ansible-playbook ${params.ansible_playbook} \
+        -i ${params.ansible_hostsFile} \
+        -e 'target=${params_ansible_target} \
+        user=${params.ansible_user} \
+        repo=${params.ansible_repo} \
+        reference=${params.ansible_reference} \
+        deploy_to=${params.ansible_deploy_to}'"
 
 
     echo "Ansible command: ${command}"
