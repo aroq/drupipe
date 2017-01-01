@@ -2,18 +2,14 @@ package com.github.aroq.workflowlibs.actions
 
 def deployWithGit(params) {
     params.ansible = [
-        playbook: 'docroot/config/ansible/delivery.yml',
-        hostsFile: 'docroot/config/ansible/inventory.ini',
-        target: 'demo',
-        user: 'zebra',
-        repo: 'aroq@svn-2625.devcloud.hosting.acquia.com:aroq.git',
+        playbook: 'library/ansible/deployWithGit.yml',
         reference: 'develop',
         deploy_to: '/var/www/dev'
     ]
     executeAnsiblePlaybook(params)
 }
 
-def executeAnsiblePlaybook(params) {
+def executeAnsiblePlaybook(params, environmentVariables = [:]) {
     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
         sh"""#!/bin/bash -l
         ansible-playbook ${params.ansible.playbook} \

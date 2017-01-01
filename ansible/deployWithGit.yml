@@ -1,0 +1,14 @@
+---
+- name: 'Deployment with Git'
+  hosts: "{{ target }}"
+  remote_user: "{{ user }}"
+  gather_facts: no
+  become: no
+
+  tasks:
+    - name: 'Git pull on destination'
+      git:
+        repo: "{{ repo }}"
+        dest: "{{ deploy_to }}/"
+        version: "{{ reference }}"
+        accept_hostkey: yes
