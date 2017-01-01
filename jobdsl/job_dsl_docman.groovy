@@ -1,6 +1,8 @@
 import com.github.aroq.DocmanConfig
 import com.github.aroq.GitlabHelper
 
+println "Docman Job DSL processing"
+
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 
 docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : 'docroot/config/config.json'
@@ -10,7 +12,8 @@ docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
 
 if (config.env.GITLAB_API_TOKEN_TEXT) {
-    def gitlabHelper = new GitlabHelper(script: this, config: config)
+    println "Initialize Gitlab Helper"
+    gitlabHelper = new GitlabHelper(script: this, config: config)
 }
 
 // TODO: Use docman config to retrieve info.
