@@ -22,15 +22,21 @@ def deployWithGit(params) {
 }
 
 def executeAnsiblePlaybook(params, environmentVariables = [:]) {
-    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
-        sh"""#!/bin/bash -l
+    def command = "
         ansible-playbook ${params.ansible.playbook} \
         -i ${params.ansible.hostsFile} \
         -e 'target=${params.ansible.target} \
         user=${params.ansible.user} \
         repo=${params.ansible.repo} \
         reference=${params.ansible.reference} \
-        deploy_to=${params.ansible.deploy_to}'
+        deploy_to=${params.ansible.deploy_to}'"
+
+
+    echo "Ansible command: ${command}"
+
+    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
+        sh"""#!/bin/bash -l
+            ${command}
         """
     }
 }
