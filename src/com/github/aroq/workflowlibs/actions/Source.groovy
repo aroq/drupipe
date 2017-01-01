@@ -1,6 +1,7 @@
 package com.github.aroq.workflowlibs.actions
 
 def add(params) {
+    echo "Source add"
     def source = params.source
     def result
     switch (source.type) {
