@@ -73,6 +73,9 @@ actionParams = [
     Druflow_dbBackupSite: [
         executeCommand: 'dbBackupSite',
     ],
+    Ansible_deployWithGit: [
+        debugEnabled: true,
+    ],
     Common_confirm: [
         timeToConfirm: 60,
     ],
