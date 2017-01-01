@@ -73,7 +73,7 @@ actionParams = [
         executeCommand: 'dbBackupSite',
     ],
     Ansible_deployWithGit: [
-        debugEnabled: true,
+        // debugEnabled: true,
         ansible_playbook: 'library/ansible/deployWithGit.yml',
     ],
     Common_confirm: [
