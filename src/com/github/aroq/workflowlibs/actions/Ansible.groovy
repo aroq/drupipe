@@ -13,7 +13,7 @@ def deployWithGit(params) {
 	    ]
 	]
     ], params)
-    params.ansible << [:]
+    // params.ansible << [:]
     executeAnsiblePlaybook(params)
 }
 
