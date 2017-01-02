@@ -4,5 +4,5 @@ class Source implements Serializable {
     String name
     String type
     String path
-    String refType == 'branch'
+    String refType = 'branch'
 }
