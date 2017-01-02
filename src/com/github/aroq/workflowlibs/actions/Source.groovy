@@ -17,7 +17,7 @@ def add(params) {
                     // git url: source.url, branch: source.branch
                 // }
             }
-            sh "git clone ${source.url} ${source.branch} ${source.path}"
+            sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
             result = source.path
             break
 
