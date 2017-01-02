@@ -46,7 +46,7 @@ def call(body) {
             ]
         )
 
-        result = executePipeline {
+        result = executeStages {
             checkoutSCM = true
             pipeline = [
                 'init': [
