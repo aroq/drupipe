@@ -8,16 +8,22 @@ def add(params) {
             jsonDump(source)
             dir(source.path) {
                 deleteDir()
-                // if (params.credentialsID) {
-                    // echo "With credentials: ${params.credentialsID}"
-                    // git credentialsId: params.credentialsID, url: source.url, branch: source.branch
-                // }
-                // else {
-                    // echo "Without credentials"
-                    // git url: source.url, branch: source.branch
-                // }
             }
-            sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
+            dir(source.path) {
+                if (source.branch) {
+                    if (params.credentialsID) {
+                        echo "With credentials: ${params.credentialsID}"
+                        git credentialsId: params.credentialsID, url: source.url, branch: source.branch
+                    }
+                    else {
+                        echo "Without credentials"
+                        git url: source.url, branch: source.branch
+                    }
+                }
+            }
+            if (source.tag) {
+                sh "git clone ${source.url} --branch ${source.tag} --depth 1 ${source.path}"
+            }
             result = source.path
             break
 
