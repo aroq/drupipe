@@ -1,18 +1,7 @@
 package com.github.aroq.workflowlibs.actions
 
 def deployWithGit(params) {
-    executePipelineAction([
-        action: 'Source.add',
-        params: [
-            source: [
-                name: 'library',
-                type: 'git',
-                path: 'library',
-                url: params.drupipeLibraryUrl,
-                branch: params.drupipeLibraryBranch,
-            ],
-        ],
-    ], params)
+    loadLibrary(params)
     // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
     // params.ansible << [:]
     executeAnsiblePlaybook(params)
@@ -21,23 +10,11 @@ def deployWithGit(params) {
 def deployWithAnsistrano(params) {
     sh("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback")
     def version = readFile('docroot/master/VERSION')
-    executePipelineAction([
-        action: 'Source.add',
-        params: [
-            source: [
-                name: 'library',
-                type: 'git',
-                path: 'library',
-                url: params.drupipeLibraryUrl,
-                branch: params.drupipeLibraryBranch,
-            ],
-        ],
-    ], params)
+    loadLibrary(params)
     // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
     params << [ansible_reference: version]
     executeAnsiblePlaybook(params)
 }
-
 
 def executeAnsiblePlaybook(params, environmentVariables = [:]) {
     def command =
@@ -56,5 +33,20 @@ def executeAnsiblePlaybook(params, environmentVariables = [:]) {
             ${command}
         """
     }
+}
+
+def loadLibrary(params) {
+    executePipelineAction([
+        action: 'Source.add',
+        params: [
+            source: [
+                name: 'library',
+                type: 'git',
+                path: 'library',
+                url: params.drupipeLibraryUrl,
+                branch: params.drupipeLibraryBranch,
+            ],
+        ],
+    ], params)
 }
 
