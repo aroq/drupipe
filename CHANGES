@@ -1,3 +1,50 @@
+Version 0.2.0:
+ - Changed library version to v0.2.0
+ - Merge branch 'develop'
+ - Mothership pipeline
+ - Changed mothership pipeline
+ - Load library refactoring
+ - Ansible action
+ - Ansistrano
+ - Ansistrano
+ - Ansistrano
+ - debug
+ - Renamed playbook
+ - debug
+ - debug
+ - Added deploy with Ansistrano
+ - Ansible action
+ - debug
+ - Ansible action
+ - debug
+ - debug
+ - Removed force mode params
+ - Config changes
+ - Library load
+ - Ansible config
+ - Ansible action
+ - Ansible action
+ - Ansible config
+ - Ansible config
+ - Ansible action
+ - Ansible action
+ - Ansible action
+ - Ansible action
+ - debug
+ - debug
+ - Debug
+ - Ansible action
+ - Ansible action
+ - Fixed Ansible action error
+ - Added AnsiColor wrapper for Ansible
+ - Added Ansible action
+ - Merge branch 'master' into develop
+ - Added info messages
+ - debug
+ - Added timeout
+ - Added timestamps
+ - Added timestamps
+
 Version 0.1.9:
  - Updated library version
 
