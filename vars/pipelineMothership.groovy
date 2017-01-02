@@ -11,18 +11,6 @@ def call(body) {
                 [
                     'seed': [
                         [
-                            action: 'Source.add',
-                            params: [
-                                source: [
-                                      name: 'library',
-                                      type: 'git',
-                                      path: 'library',
-                                      url: params.drupipeLibraryUrl,
-                                      branch: params.drupipeLibraryBranch,
-                                ]
-                            ]
-                        ],
-                        [
                             action: 'JobDslSeed.perform',
                             params: [
                                 lookupStrategy: 'JENKINS_ROOT',

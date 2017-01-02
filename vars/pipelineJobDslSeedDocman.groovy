@@ -14,18 +14,6 @@ def call(body) {
                 [
                     action: 'Docman.info',
                 ],
-                [
-                    action: 'Source.add',
-                    params: [
-                        source: [
-                              name: 'library',
-                              type: 'git',
-                              path: 'library',
-                              url: params.drupipeLibraryUrl,
-                              branch: params.drupipeLibraryBranch,
-                        ],
-                    ],
-                ],
             ],
         ]
 
