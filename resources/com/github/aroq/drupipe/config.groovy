@@ -52,7 +52,6 @@ actionParams = [
         removedViewAction: 'DELETE',
         lookupStrategy: 'SEED_JOB',
         additionalClasspath: ['library/src'],
-        debugEnabled: true,
         // TODO: Need another way of providing dsl scripts.
         jobsPattern: ['library/jobdsl/job_dsl_docman.groovy'],
     ],
@@ -72,6 +71,14 @@ actionParams = [
     ],
     Druflow_dbBackupSite: [
         executeCommand: 'dbBackupSite',
+    ],
+    Ansible_deployWithGit: [
+        // debugEnabled: true,
+        ansible_playbook: 'library/ansible/deployWithGit.yml',
+    ],
+    Ansible_deployWithAnsistrano: [
+        // debugEnabled: true,
+        ansible_playbook: 'library/ansible/deployWithAnsistrano.yml',
     ],
     Common_confirm: [
         timeToConfirm: 60,

@@ -160,4 +160,19 @@ def getMothershipProjectParams(config, json) {
     projects[config.jenkinsFolderName] ? projects[config.jenkinsFolderName] : [:]
 }
 
+def loadLibrary(script, params) {
+    script.executePipelineAction([
+        action: 'Source.add',
+        params: [
+            source: [
+                name: 'library',
+                type: 'git',
+                path: 'library',
+                url: params.drupipeLibraryUrl,
+                branch: params.drupipeLibraryBranch,
+            ],
+        ],
+    ], params)
+}
+
 return this

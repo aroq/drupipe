@@ -5,6 +5,7 @@ def add(params) {
     def result
     switch (source.type) {
         case 'git':
+            jsonDump(source)
             dir(source.path) {
                 deleteDir()
                 if (params.credentialsID) {
