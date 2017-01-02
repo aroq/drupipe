@@ -20,6 +20,7 @@ def deployWithGit(params) {
 
 def deployWithAnsistrano(params) {
     sh("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback")
+    def version = readFile('docroot/master/VERSION')
     executePipelineAction([
         action: 'Source.add',
         params: [
@@ -33,7 +34,7 @@ def deployWithAnsistrano(params) {
         ],
     ], params)
     // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
-    // params.ansible << [:]
+     params.ansible << [reference: version]
     executeAnsiblePlaybook(params)
 }
 
