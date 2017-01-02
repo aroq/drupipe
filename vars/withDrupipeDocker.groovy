@@ -1,7 +1,9 @@
 def call(commandParams = [:], body) {
+    node('master') {
+        configParams = executePipelineAction([action: 'Config.perform'], commandParams.clone() << params)
+    }
     node(commandParams.nodeName) {
         timestamps {
-            configParams = executePipelineAction([action: 'Config.perform'], commandParams.clone() << params)
             commandParams << ((configParams << configParams.actionParams['withDrupipeDocker']) << commandParams)
             if (commandParams.dockerfile) {
                 image = docker.build(commandParams.dockerfile, 'docroot/config')
