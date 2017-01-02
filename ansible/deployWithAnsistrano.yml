@@ -1,6 +1,7 @@
 ---
 - name: Deploy with Ansistrano
   hosts: "{{ target }}"
+  remote_user: "{{ user }}"
   vars:
     ansistrano_deploy_to: "{{ deploy_to }}"
     ansistrano_keep_releases: 3
