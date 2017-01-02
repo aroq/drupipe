@@ -25,7 +25,7 @@ def add(params) {
                 }
             }
             if (source.refType == 'tag') {
-                sh "git clone ${source.url} --branch ${source.tag} --depth 1 ${source.path}"
+                sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
             }
             result = source.path
             break
