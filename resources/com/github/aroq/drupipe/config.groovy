@@ -76,6 +76,10 @@ actionParams = [
         // debugEnabled: true,
         ansible_playbook: 'library/ansible/deployWithGit.yml',
     ],
+    Ansible_deployWithAnsible: [
+        // debugEnabled: true,
+        ansible_playbook: 'library/ansible/deployWithAnsible.yml',
+    ],
     Common_confirm: [
         timeToConfirm: 60,
     ],
