@@ -34,7 +34,7 @@ def deployWithAnsistrano(params) {
         ],
     ], params)
     // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
-     params.ansible << [reference: version]
+    params << [ansible_reference: version]
     executeAnsiblePlaybook(params)
 }
 
