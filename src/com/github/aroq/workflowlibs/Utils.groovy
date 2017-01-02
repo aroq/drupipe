@@ -170,6 +170,7 @@ def loadLibrary(script, params) {
                 path: 'library',
                 url: params.drupipeLibraryUrl,
                 branch: params.drupipeLibraryBranch,
+                type: params.drupipeLibraryType,
             ],
         ],
     ], params)

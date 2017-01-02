@@ -10,7 +10,7 @@ def add(params) {
                 deleteDir()
             }
             dir(source.path) {
-                if (source.branch) {
+                if (source.type == 'branch') {
                     if (params.credentialsID) {
                         echo "With credentials: ${params.credentialsID}"
                         git credentialsId: params.credentialsID, url: source.url, branch: source.branch
@@ -21,7 +21,7 @@ def add(params) {
                     }
                 }
             }
-            if (source.tag) {
+            if (source.type == 'tag') {
                 sh "git clone ${source.url} --branch ${source.tag} --depth 1 ${source.path}"
             }
             result = source.path
