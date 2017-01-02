@@ -18,6 +18,25 @@ def deployWithGit(params) {
     executeAnsiblePlaybook(params)
 }
 
+def deployWithAnsistrano(params) {
+    executePipelineAction([
+        action: 'Source.add',
+        params: [
+            source: [
+                name: 'library',
+                type: 'git',
+                path: 'library',
+                url: params.drupipeLibraryUrl,
+                branch: params.drupipeLibraryBranch,
+            ],
+        ],
+    ], params)
+    // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
+    // params.ansible << [:]
+    executeAnsiblePlaybook(params)
+}
+
+
 def executeAnsiblePlaybook(params, environmentVariables = [:]) {
     def command =
         "ansible-playbook ${params.ansible_playbook} \

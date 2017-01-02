@@ -1,0 +1,11 @@
+---
+- name: Deploy with Ansistrano
+  hosts: "{{ target }}"
+  vars:
+    ansistrano_deploy_to: "{{ deploy_to }}"
+    ansistrano_keep_releases: 3
+    ansistrano_deploy_via: git
+    ansistrano_git_repo: "{{ repo }}"
+    ansistrano_git_branch: "{{ reference }}"
+  roles:
+    - { role: carlosbuenosvinos.ansistrano-deploy }
