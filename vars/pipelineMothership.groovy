@@ -20,7 +20,6 @@ def call(body) {
 
         executeStages([
             pipeline: drupipePipeline
-            p = params
         ])
     }
 }
