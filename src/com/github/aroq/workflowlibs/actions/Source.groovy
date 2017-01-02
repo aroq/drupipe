@@ -5,6 +5,9 @@ def add(params) {
     def result
     switch (source.type) {
         case 'git':
+            if (!source.refType) {
+                source.refType = 'branch'
+            }
             jsonDump(source)
             dir(source.path) {
                 deleteDir()
