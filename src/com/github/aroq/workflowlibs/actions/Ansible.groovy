@@ -19,6 +19,7 @@ def deployWithGit(params) {
 }
 
 def deployWithAnsistrano(params) {
+    sh("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback")
     executePipelineAction([
         action: 'Source.add',
         params: [
