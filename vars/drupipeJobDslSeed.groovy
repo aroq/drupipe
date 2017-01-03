@@ -13,10 +13,8 @@ def call(body) {
     // Pipeline used to create project specific pipelines.
     withDrupipeDocker() {
         params << it
-        parameters = pipelineJobDslSeedDocman {
-            configPath = 'docroot.config'
-            params = params
-        }
+        parameters = executePipelineAction(action: 'Docman.info', params)
+
         stash name: 'config', includes: 'docroot/config/**, library/**, mothership/**', excludes: '.git, .git/**'
         parameters
     }
