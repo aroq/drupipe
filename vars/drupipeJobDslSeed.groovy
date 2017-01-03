@@ -19,11 +19,10 @@ def call(body) {
                 // it - commandParams from body(commandParams)
                 params << it
                 checkout scm
-                parameters = executePipelineAction(action: 'Docman.info', params)
+                param << executePipelineAction(action: 'Docman.info', params)
 
                 stash name: 'config', includes: 'docroot/config/**, library/**, mothership/**', excludes: '.git, .git/**'
 
-                parameters
             }
         }
 
