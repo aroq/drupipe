@@ -1,10 +1,10 @@
 #!groovy
 
-def call(pipeline, body) {
+def call(LinkedHashMap pipe) {
     drupipe() { config ->
         node(config.nodeName) {
             withDrupipeDocker(config) {
-                drupipeStages(pipeline.stages)
+                drupipeStages(pipe.stages)
             }
         }
     }
