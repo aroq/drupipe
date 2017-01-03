@@ -1,4 +1,4 @@
-package com.github.aroq.workflowlibs
+package com.github.aroq.drupipe
 
 class Action implements Serializable {
     String name

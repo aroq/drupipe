@@ -1,4 +1,4 @@
-package com.github.aroq.workflowlibs
+package com.github.aroq.drupipe
 
 class ConfigContainer implements Serializable {
     HashMap params = [test4: 'test4']

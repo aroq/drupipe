@@ -1,4 +1,4 @@
-package com.github.aroq.workflowlibs
+package com.github.aroq.drupipe
 
 class Source implements Serializable {
     String name

@@ -1,11 +1,11 @@
-package com.github.aroq.workflowlibs.actions
+package com.github.aroq.drupipe.actions
 
 import groovy.json.JsonSlurper
 
 def jsonConfig(params) {
     info(params)
 
-    utils = new com.github.aroq.workflowlibs.Utils()
+    utils = new com.github.aroq.drupipe.Utils()
     docrootConfigJson = readFile("${params.docmanConfigPath}/${params.docmanJsonConfigFile}")
     if (env.gitlabSourceNamespace) {
        params.projectName = utils.projectNameByGroupAndRepoName(this, docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)

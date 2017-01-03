@@ -1,4 +1,4 @@
-package com.github.aroq.workflowlibs.actions
+package com.github.aroq.drupipe.actions
 
 def deployFlow(params) {
    if (params.executeEnvironment) {

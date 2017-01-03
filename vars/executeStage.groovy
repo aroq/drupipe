@@ -1,4 +1,4 @@
-import com.github.aroq.workflowlibs.Stage
+import com.github.aroq.drupipe.Stage
 
 def call(Stage stageInstance, body) {
     def params = [:]

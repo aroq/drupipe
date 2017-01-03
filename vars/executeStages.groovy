@@ -20,10 +20,10 @@ def call(commandParams = [:]) {
 }
 
 def _executePipeline(params) {
-    utils = new com.github.aroq.workflowlibs.Utils()
+    utils = new com.github.aroq.drupipe.Utils()
     params << executePipelineAction([action: 'Config.perform', params: []], params)
 
-    // stages = [new com.github.aroq.workflowlibs.Stage(name: 'config', actionList: utils.processPipelineActionList([[action: 'Config.perform']]))]
+    // stages = [new com.github.aroq.drupipe.Stage(name: 'config', actionList: utils.processPipelineActionList([[action: 'Config.perform']]))]
     stages = utils.processPipeline(params.pipeline)
     stages += utils.processStages(params.stages)
 
