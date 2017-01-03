@@ -15,7 +15,7 @@ def call(body) {
         // it - commandParams from body(commandParams)
         // params << config
         node(config.nodeName) {
-            withDrupipeDocker(params) {
+            withDrupipeDocker(config) {
                 // it - commandParams from body(commandParams)
                 params << config
                 checkout scm
