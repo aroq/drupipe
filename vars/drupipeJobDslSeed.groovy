@@ -11,9 +11,9 @@ def call(body) {
     }
 
     // Pipeline used to create project specific pipelines.
-    drupipe() { params ->
+    drupipe() { config ->
         // it - commandParams from body(commandParams)
-        // params << it
+        params << config
         node(params.nodeName) {
             withDrupipeDocker(params) {
                 // it - commandParams from body(commandParams)
