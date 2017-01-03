@@ -13,11 +13,10 @@ def call(body) {
     // Pipeline used to create project specific pipelines.
     withDrupipeDocker() {
         params << it
+        echo "Config parameters: ${params}"
         parameters = executePipelineAction(action: 'Docman.info', params)
 
         stash name: 'config', includes: 'docroot/config/**, library/**, mothership/**', excludes: '.git, .git/**'
-
-        echo "Config parameters: ${parameters}"
 
         parameters
     }
