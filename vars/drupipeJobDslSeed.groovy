@@ -15,7 +15,7 @@ def call(body) {
         node(config.nodeName) {
             withDrupipeDocker(config) {
                 // it - commandParams from body(commandParams)
-                params << config
+                //params << config
                 checkout scm
                 parameters = executePipelineAction(action: 'Docman.info', config)
 
