@@ -15,11 +15,10 @@ def call(body) {
         node(config.nodeName) {
             withDrupipeDocker(config) {
                 checkout scm
-                parameters = executePipelineAction(action: 'Docman.info', config)
+                executePipelineAction(action: 'Docman.info', config)
 
                 stash name: 'config', includes: 'docroot/config/**, library/**, mothership/**', excludes: '.git, .git/**'
 
-                parameters
             }
         }
 
