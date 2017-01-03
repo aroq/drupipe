@@ -14,6 +14,7 @@ def call(body) {
     withDrupipeDocker() {
         params << it
         echo "Config parameters: ${params}"
+        checkout scm
         parameters = executePipelineAction(action: 'Docman.info', params)
 
         stash name: 'config', includes: 'docroot/config/**, library/**, mothership/**', excludes: '.git, .git/**'
