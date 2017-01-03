@@ -11,13 +11,13 @@ def call(body) {
     }
 
     // Pipeline used to create project specific pipelines.
-    drupipe() {
+    drupipe() { params ->
         // it - commandParams from body(commandParams)
-        params << it
+        // params << it
         node(params.nodeName) {
-            withDrupipeDocker(params) {
+            withDrupipeDocker(params) { params ->
                 // it - commandParams from body(commandParams)
-                params << it
+                // params << it
                 checkout scm
                 parameters = executePipelineAction(action: 'Docman.info', params)
 
