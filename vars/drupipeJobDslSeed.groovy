@@ -11,7 +11,7 @@ def call(body) {
     }
 
     // Pipeline used to create project specific pipelines.
-    withDrupipeDocker() {
+    drupipe() {
         // it = commandParams from body(commandParams)
         params << it
         checkout scm
