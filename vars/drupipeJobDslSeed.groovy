@@ -2,9 +2,13 @@
 
 // Pipeline used to create project specific pipelines.
 def call(body) {
+    echo "1"
     drupipe() { config ->
+        echo "2"
         node(config.nodeName) {
+            echo "3"
             withDrupipeDocker(config) {
+                echo "4"
                 checkout scm
                 executePipelineAction(action: 'Docman.info', config)
 
@@ -13,7 +17,10 @@ def call(body) {
             }
         }
 
+        echo "5"
+
         node('master') {
+            echo "6"
             if (fileExists('docroot/config')) {
                 dir('docroot/config') {
                     deleteDir()
