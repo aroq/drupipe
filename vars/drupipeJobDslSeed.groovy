@@ -3,6 +3,7 @@
 def call(body) {
     echo "Params: ${params}"
     def commandParams = [:]
+    commandParams << params
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = commandParams
     body()
