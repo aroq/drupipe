@@ -1,6 +1,7 @@
 #!groovy
 
 def call(body) {
+    echo "Params: ${params}"
     def commandParams = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = commandParams
