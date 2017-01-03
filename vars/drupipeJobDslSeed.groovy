@@ -19,7 +19,7 @@ def call(body) {
                 // it - commandParams from body(commandParams)
                 params << it
                 checkout scm
-                param << executePipelineAction(action: 'Docman.info', params)
+                params << executePipelineAction(action: 'Docman.info', params)
 
                 stash name: 'config', includes: 'docroot/config/**, library/**, mothership/**', excludes: '.git, .git/**'
 
@@ -43,7 +43,7 @@ def call(body) {
             if (fileExists('docroot/config/pipelines/jobdsl')) {
                 parameters.actionParams.JobDslSeed_perform.jobsPattern << 'docroot/config/pipelines/jobdsl/*.groovy'
             }
-            executePipelineAction(action: 'JobDslSeed.perform', parameters)
+            executePipelineAction(action: 'JobDslSeed.perform', params)
         }
     }
 
