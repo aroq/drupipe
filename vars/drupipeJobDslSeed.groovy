@@ -12,9 +12,11 @@ def call(body) {
 
     // Pipeline used to create project specific pipelines.
     drupipe() {
+        echo "IT: {it}"
         // it - commandParams from body(commandParams)
         params << it
-        node(commandParams.nodeName) {
+        node(params.nodeName) {
+            echo "DRUPIPE CONFIG PARAMS: ${params}"
             withDrupipeDocker(params) {
                 // it - commandParams from body(commandParams)
                 params << it
