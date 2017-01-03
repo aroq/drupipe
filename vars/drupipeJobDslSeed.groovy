@@ -12,14 +12,12 @@ def call(body) {
 
     // Pipeline used to create project specific pipelines.
     drupipe() { config ->
-        // it - commandParams from body(commandParams)
-        // params << config
         node(config.nodeName) {
             withDrupipeDocker(config) {
                 // it - commandParams from body(commandParams)
                 params << config
                 checkout scm
-                parameters = executePipelineAction(action: 'Docman.info', params)
+                parameters = executePipelineAction(action: 'Docman.info', config)
 
                 stash name: 'config', includes: 'docroot/config/**, library/**, mothership/**', excludes: '.git, .git/**'
 
