@@ -16,6 +16,9 @@ def call(body) {
         parameters = executePipelineAction(action: 'Docman.info', params)
 
         stash name: 'config', includes: 'docroot/config/**, library/**, mothership/**', excludes: '.git, .git/**'
+
+        echo "Config parameters: ${parameters}"
+
         parameters
     }
 
