@@ -14,7 +14,7 @@ def call(body) {
     drupipe() {
         // it = commandParams from body(commandParams)
         params << it
-        withDrupipeDocker() {
+        withDrupipeDocker(params) {
             // it = commandParams from body(commandParams)
             params << it
             checkout scm
