@@ -8,7 +8,6 @@ def call(commandParams = [:], body) {
         if (result) {
             commandParams << result
         }
-        body(configParams)
     }
     configParams
 }
