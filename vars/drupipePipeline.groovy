@@ -1,6 +1,6 @@
 #!groovy
 
-def call(LinkedHashMap pipe) {
+def call(pipe) {
     drupipe() { config ->
         node(config.nodeName) {
             withDrupipeDocker(config) {
