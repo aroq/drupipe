@@ -14,8 +14,6 @@ def call(body) {
     drupipe() { config ->
         node(config.nodeName) {
             withDrupipeDocker(config) {
-                // it - commandParams from body(commandParams)
-                //params << config
                 checkout scm
                 parameters = executePipelineAction(action: 'Docman.info', config)
 
@@ -40,9 +38,9 @@ def call(body) {
 
             unstash 'config'
             if (fileExists('docroot/config/pipelines/jobdsl')) {
-                parameters.actionParams.JobDslSeed_perform.jobsPattern << 'docroot/config/pipelines/jobdsl/*.groovy'
+                config.actionParams.JobDslSeed_perform.jobsPattern << 'docroot/config/pipelines/jobdsl/*.groovy'
             }
-            executePipelineAction(action: 'JobDslSeed.perform', parameters)
+            executePipelineAction(action: 'JobDslSeed.perform', config)
         }
     }
 
