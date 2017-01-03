@@ -12,7 +12,7 @@ def call(body) {
 
     // Pipeline used to create project specific pipelines.
     drupipe() {
-        echo "IT: {it}"
+        echo "IT: ${it}"
         // it - commandParams from body(commandParams)
         params << it
         node(params.nodeName) {
