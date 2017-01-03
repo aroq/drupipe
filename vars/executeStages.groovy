@@ -6,7 +6,7 @@ def call(commandParams = [:]) {
         }
         _pipelineNotify(commandParams)
 
-        commandParams << _executePipeline(commandParams)
+        commandParams << _executeStages(commandParams)
     }
     catch (e) {
         currentBuild.result = "FAILED"
@@ -19,11 +19,10 @@ def call(commandParams = [:]) {
 
 }
 
-def _executePipeline(params) {
+def _executeStages(params) {
     utils = new com.github.aroq.drupipe.Utils()
     params << executePipelineAction([action: 'Config.perform', params: []], params)
 
-    // stages = [new com.github.aroq.drupipe.Stage(name: 'config', actionList: utils.processPipelineActionList([[action: 'Config.perform']]))]
     stages = utils.processPipeline(params.pipeline)
     stages += utils.processStages(params.stages)
 
