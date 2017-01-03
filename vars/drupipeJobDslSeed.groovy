@@ -36,7 +36,7 @@ def call(body) {
         }
 
         unstash 'config'
-        parameters.actionparams.JobDslSeed_perform.jobsPattern << 'docroot/config/pipelines/jobdsl/*.groovy'
+        parameters.actionParams.JobDslSeed_perform.jobsPattern << 'docroot/config/pipelines/jobdsl/*.groovy'
         executePipelineAction(action: 'JobDslSeed.perform', parameters)
     }
 
