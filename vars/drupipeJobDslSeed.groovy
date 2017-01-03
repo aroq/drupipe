@@ -1,10 +1,10 @@
 #!groovy
 
 def call(body) {
+    params['test'] = 'test'
     echo "Params test: ${params}"
     def commandParams = [:]
     commandParams << params
-    params['test'] = 'test'
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = commandParams
     body()
