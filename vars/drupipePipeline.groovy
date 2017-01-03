@@ -1,6 +1,6 @@
-#!groovyf
+#!groovy
 
-def call(pipeline) {
+def call(pipeline, body) {
     drupipe() { config ->
         node(config.nodeName) {
             withDrupipeDocker(config) {
