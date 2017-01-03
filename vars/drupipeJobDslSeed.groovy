@@ -1,19 +1,19 @@
 #!groovy
 
 def call(body) {
-    def params = [:]
+    def commandParams = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
-    body.delegate = params
+    body.delegate = commandParams
     body()
-    if (params.params) {
-        params << params.params
-        params.remove('params')
+    if (commandParams.commandParams) {
+        commandParams << commandParams.commandParams
+        commandParams.remove('commandParams')
     }
 
     // Pipeline used to create project specific pipelines.
     withDrupipeDocker() {
-        params << it
-        parameters = executePipelineAction(action: 'Docman.info', params)
+        commandParams << it
+        parameters = executePipelineAction(action: 'Docman.info', commandParams)
 
         stash name: 'config', includes: 'docroot/config/**, library/**, mothership/**', excludes: '.git, .git/**'
         parameters
@@ -33,7 +33,7 @@ def call(body) {
         }
 
         unstash 'config'
-        parameters.actionParams.JobDslSeed_perform.jobsPattern << 'docroot/config/pipelines/jobdsl/*.groovy'
+        parameters.actioncommandParams.JobDslSeed_perform.jobsPattern << 'docroot/config/pipelines/jobdsl/*.groovy'
         executePipelineAction(action: 'JobDslSeed.perform', parameters)
     }
 
