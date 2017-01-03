@@ -4,6 +4,7 @@ def call(body) {
     echo "Params test: ${params}"
     def commandParams = [:]
     commandParams << params
+    params['test'] = 'test'
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = commandParams
     body()
@@ -14,7 +15,7 @@ def call(body) {
 
     // Pipeline used to create project specific pipelines.
     withDrupipeDocker() {
-        params << it
+        commandParams << it
         parameters = executePipelineAction(action: 'Docman.info', commandParams)
 
         stash name: 'config', includes: 'docroot/config/**, library/**, mothership/**', excludes: '.git, .git/**'
