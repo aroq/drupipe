@@ -1,5 +1,4 @@
 def call(commandParams = [:], body) {
-    echo "CONFIG PARAMS: ${config}"
     timestamps {
         node('master') {
             configParams = executePipelineAction([action: 'Config.perform'], commandParams.clone() << params)
