@@ -15,7 +15,7 @@ def call(stages, config) {
 
 def _executeStages(stagesToExecute, params) {
     utils = new com.github.aroq.drupipe.Utils()
-    params << executePipelineAction([action: 'Config.perform', params: []], params)
+    //params << executePipelineAction([action: 'Config.perform', params: []], params)
 
     stages = utils.processPipeline(stagesToExecute)
     stages += utils.processStages(params.stages)
