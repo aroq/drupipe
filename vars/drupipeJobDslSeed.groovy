@@ -15,9 +15,9 @@ def call(body) {
         // it - commandParams from body(commandParams)
         // params << it
         node(params.nodeName) {
-            withDrupipeDocker(params) { params ->
+            withDrupipeDocker(params) {
                 // it - commandParams from body(commandParams)
-                // params << it
+                params << it
                 checkout scm
                 parameters = executePipelineAction(action: 'Docman.info', params)
 
