@@ -43,7 +43,10 @@ def info(params) {
     catch (err) {
 
     }
-    if (configRepo) {
+
+    echo "Config repo: ${configRepo}"
+
+    if (configRepo && !fileExists('docroot')) {
         echo 'Docman init'
         sh('ls -l')
         sh(
