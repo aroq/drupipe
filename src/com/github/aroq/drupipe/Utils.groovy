@@ -45,10 +45,12 @@ List<Stage> processStages(stages) {
 Stage processStage(stage) {
     if (stage instanceof Stage) {
         for (action in stage.actionList) {
+            echo "ACTION: ${action.action}"
             values = action.action.split("\\.")
             action.name = values[0]
             action.methodName = values[1]
         }
+        stage
     }
     else {
         new Stage(name: stage.key, actionList: processPipelineActionList(stage.value))
