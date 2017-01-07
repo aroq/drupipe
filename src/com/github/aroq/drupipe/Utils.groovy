@@ -36,19 +36,23 @@ def colorEcho(message, color = null) {
 List<Stage> processStages(stages) {
     List<Stage> result = []
     for (item in stages) {
-        if (item instanceof Stage) {
-             result << item
-        }
-		else {
-             result << processStage(item)
-        }
+        result << processStage(item)
     }
     result
 }
 
 @NonCPS
 Stage processStage(stage) {
-    new Stage(name: stage.key, actionList: processPipelineActionList(stage.value))
+    if (stage instanceof Stage) {
+        for (action in stage.actionList) {
+            values = action.action.split("\\.")
+            action.name = values[0]
+            action.methodName = values[1]
+        }
+    }
+    else {
+        new Stage(name: stage.key, actionList: processPipelineActionList(stage.value))
+    }
 }
 
 @NonCPS
