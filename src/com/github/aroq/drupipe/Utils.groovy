@@ -33,17 +33,17 @@ def colorEcho(message, color = null) {
 }
 
 @NonCPS
-List<Stage> processStages(stages, script = null) {
+List<Stage> processStages(stages) {
     List<Stage> result = []
     for (item in stages) {
-		echo "processStages item: ${item}"
         result << processStage(item, script)
     }
     result
 }
 
 @NonCPS
-Stage processStage(stage, script = null) {
+Stage processStage(stage) {
+	echo "processStage item: ${stage}"
     new Stage(name: stage.key, actionList: processPipelineActionList(stage.value))
 }
 
