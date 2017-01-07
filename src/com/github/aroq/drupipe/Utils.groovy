@@ -36,7 +36,7 @@ def colorEcho(message, color = null) {
 List<Stage> processStages(stages) {
     List<Stage> result = []
     for (item in stages) {
-        result << processStage(item, script)
+        result << processStage(item)
     }
     result
 }
