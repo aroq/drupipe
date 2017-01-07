@@ -44,8 +44,7 @@ List<Stage> processStages(stages) {
 @NonCPS
 Stage processStage(stage) {
     if (stage instanceof Stage) {
-        for (action in stage.actionList) {
-            echo "ACTION: ${action.action}"
+        for (action in stage.actions) {
             values = action.action.split("\\.")
             action.name = values[0]
             action.methodName = values[1]
@@ -53,7 +52,7 @@ Stage processStage(stage) {
         stage
     }
     else {
-        new Stage(name: stage.key, actionList: processPipelineActionList(stage.value))
+        new Stage(name: stage.key, actions: processPipelineActionList(stage.value))
     }
 }
 

@@ -11,15 +11,11 @@ def call(Stage stageInstance, body) {
         params.remove('p')
     }
 
-	echo "STAGE NAME: ${stageInstance.name}"
-	echo "STAGE actionList: ${stageInstance.actionList}"
-	echo "STAGE params: ${stageInstance.params}"
-
     stage(stageInstance.name) {
         gitlabCommitStatus(stageInstance.name) {
             params << ['stage': stageInstance]
 
-            params << executeActionList(stageInstance.actionList) {
+            params << executeActionList(stageInstance.actions) {
                 p = params
             }
         }
