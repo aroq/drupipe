@@ -74,6 +74,9 @@ actionParams = [
     Druflow_dbBackupSite: [
         executeCommand: 'dbBackupSite',
     ],
+    Ansible: [
+        ansible_hostsFile: 'docroot/config/ansible/inventory.ini',
+    ],
     Ansible_deployWithGit: [
         // debugEnabled: true,
         ansible_playbook: 'library/ansible/deployWithGit.yml',

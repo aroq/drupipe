@@ -9,5 +9,6 @@ def call(commandParams = [:], body) {
             commandParams << result
         }
     }
+
     configParams
 }
