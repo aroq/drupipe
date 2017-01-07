@@ -20,7 +20,18 @@ def call(body) {
 
         drupipeStages([
             pipeline: drupipePipeline
-        ])
+        ], params)
     }
 }
 
+// drupipePipeline(stages:
+    // [
+        // seed: [
+            // action: 'JobDslSeed.perform',
+            // params: [
+                // lookupStrategy: 'JENKINS_ROOT',
+                // jobsPattern: ['library/jobdsl/job_dsl_mothership.groovy'],
+            // ]
+        // ],
+    // ]
+// )
