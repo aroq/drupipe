@@ -36,7 +36,7 @@ def colorEcho(message, color = null) {
 List<Stage> processStages(stages) {
     List<Stage> result = []
     for (item in stages) {
-        if (item.instanceof Stage) {
+        if (item instanceof Stage) {
              result << item
         }
 		else {
