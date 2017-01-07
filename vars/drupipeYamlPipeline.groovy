@@ -1,6 +1,6 @@
 #!groovy
 
-import com.github.aroq.drupipe.DrupalPipeline
+import com.github.aroq.drupipe.DrupipePipeline
 
 @Grab('org.yaml:snakeyaml:1.9')
 import org.yaml.snakeyaml.Yaml
