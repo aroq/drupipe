@@ -16,7 +16,7 @@ def call(stages, config) {
 def _executeStages(stagesToExecute, params) {
     utils = new com.github.aroq.drupipe.Utils()
 
-    stages = utils.processPipeline(stagesToExecute)
+    stages = utils.processStages(stagesToExecute)
     stages += utils.processStages(params.stages)
 
     if (params.force == '11') {

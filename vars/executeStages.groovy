@@ -23,7 +23,7 @@ def _executeStages(params) {
     utils = new com.github.aroq.drupipe.Utils()
     params << executePipelineAction([action: 'Config.perform', params: []], params)
 
-    stages = utils.processPipeline(params.pipeline)
+    stages = utils.processStages(params.pipeline)
     stages += utils.processStages(params.stages)
 
     if (params.force == '11') {
