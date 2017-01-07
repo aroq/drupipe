@@ -8,6 +8,7 @@ import org.yaml.snakeyaml.Yaml
 def call(yamlFileName) {
     def pipe
     node('master') {
+        checkout scm
         pipe = drupipeGetPipeline(readFile("docroot/config/pipelines/${yamlFileName}"))
     }
     drupipePipeline(pipe)
