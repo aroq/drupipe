@@ -44,6 +44,7 @@ List<Stage> processStages(stages) {
 @NonCPS
 Stage processStage(stage) {
 	echo "processStage item: ${stage}"
+	echo "processStage item class: ${stage.getClass()}"
     new Stage(name: stage.key, actionList: processPipelineActionList(stage.value))
 }
 
