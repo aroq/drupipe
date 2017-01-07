@@ -4,7 +4,7 @@
 import org.yaml.snakeyaml.Yaml
 
 def call(yamlFileName) {
-    def pipe = drupipeGetPipeline(yamlFile)
+    def pipe = drupipeGetPipeline(readFile("docroot/config/pipelines/${yamlFile}"))
     drupipePipeline(pipe)
 }
 
