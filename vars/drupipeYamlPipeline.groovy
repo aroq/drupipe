@@ -6,7 +6,10 @@ import com.github.aroq.drupipe.DrupipePipeline
 import org.yaml.snakeyaml.Yaml
 
 def call(yamlFileName) {
-    def pipe = drupipeGetPipeline(readFile("docroot/config/pipelines/${yamlFileName}"))
+    def pipe
+    node('master') {
+        pipe = drupipeGetPipeline(readFile("docroot/config/pipelines/${yamlFileName}"))
+    }
     drupipePipeline(pipe)
 }
 
