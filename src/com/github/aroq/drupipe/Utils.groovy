@@ -33,11 +33,6 @@ def colorEcho(message, color = null) {
 }
 
 @NonCPS
-List<Stage> processPipeline(pipeline) {
-    processStages(pipeline)
-}
-
-@NonCPS
 List<Stage> processStages(stages) {
     List<Stage> result = []
     for (item in stages) {

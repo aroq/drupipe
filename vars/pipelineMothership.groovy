@@ -18,7 +18,7 @@ def call(body) {
                 ],
             ]
 
-        executeStages([
+        drupipeStages([
             pipeline: drupipePipeline
         ])
     }
