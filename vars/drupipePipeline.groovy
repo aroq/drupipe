@@ -1,7 +1,7 @@
 #!groovy
 
 def call(pipe, body = null) {
-    drupipe(drupipeParams) { config ->
+    drupipe(pipe.params) { config ->
         node(config.nodeName) {
             if (config.drupipeDocker) {
                 withDrupipeDocker(config) {
