@@ -45,8 +45,8 @@ List<Stage> processStages(stages) {
 Stage processStage(stage) {
 	echo "processStage item: ${stage}"
 	echo "processStage item class: ${stage.getClass()}"
-	echo "processStage item key: ${stage.get().key}"
-	echo "processStage item value: ${stage.get().value}"
+	echo "processStage item key: ${stage.get(0).key}"
+	echo "processStage item value: ${stage.get(0).value}"
     new Stage(name: stage.key, actionList: processPipelineActionList(stage.value))
 }
 
