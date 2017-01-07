@@ -13,6 +13,6 @@ def call(yamlFileName) {
 @NonCPS
 def drupipeGetPipeline(yamlFile) {
     Yaml yaml = new Yaml();
-    DrupalPipeline drupipePipeline = yaml.loadAs(yamlFile, DrupalPipeline.class);
+    DrupipePipeline drupipePipeline = yaml.loadAs(yamlFile, DrupipePipeline.class);
     return drupipePipeline
 }
