@@ -14,6 +14,7 @@ def call(stages, config) {
 }
 
 def _executeStages(stagesToExecute, params) {
+    echo "stagesToExecute: ${stagesToExecute}"
     utils = new com.github.aroq.drupipe.Utils()
 
     stages = utils.processStages(stagesToExecute)
