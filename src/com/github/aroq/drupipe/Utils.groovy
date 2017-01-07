@@ -36,17 +36,18 @@ def colorEcho(message, color = null) {
 List<Stage> processStages(stages) {
     List<Stage> result = []
     for (item in stages) {
-        result << processStage(item)
+        if (item.instanceof Stage) {
+             result << item
+        }
+		else {
+             result << processStage(item)
+        }
     }
     result
 }
 
 @NonCPS
 Stage processStage(stage) {
-	echo "processStage item: ${stage}"
-	echo "processStage item class: ${stage.getClass()}"
-	echo "processStage item key: ${stage.get(0).key}"
-	echo "processStage item value: ${stage.get(0).value}"
     new Stage(name: stage.key, actionList: processPipelineActionList(stage.value))
 }
 
