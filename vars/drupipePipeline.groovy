@@ -1,9 +1,14 @@
 #!groovy
 
 def call(pipe, body = null) {
-    drupipe() { config ->
+    drupipe(drupipeParams) { config ->
         node(config.nodeName) {
-            withDrupipeDocker(config) {
+            if (config.drupipeDocker) {
+                withDrupipeDocker(config) {
+                    drupipeStages(pipe.stages, config)
+                }
+            }
+            else {
                 drupipeStages(pipe.stages, config)
             }
         }

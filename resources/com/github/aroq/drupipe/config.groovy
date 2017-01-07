@@ -7,6 +7,7 @@ docmanJsonConfigFile = 'config.json'
 drupipeLibraryUrl = 'https://github.com/aroq/drupipe.git'
 drupipeLibraryBranch = 'master'
 drupipeLibraryType = 'branch'
+drupipeDocker = true
 
 // Environments section.
 environments {
