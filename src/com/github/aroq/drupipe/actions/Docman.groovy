@@ -64,6 +64,11 @@ def info(params) {
     )
 }
 
+def build(params) {
+    jsonConfig(params)
+    deploy(params)
+}
+
 def deploy(params) {
     echo "FORCE MODE: ${params.force}"
     def flag = ''
