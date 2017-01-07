@@ -1,6 +1,15 @@
 package com.github.aroq.drupipe
 
 class DrupipePipeline implements Serializable {
-    HashMap stages = [:]
-    HashMap params = [:]
+    def stages = [:]
+
+    def params = [:]
+
+    // Ha setStages(stages) {
+        // this.stages = stages
+    // }
+
+    // def setStages(stages) {
+        // this.stages = stages
+    // }
 }
