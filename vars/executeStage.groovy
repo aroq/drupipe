@@ -11,7 +11,7 @@ def call(Stage stageInstance, body) {
         params.remove('p')
     }
 
-	echo "STAGE INSTNCE: ${stageInstance}"
+	echo "STAGE INSTANCE: ${stageInstance}"
 
     stage(stageInstance.name) {
         gitlabCommitStatus(stageInstance.name) {
