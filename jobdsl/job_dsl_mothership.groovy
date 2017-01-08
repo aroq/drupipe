@@ -7,7 +7,7 @@ def projects = JsonSlurper.newInstance().parseText(readFileFromWorkspace('projec
 def gitlabHelper = new GitlabHelper(script: this, config: config)
 
 projects.each { project ->
-    config << project
+    config << project.value
     String subDir = config.subDir ? config.subDir + '/' : ''
     if (config.type == 'Jenkinsfile') {
         String jobName = config.name ? config.name : project.key
