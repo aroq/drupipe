@@ -8,6 +8,7 @@ def call(commandParams = [:], body) {
         image.pull()
     }
     image.inside(commandParams.drupipeDockerArgs) {
+        commandParams.workspace = pwd()
         sshagent([commandParams.credentialsID]) {
             result = body(commandParams)
             if (result) {
