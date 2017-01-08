@@ -8,6 +8,7 @@ drupipeLibraryUrl = 'https://github.com/aroq/drupipe.git'
 drupipeLibraryBranch = 'master'
 drupipeLibraryType = 'branch'
 drupipeDocker = true
+nodeName = 'default'
 
 // Environments section.
 environments {
