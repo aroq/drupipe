@@ -15,7 +15,7 @@ projects.each { project ->
         // TODO: Add condition checking if permissions should be set based on Gitlab permissions.
         // TODO: Add condition checking if repo is in Gitlab.
         if (config.env.GITLAB_API_TOKEN_TEXT) {
-            users = gitlabHelper.getUsers(project.value['repo'])
+            users = gitlabHelper.getUsers(project.value['configRepo'])
             println "USERS: ${users}"
         }
 
@@ -48,7 +48,7 @@ projects.each { project ->
                         git() {
                             remote {
                                 name('origin')
-                                url(project.value['repo'])
+                                url(project.value['configRepo'])
                                 credentials(config.credentialsId)
                             }
                             branch('master')
@@ -77,7 +77,7 @@ projects.each { project ->
         }
         if (config.env.GITLAB_API_TOKEN_TEXT) {
             gitlabHelper.addWebhook(
-                project.value.repo,
+                project.value.configRepo,
                 "${config.env.JENKINS_URL}project/${project.key}/seed"
             )
         }
@@ -86,7 +86,7 @@ projects.each { project ->
         multibranchPipelineJob(project.key) {
             branchSources {
                 git {
-                    remote(project.value['repo'])
+                    remote(project.value['configRepo'])
                     credentialsId(project.value['credentialsId'])
                 }
             }
