@@ -10,13 +10,13 @@ projects.each { project ->
     config << project
     String subDir = config.subDir ? config.subDir + '/' : ''
     if (config.type == 'Jenkinsfile') {
-        String jobName = project.value['name'] ? project.value['name'] : project.key
+        String jobName = config.name ? config.name : project.key
         def users = [:]
 
         // TODO: Add condition checking if permissions should be set based on Gitlab permissions.
         // TODO: Add condition checking if repo is in Gitlab.
         if (config.env.GITLAB_API_TOKEN_TEXT) {
-            users = gitlabHelper.getUsers(project.value['configRepo'])
+            users = gitlabHelper.getUsers(config.configRepo)
             println "USERS: ${users}"
         }
 
@@ -49,7 +49,7 @@ projects.each { project ->
                         git() {
                             remote {
                                 name('origin')
-                                url(project.value['configRepo'])
+                                url(config.configRepo)
                                 credentials(config.credentialsId)
                             }
                             branch('master')
@@ -78,17 +78,17 @@ projects.each { project ->
         }
         if (config.env.GITLAB_API_TOKEN_TEXT) {
             gitlabHelper.addWebhook(
-                project.value.configRepo,
+                config.configRepo,
                 "${config.env.JENKINS_URL}project/${project.key}/seed"
             )
         }
     }
-    else if (project.value['type'] == 'multibranch') {
+    else if (config.type == 'multibranch') {
         multibranchPipelineJob(project.key) {
             branchSources {
                 git {
-                    remote(project.value['configRepo'])
-                    credentialsId(project.value['credentialsId'])
+                    remote(config.configRepo)
+                    credentialsId(config.credentialsId)
                 }
             }
         }
