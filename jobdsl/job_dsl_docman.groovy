@@ -71,6 +71,7 @@ docmanConfig.states?.each { state ->
             if (config.pipeline_file_format == 'yaml') {
                 cps {
                     script("drupipeYamlPipeline('${state.key}.yaml')")
+                    sandbox(false)
                 }
             }
             else {
