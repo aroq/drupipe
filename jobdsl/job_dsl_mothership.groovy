@@ -8,9 +8,9 @@ def gitlabHelper = new GitlabHelper(script: this, config: config)
 
 projects.each { project ->
     config << project.value
-    String subDir = config.subDir ? config.subDir + '/' : ''
-    if (config.type == 'Jenkinsfile') {
-        String jobName = config.name ? config.name : project.key
+    String subDir = config.mothership_job_subDir ? config.mothership_job_subDir + '/' : ''
+    if (config.mothership_job_type == 'Jenkinsfile') {
+        String jobName = config.mothership_job_name ? config.mothership_job_name : project.key
         def users = [:]
 
         // TODO: Add condition checking if permissions should be set based on Gitlab permissions.
@@ -83,7 +83,7 @@ projects.each { project ->
             )
         }
     }
-    else if (config.type == 'multibranch') {
+    else if (config.mothership_job_type == 'multibranch') {
         multibranchPipelineJob(project.key) {
             branchSources {
                 git {
