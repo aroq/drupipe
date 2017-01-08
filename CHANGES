@@ -1,3 +1,8 @@
+Version 0.2.2:
+ - Changed drupipe version
+ - Yaml pipelines & major refactoring
+ - Removed unneded files
+
 Version 0.2.1:
  - Changed drupipe library version to v0.2.1
  - Source add git changes
