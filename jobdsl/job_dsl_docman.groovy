@@ -68,19 +68,26 @@ docmanConfig.states?.each { state ->
             stringParam('version', branch)
         }
         definition {
-            cpsScm {
-                scm {
-                    git() {
-                        remote {
-                            name('origin')
-                            url(params.configRepo)
-                            credentials(params.credentialsID)
+            if (config.pipeline_file_format == 'yaml') {
+                cps {
+                    script("drupipeYamlPipeline('${state.key}.yaml')")
+                }
+            }
+            else {
+                cpsScm {
+                    scm {
+                        git() {
+                            remote {
+                                name('origin')
+                                url(params.configRepo)
+                                credentials(params.credentialsID)
+                            }
+                            extensions {
+                                relativeTargetDirectory('docroot/config')
+                            }
                         }
-                        extensions {
-                            relativeTargetDirectory('docroot/config')
-                        }
+                        scriptPath("docroot/config/pipelines/${params.pipeline}.groovy")
                     }
-                    scriptPath("docroot/config/pipelines/${params.pipeline}.groovy")
                 }
             }
         }
