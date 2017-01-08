@@ -5,10 +5,11 @@ import com.github.aroq.drupipe.DrupipePipeline
 @Grab('org.yaml:snakeyaml:1.9')
 import org.yaml.snakeyaml.Yaml
 
-def call(yamlFileName) {
+def call(yamlFileName = null) {
     def pipe
     node('master') {
         checkout scm
+        def yamlFileName = yamlFileName ? yamlFileName : env.JOB_BASE_NAME
         pipe = drupipeGetPipeline(readFile("docroot/config/pipelines/${yamlFileName}"))
     }
     drupipePipeline(pipe)
