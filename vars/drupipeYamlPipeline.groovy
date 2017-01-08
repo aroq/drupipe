@@ -9,7 +9,7 @@ def call(yamlFileName = null) {
     def pipe
     node('master') {
         checkout scm
-        def yamlFileName = yamlFileName ? yamlFileName : env.JOB_BASE_NAME
+        yamlFileName = yamlFileName ? yamlFileName : env.JOB_BASE_NAME
         pipe = drupipeGetPipeline(readFile("docroot/config/pipelines/${yamlFileName}"))
     }
     drupipePipeline(pipe)
