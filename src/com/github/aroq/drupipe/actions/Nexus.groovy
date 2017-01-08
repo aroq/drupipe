@@ -1,4 +1,4 @@
-package com.github.aroq.workflowlibs.actions
+package com.github.aroq.drupipe.actions
 
 @Grab('org.yaml:snakeyaml:1.9')
 import org.yaml.snakeyaml.Yaml

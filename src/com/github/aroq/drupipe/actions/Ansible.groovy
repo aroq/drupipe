@@ -1,7 +1,7 @@
-package com.github.aroq.workflowlibs.actions
+package com.github.aroq.drupipe.actions
 
 def deployWithGit(params) {
-    utils = new com.github.aroq.workflowlibs.Utils()
+    utils = new com.github.aroq.drupipe.Utils()
     utils.loadLibrary(this, params)
     // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
     // params.ansible << [:]
@@ -11,7 +11,7 @@ def deployWithGit(params) {
 def deployWithAnsistrano(params) {
     // TODO: refactor it.
     sh("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback")
-    utils = new com.github.aroq.workflowlibs.Utils()
+    utils = new com.github.aroq.drupipe.Utils()
     utils.loadLibrary(this, params)
     // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
     def version = readFile('docroot/master/VERSION')

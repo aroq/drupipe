@@ -1,7 +1,7 @@
-package com.github.aroq.workflowlibs.actions
+package com.github.aroq.drupipe.actions
 
 def perform(params) {
-    utils = new com.github.aroq.workflowlibs.Utils()
+    utils = new com.github.aroq.drupipe.Utils()
     utils.dumpConfigFile(params)
     utils.loadLibrary(this, params)
 

@@ -8,7 +8,7 @@ def call(actions, body) {
         params.remove('p')
     }
 
-    utils = new com.github.aroq.workflowlibs.Utils()
+    utils = new com.github.aroq.drupipe.Utils()
     actionList = utils.processPipelineActionList(actions)
     debugLog(params, actionList, 'action list', [debugMode: 'json'])
     params << executeActionList(actionList) {

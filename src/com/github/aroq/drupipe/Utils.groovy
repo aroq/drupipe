@@ -1,4 +1,4 @@
-package com.github.aroq.workflowlibs
+package com.github.aroq.drupipe
 
 import groovy.json.JsonSlurper
 
@@ -33,11 +33,6 @@ def colorEcho(message, color = null) {
 }
 
 @NonCPS
-List<Stage> processPipeline(pipeline) {
-    processStages(pipeline)
-}
-
-@NonCPS
 List<Stage> processStages(stages) {
     List<Stage> result = []
     for (item in stages) {
@@ -48,7 +43,17 @@ List<Stage> processStages(stages) {
 
 @NonCPS
 Stage processStage(stage) {
-    new Stage(name: stage.key, actionList: processPipelineActionList(stage.value))
+    if (stage instanceof Stage) {
+        for (action in stage.actions) {
+            values = action.action.split("\\.")
+            action.name = values[0]
+            action.methodName = values[1]
+        }
+        stage
+    }
+    else {
+        new Stage(name: stage.key, actions: processPipelineActionList(stage.value))
+    }
 }
 
 @NonCPS
@@ -108,6 +113,7 @@ def envToMap() {
 }
 
 def dumpConfigFile(config, fileName = 'config.dump.groovy') {
+    echo "Dumping config file: config.dump.groovy"
     writeFile(file: fileName, text: configToSlurperFile(config))
     sh "cat ${fileName}"
 }
@@ -157,6 +163,7 @@ String getJenkinsJobName(String buildUrl) {
 @NonCPS
 def getMothershipProjectParams(config, json) {
     def projects = JsonSlurper.newInstance().parseText(json).projects
+    echo "MOTHERSHIP PROJECTS: ${projects}"
     projects[config.jenkinsFolderName] ? projects[config.jenkinsFolderName] : [:]
 }
 

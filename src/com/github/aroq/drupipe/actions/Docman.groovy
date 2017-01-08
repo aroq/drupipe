@@ -1,11 +1,11 @@
-package com.github.aroq.workflowlibs.actions
+package com.github.aroq.drupipe.actions
 
 import groovy.json.JsonSlurper
 
 def jsonConfig(params) {
     info(params)
 
-    utils = new com.github.aroq.workflowlibs.Utils()
+    utils = new com.github.aroq.drupipe.Utils()
     docrootConfigJson = readFile("${params.docmanConfigPath}/${params.docmanJsonConfigFile}")
     if (env.gitlabSourceNamespace) {
        params.projectName = utils.projectNameByGroupAndRepoName(this, docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
@@ -43,7 +43,10 @@ def info(params) {
     catch (err) {
 
     }
-    if (configRepo) {
+
+    echo "Config repo: ${configRepo}"
+
+    if (configRepo && !fileExists('docroot')) {
         echo 'Docman init'
         sh('ls -l')
         sh(
@@ -59,6 +62,11 @@ def info(params) {
         docman info full config.json
         """
     )
+}
+
+def build(params) {
+    jsonConfig(params)
+    deploy(params)
 }
 
 def deploy(params) {

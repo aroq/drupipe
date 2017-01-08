@@ -1,42 +1,24 @@
-def call(body) {
-    def params = [:]
-    body.resolveStrategy = Closure.DELEGATE_FIRST
-    body.delegate = params
-    body()
-
+def call(stages, config) {
     try {
-        _pipelineNotify(params)
-        if (params.p) {
-            params << params.p
-            params.remove('p')
-        }
-
-        if (params.noNode) {
-            params << _executePipeline(params)
-        }
-        else {
-            node {
-                params << _executePipeline(params)
-            }
-        }
+        _pipelineNotify(config)
+        config << _executeStages(stages, config)
     }
     catch (e) {
         currentBuild.result = "FAILED"
         throw e
     }
     finally {
-        _pipelineNotify(params, currentBuild.result)
-        params
+        _pipelineNotify(config, currentBuild.result)
+        config
     }
-
 }
 
-def _executePipeline(params) {
-    utils = new com.github.aroq.workflowlibs.Utils()
-    params << executePipelineAction([action: 'Config.perform', params: []], params)
+def _executeStages(stagesToExecute, params) {
+    echo "stagesToExecute: ${stagesToExecute}"
+    echo "stagesToExecute class: ${stagesToExecute.getClass()}"
+    utils = new com.github.aroq.drupipe.Utils()
 
-    // stages = [new com.github.aroq.workflowlibs.Stage(name: 'config', actionList: utils.processPipelineActionList([[action: 'Config.perform']]))]
-    stages = utils.processPipeline(params.pipeline)
+    stages = utils.processStages(stagesToExecute)
     stages += utils.processStages(params.stages)
 
     if (params.force == '11') {

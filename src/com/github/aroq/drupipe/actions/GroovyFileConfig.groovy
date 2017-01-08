@@ -1,4 +1,4 @@
-package com.github.aroq.workflowlibs.actions
+package com.github.aroq.drupipe.actions
 
 def load(params) {
     if (params.configFileName && fileExists(params.configFileName)) {

@@ -7,15 +7,16 @@ def projects = JsonSlurper.newInstance().parseText(readFileFromWorkspace('projec
 def gitlabHelper = new GitlabHelper(script: this, config: config)
 
 projects.each { project ->
-    String subDir = project.value['subDir'] ? project.value['subDir'] + '/' : ''
-    if (project.value['type'] == 'Jenkinsfile') {
-        String jobName = project.value['name'] ? project.value['name'] : project.key
+    config << project.value
+    String subDir = config.mothership_job_subDir ? config.mothership_job_subDir + '/' : ''
+    if (config.mothership_job_type == 'Jenkinsfile') {
+        String jobName = config.mothership_job_name ? config.mothership_job_name : project.key
         def users = [:]
 
         // TODO: Add condition checking if permissions should be set based on Gitlab permissions.
         // TODO: Add condition checking if repo is in Gitlab.
         if (config.env.GITLAB_API_TOKEN_TEXT) {
-            users = gitlabHelper.getUsers(project.value['repo'])
+            users = gitlabHelper.getUsers(config.configRepo)
             println "USERS: ${users}"
         }
 
@@ -48,8 +49,8 @@ projects.each { project ->
                         git() {
                             remote {
                                 name('origin')
-                                url(project.value['repo'])
-                                credentials(project.value['credentialsId'])
+                                url(config.configRepo)
+                                credentials(config.credentialsId)
                             }
                             branch('master')
                             extensions {
@@ -77,17 +78,17 @@ projects.each { project ->
         }
         if (config.env.GITLAB_API_TOKEN_TEXT) {
             gitlabHelper.addWebhook(
-                project.value.repo,
+                config.configRepo,
                 "${config.env.JENKINS_URL}project/${project.key}/seed"
             )
         }
     }
-    else if (project.value['type'] == 'multibranch') {
+    else if (config.mothership_job_type == 'multibranch') {
         multibranchPipelineJob(project.key) {
             branchSources {
                 git {
-                    remote(project.value['repo'])
-                    credentialsId(project.value['credentialsId'])
+                    remote(config.configRepo)
+                    credentialsId(config.credentialsId)
                 }
             }
         }

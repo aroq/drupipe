@@ -1,4 +1,4 @@
-import com.github.aroq.workflowlibs.Stage
+import com.github.aroq.drupipe.Stage
 
 def call(Stage stageInstance, body) {
     def params = [:]
@@ -15,7 +15,7 @@ def call(Stage stageInstance, body) {
         gitlabCommitStatus(stageInstance.name) {
             params << ['stage': stageInstance]
 
-            params << executeActionList(stageInstance.actionList) {
+            params << executeActionList(stageInstance.actions) {
                 p = params
             }
         }

@@ -1,4 +1,4 @@
-package com.github.aroq.workflowlibs.actions
+package com.github.aroq.drupipe.actions
 
 def add(params) {
     def source = params.source
@@ -38,9 +38,9 @@ def add(params) {
         params.sources = [:]
         params.sourcesList = []
     }
-    utils = new com.github.aroq.workflowlibs.Utils()
+    utils = new com.github.aroq.drupipe.Utils()
     if (result) {
-        params.sources[source.name] = new com.github.aroq.workflowlibs.Source(name: source.name, type: source.type, path: source.path)
+        params.sources[source.name] = new com.github.aroq.drupipe.Source(name: source.name, type: source.type, path: source.path)
         params.sourcesList << params.sources[source.name]
 
     }

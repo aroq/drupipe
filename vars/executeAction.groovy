@@ -1,4 +1,4 @@
-import com.github.aroq.workflowlibs.Action
+import com.github.aroq.drupipe.Action
 
 def call(Action action, body) {
     def params = [:]
@@ -23,7 +23,7 @@ def call(Action action, body) {
         }
 
         echoDelimiter("-----> Stage: ${drupipeStageName} | Action name: ${action.fullName} start <-")
-        utils = new com.github.aroq.workflowlibs.Utils()
+        utils = new com.github.aroq.drupipe.Utils()
         actionParams << params
         if (!action.params) {
             action.params = [:]
@@ -54,7 +54,7 @@ def call(Action action, body) {
         }
         if (!actionFile) {
             try {
-                def actionInstance = this.class.classLoader.loadClass("com.github.aroq.workflowlibs.actions.${action.name}", true, false )?.newInstance()
+                def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${action.name}", true, false )?.newInstance()
                 actionResult = actionInstance."$action.methodName"(actionParams)
             }
             catch (err) {

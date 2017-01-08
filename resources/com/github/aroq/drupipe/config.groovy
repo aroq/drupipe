@@ -7,6 +7,8 @@ docmanJsonConfigFile = 'config.json'
 drupipeLibraryUrl = 'https://github.com/aroq/drupipe.git'
 drupipeLibraryBranch = 'master'
 drupipeLibraryType = 'branch'
+drupipeDocker = true
+nodeName = 'default'
 
 // Environments section.
 environments {
@@ -73,6 +75,9 @@ actionParams = [
     ],
     Druflow_dbBackupSite: [
         executeCommand: 'dbBackupSite',
+    ],
+    Ansible: [
+        ansible_hostsFile: 'docroot/config/ansible/inventory.ini',
     ],
     Ansible_deployWithGit: [
         // debugEnabled: true,

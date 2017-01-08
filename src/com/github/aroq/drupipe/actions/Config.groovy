@@ -1,4 +1,4 @@
-package com.github.aroq.workflowlibs.actions
+package com.github.aroq.drupipe.actions
 import groovy.json.JsonSlurper
 
 def perform(commandParams) {
@@ -6,7 +6,7 @@ def perform(commandParams) {
       return commandParams
     }
     commandParams.workspace = pwd()
-    utils = new com.github.aroq.workflowlibs.Utils()
+    utils = new com.github.aroq.drupipe.Utils()
 
     commandParams.env = utils.envToMap()
 
@@ -69,7 +69,7 @@ def mothershipConfig(commandParams) {
         commandParams << executePipelineActionList(providers) {
             p = commandParams
         }
-        utils = new com.github.aroq.workflowlibs.Utils()
+        utils = new com.github.aroq.drupipe.Utils()
         def json = readFile('mothership/projects.json')
         commandParams << utils.getMothershipProjectParams(commandParams, json)
     }

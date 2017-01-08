@@ -19,15 +19,15 @@ if (config.env.GITLAB_API_TOKEN_TEXT) {
 // TODO: Use docman config to retrieve info.
 branches = [
     development: [
-        pipeline: 'deploy',
+        pipeline: 'pipeline',
         quietPeriodSeconds: 5,
     ],
     staging: [
-        pipeline: 'deploy',
+        pipeline: 'pipeline',
         quietPeriodSeconds: 5,
     ],
     stable: [
-        pipeline: 'release',
+        pipeline: 'pipeline',
         quietPeriodSeconds: 5,
     ],
 ]
