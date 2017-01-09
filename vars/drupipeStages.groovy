@@ -1,15 +1,15 @@
-def call(stages) {
+def call(stages, config) {
     try {
-        _pipelineNotify(this.config)
-        this.config << _executeStages(stages, this.config)
+        _pipelineNotify(config)
+        config << _executeStages(stages, config)
     }
     catch (e) {
         currentBuild.result = "FAILED"
         throw e
     }
     finally {
-        _pipelineNotify(this.config, currentBuild.result)
-        this.config
+        _pipelineNotify(config, currentBuild.result)
+        config
     }
 }
 
