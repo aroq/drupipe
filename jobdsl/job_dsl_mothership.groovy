@@ -4,7 +4,7 @@ import com.github.aroq.GitlabHelper
 def configMain = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 def projects = JsonSlurper.newInstance().parseText(readFileFromWorkspace('projects.json')).projects
 
-def gitlabHelper = new GitlabHelper(script: this, config: config)
+def gitlabHelper = new GitlabHelper(script: this, config: configMain)
 
 projects.each { project ->
     println "PROJECT: ${project.value}"
