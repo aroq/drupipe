@@ -9,6 +9,8 @@ def gitlabHelper = new GitlabHelper(script: this, config: config)
 projects.each { project ->
     println "PROJECT: ${project.value}"
     config << project.value
+    println "CONFIG mothership_job_subDir: ${config.mothership_job_subDir}"
+    println "CONFIG mothership_job_name: ${config.mothership_job_name}"
     String subDir = config.mothership_job_subDir ? config.mothership_job_subDir + '/' : ''
     if (config.mothership_job_type == 'Jenkinsfile') {
         String jobName = config.mothership_job_name ? config.mothership_job_name : project.key
