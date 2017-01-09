@@ -1,4 +1,4 @@
-def call(stages, config) {
+def call(stages) {
     try {
         _pipelineNotify(config)
         config << _executeStages(stages, config)
