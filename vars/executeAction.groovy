@@ -46,7 +46,7 @@ def call(Action action, body) {
                 source = params.sourcesList[i]
                 fileName = sourcePath(params, source.name, 'pipelines/actions/' + action.name + '.groovy')
                 debugLog(actionParams, fileName, "Action file name to check")
-                if (!params.flyweightMode && fileExists(fileName)) {
+                if (params.nodeName && fileExists(fileName)) {
                     actionFile = load(fileName)
                     actionResult = actionFile."$action.methodName"(actionParams)
                 }
