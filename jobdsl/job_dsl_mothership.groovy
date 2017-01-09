@@ -7,10 +7,12 @@ def projects = JsonSlurper.newInstance().parseText(readFileFromWorkspace('projec
 def gitlabHelper = new GitlabHelper(script: this, config: config)
 
 projects.each { project ->
+    println "PROJECT: ${project.value}"
     config << project.value
     String subDir = config.mothership_job_subDir ? config.mothership_job_subDir + '/' : ''
     if (config.mothership_job_type == 'Jenkinsfile') {
         String jobName = config.mothership_job_name ? config.mothership_job_name : project.key
+        println "JOB NAME: ${jobName}"
         def users = [:]
 
         // TODO: Add condition checking if permissions should be set based on Gitlab permissions.
