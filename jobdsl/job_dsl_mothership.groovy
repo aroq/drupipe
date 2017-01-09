@@ -1,16 +1,21 @@
 import groovy.json.JsonSlurper
 import com.github.aroq.GitlabHelper
 
-def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
+def configMain = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 def projects = JsonSlurper.newInstance().parseText(readFileFromWorkspace('projects.json')).projects
 
-def gitlabHelper = new GitlabHelper(script: this, config: config)
+def gitlabHelper = new GitlabHelper(script: this, config: configMain)
 
 projects.each { project ->
+    println "PROJECT: ${project.value}"
+    def config = configMain.clone()
     config << project.value
+    println "CONFIG mothership_job_subDir: ${config.mothership_job_subDir}"
+    println "CONFIG mothership_job_name: ${config.mothership_job_name}"
     String subDir = config.mothership_job_subDir ? config.mothership_job_subDir + '/' : ''
     if (config.mothership_job_type == 'Jenkinsfile') {
         String jobName = config.mothership_job_name ? config.mothership_job_name : project.key
+        println "JOB NAME: ${jobName}"
         def users = [:]
 
         // TODO: Add condition checking if permissions should be set based on Gitlab permissions.
