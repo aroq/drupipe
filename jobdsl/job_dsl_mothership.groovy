@@ -1,13 +1,14 @@
 import groovy.json.JsonSlurper
 import com.github.aroq.GitlabHelper
 
-def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
+def configMain = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 def projects = JsonSlurper.newInstance().parseText(readFileFromWorkspace('projects.json')).projects
 
 def gitlabHelper = new GitlabHelper(script: this, config: config)
 
 projects.each { project ->
     println "PROJECT: ${project.value}"
+    def config = configMain.clone()
     config << project.value
     println "CONFIG mothership_job_subDir: ${config.mothership_job_subDir}"
     println "CONFIG mothership_job_name: ${config.mothership_job_name}"
