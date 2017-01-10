@@ -9,6 +9,7 @@ def jsonConfig(params) {
     docrootConfigJson = readFile("${params.docmanConfigPath}/${params.docmanJsonConfigFile}")
     if (env.gitlabSourceNamespace) {
        params.projectName = utils.projectNameByGroupAndRepoName(docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
+       params.projectName = 'sites'
     }
     else if (projectName) {
         params.projectName = projectName
