@@ -7,6 +7,7 @@ def call(pipe, body = null) {
     drupipe(pipe.params) { config ->
         if (config.nodeName) {
             node(config.nodeName) {
+                config.block.nodeName = config.nodeName
                 if (config.drupipeDocker) {
                     withDrupipeDocker(config) {
                         drupipeStages(pipe.stages, config)
