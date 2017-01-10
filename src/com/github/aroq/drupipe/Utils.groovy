@@ -82,9 +82,9 @@ Action processPipelineAction(action) {
 @NonCPS
 def projectNameByGroupAndRepoName(docrootConfigJson, groupName, repoName) {
     // TODO: Refactor it.
-    gName = groupName.toLowerCase()
-    rName = repoName.toLowerCase()
-    docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
+    def gName = groupName.toLowerCase()
+    def rName = repoName.toLowerCase()
+    def docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
     def result = ''
     docmanConfig.projects.each { project ->
         def repo = project.value['repo'];
