@@ -101,6 +101,7 @@ def deploy(params) {
     }
     catch (err) {
         echo "Catch docman call"
+        echo "err"
     }
 
 }
