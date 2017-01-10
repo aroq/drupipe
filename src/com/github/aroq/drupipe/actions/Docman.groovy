@@ -9,7 +9,6 @@ def jsonConfig(params) {
     docrootConfigJson = readFile("${params.docmanConfigPath}/${params.docmanJsonConfigFile}")
     if (env.gitlabSourceNamespace) {
        params.projectName = utils.projectNameByGroupAndRepoName(docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
-       params.projectName = 'sites'
     }
     else if (projectName) {
         params.projectName = projectName
@@ -86,32 +85,16 @@ def deploy(params) {
 
     echo "docman deploy git_target ${deployProjectName} branch ${version} ${flag}"
 
-    echo "PARAMS docrootDir: ${params.docrootDir}"
-    echo "PARAMS config_repo: ${config_repo}"
-    echo "PARAMS deployProjectName: ${deployProjectName}"
-    echo "PARAMS version: ${version}"
-    echo "PARAMS flag: ${flag}"
-
-    try {
-        echo "Before docman call"
-        sh(
-            """#!/bin/bash -l
-            if [ "${params.force}" == "1" ]; then
-              rm -fR ${params.docrootDir}
-            fi
-            docman init ${params.docrootDir} ${config_repo} -s
-            cd docroot
-            docman deploy git_target ${deployProjectName} branch ${version} ${flag}
-            """
-        )
-        echo "After docman call"
-    }
-    catch (e) {
-        echo "Catch docman call"
-        echo e.toString()
-        echo org.codehaus.groovy.runtime.StackTraceUtils.sanitize(new Exception(e)).printStackTrace()
-    }
-
+    sh(
+        """#!/bin/bash -l
+        if [ "${params.force}" == "1" ]; then
+          rm -fR ${params.docrootDir}
+        fi
+        docman init ${params.docrootDir} ${config_repo} -s
+        cd docroot
+        docman deploy git_target ${deployProjectName} branch ${version} ${flag}
+        """
+    )
 }
 
 def init(params) {
