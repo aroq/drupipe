@@ -2,6 +2,8 @@
 
 def call(blockParams = [:], config, body) {
     def result = [:]
+    echo "BLOCK PARAMS: ${blockParams}"
+    echo "BLOCK CONFIG: ${config}"
     if (blockParams.nodeName) {
         config.nodeName = blockParams.nodeName
         node(config.nodeName) {
