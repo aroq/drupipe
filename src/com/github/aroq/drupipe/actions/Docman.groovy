@@ -99,7 +99,7 @@ def deploy(params) {
         )
         echo "After docman call"
     }
-    catch {
+    catch (err) {
         echo "Catch docman call"
     }
 
