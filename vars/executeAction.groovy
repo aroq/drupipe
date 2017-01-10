@@ -47,7 +47,7 @@ def call(Action action, body) {
                 fileName = sourcePath(params, source.name, 'pipelines/actions/' + action.name + '.groovy')
                 debugLog(actionParams, fileName, "Action file name to check")
                 // To make sure we only check fileExists in Heavyweight executor mode.
-                if (params.nodeName && fileExists(fileName)) {
+                if (params.block.nodeName && fileExists(fileName)) {
                     actionFile = load(fileName)
                     actionResult = actionFile."$action.methodName"(actionParams)
                 }
