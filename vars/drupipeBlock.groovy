@@ -1,6 +1,6 @@
 #!groovy
 
-def call(blockParams, config, body) {
+def call(blockParams = [:], config, body) {
     if (blockParams.nodeName) {
         config.nodeName = blockParams.nodeName
         node(config.nodeName) {
