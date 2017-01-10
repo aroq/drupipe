@@ -1,6 +1,7 @@
 package com.github.aroq.drupipe
 
 import groovy.json.JsonSlurper
+import groovy.json.JsonSlurperClassic
 
 def colorEcho(message, color = null) {
     if (!color) {
@@ -84,7 +85,7 @@ def projectNameByGroupAndRepoName(docrootConfigJson, groupName, repoName) {
     // TODO: Refactor it.
     def gName = groupName.toLowerCase()
     def rName = repoName.toLowerCase()
-    def docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
+    def docmanConfig = JsonSlurperClassic.newInstance().parseText(docrootConfigJson)
     def result = ''
     docmanConfig.projects.each { project ->
         def repo = project.value['repo'];
