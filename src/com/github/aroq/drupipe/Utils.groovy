@@ -82,16 +82,16 @@ Action processPipelineAction(action) {
 @NonCPS
 def projectNameByGroupAndRepoName(docrootConfigJson, groupName, repoName) {
     // TODO: Refactor it.
-    groupName = groupName.toLowerCase()
-    repoName = repoName.toLowerCase()
+    gName = groupName.toLowerCase()
+    rName = repoName.toLowerCase()
     docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
-    result = ''
+    def result = ''
     docmanConfig.projects.each { project ->
         def repo = project.value['repo'];
         if (repo) {
-        echo "REPO: ${repo.toLowerCase()}"
-        echo "GITLAB: ${groupName}/${repoName}"
-            if (repo.toLowerCase().contains("${groupName}/${repoName}")) {
+            echo "REPO: ${repo.toLowerCase()}"
+            echo "GITLAB: ${gName}/${rName}"
+            if (repo.toLowerCase().contains("${gName}/${rName}")) {
                 result = project.value['name']
             }
         }
