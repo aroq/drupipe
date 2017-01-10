@@ -99,9 +99,10 @@ def deploy(params) {
         )
         echo "After docman call"
     }
-    catch (err) {
+    catch (e) {
         echo "Catch docman call"
-        echo "err"
+        echo e.toString()
+        echo org.codehaus.groovy.runtime.StackTraceUtils.sanitize(new Exception(e)).printStackTrace()
     }
 
 }
