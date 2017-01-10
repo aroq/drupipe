@@ -5,6 +5,7 @@ def call(pipe, body = null) {
         pipe.params = [:]
     }
     drupipe(pipe.params) { config ->
+        config.block = [:]
         if (config.nodeName) {
             node(config.nodeName) {
                 config.block.nodeName = config.nodeName
