@@ -95,12 +95,12 @@ def deploy(params) {
         echo "Before docman call"
         sh(
             """#!/bin/bash -l
-            #if [ "${params.force}" == "1" ]; then
-            #  rm -fR ${params.docrootDir}
-            #fi
-            #docman init ${params.docrootDir} ${config_repo} -s
-            #cd docroot
-            #docman deploy git_target ${deployProjectName} branch ${version} ${flag}
+            if [ "${params.force}" == "1" ]; then
+              rm -fR ${params.docrootDir}
+            fi
+            docman init ${params.docrootDir} ${config_repo} -s
+            cd docroot
+            docman deploy git_target ${deployProjectName} branch ${version} ${flag}
             """
         )
         echo "After docman call"
