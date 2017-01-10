@@ -85,16 +85,24 @@ def deploy(params) {
 
     echo "docman deploy git_target ${deployProjectName} branch ${version} ${flag}"
 
-    sh(
-        """#!/bin/bash -l
-        if [ "${params.force}" == "1" ]; then
-          rm -fR ${params.docrootDir}
-        fi
-        docman init ${params.docrootDir} ${config_repo} -s
-        cd docroot
-        docman deploy git_target ${deployProjectName} branch ${version} ${flag}
-        """
-    )
+    try {
+        echo "Before docman call"
+        sh(
+            """#!/bin/bash -l
+            if [ "${params.force}" == "1" ]; then
+              rm -fR ${params.docrootDir}
+            fi
+            docman init ${params.docrootDir} ${config_repo} -s
+            cd docroot
+            docman deploy git_target ${deployProjectName} branch ${version} ${flag}
+            """
+        )
+        echo "After docman call"
+    }
+    catch {
+        echo "Catch docman call"
+    }
+
 }
 
 def init(params) {
