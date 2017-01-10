@@ -7,7 +7,7 @@ def call(blockParams = [:], config, body) {
     echo "BLOCK CONFIG: ${config}"
     if (blockParams.nodeName) {
         config.block.nodeName = blockParams.nodeName
-        node(config.nodeName) {
+        node(config.block.nodeName) {
             if (blockParams.drupipeDocker) {
                 config.block.drupipeDocker = blockParams.drupipeDocker
                 withDrupipeDocker(config) {
