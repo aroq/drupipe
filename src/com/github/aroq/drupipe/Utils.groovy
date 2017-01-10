@@ -80,7 +80,7 @@ Action processPipelineAction(action) {
 }
 
 @NonCPS
-def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName) {
+def projectNameByGroupAndRepoName(docrootConfigJson, groupName, repoName) {
     // TODO: Refactor it.
     groupName = groupName.toLowerCase()
     repoName = repoName.toLowerCase()
@@ -89,14 +89,14 @@ def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName
     docmanConfig.projects.each { project ->
         def repo = project.value['repo'];
         if (repo) {
-        script.echo "REPO: ${repo.toLowerCase()}"
-        script.echo "GITLAB: ${groupName}/${repoName}"
+        echo "REPO: ${repo.toLowerCase()}"
+        echo "GITLAB: ${groupName}/${repoName}"
             if (repo.toLowerCase().contains("${groupName}/${repoName}")) {
                 result = project.value['name']
             }
         }
     }
-    result
+    result.toString()
 }
 
 def writeEnvFile() {
