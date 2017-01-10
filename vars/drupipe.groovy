@@ -6,6 +6,15 @@ def call(commandParams = [:], body) {
                 commandParams << (configParams << commandParams)
             }
         }
+
+        if (params.force == '11') {
+            echo 'FORCE REMOVE DIR'
+            deleteDir()
+        }
+        if (params.checkoutSCM) {
+            checkout scm
+        }
+
         result = body(commandParams)
         if (result) {
             commandParams << result

@@ -14,21 +14,10 @@ def call(stages, config) {
 }
 
 def _executeStages(stagesToExecute, params) {
-    echo "stagesToExecute: ${stagesToExecute}"
-    echo "stagesToExecute class: ${stagesToExecute.getClass()}"
     utils = new com.github.aroq.drupipe.Utils()
 
     stages = utils.processStages(stagesToExecute)
     stages += utils.processStages(params.stages)
-
-    if (params.force == '11') {
-        echo 'FORCE REMOVE DIR'
-        deleteDir()
-    }
-    if (params.checkoutSCM) {
-        echo "params.checkoutSCM: ${params.checkoutSCM}"
-        checkout scm
-    }
 
     for (int i = 0; i < stages.size(); i++) {
         params.stage = stages[i]
