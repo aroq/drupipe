@@ -48,7 +48,7 @@ class Action implements Serializable {
                 for (def i = 0; i < context.sourcesList.size(); i++) {
                     def source = context.sourcesList[i]
                     def fileName = utils.sourcePath(context, source.name, 'pipelines/actions/' + this.name + '.groovy')
-                    echo "FILE NAME: ${fileName}"
+                    script.echo "FILE NAME: ${fileName}"
 //                    utils.debugLog(actionParams, fileName, "Action file name to check")
                     // To make sure we only check fileExists in Heavyweight executor mode.
                     if (context.block?.nodeName && script.fileExists(fileName)) {
