@@ -79,7 +79,7 @@ Action processPipelineAction(action) {
         actionParams = action.params
     }
     values = actionName.split("\\.")
-    new Action(name: values[0], methodName: values[1], params: actionParams)
+    new Action(name: values[0], methodName: values[1], params: actionParams, script: this)
 }
 
 @NonCPS
