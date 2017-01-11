@@ -55,10 +55,11 @@ class Action implements Serializable {
                     }
                 }
             }
+            def actionResult = null
             if (!actionFile) {
                 try {
                     def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance()
-                    def actionResult = actionInstance."${this.methodName}"(actionParams)
+                    actionResult = actionInstance."${this.methodName}"(actionParams)
                 }
                 catch (err) {
                     script.echo err.toString()
