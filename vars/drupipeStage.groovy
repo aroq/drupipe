@@ -1,5 +1,5 @@
 def call(name, config, body) {
     utils = new com.github.aroq.drupipe.Utils()
-    utils._executeState(name, config, body)
+    utils._executeStage(name, config, body)
 }
 
