@@ -10,34 +10,29 @@ class Stage implements Serializable {
     def script
 
     def execute(body = null) {
+        def utils = new com.github.aroq.drupipe.Utils()
         script.stage(name) {
             script.gitlabCommitStatus(name) {
                 if (body) {
                     params << body()
                 }
-                params << ['stage': this]
+                this.params << ['stage': this]
                 if (actions) {
-                    params << executeActions()
+                    try {
+                        for (action in this.actions) {
+                            this.params << utils.executeAction(action, this.params)
+                        }
+                        this.params
+                    }
+                    catch (e) {
+                        script.echo e.toString()
+                        throw e
+                    }
                 }
             }
         }
-        params
-    }
-
-    def executeActions() {
-        def utils = new com.github.aroq.drupipe.Utils()
-        try {
-            for (action in this.actions) {
-                this.params << utils.executeAction(action, this.params)
-            }
-            this.params
-        }
-        catch (e) {
-            script.echo e.toString()
-            throw e
-        }
-
         this.params
     }
+
 }
 

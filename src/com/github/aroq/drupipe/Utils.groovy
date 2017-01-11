@@ -286,22 +286,6 @@ def executeActionList(actionList, params) {
     params
 }
 
-//def _executeStage(name, config, body) {
-//    stage(name) {
-//        gitlabCommitStatus(name) {
-//            config << body()
-//        }
-//    }
-//    config
-//}
-//
-//def executeStage(Stage stageInstance, params) {
-//    _executeStage(stageInstance.name, params) {
-//        params << ['stage': stageInstance]
-//        params << executeActionList(stageInstance.actions, params)
-//    }
-//}
-
 def executeStages(stagesToExecute, params) {
     stages = processStages(stagesToExecute, params)
     stages += processStages(params.stages, params)
