@@ -19,19 +19,20 @@ class Stage implements Serializable {
         }
         params
     }
-}
 
-def executeActions() {
-    try {
-        for (action in actions) {
-            params << executeAction(action, params)
+    def executeActions() {
+        try {
+            for (action in this.actions) {
+                params << executeAction(action, this.params)
+            }
+            this.params
         }
-        params
-    }
-    catch (err) {
-        echo err.toString()
-        throw err
-    }
+        catch (err) {
+            echo err.toString()
+            throw err
+        }
 
-    params
+        this.params
+    }
 }
+
