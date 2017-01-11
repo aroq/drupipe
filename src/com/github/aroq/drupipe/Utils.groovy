@@ -296,45 +296,13 @@ def executeStage(Stage stageInstance, params) {
     params
 }
 
-def executeStages(commandParams = [:]) {
-    try {
-        if (commandParams.params) {
-            commandParams << commandParams.params
-            commandParams.remove('params')
-        }
-        _pipelineNotify(commandParams)
-
-        commandParams << _executeStages(commandParams)
-    }
-    catch (e) {
-        currentBuild.result = "FAILED"
-        throw e
-    }
-    finally {
-        _pipelineNotify(commandParams, currentBuild.result)
-        commandParams
-    }
-
-}
-
-def _executeStages(params) {
-    params << drupipeAction([action: 'Config.perform', params: []], params)
-
-    stages = processStages(params.pipeline)
-    stages += processStages(params.stages)
-
-    if (params.force == '11') {
-        echo 'FORCE REMOVE DIR'
-        deleteDir()
-    }
-    if (params.checkoutSCM) {
-        echo "params.checkoutSCM: ${params.checkoutSCM}"
-        checkout scm
-    }
+def _executeStages(stagesToExecute, params) {
+    stages = utils.processStages(stagesToExecute)
+    stages += utils.processStages(params.stages)
 
     for (int i = 0; i < stages.size(); i++) {
         params.stage = stages[i]
-        params << executeStage(stages[i], params)
+        params << utils.executeStage(stages[i], params)
     }
     params
 }

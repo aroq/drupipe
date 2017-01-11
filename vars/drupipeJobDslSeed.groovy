@@ -9,7 +9,6 @@ def call(body) {
                 drupipeAction(action: 'Docman.info', config)
 
                 stash name: 'config', includes: 'docroot/config/**, library/**, mothership/**', excludes: '.git, .git/**'
-
             }
         }
 

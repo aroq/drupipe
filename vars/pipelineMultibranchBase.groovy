@@ -48,7 +48,7 @@ def call(body) {
             ]
         )
 
-        result = utils.executeStages {
+        result = drupipeStages {
             checkoutSCM = true
             pipeline = [
                 'init': [

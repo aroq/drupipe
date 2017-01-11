@@ -19,7 +19,7 @@ def call(body) {
             ],
         ]
 
-    utils.executeStages([
+    drupipeStages([
         pipeline: drupipePipeline
     ])
 }
