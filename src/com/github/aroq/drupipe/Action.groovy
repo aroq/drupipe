@@ -27,8 +27,8 @@ class Action implements Serializable {
 
             utils.echoDelimiter("-----> Stage: ${drupipeStageName} | Action name: ${this.fullName} start <-")
             actionParams << this.context
-            if (!action.params) {
-                action.params = [:]
+            if (!this.params) {
+                this.params = [:]
             }
             actionParams << ['action': this]
             defaultParams = [:]
