@@ -45,7 +45,7 @@ List<Stage> processStages(stages, config) {
 }
 
 @NonCPS
-Stage processStage(stage, config) {
+Stage processStage(stage, context) {
     if (stage instanceof Stage) {
         for (action in stage.actions) {
             values = action.action.split("\\.")
@@ -55,21 +55,21 @@ Stage processStage(stage, config) {
         stage
     }
     else {
-        new Stage(name: stage.key, params: config, actions: processPipelineActionList(stage.value), script: this)
+        new Stage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context), script: this)
     }
 }
 
 @NonCPS
-List processPipelineActionList(actionList) {
+List processPipelineActionList(actionList, context) {
     List actions = []
     for (action in actionList) {
-        actions << processPipelineAction(action)
+        actions << processPipelineAction(action, context)
     }
     actions
 }
 
 @NonCPS
-Action processPipelineAction(action) {
+Action processPipelineAction(action, context) {
     if (action.getClass() == java.lang.String) {
         actionName = action
         actionParams = [:]
@@ -79,7 +79,7 @@ Action processPipelineAction(action) {
         actionParams = action.params
     }
     values = actionName.split("\\.")
-    new Action(name: values[0], methodName: values[1], params: actionParams, script: this)
+    new Action(name: values[0], methodName: values[1], params: actionParams, script: this, context: context)
 }
 
 @NonCPS
@@ -190,11 +190,10 @@ boolean isCollectionOrList(object) {
     object instanceof java.util.Collection || object instanceof java.util.List || object instanceof java.util.LinkedHashMap || object instanceof java.util.HashMap
 }
 
-def executePipelineActionList(actions, params) {
-    actionList = processPipelineActionList(actions)
-    debugLog(params, actionList, 'action list', [debugMode: 'json'])
-    params << executeActionList(actionList, params)
-    params
+def executePipelineActionList(actions, context) {
+    actionList = processPipelineActionList(actions, context)
+    debugLog(context, actionList, 'action list', [debugMode: 'json'])
+    context << executeActionList(actionList, context)
 }
 
 def executeActionList(actionList, params) {

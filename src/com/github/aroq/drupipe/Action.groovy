@@ -6,6 +6,7 @@ class Action implements Serializable {
     String methodName
     HashMap params = [:]
     def script
+    LinkedHashMap context = [:]
 
     String getFullName() {
         "${this.name}.${this.methodName}"
