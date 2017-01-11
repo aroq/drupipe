@@ -11,13 +11,12 @@ def call(Stage stageInstance, body) {
         params.remove('p')
     }
 
+    utils = new com.github.aroq.drupipe.Utils()
+
     stage(stageInstance.name) {
         gitlabCommitStatus(stageInstance.name) {
             params << ['stage': stageInstance]
-
-            params << executeActionList(stageInstance.actions) {
-                p = params
-            }
+            params << utils.executeActionList(stageInstance.actions, params)
         }
     }
 }

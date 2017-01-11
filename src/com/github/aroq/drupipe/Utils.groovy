@@ -271,4 +271,19 @@ def executePipelineActionList(actions, params) {
     params
 }
 
+def executeActionList(actionList, params) {
+    try {
+        for (action in actionList) {
+            params << executeAction(action, params)
+        }
+        params
+    }
+    catch (err) {
+        echo err.toString()
+        throw err
+    }
+
+    params
+}
+
 return this
