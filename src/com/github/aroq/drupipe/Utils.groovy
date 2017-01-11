@@ -36,16 +36,16 @@ def colorEcho(message, color = null) {
 }
 
 @NonCPS
-List<Stage> processStages(stages) {
+List<Stage> processStages(stages, config) {
     List<Stage> result = []
     for (item in stages) {
-        result << processStage(item)
+        result << processStage(item, config)
     }
     result
 }
 
 @NonCPS
-Stage processStage(stage) {
+Stage processStage(stage, config) {
     if (stage instanceof Stage) {
         for (action in stage.actions) {
             values = action.action.split("\\.")
@@ -55,7 +55,7 @@ Stage processStage(stage) {
         stage
     }
     else {
-        new Stage(name: stage.key, actions: processPipelineActionList(stage.value), script: this)
+        new Stage(name: stage.key, params: config, actions: processPipelineActionList(stage.value), script: this)
     }
 }
 
@@ -303,8 +303,8 @@ def executeActionList(actionList, params) {
 //}
 
 def executeStages(stagesToExecute, params) {
-    stages = processStages(stagesToExecute)
-    stages += processStages(params.stages)
+    stages = processStages(stagesToExecute, params)
+    stages += processStages(params.stages, params)
 
     for (int i = 0; i < stages.size(); i++) {
         params << stages[i].execute()
