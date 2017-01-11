@@ -17,7 +17,7 @@ class Action implements Serializable {
 
         try {
             def utils = new com.github.aroq.drupipe.Utils()
-            String drupipeStagename
+            String drupipeStageName
             if (this.context.stage) {
                 drupipeStageName = "${this.context.stage.name}"
             }
