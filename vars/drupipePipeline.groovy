@@ -10,7 +10,7 @@ def call(pipe, body = null) {
             node(config.nodeName) {
                 config.block.nodeName = config.nodeName
                 if (config.drupipeDocker) {
-                    withDrupipeDocker(config) {
+                    drupipeWithDocker(config) {
                         drupipeStages(pipe.stages, config)
                     }
                 }

@@ -4,7 +4,7 @@
 def call(body) {
     drupipe() { config ->
         node(config.nodeName) {
-            withDrupipeDocker(config) {
+            drupipeWithDocker(config) {
                 checkout scm
                 drupipeAction(action: 'Docman.info', config)
 
