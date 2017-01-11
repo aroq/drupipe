@@ -45,7 +45,7 @@ class Action implements Serializable {
             if (params.sourcesList) {
                 for (i = 0; i < params.sourcesList.size(); i++) {
                     source = params.sourcesList[i]
-                    fileName = sourcePath(params, source.name, 'pipelines/actions/' + action.name + '.groovy')
+                    fileName = utils.sourcePath(params, source.name, 'pipelines/actions/' + action.name + '.groovy')
                     utils.debugLog(actionParams, fileName, "Action file name to check")
                     // To make sure we only check fileExists in Heavyweight executor mode.
                     if (params.block?.nodeName && script.fileExists(fileName)) {
@@ -60,13 +60,13 @@ class Action implements Serializable {
                     actionResult = actionInstance."$action.methodName"(actionParams)
                 }
                 catch (err) {
-                    echo err.toString()
+                    script.echo err.toString()
                     throw err
                 }
             }
 
             if (actionResult && actionResult.returnConfig) {
-                if (isCollectionOrList(actionResult)) {
+                if (utils.isCollectionOrList(actionResult)) {
                     params << actionResult
                 }
                 else {
@@ -74,14 +74,14 @@ class Action implements Serializable {
                     params << ["${action.name}.${action.methodName}": actionResult]
                 }
             }
-            debugLog(actionParams, params, "${action.fullName} action result")
+            utils.debugLog(actionParams, params, "${action.fullName} action result")
             params.returnConfig = false
-            echoDelimiter "-----> Stage: ${drupipeStageName} | Action name: ${action.fullName} end <-"
+            utils.echoDelimiter "-----> Stage: ${drupipeStageName} | Action name: ${action.fullName} end <-"
 
             params
         }
         catch (err) {
-            echo err.toString()
+            script.echo err.toString()
             throw err
         }
     }
