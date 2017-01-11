@@ -44,7 +44,7 @@ class Action implements Serializable {
             // TODO: configure it:
             def actionFile = null
             if (context.sourcesList) {
-                for (i = 0; i < context.sourcesList.size(); i++) {
+                for (def i = 0; i < context.sourcesList.size(); i++) {
                     source = context.sourcesList[i]
                     fileName = utils.sourcePath(context, source.name, 'pipelines/actions/' + this.name + '.groovy')
 //                    utils.debugLog(actionParams, fileName, "Action file name to check")
