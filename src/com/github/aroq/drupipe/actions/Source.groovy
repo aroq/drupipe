@@ -42,6 +42,7 @@ def add(params) {
     utils = new com.github.aroq.drupipe.Utils()
     if (result) {
         params.sources[source.name] = new com.github.aroq.drupipe.Source(name: source.name, type: source.type, path: source.path)
+        echo "PARAMS SOURCES LIST: ${params.sourcesList}"
         params.sourcesList << params.sources[source.name]
 
     }
