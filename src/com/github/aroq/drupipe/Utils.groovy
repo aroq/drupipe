@@ -265,9 +265,7 @@ boolean isCollectionOrList(object) {
 def executePipelineActionList(actions, params) {
     actionList = processPipelineActionList(actions)
     debugLog(params, actionList, 'action list', [debugMode: 'json'])
-    params << executeActionList(actionList) {
-        p = params
-    }
+    params << executeActionList(actionList, params)
     params
 }
 
