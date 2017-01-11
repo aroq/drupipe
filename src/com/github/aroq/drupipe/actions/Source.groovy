@@ -1,7 +1,9 @@
 package com.github.aroq.drupipe.actions
 
 def add(params) {
+    echo "SOURCE ADD"
     def source = params.source
+    echo "PARAMS SOURCE: ${params.source}"
     def result
     utils = new com.github.aroq.drupipe.Utils()
     switch (source.type) {
