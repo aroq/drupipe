@@ -289,7 +289,7 @@ def executeStage(Stage stageInstance, params) {
     stage(stageInstance.name) {
         gitlabCommitStatus(stageInstance.name) {
             params << ['stage': stageInstance]
-            params << utils.executeActionList(stageInstance.actions, params)
+            params << executeActionList(stageInstance.actions, params)
         }
     }
     params
