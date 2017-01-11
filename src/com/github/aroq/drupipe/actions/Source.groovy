@@ -53,7 +53,7 @@ def loadConfig(params) {
         configFilePath = sourcePath(params, params.sourceName, params.configPath)
 
         if (params.configType == 'groovy') {
-            params << executePipelineAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], params)
+            params << drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], params)
         }
         params.remove('sourceName')
         params.remove('configPath')

@@ -10,10 +10,9 @@ def call(actionList, body) {
     }
 
     try {
+        utils = new com.github.aroq.drupipe.Utils()
         for (action in actionList) {
-            params << executeAction(action) {
-                p = params
-            }
+            params << utils.executeAction(action, params)
         }
         params
     }
