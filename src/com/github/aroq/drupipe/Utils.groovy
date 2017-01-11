@@ -201,6 +201,7 @@ def executeActionList(actionList, params) {
     try {
         for (action in actionList) {
             params << action.execute()
+            echo "executeActionList CONTEXT: ${params}"
         }
         params
     }
