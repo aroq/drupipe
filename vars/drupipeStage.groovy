@@ -1,6 +1,5 @@
-def call(stage, config) {
+def call(name, config, body) {
     utils = new com.github.aroq.drupipe.Utils()
-    utils.pipelineNotify(config)
-    config << utils.executeStage(utils.processStage(stage), config)
+    utils._executeState(name, config, body)
 }
 
