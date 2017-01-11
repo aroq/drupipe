@@ -30,7 +30,7 @@ class Action implements Serializable {
             if (!this.params) {
                 this.params = [:]
             }
-            actionParams << ['action': this]
+            //actionParams << ['action': this]
             def defaultParams = [:]
             for (actionName in [this.name, this.name + '_' + this.methodName]) {
                 if (actionName in params.actionParams) {
