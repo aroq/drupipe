@@ -31,10 +31,7 @@ def perform(commandParams) {
 
     checkout scm
 
-    commandParams << utils.executePipelineActionList(providers) {
-        p = commandParams
-    }
-
+    commandParams << utils.executePipelineActionList(providers, commandParams)
     commandParams << ['Config_perform': true, returnConfig: true]
 }
 
@@ -65,11 +62,8 @@ def mothershipConfig(commandParams) {
                 ]
             ]
         ]
-
-        commandParams << utils.executePipelineActionList(providers) {
-            p = commandParams
-        }
         utils = new com.github.aroq.drupipe.Utils()
+        commandParams << utils.executePipelineActionList(providers, commandParams)
         def json = readFile('mothership/projects.json')
         commandParams << utils.getMothershipProjectParams(commandParams, json)
     }
@@ -97,10 +91,8 @@ def projectConfig(commandParams) {
             ]
         ]
     ]
-
-    commandParams << utils.executePipelineActionList(providers) {
-        p = commandParams
-    }
+    utils = new com.github.aroq.drupipe.Utils()
+    commandParams << utils.executePipelineActionList(providers, commandParams)
 
     commandParams << [returnConfig: true]
 }
