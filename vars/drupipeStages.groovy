@@ -2,7 +2,7 @@ def call(stages, config) {
     utils = new com.github.aroq.drupipe.Utils()
 
     try {
-        utils._pipelineNotify(config)
+        utils.pipelineNotify(config)
         config << utils.executeStages(stages, config)
     }
     catch (e) {
@@ -10,7 +10,7 @@ def call(stages, config) {
         throw e
     }
     finally {
-        utils._pipelineNotify(config, currentBuild.result)
+        utils.pipelineNotify(config, currentBuild.result)
         config
     }
 }

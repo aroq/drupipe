@@ -307,7 +307,7 @@ def executeStages(stagesToExecute, params) {
     params
 }
 
-def _pipelineNotify(params, String buildStatus = 'STARTED') {
+def pipelineNotify(params, String buildStatus = 'STARTED') {
     // build status of null means successful
     buildStatus =  buildStatus ?: 'SUCCESSFUL'
 
