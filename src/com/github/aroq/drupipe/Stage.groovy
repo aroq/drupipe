@@ -9,10 +9,12 @@ class Stage implements Serializable {
 
     def script
 
-    def execute(body) {
+    def execute(body = null) {
         script.stage(name) {
             script.gitlabCommitStatus(name) {
-                params << body()
+                if (body) {
+                    params << body()
+                }
                 params << ['stage': this]
                 if (actions) {
                     params << executeActions()
