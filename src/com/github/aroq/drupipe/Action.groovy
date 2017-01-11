@@ -30,7 +30,7 @@ class Action implements Serializable {
             if (!this.params) {
                 this.params = [:]
             }
-            //actionParams << ['action': this]
+            actionParams << ['action': this]
             def defaultParams = [:]
             for (actionName in [this.name, this.name + '_' + this.methodName]) {
                 if (actionName in params.actionParams) {
@@ -40,14 +40,14 @@ class Action implements Serializable {
             actionParams << context
             actionParams << defaultParams << this.params
 
-            utils.debugLog(actionParams, actionParams, "${this.fullName} action params")
+            //utils.debugLog(actionParams, actionParams, "${this.fullName} action params")
             // TODO: configure it:
             def actionFile = null
             if (context.sourcesList) {
                 for (i = 0; i < context.sourcesList.size(); i++) {
                     source = context.sourcesList[i]
                     fileName = utils.sourcePath(context, source.name, 'pipelines/actions/' + this.name + '.groovy')
-                    utils.debugLog(actionParams, fileName, "Action file name to check")
+//                    utils.debugLog(actionParams, fileName, "Action file name to check")
                     // To make sure we only check fileExists in Heavyweight executor mode.
                     if (context.block?.nodeName && script.fileExists(fileName)) {
                         actionFile = script.load(fileName)
@@ -75,7 +75,7 @@ class Action implements Serializable {
                     context << ["${action.name}.${action.methodName}": actionResult]
                 }
             }
-            utils.debugLog(actionParams, context, "${this.fullName} action result")
+//            utils.debugLog(actionParams, context, "${this.fullName} action result")
             context.returnConfig = false
             utils.echoDelimiter "-----> Stage: ${drupipeStageName} | Action name: ${this.fullName} end <-"
 
