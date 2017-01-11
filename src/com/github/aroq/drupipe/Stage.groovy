@@ -7,9 +7,11 @@ class Stage implements Serializable {
 
     HashMap params = [:]
 
+    def script
+
     def execute(body) {
-        stage(name) {
-            gitlabCommitStatus(name) {
+        script.stage(name) {
+            script.gitlabCommitStatus(name) {
                 params << body()
                 params << ['stage': stageInstance]
                 if (actions) {
@@ -21,15 +23,16 @@ class Stage implements Serializable {
     }
 
     def executeActions() {
+        def utils = new com.github.aroq.drupipe.Utils()
         try {
             for (action in this.actions) {
-                params << executeAction(action, this.params)
+                this.params << utils.executeAction(action, this.params)
             }
             this.params
         }
-        catch (err) {
-            echo err.toString()
-            throw err
+        catch (e) {
+            script.echo e.toString()
+            throw e
         }
 
         this.params
