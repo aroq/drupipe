@@ -3,7 +3,7 @@ def call(stages, config) {
 
     try {
         utils._pipelineNotify(config)
-        config << utils._executeStages(stages, config)
+        config << utils.executeStages(stages, config)
     }
     catch (e) {
         currentBuild.result = "FAILED"

@@ -296,13 +296,13 @@ def executeStage(Stage stageInstance, params) {
     params
 }
 
-def _executeStages(stagesToExecute, params) {
-    stages = utils.processStages(stagesToExecute)
-    stages += utils.processStages(params.stages)
+def executeStages(stagesToExecute, params) {
+    stages = processStages(stagesToExecute)
+    stages += processStages(params.stages)
 
     for (int i = 0; i < stages.size(); i++) {
         params.stage = stages[i]
-        params << utils.executeStage(stages[i], params)
+        params << executeStage(stages[i], params)
     }
     params
 }
