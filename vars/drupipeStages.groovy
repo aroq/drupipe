@@ -21,7 +21,7 @@ def _executeStages(stagesToExecute, params) {
 
     for (int i = 0; i < stages.size(); i++) {
         params.stage = stages[i]
-        params << executeStage(stages[i], params)
+        params << utils.executeStage(stages[i], params)
     }
     params
 }
