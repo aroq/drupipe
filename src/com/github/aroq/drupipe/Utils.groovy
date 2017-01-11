@@ -286,28 +286,28 @@ def executeActionList(actionList, params) {
     params
 }
 
-def _executeStage(name, config, body) {
-    stage(name) {
-        gitlabCommitStatus(name) {
-            config << body()
-        }
-    }
-    config
-}
-
-def executeStage(Stage stageInstance, params) {
-    _executeStage(stageInstance.name, params) {
-        params << ['stage': stageInstance]
-        params << executeActionList(stageInstance.actions, params)
-    }
-}
+//def _executeStage(name, config, body) {
+//    stage(name) {
+//        gitlabCommitStatus(name) {
+//            config << body()
+//        }
+//    }
+//    config
+//}
+//
+//def executeStage(Stage stageInstance, params) {
+//    _executeStage(stageInstance.name, params) {
+//        params << ['stage': stageInstance]
+//        params << executeActionList(stageInstance.actions, params)
+//    }
+//}
 
 def executeStages(stagesToExecute, params) {
     stages = processStages(stagesToExecute)
     stages += processStages(params.stages)
 
     for (int i = 0; i < stages.size(); i++) {
-        params << executeStage(stages[i], params)
+        params << stages[i].execute()
     }
     params
 }
