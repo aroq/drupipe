@@ -18,38 +18,38 @@ class Action implements Serializable {
         try {
             def utils = new com.github.aroq.drupipe.Utils()
             String drupipeStagename
-            if (params.stage) {
-                drupipeStageName = "${params.stage.name}"
+            if (this.context.stage) {
+                drupipeStageName = "${this.context.stage.name}"
             }
             else {
                 drupipeStageName = 'config'
             }
 
             utils.echoDelimiter("-----> Stage: ${drupipeStageName} | Action name: ${action.fullName} start <-")
-            actionParams << params
+            actionParams << this.context
             if (!action.params) {
                 action.params = [:]
             }
-            actionParams << ['action': action]
+            actionParams << ['action': this]
             defaultParams = [:]
-            for (actionName in [action.name, action.name + '_' + action.methodName]) {
+            for (actionName in [this.name, this.name + '_' + this.methodName]) {
                 if (actionName in params.actionParams) {
                     defaultParams << params.actionParams[actionName]
                 }
             }
-            actionParams << params
-            actionParams << defaultParams << action.params
+            actionParams << context
+            actionParams << defaultParams << this.params
 
-            utils.debugLog(actionParams, actionParams, "${action.fullName} action params")
+            utils.debugLog(actionParams, actionParams, "${this.fullName} action params")
             // TODO: configure it:
             def actionFile = null
-            if (params.sourcesList) {
-                for (i = 0; i < params.sourcesList.size(); i++) {
-                    source = params.sourcesList[i]
-                    fileName = utils.sourcePath(params, source.name, 'pipelines/actions/' + action.name + '.groovy')
+            if (context.sourcesList) {
+                for (i = 0; i < context.sourcesList.size(); i++) {
+                    source = context.sourcesList[i]
+                    fileName = utils.sourcePath(context, source.name, 'pipelines/actions/' + this.name + '.groovy')
                     utils.debugLog(actionParams, fileName, "Action file name to check")
                     // To make sure we only check fileExists in Heavyweight executor mode.
-                    if (params.block?.nodeName && script.fileExists(fileName)) {
+                    if (context.block?.nodeName && script.fileExists(fileName)) {
                         actionFile = script.load(fileName)
                         actionResult = actionFile."$action.methodName"(actionParams)
                     }
@@ -57,7 +57,7 @@ class Action implements Serializable {
             }
             if (!actionFile) {
                 try {
-                    def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${action.name}", true, false )?.newInstance()
+                    def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance()
                     actionResult = actionInstance."$action.methodName"(actionParams)
                 }
                 catch (err) {
@@ -68,18 +68,18 @@ class Action implements Serializable {
 
             if (actionResult && actionResult.returnConfig) {
                 if (utils.isCollectionOrList(actionResult)) {
-                    params << actionResult
+                    context << actionResult
                 }
                 else {
                     // TODO: check if this should be in else clause.
-                    params << ["${action.name}.${action.methodName}": actionResult]
+                    context << ["${action.name}.${action.methodName}": actionResult]
                 }
             }
-            utils.debugLog(actionParams, params, "${action.fullName} action result")
-            params.returnConfig = false
-            utils.echoDelimiter "-----> Stage: ${drupipeStageName} | Action name: ${action.fullName} end <-"
+            utils.debugLog(actionParams, context, "${this.fullName} action result")
+            context.returnConfig = false
+            utils.echoDelimiter "-----> Stage: ${drupipeStageName} | Action name: ${this.fullName} end <-"
 
-            params
+            context
         }
         catch (err) {
             script.echo err.toString()
