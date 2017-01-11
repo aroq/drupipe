@@ -197,7 +197,6 @@ def executeAction(action, params) {
         }
 
         echoDelimiter("-----> Stage: ${drupipeStageName} | Action name: ${action.fullName} start <-")
-        utils = new com.github.aroq.drupipe.Utils()
         actionParams << params
         if (!action.params) {
             action.params = [:]
@@ -261,6 +260,15 @@ def executeAction(action, params) {
 
 boolean isCollectionOrList(object) {
     object instanceof java.util.Collection || object instanceof java.util.List || object instanceof java.util.LinkedHashMap || object instanceof java.util.HashMap
+}
+
+def executePipelineActionList(actions, params) {
+    actionList = processPipelineActionList(actions)
+    debugLog(params, actionList, 'action list', [debugMode: 'json'])
+    params << executeActionList(actionList) {
+        p = params
+    }
+    params
 }
 
 return this

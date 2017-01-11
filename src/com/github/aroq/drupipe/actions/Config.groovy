@@ -31,7 +31,7 @@ def perform(commandParams) {
 
     checkout scm
 
-    commandParams << executePipelineActionList(providers) {
+    commandParams << utils.executePipelineActionList(providers) {
         p = commandParams
     }
 
@@ -66,7 +66,7 @@ def mothershipConfig(commandParams) {
             ]
         ]
 
-        commandParams << executePipelineActionList(providers) {
+        commandParams << utils.executePipelineActionList(providers) {
             p = commandParams
         }
         utils = new com.github.aroq.drupipe.Utils()
@@ -98,7 +98,7 @@ def projectConfig(commandParams) {
         ]
     ]
 
-    commandParams << executePipelineActionList(providers) {
+    commandParams << utils.executePipelineActionList(providers) {
         p = commandParams
     }
 
