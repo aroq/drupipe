@@ -3,12 +3,13 @@ package com.github.aroq.drupipe.actions
 def add(params) {
     def source = params.source
     def result
+    utils = new com.github.aroq.drupipe.Utils()
     switch (source.type) {
         case 'git':
             if (!source.refType) {
                 source.refType = 'branch'
             }
-            jsonDump(source)
+            utils.jsonDump(source)
             dir(source.path) {
                 deleteDir()
             }
@@ -49,8 +50,9 @@ def add(params) {
 }
 
 def loadConfig(params) {
+    utils = new com.github.aroq.drupipe.Utils()
     if (params.configPath) {
-        configFilePath = sourcePath(params, params.sourceName, params.configPath)
+        configFilePath = utils.sourcePath(params, params.sourceName, params.configPath)
 
         if (params.configType == 'groovy') {
             params << drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], params)

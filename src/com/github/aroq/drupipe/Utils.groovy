@@ -3,6 +3,7 @@ package com.github.aroq.drupipe
 import groovy.json.JsonSlurper
 import com.github.aroq.drupipe.Action
 import com.github.aroq.drupipe.Stage
+import groovy.json.JsonOutput
 
 def colorEcho(message, color = null) {
     if (!color) {
@@ -398,6 +399,62 @@ def _pipelineNotify(params, String buildStatus = 'STARTED') {
             attachLog: true,
         )
     }
+}
+
+def sourcePath(params, sourceName, String path) {
+    debugLog(params, sourceName, 'Source name')
+    if (sourceName in params.sources) {
+        params.sources[sourceName].path + '/' + path
+    }
+}
+
+
+def debugLog(params, value, dumpName = '', debugParams = [:]) {
+    if (params.debugEnabled) {
+        if (value instanceof java.lang.String) {
+            echo "${dumpName}: ${value}"
+        }
+        else {
+            if (debugParams?.debugMode == 'json' || params.debugMode == 'json') {
+                jsonDump(value, dumpName)
+            }
+            else {
+                dump(value, dumpName)
+            }
+        }
+    }
+}
+
+def dump(params, String dumpName = '') {
+    colorEcho "Dumping ${dumpName}:"
+    colorEcho collectParams(params)
+}
+
+@NonCPS
+def collectParams(params) {
+    def String result = ''
+    for (item in params) {
+        result = result + "${item.key} = ${item.value}\r\n"
+    }
+    result
+}
+
+def echoDelimiter(String message) {
+    if (message) {
+        if (message.size() < 80) {
+            echo message + '-' * (80 - message.size())
+        }
+        else {
+            echo message
+        }
+    }
+}
+
+def jsonDump(value, String dumpName = '') {
+    if (dumpName) {
+        echo dumpName
+    }
+    echo JsonOutput.prettyPrint(JsonOutput.toJson(value))
 }
 
 return this
