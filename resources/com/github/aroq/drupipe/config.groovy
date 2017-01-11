@@ -39,7 +39,7 @@ actionParams = [
         workspaceRelativePath: '../../..',
         behat_args: '--format=pretty --out=std --format=junit',
     ],
-    withDrupipeDocker: [
+    drupipeWithDocker: [
         drupipeDockerImageName: 'aroq/drudock:1.2.0',
         drupipeDockerArgs: '--user root:root',
         noNode: true,
