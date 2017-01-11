@@ -55,7 +55,7 @@ Stage processStage(stage) {
         stage
     }
     else {
-        new Stage(name: stage.key, actions: processPipelineActionList(stage.value))
+        new Stage(name: stage.key, actions: processPipelineActionList(stage.value), script: this)
     }
 }
 
