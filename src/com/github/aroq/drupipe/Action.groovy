@@ -43,6 +43,7 @@ class Action implements Serializable {
             //utils.debugLog(actionParams, actionParams, "${this.fullName} action params")
             // TODO: configure it:
             def actionFile = null
+            script.echo "CONTEXT: ${context}"
             if (context.sourcesList) {
                 for (def i = 0; i < context.sourcesList.size(); i++) {
                     def source = context.sourcesList[i]
