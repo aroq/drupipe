@@ -25,7 +25,7 @@ class Action implements Serializable {
                 drupipeStageName = 'config'
             }
 
-            utils.echoDelimiter("-----> Stage: ${drupipeStageName} | Action name: ${action.fullName} start <-")
+            utils.echoDelimiter("-----> Stage: ${drupipeStageName} | Action name: ${this.fullName} start <-")
             actionParams << this.context
             if (!action.params) {
                 action.params = [:]
