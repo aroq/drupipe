@@ -4,6 +4,8 @@ def call(body) {
     body.delegate = params
     body()
 
+    utils = new com.github.aroq.drupipe.Utils()
+
     node {
         // Set environment based on branch name.
         def environment = 'local'
@@ -46,7 +48,7 @@ def call(body) {
             ]
         )
 
-        result = executeStages {
+        result = utils.executeStages {
             checkoutSCM = true
             pipeline = [
                 'init': [
