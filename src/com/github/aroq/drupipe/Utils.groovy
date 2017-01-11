@@ -199,7 +199,7 @@ def executePipelineActionList(actions, context) {
 def executeActionList(actionList, params) {
     try {
         for (action in actionList) {
-            params << executeAction(action, params)
+            params << action.execute()
         }
         params
     }
