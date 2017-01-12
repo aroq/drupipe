@@ -32,7 +32,7 @@ class Action implements Serializable {
             }
             actionParams << ['action': this]
             def defaultParams = [:]
-            echo "CONTEXT: ${context}"
+            script.echo "CONTEXT: ${context}"
             script.echo "Action name: ${this.name}"
             for (actionName in [this.name, this.name + '_' + this.methodName]) {
                 script.echo "Checking action name: ${actionName}"
