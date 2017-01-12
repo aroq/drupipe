@@ -1,7 +1,7 @@
 import com.github.aroq.drupipe.DrupipePipeline
 
 def call(context = [:], body) {
-    context.pipeline = new DrupipePipeline(params: context, script: this)
+    context.pipeline = new DrupipePipeline(context: context, script: this)
     timestamps {
         if (!context['Config_perform']) {
             node('master') {
