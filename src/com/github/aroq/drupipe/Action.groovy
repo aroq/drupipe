@@ -14,7 +14,7 @@ class Action implements Serializable {
 
     def execute(c = null) {
         if (c) {
-            echo "ACTION CONTEXT: ${c}"
+            script.echo "ACTION CONTEXT: ${c}"
             this.context << c
         }
         def actionParams = [:]
