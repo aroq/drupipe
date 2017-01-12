@@ -11,7 +11,9 @@ def call(pipe, body = null) {
                 config.block.nodeName = config.nodeName
                 if (config.drupipeDocker) {
                     drupipeWithDocker(config) {
-                        drupipeStages(pipe.stages, config)
+                        pipe.blocks.each { block ->
+                            drupipeStages(block.stages, config)
+                        }
                     }
                 }
                 else {
