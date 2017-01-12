@@ -63,7 +63,7 @@ def mothershipConfig(commandParams) {
             ]
         ]
         utils = new com.github.aroq.drupipe.Utils()
-        commandParams << utils.executePipelineActionList(providers, commandParams)
+        commandParams << commandParams.pipeline.executePipelineActionList(providers, commandParams)
         def json = readFile('mothership/projects.json')
         commandParams << utils.getMothershipProjectParams(commandParams, json)
     }
