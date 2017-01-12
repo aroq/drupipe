@@ -36,10 +36,10 @@ def colorEcho(message, color = null) {
 }
 
 @NonCPS
-List<Stage> processStages(stages, config) {
+List<Stage> processStages(stages, context) {
     List<Stage> result = []
     for (item in stages) {
-        result << processStage(item, config)
+        result << processStage(item, context)
     }
     result
 }
