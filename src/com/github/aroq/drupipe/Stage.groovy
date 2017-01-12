@@ -8,12 +8,10 @@ class Stage implements Serializable {
 
     HashMap params = [:]
 
-    def script
-
     def execute(params, body = null) {
         this.params = params
-        this.script.stage(name) {
-            script.gitlabCommitStatus(name) {
+        this.params.pipeline.script.stage(name) {
+            this.params.pipeline.script.gitlabCommitStatus(name) {
                 if (body) {
                     this.params << body()
                 }
@@ -26,7 +24,7 @@ class Stage implements Serializable {
                         this.params
                     }
                     catch (e) {
-                        script.echo e.toString()
+                        this.params.pipeline.script.echo e.toString()
                         throw e
                     }
                 }

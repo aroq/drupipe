@@ -66,7 +66,7 @@ class DrupipePipeline implements Serializable {
             stage
         }
         else {
-            new Stage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context), script: script)
+            new Stage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context))
         }
     }
 
@@ -92,12 +92,11 @@ class DrupipePipeline implements Serializable {
             actionParams = action.params
         }
         def values = actionName.split("\\.")
-        new Action(name: values[0], methodName: values[1], params: actionParams, script: script, context: context)
+        new Action(name: values[0], methodName: values[1], params: actionParams, context: context)
     }
 
     def executePipelineActionList(actions, context) {
         def actionList = processPipelineActionList(actions, context)
-//        utils.debugLog(context, actionList, 'action list', [debugMode: 'json'])
         context << executeActionList(actionList, context)
     }
 
