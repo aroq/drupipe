@@ -34,6 +34,7 @@ class Action implements Serializable {
             def defaultParams = [:]
             for (actionName in [this.name, this.name + '_' + this.methodName]) {
                 if (actionName in params.actionParams) {
+                    echo "ACTION DEFAULT PARAMS SET:${params.actionParams[actionName]}"
                     defaultParams << params.actionParams[actionName]
                 }
             }
