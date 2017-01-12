@@ -66,7 +66,7 @@ class DrupipePipeline implements Serializable {
             stage
         }
         else {
-            new Stage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context), script: this)
+            new Stage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context), script: script)
         }
     }
 
