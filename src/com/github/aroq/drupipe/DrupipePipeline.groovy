@@ -7,7 +7,7 @@ class DrupipePipeline implements Serializable {
     LinkedHashMap params = [:]
 
     def execute() {
-        drupipe(params) { context ->
+        drupipe(this.params) { context ->
             context.block = [:]
             if (context.nodeName) {
                 node(context.nodeName) {
