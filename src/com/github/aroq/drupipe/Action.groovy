@@ -58,7 +58,7 @@ class Action implements Serializable {
                     // To make sure we only check fileExists in Heavyweight executor mode.
                     if (context.block?.nodeName && script.fileExists(fileName)) {
                         actionFile = script.load(fileName)
-                        actionResult = actionFile."$action.methodName"(actionParams)
+                        actionResult = actionFile."${this.methodName}"(actionParams)
                     }
                 }
             }
