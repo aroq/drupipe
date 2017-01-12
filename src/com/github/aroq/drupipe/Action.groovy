@@ -1,11 +1,17 @@
 package com.github.aroq.drupipe
 
 class Action implements Serializable {
+
     String action
+
     String name
+
     String methodName
+
     HashMap params = [:]
+
     def script
+
     LinkedHashMap context = [:]
 
     String getFullName() {
@@ -14,7 +20,6 @@ class Action implements Serializable {
 
     def execute(c = null) {
         if (c) {
-            script.echo "ACTION CONTEXT: ${c}"
             this.context << c
         }
         def actionParams = [:]
