@@ -109,7 +109,7 @@ class DrupipePipeline implements Serializable {
             params
         }
         catch (err) {
-            echo err.toString()
+            script.echo err.toString()
             throw err
         }
 
