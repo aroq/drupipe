@@ -1,6 +1,6 @@
 #!groovy
 
-def call(pipe, body = null) {
+def call(pipe) {
     if (!pipe.params) {
         pipe.params = [:]
     }
@@ -17,12 +17,16 @@ def call(pipe, body = null) {
                     }
                 }
                 else {
-                    drupipeStages(pipe.stages, config)
+                    pipe.blocks.each { block ->
+                        drupipeStages(block.stages, config)
+                    }
                 }
             }
         }
         else {
-            drupipeStages(pipe.stages, config)
+            pipe.blocks.each { block ->
+                drupipeStages(block.stages, config)
+            }
         }
     }
 }

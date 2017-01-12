@@ -16,6 +16,7 @@ def call(commandParams = [:], body) {
         }
 
         result = body(commandParams)
+
         if (result) {
             commandParams << result
         }

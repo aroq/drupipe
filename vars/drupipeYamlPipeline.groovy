@@ -12,7 +12,8 @@ def call(yamlFileName = null) {
         yamlFileName = yamlFileName ? yamlFileName : "${env.JOB_BASE_NAME}.yaml"
         pipe = drupipeGetPipeline(readFile("docroot/config/pipelines/${yamlFileName}"))
     }
-    drupipePipeline(pipe)
+    pipe.execute()
+//    drupipePipeline(pipe)
 }
 
 @NonCPS

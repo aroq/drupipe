@@ -1,6 +1,7 @@
 package com.github.aroq.drupipe
 
 class Stage implements Serializable {
+
     String name
 
     ArrayList<Action> actions = []
@@ -20,7 +21,6 @@ class Stage implements Serializable {
                 if (actions) {
                     try {
                         for (action in this.actions) {
-                            script.echo "EXECUTE ACTION PARAMS: ${this.params}"
                             this.params << action.execute(this.params)
                         }
                         this.params
