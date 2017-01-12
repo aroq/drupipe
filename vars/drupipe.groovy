@@ -1,9 +1,12 @@
-def call(commandParams = [:], body) {
+import com.github.aroq.drupipe.DrupipePipeline
+
+def call(context = [:], body) {
     timestamps {
-        if (!commandParams['Config_perform']) {
+        context.pipeline = new DrupipePipeline(params: context, script: this)
+        if (!context['Config_perform']) {
             node('master') {
-                configParams = drupipeAction([action: 'Config.perform'], commandParams.clone() << params)
-                commandParams << (configParams << commandParams)
+                configParams = drupipeAction([action: 'Config.perform'], context.clone() << params)
+                context << (configParams << context)
             }
         }
 
@@ -15,10 +18,10 @@ def call(commandParams = [:], body) {
             checkout scm
         }
 
-        result = body(commandParams)
+        result = body(context)
 
         if (result) {
-            commandParams << result
+            context << result
         }
     }
 

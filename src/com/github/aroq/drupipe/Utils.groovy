@@ -1,8 +1,6 @@
 package com.github.aroq.drupipe
 
 import groovy.json.JsonSlurper
-import com.github.aroq.drupipe.Action
-import com.github.aroq.drupipe.Stage
 import groovy.json.JsonOutput
 
 def colorEcho(message, color = null) {
@@ -33,53 +31,6 @@ def colorEcho(message, color = null) {
     wrap([$class: 'AnsiColorBuildWrapper']) {
         echo "\u001B[${color}m${message}\u001B[0m"
     }
-}
-
-@NonCPS
-List<Stage> processStages(stages, context) {
-    List<Stage> result = []
-    for (item in stages) {
-        result << processStage(item, context)
-    }
-    result
-}
-
-@NonCPS
-Stage processStage(stage, context) {
-    if (stage instanceof Stage) {
-        for (action in stage.actions) {
-            values = action.action.split("\\.")
-            action.name = values[0]
-            action.methodName = values[1]
-        }
-        stage
-    }
-    else {
-        new Stage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context), script: this)
-    }
-}
-
-@NonCPS
-List processPipelineActionList(actionList, context) {
-    List actions = []
-    for (action in actionList) {
-        actions << processPipelineAction(action, context)
-    }
-    actions
-}
-
-@NonCPS
-Action processPipelineAction(action, context) {
-    if (action.getClass() == java.lang.String) {
-        actionName = action
-        actionParams = [:]
-    }
-    else {
-        actionName = action.action
-        actionParams = action.params
-    }
-    values = actionName.split("\\.")
-    new Action(name: values[0], methodName: values[1], params: actionParams, script: this, context: context)
 }
 
 @NonCPS
@@ -207,16 +158,6 @@ def executeActionList(actionList, params) {
         throw err
     }
 
-    params
-}
-
-def executeStages(stagesToExecute, params) {
-    stages = processStages(stagesToExecute, params)
-    stages += processStages(params.stages, params)
-
-    for (int i = 0; i < stages.size(); i++) {
-        params << stages[i].execute(params)
-    }
     params
 }
 
