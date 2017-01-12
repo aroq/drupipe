@@ -56,7 +56,7 @@ Stage processStage(stage, context) {
     }
     else {
         echo "NEW STATE CREATE script: ${this}"
-        new Stage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context), script: this)
+//        new Stage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context), script: this)
     }
 }
 
