@@ -91,7 +91,7 @@ class DrupipePipeline implements Serializable {
             actionName = action.action
             actionParams = action.params
         }
-        values = actionName.split("\\.")
+        def values = actionName.split("\\.")
         new Action(name: values[0], methodName: values[1], params: actionParams, script: this, context: context)
     }
 
