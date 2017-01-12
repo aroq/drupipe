@@ -1,8 +1,8 @@
 package com.github.aroq.drupipe
 
-class DrupipePipeline implements Serializable {
+class DrupipeBlock implements Serializable {
 
-    ArrayList<DrupipeBlock> blocks = []
+    ArrayList<Stage> stages = []
 
     LinkedHashMap params = [:]
 
