@@ -21,6 +21,9 @@ def drupipeGetPipeline(yamlFile) {
     DrupipePipeline drupipePipeline = yaml.loadAs(yamlFile, DrupipePipeline.class);
     drupipePipeline.stages.each { stage ->
         stage.script = this
+        stage.actions.each { action ->
+            action.script = this
+        }
     }
     return drupipePipeline
 }
