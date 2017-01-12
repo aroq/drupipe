@@ -215,7 +215,7 @@ def executeStages(stagesToExecute, params) {
     stages += processStages(params.stages, params)
 
     for (int i = 0; i < stages.size(); i++) {
-        params << stages[i].execute()
+        params << stages[i].execute(params)
     }
     params
 }

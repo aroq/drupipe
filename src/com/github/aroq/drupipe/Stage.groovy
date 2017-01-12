@@ -9,18 +9,19 @@ class Stage implements Serializable {
 
     def script
 
-    def execute(body = null) {
+    def execute(params, body = null) {
+        this.params = params
         this.script.stage(name) {
             script.gitlabCommitStatus(name) {
                 if (body) {
-                    params << body()
+                    this.params << body()
                 }
                 this.params << ['stage': this]
                 if (actions) {
                     try {
                         for (action in this.actions) {
-                            script.echo "EXECUTE ACTION PARAMS: ${params}"
-                            this.params << action.execute(params)
+                            script.echo "EXECUTE ACTION PARAMS: ${this.params}"
+                            this.params << action.execute(this.params)
                         }
                         this.params
                     }
