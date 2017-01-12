@@ -92,7 +92,7 @@ def projectConfig(commandParams) {
         ]
     ]
     utils = new com.github.aroq.drupipe.Utils()
-    commandParams << utils.executePipelineActionList(providers, commandParams)
+    commandParams << commandParams.pipeline.executePipelineActionList(providers, commandParams)
 
     commandParams << [returnConfig: true]
 }
