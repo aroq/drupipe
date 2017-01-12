@@ -74,7 +74,7 @@ def projectConfig(commandParams) {
     sourceObject = [
         name: 'projectConfig',
         type: 'dir',
-        path: commandParams.projectConfigPath,
+        path: commandParams.docmanConfigPath,
     ]
 
     providers = [
@@ -87,7 +87,7 @@ def projectConfig(commandParams) {
             params: [
                 sourceName: 'projectConfig',
                 configType: 'groovy',
-                configPath: commandParams.projectConfigFile
+                configPath: commandParams.docmanConfigFile
             ]
         ]
     ]
