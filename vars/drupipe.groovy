@@ -1,8 +1,8 @@
 import com.github.aroq.drupipe.DrupipePipeline
 
 def call(context = [:], body) {
+    context.pipeline = new DrupipePipeline(params: context, script: this)
     timestamps {
-        context.pipeline = new DrupipePipeline(params: context, script: this)
         if (!context['Config_perform']) {
             node('master') {
                 configParams = drupipeAction([action: 'Config.perform'], context.clone() << params)

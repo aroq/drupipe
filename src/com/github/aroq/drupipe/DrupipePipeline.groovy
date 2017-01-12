@@ -4,12 +4,27 @@ class DrupipePipeline implements Serializable {
 
     ArrayList<DrupipeBlock> blocks = []
 
-    LinkedHashMap params = [:]
+    LinkedHashMap context = [:]
 
     def script
 
-    def execute() {
-        script.drupipe(this.params) { context ->
+    def execute(body = null) {
+        timestamps {
+//            if (!context['Config_perform']) {
+//            }
+            node('master') {
+                configParams = drupipeAction([action: 'Config.perform'], context.clone() << params)
+                context << (configParams << context)
+            }
+
+            if (context.force == '11') {
+                echo 'FORCE REMOVE DIR'
+                deleteDir()
+            }
+            if (context.checkoutSCM) {
+                checkout scm
+            }
+
             context.block = [:]
             if (context.nodeName) {
                 script.node(context.nodeName) {
@@ -33,7 +48,17 @@ class DrupipePipeline implements Serializable {
                     script.drupipeStages(block.stages, context)
                 }
             }
+
+            if (body) {
+                def result = body(context)
+                if (result) {
+                    context << result
+                }
+            }
+
         }
+
+        context
     }
 
     def executeStages(stagesToExecute, context) {
