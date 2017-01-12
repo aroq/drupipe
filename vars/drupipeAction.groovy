@@ -1,7 +1,5 @@
-def call(action, params = [:]) {
+def call(action, context = [:]) {
     utils = new com.github.aroq.drupipe.Utils()
-    params << utils.processPipelineAction(action, params).execute(params)
-
-    params
+    context << context.pipeline.processPipelineAction(action, context).execute(context)
 }
 
