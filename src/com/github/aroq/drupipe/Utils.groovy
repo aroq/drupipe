@@ -191,7 +191,6 @@ boolean isCollectionOrList(object) {
 }
 
 def executePipelineActionList(actions, context) {
-    echo "executePipelineActionList CONTEXT: ${context}"
     actionList = processPipelineActionList(actions, context)
     debugLog(context, actionList, 'action list', [debugMode: 'json'])
     context << executeActionList(actionList, context)
@@ -201,7 +200,6 @@ def executeActionList(actionList, params) {
     try {
         for (action in actionList) {
             params << action.execute()
-            echo "executeActionList CONTEXT: ${params}"
         }
         params
     }
