@@ -59,7 +59,7 @@ class DrupipePipeline implements Serializable {
     Stage processStage(stage, context) {
         if (stage instanceof Stage) {
             for (action in stage.actions) {
-                values = action.action.split("\\.")
+                def values = action.action.split("\\.")
                 action.name = values[0]
                 action.methodName = values[1]
             }
