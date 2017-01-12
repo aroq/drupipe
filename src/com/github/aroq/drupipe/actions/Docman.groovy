@@ -1,8 +1,7 @@
 package com.github.aroq.drupipe.actions
 
-import groovy.json.JsonSlurper
-
 def jsonConfig(params) {
+    echo "jsonConfig params: ${params}"
     info(params)
 
     utils = new com.github.aroq.drupipe.Utils()

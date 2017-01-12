@@ -12,9 +12,10 @@ class Action implements Serializable {
         "${this.name}.${this.methodName}"
     }
 
-    def execute(context = null) {
-        if (context) {
-            this.context << context
+    def execute(c = null) {
+        if (c) {
+            echo "ACTION CONTEXT: ${c}"
+            this.context << c
         }
         def actionParams = [:]
 
