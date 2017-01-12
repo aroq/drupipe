@@ -48,6 +48,7 @@ class Action implements Serializable {
             //utils.debugLog(actionParams, actionParams, "${this.fullName} action params")
             // TODO: configure it:
             def actionFile = null
+            def actionResult = null
             script.echo "CONTEXT sources list: ${context.sourcesList}"
             if (context.sourcesList) {
                 for (def i = 0; i < context.sourcesList.size(); i++) {
@@ -62,7 +63,6 @@ class Action implements Serializable {
                     }
                 }
             }
-            def actionResult = null
             if (!actionFile) {
                 try {
                     def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance()
