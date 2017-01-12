@@ -32,30 +32,23 @@ class Action implements Serializable {
             }
             actionParams << ['action': this]
             def defaultParams = [:]
-            script.echo "CONTEXT: ${context}"
-            script.echo "Action name: ${this.name}"
             for (actionName in [this.name, this.name + '_' + this.methodName]) {
-                script.echo "Checking action name: ${actionName}"
-                script.echo "...in params: ${context.actionParams}"
                 if (actionName in context.actionParams) {
-                    script.echo "ACTION DEFAULT PARAMS SET: ${context.actionParams[actionName]}"
                     defaultParams << context.actionParams[actionName]
                 }
             }
             actionParams << context
             actionParams << defaultParams << this.params
 
-            //utils.debugLog(actionParams, actionParams, "${this.fullName} action params")
+            utils.debugLog(actionParams, actionParams, "${this.fullName} action params")
             // TODO: configure it:
             def actionFile = null
             def actionResult = null
-            script.echo "CONTEXT sources list: ${context.sourcesList}"
             if (context.sourcesList) {
                 for (def i = 0; i < context.sourcesList.size(); i++) {
                     def source = context.sourcesList[i]
                     def fileName = utils.sourcePath(context, source.name, 'pipelines/actions/' + this.name + '.groovy')
-                    script.echo "FILE NAME: ${fileName}"
-//                    utils.debugLog(actionParams, fileName, "Action file name to check")
+                    utils.debugLog(actionParams, fileName, "Action file name to check")
                     // To make sure we only check fileExists in Heavyweight executor mode.
                     if (context.block?.nodeName && script.fileExists(fileName)) {
                         actionFile = script.load(fileName)
@@ -83,7 +76,7 @@ class Action implements Serializable {
                     context << ["${action.name}.${action.methodName}": actionResult]
                 }
             }
-//            utils.debugLog(actionParams, context, "${this.fullName} action result")
+            utils.debugLog(actionParams, context, "${this.fullName} action result")
             context.returnConfig = false
             utils.echoDelimiter "-----> Stage: ${drupipeStageName} | Action name: ${this.fullName} end <-"
 
