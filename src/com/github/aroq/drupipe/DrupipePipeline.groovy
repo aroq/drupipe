@@ -6,29 +6,31 @@ class DrupipePipeline implements Serializable {
 
     LinkedHashMap params = [:]
 
+    def script
+
     def execute() {
-        drupipe(this.params) { context ->
+        script.drupipe(this.params) { context ->
             context.block = [:]
             if (context.nodeName) {
-                node(context.nodeName) {
+                script.node(context.nodeName) {
                     context.block.nodeName = context.nodeName
                     if (context.drupipeDocker) {
-                        drupipeWithDocker(context) {
+                        script.drupipeWithDocker(context) {
                             blocks.each { block ->
-                                drupipeStages(block.stages, context)
+                                script.drupipeStages(block.stages, context)
                             }
                         }
                     }
                     else {
                         blocks.each { block ->
-                            drupipeStages(block.stages, context)
+                            script.drupipeStages(block.stages, context)
                         }
                     }
                 }
             }
             else {
                 blocks.each { block ->
-                    drupipeStages(block.stages, context)
+                    script.drupipeStages(block.stages, context)
                 }
             }
         }
