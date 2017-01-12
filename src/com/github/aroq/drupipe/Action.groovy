@@ -35,9 +35,10 @@ class Action implements Serializable {
             script.echo "Action name: ${this.name}"
             for (actionName in [this.name, this.name + '_' + this.methodName]) {
                 script.echo "Checking action name: ${actionName}"
-                if (actionName in params.actionParams) {
-                    script.echo "ACTION DEFAULT PARAMS SET: ${params.actionParams[actionName]}"
-                    defaultParams << params.actionParams[actionName]
+                script.echo "...in params: ${context.actionParams}"
+                if (actionName in context.actionParams) {
+                    script.echo "ACTION DEFAULT PARAMS SET: ${context.actionParams[actionName]}"
+                    defaultParams << context.actionParams[actionName]
                 }
             }
             actionParams << context
