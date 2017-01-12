@@ -81,6 +81,8 @@ class DrupipePipeline implements Serializable {
 
     @NonCPS
     Action processPipelineAction(action, context) {
+        def actionName
+        def actionParams
         if (action.getClass() == java.lang.String) {
             actionName = action
             actionParams = [:]
