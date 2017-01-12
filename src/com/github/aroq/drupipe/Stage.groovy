@@ -21,7 +21,7 @@ class Stage implements Serializable {
                 if (actions) {
                     try {
                         for (action in this.actions) {
-                            this.params << action.execute()
+                            this.params << action.execute(params)
                         }
                         this.params
                     }

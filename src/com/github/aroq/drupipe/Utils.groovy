@@ -198,7 +198,7 @@ def executePipelineActionList(actions, context) {
 def executeActionList(actionList, params) {
     try {
         for (action in actionList) {
-            params << action.execute()
+            params << action.execute(params)
         }
         params
     }
