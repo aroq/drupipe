@@ -8,5 +8,4 @@ def call(pipe) {
     }
 
     (new DrupipePipeline(pipe)).execute()
-
 }
