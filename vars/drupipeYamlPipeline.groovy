@@ -19,5 +19,8 @@ def call(yamlFileName = null) {
 def drupipeGetPipeline(yamlFile) {
     Yaml yaml = new Yaml();
     DrupipePipeline drupipePipeline = yaml.loadAs(yamlFile, DrupipePipeline.class);
+    drupipePipeline.stage.each { stage ->
+        stage.script = this
+    }
     return drupipePipeline
 }
