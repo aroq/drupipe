@@ -140,27 +140,6 @@ boolean isCollectionOrList(object) {
     object instanceof java.util.Collection || object instanceof java.util.List || object instanceof java.util.LinkedHashMap || object instanceof java.util.HashMap
 }
 
-def executePipelineActionList(actions, context) {
-    actionList = processPipelineActionList(actions, context)
-    debugLog(context, actionList, 'action list', [debugMode: 'json'])
-    context << executeActionList(actionList, context)
-}
-
-def executeActionList(actionList, params) {
-    try {
-        for (action in actionList) {
-            params << action.execute(params)
-        }
-        params
-    }
-    catch (err) {
-        echo err.toString()
-        throw err
-    }
-
-    params
-}
-
 def pipelineNotify(params, String buildStatus = 'STARTED') {
     // build status of null means successful
     buildStatus =  buildStatus ?: 'SUCCESSFUL'
