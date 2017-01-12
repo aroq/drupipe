@@ -57,8 +57,8 @@ class Action implements Serializable {
                     def fileName = utils.sourcePath(context, source.name, 'pipelines/actions/' + this.name + '.groovy')
                     utils.debugLog(actionParams, fileName, "Action file name to check")
                     // To make sure we only check fileExists in Heavyweight executor mode.
-                    if (context.block?.nodeName && this.params.pipeline.script.fileExists(fileName)) {
-                        actionFile = this.params.pipeline.script.load(fileName)
+                    if (context.block?.nodeName && this.context.pipeline.script.fileExists(fileName)) {
+                        actionFile = this.context.pipeline.script.load(fileName)
                         actionResult = actionFile."${this.methodName}"(actionParams)
                     }
                 }
@@ -69,7 +69,7 @@ class Action implements Serializable {
                     actionResult = actionInstance."${this.methodName}"(actionParams)
                 }
                 catch (err) {
-                    this.params.pipeline.script.echo err.toString()
+                    this.context.pipeline.script.echo err.toString()
                     throw err
                 }
             }
@@ -90,7 +90,7 @@ class Action implements Serializable {
             context
         }
         catch (err) {
-            this.params.pipeline.script.echo err.toString()
+            this.context.pipeline.script.echo err.toString()
             throw err
         }
     }
