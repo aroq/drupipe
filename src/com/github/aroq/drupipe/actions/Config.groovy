@@ -47,14 +47,14 @@ def mothershipConfig(commandParams) {
 
         providers = [
             [
-                action: 'DrupipeSource.add',
+                action: 'Source.add',
                 params: [
                     source: sourceObject,
                     credentialsID: 'zebra',
                 ],
             ],
             [
-                action: 'DrupipeSource.loadConfig',
+                action: 'Source.loadConfig',
                 params: [
                     sourceName: 'mothershipConfig',
                     configType: 'groovy',
@@ -79,11 +79,11 @@ def projectConfig(commandParams) {
 
     providers = [
         [
-            action: 'DrupipeSource.add',
+            action: 'Source.add',
             params: [source: sourceObject]
         ],
         [
-            action: 'DrupipeSource.loadConfig',
+            action: 'Source.loadConfig',
             params: [
                 sourceName: 'projectConfig',
                 configType: 'groovy',

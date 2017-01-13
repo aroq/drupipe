@@ -53,7 +53,7 @@ def call(body) {
             pipeline = [
                 'init': [
                     [
-                        action: 'DrupipeSource.add',
+                        action: 'Source.add',
                         params: [
                             source: [
                                 name: 'root',
@@ -63,7 +63,7 @@ def call(body) {
                         ]
                     ],
                     [
-                        action: 'DrupipeSource.loadConfig',
+                        action: 'Source.loadConfig',
                         params: [
                             sourceName: 'root',
                             configType: 'groovy',
