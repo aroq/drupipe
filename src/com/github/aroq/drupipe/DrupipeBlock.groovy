@@ -15,6 +15,7 @@ class DrupipeBlock implements Serializable {
 
         def result = [:]
         context.block = [:]
+        context.pipeline.script.echo "CONTEXT: ${context}" {
 
 //        if (blockParams.nodeName) {
 //            context.block.nodeName = blockParams.nodeName
