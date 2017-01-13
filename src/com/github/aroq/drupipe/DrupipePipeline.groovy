@@ -9,11 +9,11 @@ class DrupipePipeline implements Serializable {
     def script
 
     def execute(body = null) {
-        timestamps {
+        script.timestamps {
 //            if (!context['Config_perform']) {
 //            }
-            node('master') {
-                configParams = drupipeAction([action: 'Config.perform'], context.clone() << params)
+            script.node('master') {
+                configParams = script.drupipeAction([action: 'Config.perform'], context.clone() << params)
                 context << (configParams << context)
             }
 
