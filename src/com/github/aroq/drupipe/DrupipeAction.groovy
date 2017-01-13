@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe
 
-class Action implements Serializable {
+class DrupipeAction implements Serializable {
 
     String action
 
@@ -32,7 +32,7 @@ class Action implements Serializable {
                 drupipeStageName = 'config'
             }
 
-            utils.echoDelimiter("-----> Stage: ${drupipeStageName} | Action name: ${this.fullName} start <-")
+            utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} start <-")
             actionParams << this.context
             if (!this.params) {
                 this.params = [:]
@@ -55,7 +55,7 @@ class Action implements Serializable {
                 for (def i = 0; i < context.sourcesList.size(); i++) {
                     def source = context.sourcesList[i]
                     def fileName = utils.sourcePath(context, source.name, 'pipelines/actions/' + this.name + '.groovy')
-                    utils.debugLog(actionParams, fileName, "Action file name to check")
+                    utils.debugLog(actionParams, fileName, "DrupipeAction file name to check")
                     // To make sure we only check fileExists in Heavyweight executor mode.
                     if (context.block?.nodeName && this.context.pipeline.script.fileExists(fileName)) {
                         actionFile = this.context.pipeline.script.load(fileName)
@@ -85,7 +85,7 @@ class Action implements Serializable {
             }
             utils.debugLog(actionParams, context, "${this.fullName} action result")
             context.returnConfig = false
-            utils.echoDelimiter "-----> Stage: ${drupipeStageName} | Action name: ${this.fullName} end <-"
+            utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} end <-"
 
             context
         }

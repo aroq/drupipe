@@ -75,8 +75,8 @@ class DrupipePipeline implements Serializable {
     }
 
     @NonCPS
-    List<Stage> processStages(stages, context) {
-        List<Stage> result = []
+    List<DrupipeStage> processStages(stages, context) {
+        List<DrupipeStage> result = []
         for (item in stages) {
             result << processStage(item, context)
         }
@@ -84,8 +84,8 @@ class DrupipePipeline implements Serializable {
     }
 
     @NonCPS
-    Stage processStage(stage, context) {
-        if (stage instanceof Stage) {
+    DrupipeStage processStage(stage, context) {
+        if (stage instanceof DrupipeStage) {
             for (action in stage.actions) {
                 def values = action.action.split("\\.")
                 action.name = values[0]
@@ -94,7 +94,7 @@ class DrupipePipeline implements Serializable {
             stage
         }
         else {
-            new Stage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context))
+            new DrupipeStage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context))
         }
     }
 
@@ -108,7 +108,7 @@ class DrupipePipeline implements Serializable {
     }
 
     @NonCPS
-    Action processPipelineAction(action, context) {
+    DrupipeAction processPipelineAction(action, context) {
         def actionName
         def actionParams
         if (action.getClass() == java.lang.String) {
@@ -120,7 +120,7 @@ class DrupipePipeline implements Serializable {
             actionParams = action.params
         }
         def values = actionName.split("\\.")
-        new Action(name: values[0], methodName: values[1], params: actionParams, context: context)
+        new DrupipeAction(name: values[0], methodName: values[1], params: actionParams, context: context)
     }
 
     def executePipelineActionList(actions, context) {
