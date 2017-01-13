@@ -12,9 +12,9 @@ class DrupipePipeline implements Serializable {
 
     def execute(body = null) {
         context.pipeline = this
+        def utils = new com.github.aroq.drupipe.Utils()
 
         try {
-            def utils = new com.github.aroq.drupipe.Utils()
             utils.pipelineNotify(context)
             script.timestamps {
                 script.node('master') {
