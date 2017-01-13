@@ -50,6 +50,6 @@ class DrupipeBlock implements Serializable {
         else {
             context << body()
         }
-        thicontext
+        context
     }
 }
