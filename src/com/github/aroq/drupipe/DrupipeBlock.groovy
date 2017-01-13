@@ -36,11 +36,11 @@ class DrupipeBlock implements Serializable {
 
         if (blockParams.nodeName) {
             context.block.nodeName = blockParams.nodeName
-            script.node(context.nodeName) {
+            context.pipeline.script.node(context.nodeName) {
                 context.block.nodeName = blockParams.nodeName
                 if (context.drupipeDocker) {
                     context.block.drupipeDocker = blockParams.drupipeDocker
-                    script.drupipeWithDocker(context) {
+                    context.pipeline.script.drupipeWithDocker(context) {
                         result = _execute(body)
                     }
                 }
