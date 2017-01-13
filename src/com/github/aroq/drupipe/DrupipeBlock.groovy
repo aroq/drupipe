@@ -4,6 +4,8 @@ class DrupipeBlock implements Serializable {
 
     ArrayList<DrupipeStage> stages = []
 
+    LinkedHashMap blockParams = [:]
+
     LinkedHashMap context = [:]
 
     def execute(context, body = null) {
@@ -32,12 +34,12 @@ class DrupipeBlock implements Serializable {
 //            result = body()
 //        }
 
-        if (context.nodeName) {
-            context.block.nodeName = context.nodeName
+        if (blockParams.nodeName) {
+            context.block.nodeName = blockParams.nodeName
             script.node(context.nodeName) {
-                context.block.nodeName = context.nodeName
+                context.block.nodeName = blockParams.nodeName
                 if (context.drupipeDocker) {
-                    context.block.drupipeDocker = context.drupipeDocker
+                    context.block.drupipeDocker = blockParams.drupipeDocker
                     script.drupipeWithDocker(context) {
                         result = _execute(body)
                     }
