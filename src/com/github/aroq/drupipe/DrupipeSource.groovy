@@ -1,7 +1,11 @@
 package com.github.aroq.drupipe
 
-class Source implements Serializable {
+class DrupipeSource implements Serializable {
+
     String name
+
     String type
+
     String path
+
 }

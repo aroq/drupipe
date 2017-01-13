@@ -122,7 +122,7 @@ def getMothershipProjectParams(config, json) {
 
 def loadLibrary(script, params) {
     script.drupipeAction([
-        action: 'Source.add',
+        action: 'DrupipeSource.add',
         params: [
             source: [
                 name: 'library',
@@ -203,7 +203,7 @@ def pipelineNotify(params, String buildStatus = 'STARTED') {
 }
 
 def sourcePath(params, sourceName, String path) {
-    debugLog(params, sourceName, 'Source name')
+    debugLog(params, sourceName, 'DrupipeSource name')
     if (sourceName in params.sources) {
         params.sources[sourceName].path + '/' + path
     }
