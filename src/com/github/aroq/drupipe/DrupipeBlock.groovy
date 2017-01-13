@@ -4,7 +4,7 @@ class DrupipeBlock implements Serializable {
 
     ArrayList<DrupipeStage> stages = []
 
-    String nodeName = null
+    String nodeName = 'default'
 
     Boolean drupipeDocker = false
 
