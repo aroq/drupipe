@@ -44,10 +44,8 @@ class DrupipeBlock implements Serializable {
     }
 
     def _execute(body = null) {
-        if (blocks) {
-            blocks.each { block ->
-                context << script.drupipeStages(block.stages, context)
-            }
+        if (stages) {
+            context << context.pipeline.script.drupipeStages(this.stages, context)
         }
         else {
             context << body()
