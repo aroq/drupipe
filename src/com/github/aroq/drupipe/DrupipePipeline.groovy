@@ -22,13 +22,11 @@ class DrupipePipeline implements Serializable {
                     context << (configParams << context)
                 }
 
+                // Secret option for emergency deleting everything.
                 if (context.force == '11') {
                     echo 'FORCE REMOVE DIR'
                     deleteDir()
                 }
-//                if (context.checkoutSCM) {
-//                    checkout scm
-//                }
 
                 if (blocks) {
                     blocks.each { block ->
