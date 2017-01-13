@@ -25,27 +25,29 @@ class DrupipePipeline implements Serializable {
                 checkout scm
             }
 
-            context.block = [:]
-            if (context.nodeName) {
-                script.node(context.nodeName) {
-                    context.block.nodeName = context.nodeName
-                    if (context.drupipeDocker) {
-                        script.drupipeWithDocker(context) {
+            if (blocks) {
+                context.block = [:]
+                if (context.nodeName) {
+                    script.node(context.nodeName) {
+                        context.block.nodeName = context.nodeName
+                        if (context.drupipeDocker) {
+                            script.drupipeWithDocker(context) {
+                                blocks.each { block ->
+                                    script.drupipeStages(block.stages, context)
+                                }
+                            }
+                        }
+                        else {
                             blocks.each { block ->
                                 script.drupipeStages(block.stages, context)
                             }
                         }
                     }
-                    else {
-                        blocks.each { block ->
-                            script.drupipeStages(block.stages, context)
-                        }
-                    }
                 }
-            }
-            else {
-                blocks.each { block ->
-                    script.drupipeStages(block.stages, context)
+                else {
+                    blocks.each { block ->
+                        script.drupipeStages(block.stages, context)
+                    }
                 }
             }
 
