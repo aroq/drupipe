@@ -9,6 +9,7 @@ class DrupipeBlock implements Serializable {
     LinkedHashMap context = [:]
 
     def execute(context, body = null) {
+        context.pipeline.script.echo "blockParams: ${blockParams}"
         if (context) {
             this.context = context
         }
