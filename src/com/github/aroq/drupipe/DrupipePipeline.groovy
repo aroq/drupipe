@@ -26,9 +26,9 @@ class DrupipePipeline implements Serializable {
                     echo 'FORCE REMOVE DIR'
                     deleteDir()
                 }
-                if (context.checkoutSCM) {
-                    checkout scm
-                }
+//                if (context.checkoutSCM) {
+//                    checkout scm
+//                }
 
                 if (blocks) {
                     blocks.each { block ->
@@ -132,5 +132,4 @@ class DrupipePipeline implements Serializable {
 
         params
     }
-
 }
