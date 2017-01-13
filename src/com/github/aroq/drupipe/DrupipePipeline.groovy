@@ -27,6 +27,9 @@ class DrupipePipeline implements Serializable {
             }
 
             if (blocks) {
+                blocks.each { block ->
+                    block.execute(context)
+                }
             }
 
             if (body) {
@@ -35,7 +38,6 @@ class DrupipePipeline implements Serializable {
                     context << result
                 }
             }
-
         }
 
         context
