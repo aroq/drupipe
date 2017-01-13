@@ -12,35 +12,46 @@ class DrupipePipeline implements Serializable {
 
     def execute(body = null) {
         context.pipeline = this
-        script.timestamps {
-            script.node('master') {
-                def configParams = script.drupipeAction([action: 'Config.perform'], context.clone() << params)
-                context << (configParams << context)
-            }
 
-            if (context.force == '11') {
-                echo 'FORCE REMOVE DIR'
-                deleteDir()
-            }
-            if (context.checkoutSCM) {
-                checkout scm
-            }
-
-            if (blocks) {
-                blocks.each { block ->
-                    block.execute(context)
+        try {
+            def utils = new com.github.aroq.drupipe.Utils()
+            utils.pipelineNotify(context)
+            script.timestamps {
+                script.node('master') {
+                    def configParams = script.drupipeAction([action: 'Config.perform'], context.clone() << params)
+                    context << (configParams << context)
                 }
-            }
 
-            if (body) {
-                def result = body(context)
-                if (result) {
-                    context << result
+                if (context.force == '11') {
+                    echo 'FORCE REMOVE DIR'
+                    deleteDir()
+                }
+                if (context.checkoutSCM) {
+                    checkout scm
+                }
+
+                if (blocks) {
+                    blocks.each { block ->
+                        block.execute(context)
+                    }
+                }
+
+                if (body) {
+                    def result = body(context)
+                    if (result) {
+                        context << result
+                    }
                 }
             }
         }
-
-        context
+        catch (e) {
+            script.currentBuild.result = "FAILED"
+            throw e
+        }
+        finally {
+            utils.pipelineNotify(context, script.currentBuild.result)
+            context
+        }
     }
 
     def executeStages(stagesToExecute, context) {
