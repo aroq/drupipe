@@ -4,7 +4,7 @@ class DrupipeBlock implements Serializable {
 
     ArrayList<DrupipeStage> stages = []
 
-    String nodeName = ''
+    String nodeName = null
 
     Boolean drupipeDocker = false
 
@@ -16,12 +16,10 @@ class DrupipeBlock implements Serializable {
         }
 
         def result = [:]
-        context.block = [:]
+        context.block = this
 
         if (this.nodeName) {
-            context.block.nodeName = this.nodeName
             context.pipeline.script.node(context.nodeName) {
-                context.block.nodeName = this.nodeName
                 if (context.drupipeDocker) {
                     context.block.drupipeDocker = this.drupipeDocker
                     context.pipeline.script.drupipeWithDocker(context) {
@@ -29,14 +27,11 @@ class DrupipeBlock implements Serializable {
                     }
                 }
                 else {
-                    context.block.drupipeDocker = null
                     result = _execute(body)
                 }
             }
         }
         else {
-            context.block.nodeName = null
-            context.block.drupipeDocker = null
             result = _execute(body)
         }
 
