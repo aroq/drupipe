@@ -112,6 +112,7 @@ class DrupipePipeline implements Serializable {
     }
 
     def executePipelineActionList(actions) {
+        script.echo "TESTETESTTEST"
         def actionList = processPipelineActionList(actions)
         context << executeActionList(actionList)
     }
