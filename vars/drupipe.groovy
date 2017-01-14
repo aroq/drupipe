@@ -1,6 +1,7 @@
 import com.github.aroq.drupipe.DrupipePipeline
 
 def call(context = [:], body) {
-    context.pipeline = new DrupipePipeline(context: context, script: this, params: params)
+    context << params
+    context.pipeline = new DrupipePipeline(context: context, script: this)
     context.pipeline.execute(body)
 }

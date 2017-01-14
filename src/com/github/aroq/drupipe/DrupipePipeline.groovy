@@ -6,8 +6,6 @@ class DrupipePipeline implements Serializable {
 
     LinkedHashMap context = [:]
 
-    LinkedHashMap params = [:]
-
     def script
 
     def execute(body = null) {
@@ -18,7 +16,7 @@ class DrupipePipeline implements Serializable {
             utils.pipelineNotify(context)
             script.timestamps {
                 script.node('master') {
-                    def configParams = script.drupipeAction([action: 'Config.perform'], context.clone() << params)
+                    def configParams = script.drupipeAction([action: 'Config.perform'], context.clone())
                     context << (configParams << context)
                 }
 
