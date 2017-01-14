@@ -1,4 +1,4 @@
-def call(stages, config) {
-   config << config.pipeline.executeStages(stages, config)
+def call(stages, context) {
+   config.pipeline.executeStages(stages, context)
 }
 

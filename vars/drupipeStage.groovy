@@ -1,6 +1,6 @@
 import com.github.aroq.drupipe.DrupipeStage
 
-def call(name, config, body) {
-    new DrupipeStage(name: name, params: config).execute(config, body)
+def call(name, context, body) {
+    new DrupipeStage(name: name, params: context).execute(context, body)
 }
 
