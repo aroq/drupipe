@@ -87,16 +87,16 @@ class DrupipePipeline implements Serializable {
     }
 
     @NonCPS
-    List processPipelineActionList(actionList) {
+    List processPipelineActionList(actionList, context) {
         List actions = []
         for (action in actionList) {
-            actions << processPipelineAction(action)
+            actions << processPipelineAction(action, context)
         }
         actions
     }
 
     @NonCPS
-    DrupipeAction processPipelineAction(action) {
+    DrupipeAction processPipelineAction(action, context) {
         def actionName
         def actionParams
         if (action.getClass() == java.lang.String) {
@@ -111,24 +111,23 @@ class DrupipePipeline implements Serializable {
         new DrupipeAction(name: values[0], methodName: values[1], params: actionParams, context: context)
     }
 
-    def executePipelineActionList(actions) {
-        script.echo "TESTETESTTEST"
-        def actionList = processPipelineActionList(actions)
-        context << executeActionList(actionList)
+    def executePipelineActionList(actions, context) {
+        def actionList = processPipelineActionList(actions, context)
+        context << executeActionList(actionList, context)
     }
 
-    def executeActionList(actionList) {
+    def executeActionList(actionList, params) {
         try {
             for (action in actionList) {
-                context << action.execute(context)
+                params << action.execute(params)
             }
-            context
+            params
         }
         catch (err) {
             script.echo err.toString()
             throw err
         }
 
-        context
+        params
     }
 }
