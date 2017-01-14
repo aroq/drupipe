@@ -63,6 +63,7 @@ def mothershipConfig(commandParams) {
             ]
         ]
         utils = new com.github.aroq.drupipe.Utils()
+        echo "COMMAND PARAMS: ${commandParams}"
         commandParams << commandParams.pipeline.executePipelineActionList(providers)
         def json = readFile('mothership/projects.json')
         commandParams << utils.getMothershipProjectParams(commandParams, json)
