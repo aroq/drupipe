@@ -1,4 +1,6 @@
+#!groovy
+
 def call(stages, context) {
-   config.pipeline.executeStages(stages, context)
+    context.pipeline.executeStages(stages, context)
 }
 
