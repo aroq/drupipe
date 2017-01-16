@@ -17,6 +17,9 @@ class DrupipeAction implements Serializable {
     }
 
     def execute() {
+        if (c) {
+            this.context << c
+        }
         def actionParams = [:]
 
         try {
