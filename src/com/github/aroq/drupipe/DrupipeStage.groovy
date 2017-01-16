@@ -4,7 +4,7 @@ class DrupipeStage implements Serializable {
 
     String name
 
-    ArrayList<DrupipeAction> actions = []
+    ArrayList<Action> actions = []
 
     HashMap params = [:]
 
@@ -19,7 +19,7 @@ class DrupipeStage implements Serializable {
                 if (actions) {
                     try {
                         for (action in this.actions) {
-                            this.params << action.execute(s)
+                            this.params << action.execute(this.params)
                         }
                         this.params
                     }
