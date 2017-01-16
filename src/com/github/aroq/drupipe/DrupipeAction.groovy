@@ -16,7 +16,7 @@ class DrupipeAction implements Serializable {
         "${this.name}.${this.methodName}"
     }
 
-    def execute() {
+    def execute(c = null) {
         if (c) {
             this.context << c
         }
