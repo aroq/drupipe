@@ -42,6 +42,10 @@ actionParams = [
         drupipeDockerArgs: '--user root:root',
         noNode: true,
     ],
+    Docman: [
+        debugEnabled: true,
+        docmanJsonConfigFile: 'config.json',
+    ],
     // TODO: add private (that will not go into common config) params section.
     Docman_config: [
         docmanJsonConfigFile: 'config.json',
