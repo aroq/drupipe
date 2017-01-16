@@ -64,6 +64,7 @@ def info(params) {
 }
 
 def build(params) {
+    echo "DOCMAN PARAMS: ${params}"
     jsonConfig(params)
     deploy(params)
 }
