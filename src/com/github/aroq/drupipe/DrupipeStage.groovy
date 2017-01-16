@@ -4,7 +4,7 @@ class DrupipeStage implements Serializable {
 
     String name
 
-    ArrayList<Action> actions = []
+    ArrayList<DrupipeAction> actions = []
 
     HashMap params = [:]
 
