@@ -3,12 +3,13 @@ package com.github.aroq.drupipe.actions
 def add(params) {
     def source = params.source
     def result
+    utils = new com.github.aroq.drupipe.Utils()
     switch (source.type) {
         case 'git':
             if (!source.refType) {
                 source.refType = 'branch'
             }
-            jsonDump(source)
+//            utils.jsonDump(source)
             dir(source.path) {
                 deleteDir()
             }
@@ -40,7 +41,7 @@ def add(params) {
     }
     utils = new com.github.aroq.drupipe.Utils()
     if (result) {
-        params.sources[source.name] = new com.github.aroq.drupipe.Source(name: source.name, type: source.type, path: source.path)
+        params.sources[source.name] = new com.github.aroq.drupipe.DrupipeSource(name: source.name, type: source.type, path: source.path)
         params.sourcesList << params.sources[source.name]
 
     }
@@ -49,11 +50,13 @@ def add(params) {
 }
 
 def loadConfig(params) {
+    utils = new com.github.aroq.drupipe.Utils()
     if (params.configPath) {
-        configFilePath = sourcePath(params, params.sourceName, params.configPath)
+        configFilePath = utils.sourcePath(params, params.sourceName, params.configPath)
+        echo "CONFIG FILE PATH: ${configFilePath}"
 
         if (params.configType == 'groovy') {
-            params << executePipelineAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], params)
+            params << drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], params)
         }
         params.remove('sourceName')
         params.remove('configPath')

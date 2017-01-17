@@ -1,14 +1,9 @@
-def call(commandParams = [:], body) {
-    timestamps {
-        node('master') {
-            configParams = executePipelineAction([action: 'Config.perform'], commandParams.clone() << params)
-            commandParams << (configParams << commandParams)
-        }
-        result = body(commandParams)
-        if (result) {
-            commandParams << result
-        }
-    }
+#!groovy
 
-    configParams
+import com.github.aroq.drupipe.DrupipePipeline
+
+def call(context = [:], body) {
+    // "params" is the globally available Jenkins params map (immutable).
+    context.pipeline = new DrupipePipeline(context: context, script: this, params: params)
+    context.pipeline.execute(body)
 }

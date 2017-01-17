@@ -8,6 +8,8 @@ def call(body) {
         params.remove('params')
     }
 
+    utils = new com.github.aroq.drupipe.Utils()
+
     def drupipePipeline =
         [
             'init': [
@@ -17,7 +19,7 @@ def call(body) {
             ],
         ]
 
-    executeStages([
+    drupipeStages([
         pipeline: drupipePipeline
     ])
 }

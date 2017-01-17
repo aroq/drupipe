@@ -14,7 +14,7 @@ def call(body) {
                         script: params.deployScript,
                         args: [
                             '@dev.default',
-                            jenkinsParam('alias')
+                            //jenkinsParam('alias')
                         ]
                     ]
                 ]
@@ -26,7 +26,7 @@ def call(body) {
                         script: params.testScript,
                         args: [
                             '@dev.default',
-                            jenkinsParam('alias')
+                            //jenkinsParam('alias')
                         ]
                     ]
                 ]

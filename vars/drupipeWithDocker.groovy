@@ -1,5 +1,5 @@
 def call(commandParams = [:], body) {
-    commandParams << commandParams.actionParams['withDrupipeDocker'] << commandParams
+    commandParams << commandParams.actionParams['drupipeWithDocker'] << commandParams
     if (commandParams.dockerfile) {
         image = docker.build(commandParams.dockerfile, 'docroot/config')
     }

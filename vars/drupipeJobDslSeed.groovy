@@ -4,12 +4,11 @@
 def call(body) {
     drupipe() { config ->
         node(config.nodeName) {
-            withDrupipeDocker(config) {
+            drupipeWithDocker(config) {
                 checkout scm
-                executePipelineAction(action: 'Docman.info', config)
+                drupipeAction(action: 'Docman.info', config)
 
                 stash name: 'config', includes: 'docroot/config/**, library/**, mothership/**', excludes: '.git, .git/**'
-
             }
         }
 
@@ -30,7 +29,7 @@ def call(body) {
             if (fileExists('docroot/config/pipelines/jobdsl')) {
                 config.actionParams.JobDslSeed_perform.jobsPattern << 'docroot/config/pipelines/jobdsl/*.groovy'
             }
-            executePipelineAction(action: 'JobDslSeed.perform', config)
+            drupipeAction(action: 'JobDslSeed.perform', config)
         }
     }
 }

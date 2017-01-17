@@ -285,7 +285,7 @@ Version 0.1.0
  - Added mattermost & email notifications
  - Removed force remove in drudock
  - Added force remove in drudock
- - Changed execute pipeline Action call & refactored code
+ - Changed execute pipeline DrupipeAction call & refactored code
  - Changed job dsl seed docman
  - Changed lookupStrategy for the mothership job
  - Refactored execute pipeline code

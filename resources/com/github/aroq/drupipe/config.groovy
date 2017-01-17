@@ -7,8 +7,6 @@ docmanJsonConfigFile = 'config.json'
 drupipeLibraryUrl = 'https://github.com/aroq/drupipe.git'
 drupipeLibraryBranch = 'master'
 drupipeLibraryType = 'branch'
-drupipeDocker = true
-nodeName = 'default'
 
 // Environments section.
 environments {
@@ -39,10 +37,14 @@ actionParams = [
         workspaceRelativePath: '../../..',
         behat_args: '--format=pretty --out=std --format=junit',
     ],
-    withDrupipeDocker: [
+    drupipeWithDocker: [
         drupipeDockerImageName: 'aroq/drudock:1.2.0',
         drupipeDockerArgs: '--user root:root',
         noNode: true,
+    ],
+    Docman: [
+        debugEnabled: true,
+        docmanJsonConfigFile: 'config.json',
     ],
     // TODO: add private (that will not go into common config) params section.
     Docman_config: [

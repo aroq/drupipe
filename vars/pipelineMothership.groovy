@@ -1,17 +1,15 @@
-def call(body) {
-    drupipePipeline(
-        stages:
-            [
-                seed: [
-                    [
-                        action: 'JobDslSeed.perform',
-                        params: [
-                            lookupStrategy: 'JENKINS_ROOT',
-                            jobsPattern: ['library/jobdsl/job_dsl_mothership.groovy'],
-                        ],
-                    ]
-                ],
-            ],
-        params: [nodeName: 'master', drupipeDocker: false]
-    )
+def call() {
+    drupipe { context ->
+        drupipeBlock(nodeName: 'master', context) {
+            drupipeStage('seed', context) {
+                drupipeAction(
+                    action: 'JobDslSeed.perform',
+                    params: [
+                        lookupStrategy: 'JENKINS_ROOT',
+                        jobsPattern: ['library/jobdsl/job_dsl_mothership.groovy']
+                    ],
+                context)
+            }
+        }
+    }
 }

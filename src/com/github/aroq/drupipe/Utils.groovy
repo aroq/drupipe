@@ -1,7 +1,7 @@
 package com.github.aroq.drupipe
 
 import groovy.json.JsonSlurper
-import groovy.json.JsonSlurperClassic
+import groovy.json.JsonOutput
 
 def colorEcho(message, color = null) {
     if (!color) {
@@ -34,70 +34,23 @@ def colorEcho(message, color = null) {
 }
 
 @NonCPS
-List<Stage> processStages(stages) {
-    List<Stage> result = []
-    for (item in stages) {
-        result << processStage(item)
-    }
-    result
-}
-
-@NonCPS
-Stage processStage(stage) {
-    if (stage instanceof Stage) {
-        for (action in stage.actions) {
-            values = action.action.split("\\.")
-            action.name = values[0]
-            action.methodName = values[1]
-        }
-        stage
-    }
-    else {
-        new Stage(name: stage.key, actions: processPipelineActionList(stage.value))
-    }
-}
-
-@NonCPS
-List processPipelineActionList(actionList) {
-    List actions = []
-    for (action in actionList) {
-        actions << processPipelineAction(action)
-    }
-    actions
-}
-
-@NonCPS
-Action processPipelineAction(action) {
-    if (action.getClass() == java.lang.String) {
-        actionName = action
-        actionParams = [:]
-    }
-    else {
-        actionName = action.action
-        actionParams = action.params
-    }
-    values = actionName.split("\\.")
-    new Action(name: values[0], methodName: values[1], params: actionParams)
-}
-
-@NonCPS
-def projectNameByGroupAndRepoName(docrootConfigJson, groupName, repoName) {
+def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName) {
     // TODO: Refactor it.
-    def gName = groupName.toLowerCase()
-    def rName = repoName.toLowerCase()
-    def docmanConfig = JsonSlurperClassic.newInstance().parseText(docrootConfigJson)
-    def result = ''
+    groupName = groupName.toLowerCase()
+    repoName = repoName.toLowerCase()
+    docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
+    result = ''
     docmanConfig.projects.each { project ->
         def repo = project.value['repo'];
         if (repo) {
-            echo "REPO: ${repo.toLowerCase()}"
-            echo "GITLAB: ${gName}/${rName}"
-            if (repo.toLowerCase().contains("${gName}/${rName}")) {
+        script.echo "REPO: ${repo.toLowerCase()}"
+        script.echo "GITLAB: ${groupName}/${repoName}"
+            if (repo.toLowerCase().contains("${groupName}/${repoName}")) {
                 result = project.value['name']
             }
         }
     }
-    result.toString()
+    result
 }
 
 def writeEnvFile() {
@@ -164,12 +117,11 @@ String getJenkinsJobName(String buildUrl) {
 @NonCPS
 def getMothershipProjectParams(config, json) {
     def projects = JsonSlurper.newInstance().parseText(json).projects
-    echo "MOTHERSHIP PROJECTS: ${projects}"
     projects[config.jenkinsFolderName] ? projects[config.jenkinsFolderName] : [:]
 }
 
 def loadLibrary(script, params) {
-    script.executePipelineAction([
+    script.drupipeAction([
         action: 'Source.add',
         params: [
             source: [
@@ -182,6 +134,128 @@ def loadLibrary(script, params) {
             ],
         ],
     ], params)
+}
+
+boolean isCollectionOrList(object) {
+    object instanceof java.util.Collection || object instanceof java.util.List || object instanceof java.util.LinkedHashMap || object instanceof java.util.HashMap
+}
+
+def pipelineNotify(params, String buildStatus = 'STARTED') {
+    // build status of null means successful
+    buildStatus =  buildStatus ?: 'SUCCESSFUL'
+
+    // Default values
+    def colorName = 'RED'
+    def colorCode = '#FF0000'
+    def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+    def summary = "${subject} (${env.BUILD_URL})"
+    def details = """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+    <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>"""
+
+    // Override default values based on build status
+    if (buildStatus == 'STARTED') {
+        color = 'YELLOW'
+        colorCode = '#FFFF00'
+    } else if (buildStatus == 'SUCCESSFUL') {
+        color = 'GREEN'
+        colorCode = '#00FF00'
+    } else {
+        color = 'RED'
+        colorCode = '#FF0000'
+    }
+
+    // Send notifications
+    if (params.notificationsSlack) {
+        try {
+            slackSend (color: colorCode, message: summary, channel: params.slackChannel)
+        }
+        catch (e) {
+            echo 'Unable to sent Slack notification'
+        }
+    }
+
+    if (params.notificationsMattermost) {
+        try {
+            mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel)
+        }
+        catch (e) {
+            echo 'Unable to sent Mattermost notification'
+        }
+    }
+
+    // hipchatSend (color: color, notify: true, message: summary)
+
+    if (params.notificationsEmailExt) {
+        def to = emailextrecipients([
+            [$class: 'CulpritsRecipientProvider'],
+            [$class: 'DevelopersRecipientProvider'],
+            [$class: 'RequesterRecipientProvider']
+        ])
+
+        emailext (
+            subject: subject,
+            body: details,
+            to: to,
+            mimeType: 'text/html',
+            attachLog: true,
+        )
+    }
+}
+
+def sourcePath(params, sourceName, String path) {
+    debugLog(params, sourceName, 'Source name')
+    if (sourceName in params.sources) {
+        params.sources[sourceName].path + '/' + path
+    }
+}
+
+
+def debugLog(params, value, dumpName = '', debugParams = [:]) {
+    if (params.debugEnabled) {
+        if (value instanceof java.lang.String) {
+            echo "${dumpName}: ${value}"
+        }
+        else {
+            if (debugParams?.debugMode == 'json' || params.debugMode == 'json') {
+//                jsonDump(value, dumpName)
+            }
+            else {
+                dump(value, dumpName)
+            }
+        }
+    }
+}
+
+def dump(params, String dumpName = '') {
+    colorEcho "Dumping ${dumpName}:"
+    colorEcho collectParams(params)
+}
+
+@NonCPS
+def collectParams(params) {
+    def String result = ''
+    for (item in params) {
+        result = result + "${item.key} = ${item.value}\r\n"
+    }
+    result
+}
+
+def echoDelimiter(String message) {
+    if (message) {
+        if (message.size() < 80) {
+            echo message + '-' * (80 - message.size())
+        }
+        else {
+            echo message
+        }
+    }
+}
+
+def jsonDump(value, String dumpName = '') {
+    if (dumpName) {
+        echo dumpName
+    }
+    echo JsonOutput.prettyPrint(JsonOutput.toJson(value))
 }
 
 return this
