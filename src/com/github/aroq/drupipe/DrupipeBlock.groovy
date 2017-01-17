@@ -18,11 +18,11 @@ class DrupipeBlock implements Serializable {
         }
 
         if (nodeName == 'use_default') {
-            nodeName = config.nodeName
+            nodeName = context.nodeName
         }
 
         if (dockerImage == 'use_default') {
-            dockerImage = config.dockerImage
+            dockerImage = context.dockerImage
         }
         context.dockerImage = dockerImage
 
