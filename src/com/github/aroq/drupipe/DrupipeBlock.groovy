@@ -4,9 +4,11 @@ class DrupipeBlock implements Serializable {
 
     ArrayList<DrupipeStage> stages = []
 
-    String nodeName = 'default'
+    String nodeName = 'use_default'
 
-    Boolean drupipeDocker = false
+    Boolean withDocker = false
+
+    String dockerImage = 'use_default'
 
     LinkedHashMap context = [:]
 
@@ -15,12 +17,20 @@ class DrupipeBlock implements Serializable {
             this.context = context
         }
 
+        if (nodeName == 'use_default') {
+            nodeName = config.nodeName
+        }
+
+        if (dockerImage == 'use_default') {
+            dockerImage = config.dockerImage
+        }
+
         def result = [:]
         context.block = this
 
         if (this.nodeName) {
             context.pipeline.script.node(this.nodeName) {
-                if (context.block.drupipeDocker) {
+                if (context.block.withDocker) {
                     context.pipeline.script.drupipeWithDocker(context) {
                         result = _execute(body)
                     }

@@ -7,6 +7,8 @@ docmanJsonConfigFile = 'config.json'
 drupipeLibraryUrl = 'https://github.com/aroq/drupipe.git'
 drupipeLibraryBranch = 'master'
 drupipeLibraryType = 'branch'
+dockerImage = 'aroq/drudock:1.2.0'
+nodeName = 'default'
 
 // Environments section.
 environments {
@@ -38,7 +40,6 @@ actionParams = [
         behat_args: '--format=pretty --out=std --format=junit',
     ],
     drupipeWithDocker: [
-        drupipeDockerImageName: 'aroq/drudock:1.2.0',
         drupipeDockerArgs: '--user root:root',
         noNode: true,
     ],
