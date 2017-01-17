@@ -4,15 +4,19 @@ class DrupipeBlock implements Serializable {
 
     ArrayList<DrupipeStage> stages = []
 
-    String nodeName = 'default'
+    String nodeName = 'config.nodeName'
 
     Boolean drupipeDocker = false
 
     LinkedHashMap context = [:]
 
-    def execute(context, body = null) {
-        if (context) {
-            this.context = context
+    def execute(c, body = null) {
+        if (c) {
+            this.context = c
+        }
+
+        if (this.nodeName == 'config.nodeName') {
+            this.nodeName = context.nodeName
         }
 
         def result = [:]
