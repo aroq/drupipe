@@ -1,3 +1,154 @@
+Version 0.2.4:
+ - Set drupipe version to 0.2.4
+ - Fixed bug with JSON serialization
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+
+Version 0.2.3:
+ - updated drupipe version tag
+ - Merge branch 'develop'
+ - debug
+ - Debug
+ - Refactor
+ - Refactoring
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Debug message
+ - Debug message
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - YAML pipeline
+ - Yaml pipeline
+ - YAML pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - debug
+ - Yaml pipeline
+ - Yaml pipeline
+ - debug
+ - Yaml pipeline
+ - Yaml pipeline
+ - YAML pipeline
+ - YAML pipeline
+ - Yaml pipeline
+ - Yaml pipeline
+ - YAML pipeline
+ - Yaml pipeline
+ - YAML pipeline
+ - Added Pipeline object
+ - Refactoring
+ - Refactoring
+ - Refactoring
+ - Refactoring
+ - Mothership pipeline
+ - Refactoring code
+ - Refactored code
+ - Docman build step added
+ - Ansible params refactoring
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - Refactoring
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - Refactoring params
+ - debug
+ - debug
+ - Refactoring params
+ - debug
+ - Refactoring params
+ - debug
+ - Renamed params to commandParams
+ - drupipieJobDslSeed refactoring
+ - Renamed workflow libs to drupal
+ - Renamed workflowlibs package to drupipe
+ - Added drupipeJobDslSeed command
+ - Changed params
+ - Changes in drupipeDocker
+ - Removed withDrudock file
+ - Removed timeout
+ - Removed executePipeline
+
 Version 0.2.2:
  - Changed drupipe version
  - Yaml pipelines & major refactoring
