@@ -12,9 +12,9 @@ class DrupipeBlock implements Serializable {
 
     LinkedHashMap context = [:]
 
-    def execute(context, body = null) {
-        if (context) {
-            this.context = context
+    def execute(c, body = null) {
+        if (c) {
+            this.context = c
         }
 
         if (nodeName == 'use_default') {
