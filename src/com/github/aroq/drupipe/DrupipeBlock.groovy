@@ -24,13 +24,14 @@ class DrupipeBlock implements Serializable {
         if (dockerImage == 'use_default') {
             dockerImage = config.dockerImage
         }
+        context.dockerImage = dockerImage
 
         def result = [:]
         context.block = this
 
-        if (this.nodeName) {
-            context.pipeline.script.node(this.nodeName) {
-                if (context.block.withDocker) {
+        if (nodeName) {
+            context.pipeline.script.node(nodeName) {
+                if (withDocker) {
                     context.pipeline.script.drupipeWithDocker(context) {
                         result = _execute(body)
                     }
