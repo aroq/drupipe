@@ -21,8 +21,6 @@ class DrupipeBlock implements Serializable {
             nodeName = config.nodeName
         }
 
-        echo "DOCKER IMAGE: ${dockerImage}"
-
         if (dockerImage == 'use_default') {
             dockerImage = config.dockerImage
         }
