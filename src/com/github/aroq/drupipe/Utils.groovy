@@ -78,7 +78,7 @@ def envTextToMap(env) {
 @NonCPS
 String configToSlurperFile(config) {
     def co = new ConfigObject()
-    skipConfigKeys = ['action', 'sources', 'sourcesList', 'stage', 'pipeline']
+    skipConfigKeys = ['action', 'sources', 'sourcesList', 'stage', 'pipeline', 'block']
     config.each { entry ->
         if (!skipConfigKeys.contains(entry.key)) {
             co.put(entry.key, entry.value)
