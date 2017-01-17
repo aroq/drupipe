@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe
 
-import groovy.json.JsonSlurper
+import groovy.json.JsonSlurperClassic
 import groovy.json.JsonOutput
 
 def colorEcho(message, color = null) {
@@ -38,7 +38,7 @@ def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName
     // TODO: Refactor it.
     groupName = groupName.toLowerCase()
     repoName = repoName.toLowerCase()
-    docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
+    docmanConfig = JsonSlurperClassic.newInstance().parseText(docrootConfigJson)
     result = ''
     docmanConfig.projects.each { project ->
         def repo = project.value['repo'];
@@ -116,7 +116,7 @@ String getJenkinsJobName(String buildUrl) {
 
 @NonCPS
 def getMothershipProjectParams(config, json) {
-    def projects = JsonSlurper.newInstance().parseText(json).projects
+    def projects = JsonSlurperClassic.newInstance().parseText(json).projects
     projects[config.jenkinsFolderName] ? projects[config.jenkinsFolderName] : [:]
 }
 

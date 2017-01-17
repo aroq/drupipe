@@ -7,7 +7,7 @@ def jsonConfig(params) {
     utils = new com.github.aroq.drupipe.Utils()
     docrootConfigJson = readFile("${params.docmanConfigPath}/${params.docmanJsonConfigFile}")
     if (env.gitlabSourceNamespace) {
-       params.projectName = utils.projectNameByGroupAndRepoName(docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
+       params.projectName = utils.projectNameByGroupAndRepoName(this, docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
     }
     else if (projectName) {
         params.projectName = projectName
