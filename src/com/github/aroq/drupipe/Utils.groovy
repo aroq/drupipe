@@ -53,12 +53,6 @@ def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName
     result
 }
 
-def writeEnvFile() {
-    sh 'env > env.txt'
-    writeFile(file: 'ENV.groovy', text: envConfig(readFile('env.txt')))
-    sh 'rm -fR env.txt'
-}
-
 def envToMap() {
     sh 'env > env.txt'
     def result = envTextToMap(readFile('env.txt'))
@@ -70,17 +64,6 @@ def dumpConfigFile(config, fileName = 'config.dump.groovy') {
     echo "Dumping config file: config.dump.groovy"
     writeFile(file: fileName, text: configToSlurperFile(config))
     sh "cat ${fileName}"
-}
-
-@NonCPS
-String envConfig(env) {
-    def co = new ConfigObject()
-    env.split("\r?\n").each {
-        co.put(it.substring(0, it.indexOf('=')), it.substring(it.indexOf('=') + 1))
-    }
-    def sw = new StringWriter()
-    co.writeTo(sw)
-    sw.toString()
 }
 
 @NonCPS
