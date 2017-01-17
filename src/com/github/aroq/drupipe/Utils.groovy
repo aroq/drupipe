@@ -116,7 +116,7 @@ String getJenkinsJobName(String buildUrl) {
 
 @NonCPS
 def getMothershipProjectParams(config, json) {
-    def projects = JsonSlurper.newInstance().parseText(json).projects
+    def projects = JsonSlurperClassic.newInstance().parseText(json).projects
     projects[config.jenkinsFolderName] ? projects[config.jenkinsFolderName] : [:]
 }
 
