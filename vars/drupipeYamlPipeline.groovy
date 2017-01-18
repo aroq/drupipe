@@ -20,5 +20,6 @@ def drupipeGetPipeline(yamlFile) {
     Yaml yaml = new Yaml();
     DrupipePipeline drupipePipeline = yaml.loadAs(yamlFile, DrupipePipeline.class);
     drupipePipeline.script = this
+    drupipePipeline.params = params
     return drupipePipeline
 }

@@ -20,13 +20,13 @@ class DrupipePipeline implements Serializable {
                 script.node('master') {
                     def configParams = script.drupipeAction([action: 'Config.perform'], context.clone() << params)
                     context << (configParams << context)
+                    // Secret option for emergency remove workspace.
+                    if (context.force == '11') {
+                        script.echo 'FORCE REMOVE DIR'
+                        script.deleteDir()
+                    }
                 }
 
-                // Secret option for emergency remove workspace.
-                if (context.force == '11') {
-                    echo 'FORCE REMOVE DIR'
-                    deleteDir()
-                }
 
                 if (blocks) {
                     blocks.each { block ->
