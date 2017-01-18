@@ -10,8 +10,6 @@ drupipeLibraryType = 'branch'
 dockerImage = 'aroq/drudock:1.3.0'
 nodeName = 'default'
 
-nodeName = 'default'
-
 // Environments section.
 environments {
     dev {
@@ -23,9 +21,9 @@ environments {
         dockerImage = 'aroq/drudock:latest'
     }
     prod {
-        drupipeLibraryBranch = 'v0.3.2'
+        drupipeLibraryBranch = 'v0.3.3'
         drupipeLibraryType = 'tag'
-        dockerImage = 'aroq/drudock:dev'
+        dockerImage = 'aroq/drudock:1.3.1'
     }
 }
 
