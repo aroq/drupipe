@@ -18,9 +18,12 @@ class DrupipePipeline implements Serializable {
             utils.pipelineNotify(context)
             script.timestamps {
                 script.node('master') {
+                    echo "PARAMS: ${params}"
                     def configParams = script.drupipeAction([action: 'Config.perform'], context.clone() << params)
                     context << (configParams << context)
                 }
+
+                echo "CONTEXT: ${context}"
 
                 // Secret option for emergency remove workspace.
                 if (context.force == '11') {
