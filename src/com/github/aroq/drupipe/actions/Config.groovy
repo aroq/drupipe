@@ -1,5 +1,4 @@
 package com.github.aroq.drupipe.actions
-import groovy.json.JsonSlurper
 
 def perform(commandParams) {
     if (commandParams['Config_perform']) {
