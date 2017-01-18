@@ -7,6 +7,8 @@ docmanJsonConfigFile = 'config.json'
 drupipeLibraryUrl = 'https://github.com/aroq/drupipe.git'
 drupipeLibraryBranch = 'master'
 drupipeLibraryType = 'branch'
+dockerImage = 'aroq/drudock:1.3.0'
+nodeName = 'default'
 
 nodeName = 'default'
 
@@ -14,13 +16,16 @@ nodeName = 'default'
 environments {
     dev {
         drupipeLibraryBranch = 'develop'
+        dockerImage = 'aroq/drudock:dev'
     }
     test {
         drupipeLibraryBranch = 'master'
+        dockerImage = 'aroq/drudock:latest'
     }
     prod {
-        drupipeLibraryBranch = 'v0.3.0'
+        drupipeLibraryBranch = 'v0.3.2'
         drupipeLibraryType = 'tag'
+        dockerImage = 'aroq/drudock:1.3.0'
     }
 }
 
@@ -40,7 +45,6 @@ actionParams = [
         behat_args: '--format=pretty --out=std --format=junit',
     ],
     drupipeWithDocker: [
-        drupipeDockerImageName: 'aroq/drudock:1.2.0',
         drupipeDockerArgs: '--user root:root',
         noNode: true,
     ],

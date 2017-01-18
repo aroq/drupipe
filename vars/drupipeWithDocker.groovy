@@ -4,7 +4,7 @@ def call(commandParams = [:], body) {
         image = docker.build(commandParams.dockerfile, 'docroot/config')
     }
     else {
-        image = docker.image(commandParams.drupipeDockerImageName)
+        image = docker.image(commandParams.dockerImage)
         image.pull()
     }
     image.inside(commandParams.drupipeDockerArgs) {
