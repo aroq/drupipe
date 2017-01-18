@@ -10,6 +10,8 @@ drupipeLibraryType = 'branch'
 dockerImage = 'aroq/drudock:1.3.0'
 nodeName = 'default'
 
+nodeName = 'default'
+
 // Environments section.
 environments {
     dev {
