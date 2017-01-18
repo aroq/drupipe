@@ -23,7 +23,7 @@ environments {
     prod {
         drupipeLibraryBranch = 'v0.3.2'
         drupipeLibraryType = 'tag'
-        dockerImage = 'aroq/drudock:1.3.1'
+        dockerImage = 'aroq/drudock:1.3.0'
     }
 }
 
