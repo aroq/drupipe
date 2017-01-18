@@ -28,7 +28,7 @@ class DrupipePipeline implements Serializable {
                 // Secret option for emergency remove workspace.
                 if (context.force == '11') {
                     script.echo 'FORCE REMOVE DIR'
-                    deleteDir()
+                    script.deleteDir()
                 }
 
                 if (blocks) {
