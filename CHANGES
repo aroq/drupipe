@@ -1,3 +1,7 @@
+Version 0.3.6:
+ - Changed drupipe version to 0.3.6
+ - Changed order of docman info & deploy back
+
 Version 0.3.5:
  - Changed drupipe version to v0.3.5
  - Merge branch 'develop'
