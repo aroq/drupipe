@@ -18,6 +18,7 @@ def call(yamlFileName = null) {
 @NonCPS
 def drupipeGetPipeline(yamlFile) {
     Yaml yaml = new Yaml();
+    echo "yamlFile: ${yamlFile}"
     DrupipePipeline drupipePipeline = yaml.loadAs(yamlFile, DrupipePipeline.class);
     drupipePipeline.script = this
     drupipePipeline.params = params
