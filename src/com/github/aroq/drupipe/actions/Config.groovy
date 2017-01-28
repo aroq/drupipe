@@ -49,7 +49,7 @@ def mothershipConfig(commandParams) {
                 action: 'Source.add',
                 params: [
                     source: sourceObject,
-                    credentialsID: 'zebra',
+                    credentialsID: commandParams.credentialsId,
                 ],
             ],
             [
