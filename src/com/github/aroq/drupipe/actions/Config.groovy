@@ -17,7 +17,7 @@ def perform(commandParams) {
             action: 'GroovyFileConfig.groovyConfigFromLibraryResource', params: [resource: 'com/github/aroq/drupipe/config.groovy']
         ],
         [
-            action: "Config.mothershipConfig"
+            action: "Config.mothershipConfig", params: [credentialsId: commandParams.credentialsId]
         ],
         [
             action: "Config.projectConfig"
