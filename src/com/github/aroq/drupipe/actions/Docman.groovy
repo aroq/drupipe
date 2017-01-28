@@ -66,6 +66,8 @@ def info(params) {
 def build(params) {
     jsonConfig(params)
     deploy(params)
+    params << [returnConfig: true]
+    params
 }
 
 def deploy(params) {
