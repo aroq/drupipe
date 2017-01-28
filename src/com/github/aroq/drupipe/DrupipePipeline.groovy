@@ -30,7 +30,7 @@ class DrupipePipeline implements Serializable {
 
                 if (blocks) {
                     blocks.each { block ->
-                        block.execute(context)
+                        context << block.execute(context)
                     }
                 }
 
