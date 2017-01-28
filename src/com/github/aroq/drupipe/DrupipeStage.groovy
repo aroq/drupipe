@@ -20,6 +20,7 @@ class DrupipeStage implements Serializable {
                     try {
                         for (action in this.actions) {
                             this.params << action.execute(this.params)
+                            echo "DrupipeStage: execute: PARAMS: %${params}"
                         }
                         this.params
                     }
