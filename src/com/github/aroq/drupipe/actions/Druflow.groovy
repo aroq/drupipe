@@ -7,14 +7,8 @@ def deployFlow(params) {
     else {
         executeEnvironment = environment
     }
-    if (params.projectName) {
-        deployProjectName = params.projectName
-    }
-    else {
-        deployProjectName = projectName
-    }
 
-    executeDruflowCommand(params, [env: executeEnvironment, projectName: deployProjectName])
+    executeDruflowCommand(params, [env: executeEnvironment, projectName: params.projectName])
 }
 
 def prepareDruflowCommandParams(params, overrides = [:]) {
