@@ -19,7 +19,7 @@ def call(yamlFileName = null) {
 def drupipeGetPipeline(yamlFile) {
     Yaml yaml = new Yaml();
     echo "yamlFile: ${yamlFile}"
-    com.github.aroq.drupipe.DrupipePipeline drupipePipeline = yaml.loadAs(yamlFile, com.github.aroq.drupipe.DrupipePipeline.class);
+    drupipePipeline = yaml.loadAs(yamlFile, DrupipePipeline.class);
     drupipePipeline.script = this
     drupipePipeline.params = params
     return drupipePipeline
