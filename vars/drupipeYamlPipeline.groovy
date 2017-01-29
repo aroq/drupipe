@@ -17,7 +17,7 @@ def call(yamlFileName = null) {
 
 @NonCPS
 def drupipeGetPipeline(yamlFile) {
-    Yaml yaml = new Yaml(new CustomClassLoaderConstructor(getClass().getClassLoader()));
+    Yaml yaml = new Yaml(new org.yaml.snakeyaml.CustomClassLoaderConstructor(getClass().getClassLoader()));
     echo "yamlFile: ${yamlFile}"
     drupipePipeline = yaml.loadAs(yamlFile, DrupipePipeline.class);
     drupipePipeline.script = this
