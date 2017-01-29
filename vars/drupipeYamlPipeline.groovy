@@ -4,6 +4,7 @@ import com.github.aroq.drupipe.DrupipePipeline
 
 @Grab('org.yaml:snakeyaml:1.17')
 import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor
 
 def call(yamlFileName = null) {
     def pipe
@@ -17,7 +18,7 @@ def call(yamlFileName = null) {
 
 @NonCPS
 def drupipeGetPipeline(yamlFile) {
-    Yaml yaml = new Yaml(new org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor(getClass().getClassLoader()));
+    Yaml yaml = new Yaml(new CustomClassLoaderConstructor(getClass().getClassLoader()));
     echo "yamlFile: ${yamlFile}"
     drupipePipeline = yaml.loadAs(yamlFile, DrupipePipeline.class);
     drupipePipeline.script = this
