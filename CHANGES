@@ -1,3 +1,15 @@
+Version 0.4.0:
+ - Merge branch 'develop'
+ - Changed druflow get git command
+ - Merge branch 'master' into develop
+ - Changed druflow get git command
+ - Refactoring
+ - Refactoring
+ - Refactoring
+ - Refactoring
+ - Refactoring
+ - changed snakeyaml version to 1.17
+
 Version 0.3.8:
  - Changed drupipe version to v0.3.8
  - Changed settings
