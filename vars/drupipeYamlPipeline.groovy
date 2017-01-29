@@ -2,7 +2,7 @@
 
 import com.github.aroq.drupipe.DrupipePipeline
 
-@Grab('org.yaml:snakeyaml:1.9')
+@Grab('org.yaml:snakeyaml:1.17')
 import org.yaml.snakeyaml.Yaml
 
 def call(yamlFileName = null) {
