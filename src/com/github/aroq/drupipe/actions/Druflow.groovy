@@ -47,9 +47,13 @@ def executeDruflowCommand(params, overrides = [:]) {
 }
 
 def druflowGet(params) {
-    dir(params.druflowDir) {
-        git params.druflowRepo
+    if (fileExists(params.druflowDir)) {
+        dir(params.druflowDir) {
+            deleteDir()
+        }
+
     }
+    sh "git clone ${params.druflowRepo} --branch ${params.druflowGitReference} --depth 1 ${params.druflowDir}"
 }
 
 def copySite(params) {

@@ -9,7 +9,6 @@ def add(params) {
             if (!source.refType) {
                 source.refType = 'branch'
             }
-//            utils.jsonDump(source)
             dir(source.path) {
                 deleteDir()
             }
