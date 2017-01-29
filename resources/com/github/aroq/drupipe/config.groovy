@@ -21,7 +21,7 @@ environments {
         dockerImage = 'aroq/drudock:latest'
     }
     prod {
-        drupipeLibraryBranch = 'v0.3.4'
+        drupipeLibraryBranch = 'v0.3.8'
         drupipeLibraryType = 'tag'
         dockerImage = 'aroq/drudock:1.3.1'
     }
@@ -71,6 +71,7 @@ actionParams = [
     Druflow: [
         druflowDir: 'druflow',
         druflowRepo: 'https://github.com/aroq/druflow.git',
+        druflowGitReference: '0.1.0',
     ],
     Druflow_deployFlow: [
         propertiesFile: 'docroot/master/version.properties',
@@ -86,11 +87,9 @@ actionParams = [
         ansible_hostsFile: 'docroot/config/ansible/inventory.ini',
     ],
     Ansible_deployWithGit: [
-        // debugEnabled: true,
         ansible_playbook: 'library/ansible/deployWithGit.yml',
     ],
     Ansible_deployWithAnsistrano: [
-        // debugEnabled: true,
         ansible_playbook: 'library/ansible/deployWithAnsistrano.yml',
     ],
     Common_confirm: [
