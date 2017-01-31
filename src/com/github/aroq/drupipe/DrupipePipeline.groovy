@@ -21,7 +21,7 @@ class DrupipePipeline implements Serializable {
                     script.echo "DRUPIPE: BEFORE: debugEnabled: ${params.debugEnabled}"
                     params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
                     script.echo "DRUPIPE: AFTER: debugEnabled: ${params.debugEnabled}"
-                    def configParams = script.drupipeAction([action: 'Config.perform'], context.clone() << params, params)
+                    def configParams = script.drupipeAction([action: 'Config.perform', params: [defaultParams: params]], context.clone() << params)
                     script.echo "DRUPIPE configParams: debugEnabled: ${configParams.debugEnabled}"
                     context << (configParams << context)
                     script.echo "DRUPIPE context: debugEnabled: ${context.debugEnabled}"

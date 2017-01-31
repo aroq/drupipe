@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-def perform(commandParams, defaultParams = [:]) {
+def perform(commandParams) {
     if (commandParams['Config_perform']) {
       return commandParams
     }
@@ -32,7 +32,7 @@ def perform(commandParams, defaultParams = [:]) {
 
     commandParams << commandParams.pipeline.executePipelineActionList(providers, commandParams)
     commandParams << ['Config_perform': true, returnConfig: true]
-    commandParams << defaultParams
+    commandParams << params.defaultParams
 }
 
 def mothershipConfig(commandParams) {
