@@ -38,9 +38,6 @@ def prepareDruflowCommand(params, overrides) {
 }
 
 def executeDruflowCommand(params, overrides = [:]) {
-    echo "CHECKING DIRS"
-    sh 'ls -l docroot'
-    sh 'ls -l docroot/config'
     def druflowCommand = prepareDruflowCommand(params, overrides)
     druflowGet(params)
     sh(druflowCommand)

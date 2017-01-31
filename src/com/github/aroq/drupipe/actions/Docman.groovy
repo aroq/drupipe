@@ -46,7 +46,6 @@ def info(params) {
 
     if (configRepo && !fileExists('docroot')) {
         echo 'Docman init'
-        sh('ls -l')
         sh(
             """#!/bin/bash -l
             docman init ${params.docrootDir} ${configRepo} -s
