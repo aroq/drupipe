@@ -22,7 +22,7 @@ class DrupipePipeline implements Serializable {
                     params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
                     script.echo "DRUPIPE: AFTER: debugEnabled: ${params.debugEnabled}"
                     def configParams = script.drupipeAction([action: 'Config.perform'], context.clone() << params)
-                    script.echo "DRUPIPE configParams: debugEnabled: ${context.debugEnabled}"
+                    script.echo "DRUPIPE configParams: debugEnabled: ${configParams.debugEnabled}"
                     context << (configParams << context)
                     script.echo "DRUPIPE context: debugEnabled: ${context.debugEnabled}"
                     // Secret option for emergency remove workspace.
