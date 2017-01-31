@@ -52,7 +52,7 @@ def loadConfig(params) {
     utils = new com.github.aroq.drupipe.Utils()
     if (params.configPath) {
         configFilePath = utils.sourcePath(params, params.sourceName, params.configPath)
-        echo "CONFIG FILE PATH: ${configFilePath}"
+//        debugLog "CONFIG FILE PATH: ${configFilePath}"
 
         if (params.configType == 'groovy') {
             params << drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], params)
