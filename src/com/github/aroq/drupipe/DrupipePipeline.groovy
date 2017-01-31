@@ -20,7 +20,7 @@ class DrupipePipeline implements Serializable {
                 script.node('master') {
                     def configParams = script.drupipeAction([action: 'Config.perform'], context.clone() << params)
                     context << (configParams << context)
-                    script.echo "debugEnabled: ${params.debugEnabled}"
+                    script.echo "DRUPIPE pipeline: debugEnabled: ${params.debugEnabled}"
                     // Secret option for emergency remove workspace.
                     if (context.force == '11') {
                         script.echo 'FORCE REMOVE DIR'
