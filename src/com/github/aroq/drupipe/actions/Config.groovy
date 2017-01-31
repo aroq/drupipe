@@ -93,5 +93,8 @@ def projectConfig(commandParams) {
     utils = new com.github.aroq.drupipe.Utils()
     commandParams << commandParams.pipeline.executePipelineActionList(providers, commandParams)
 
+    sh "ls -l"
+    sh "ls -l docroot/config/pipelines/actions"
+
     commandParams << [returnConfig: true]
 }
