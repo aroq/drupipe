@@ -56,7 +56,9 @@ class DrupipeAction implements Serializable {
                     def source = context.sourcesList[i]
                     def fileName = utils.sourcePath(context, source.name, 'pipelines/actions/' + this.name + '.groovy')
                     utils.debugLog(actionParams, fileName, "DrupipeAction file name to check")
+                    this.context.pipeline.script.echo "File name to check: ${fileName}"
                     // To make sure we only check fileExists in Heavyweight executor mode.
+                    this.context.pipeline.script.echo "CONTEXT block nodeName: ${context.block?.nodeName}"
                     if (context.block?.nodeName && this.context.pipeline.script.fileExists(fileName)) {
                         actionFile = this.context.pipeline.script.load(fileName)
                         actionResult = actionFile."${this.methodName}"(actionParams)
