@@ -1,7 +1,6 @@
 package com.github.aroq.drupipe.actions
 
 def jsonConfig(params) {
-    echo "jsonConfig params: ${params}"
     info(params)
 
     utils = new com.github.aroq.drupipe.Utils()
