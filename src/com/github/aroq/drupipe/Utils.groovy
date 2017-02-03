@@ -54,9 +54,15 @@ def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName
 }
 
 def envToMap() {
+    def result = [:]
     sh 'env > env.txt'
-    def result = envTextToMap(readFile('env.txt'))
-    sh 'rm -fR env.txt'
+    if (fileExists('env.txt')) {
+        result = envTextToMap(readFile('env.txt'))
+        sh 'rm -fR env.txt'
+    }
+    else {
+        throw "No env.txt file created."
+    }
     result
 }
 
