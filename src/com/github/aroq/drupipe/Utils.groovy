@@ -77,7 +77,9 @@ def envTextToMap(env) {
     echo "ENV: ${env}"
     def result = [:]
     env.split("\r?\n").each {
-        result.put(it.substring(0, it.indexOf('=')), it.substring(it.indexOf('=') + 1))
+        if (it.indexOf('=') > 0) {
+            result.put(it.substring(0, it.indexOf('=')), it.substring(it.indexOf('=') + 1))
+        }
     }
     result
 }
