@@ -44,7 +44,9 @@ actionParams = [
     ],
     drupipeWithDocker: [
         drupipeDockerArgs: '--user root:root',
-        noNode: true,
+    ],
+    drupipeWithKubernetes: [
+        containerName: 'drudock',
     ],
     Docman: [
         debugEnabled: true,

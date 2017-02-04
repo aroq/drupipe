@@ -36,6 +36,11 @@ class DrupipeBlock implements Serializable {
                         result = _execute(body)
                     }
                 }
+                else if (withKubernetes) {
+                    context.pipeline.script.drupipeWithKubernetes(context) {
+                        result = _execute(body)
+                    }
+                }
                 else {
                     result = _execute(body)
                 }
