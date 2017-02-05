@@ -25,7 +25,7 @@ def info(params) {
     if (params.force == '1') {
         echo "Force mode"
         drupipeShell(
-            """#!/bin/bash -l
+            """
             if [ "${params.force}" == "1" ]; then
               rm -fR ${params.docrootDir}
             fi
@@ -48,14 +48,14 @@ def info(params) {
     if (configRepo && !fileExists('docroot')) {
         echo 'Docman init'
         drupipeShell(
-            """#!/bin/bash -l
+            """
             docman init ${params.docrootDir} ${configRepo} -s
             """, params << [shellCommandWithBashLogin: true]
         )
     }
     echo 'Docman info'
     drupipeShell(
-        """#!/bin/bash -l
+        """
         cd ${params.docrootDir}
         docman info full config.json
         """, params
@@ -86,7 +86,7 @@ def deploy(params) {
     echo "docman deploy git_target ${deployProjectName} branch ${version} ${flag}"
 
     drupipeShell(
-        """#!/bin/bash -l
+        """
         if [ "${params.force}" == "1" ]; then
           rm -fR ${params.docrootDir}
         fi
@@ -106,7 +106,7 @@ def init(params) {
     }
     if (configRepo) {
         drupipeShell(
-            """#!/bin/bash -l
+            """
             docman init ${params.path} ${configRepo} -s
             """, params << [shellCommandWithBashLogin: true]
         )
