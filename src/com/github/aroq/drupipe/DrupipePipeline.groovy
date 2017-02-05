@@ -53,7 +53,7 @@ class DrupipePipeline implements Serializable {
     }
 
     def executeStages(stagesToExecute, context) {
-        echo "BLOCK 2: ${context.block}"
+        this.context.pipeline.script.echo "BLOCK 2: ${context.block}"
         def stages = processStages(stagesToExecute, context)
         stages += processStages(context.stages, context)
 
