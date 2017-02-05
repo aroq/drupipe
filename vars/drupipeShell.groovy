@@ -7,7 +7,6 @@ def call(shellCommand, context) {
             echo "With bash login session"
             sh """#!/bin/bash -l
                 export SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK}
-                docman init test git@code.adyax.com:CI-Sample-Multirepo/config-dev.git
                 ${shellCommand}
                 """
         }
