@@ -10,7 +10,7 @@ def deployWithGit(params) {
 
 def deployWithAnsistrano(params) {
     // TODO: refactor it.
-    sh("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback")
+    drupipeShell("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback", params)
     utils = new com.github.aroq.drupipe.Utils()
     utils.loadLibrary(this, params)
     // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).

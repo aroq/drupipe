@@ -43,7 +43,7 @@ def executeDruflowCommand(params, overrides = [:]) {
     sh 'ls -l docroot/config'
     def druflowCommand = prepareDruflowCommand(params, overrides)
     druflowGet(params)
-    sh(druflowCommand)
+    drupipeShell(druflowCommand, params)
 }
 
 def druflowGet(params) {
