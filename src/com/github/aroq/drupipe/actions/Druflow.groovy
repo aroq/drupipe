@@ -39,8 +39,6 @@ def prepareDruflowCommand(params, overrides) {
 
 def executeDruflowCommand(params, overrides = [:]) {
     echo "CHECKING DIRS"
-    sh 'ls -l docroot'
-    sh 'ls -l docroot/config'
     def druflowCommand = prepareDruflowCommand(params, overrides)
     druflowGet(params)
     drupipeShell(druflowCommand, params)
@@ -53,7 +51,7 @@ def druflowGet(params) {
         }
 
     }
-    sh "git clone ${params.druflowRepo} --branch ${params.druflowGitReference} --depth 1 ${params.druflowDir}"
+    drupipeShell("git clone ${params.druflowRepo} --branch ${params.druflowGitReference} --depth 1 ${params.druflowDir}", params)
 }
 
 def copySite(params) {

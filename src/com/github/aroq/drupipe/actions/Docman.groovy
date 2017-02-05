@@ -29,7 +29,7 @@ def info(params) {
             if [ "${params.force}" == "1" ]; then
               rm -fR ${params.docrootDir}
             fi
-            """, params
+            """, params << [shellCommandWithBashLogin: true]
         )
     }
 
@@ -50,7 +50,7 @@ def info(params) {
         drupipeShell(
             """#!/bin/bash -l
             docman init ${params.docrootDir} ${configRepo} -s
-            """, params
+            """, params << [shellCommandWithBashLogin: true]
         )
     }
     echo 'Docman info'
@@ -93,7 +93,7 @@ def deploy(params) {
         docman init ${params.docrootDir} ${config_repo} -s
         cd docroot
         docman deploy git_target ${deployProjectName} branch ${version} ${flag}
-        """, params
+        """, params << [shellCommandWithBashLogin: true]
     )
 }
 
@@ -108,7 +108,7 @@ def init(params) {
         drupipeShell(
             """#!/bin/bash -l
             docman init ${params.path} ${configRepo} -s
-            """, params
+            """, params << [shellCommandWithBashLogin: true]
         )
         params.dir
     }

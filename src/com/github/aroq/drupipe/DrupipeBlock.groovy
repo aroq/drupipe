@@ -8,6 +8,8 @@ class DrupipeBlock implements Serializable {
 
     Boolean withDocker = false
 
+    Boolean withKubernetes = false
+
     String dockerImage = 'use_default'
 
     LinkedHashMap context = [:]
