@@ -58,7 +58,7 @@ def info(params) {
         """
         cd ${params.docrootDir}
         docman info full config.json
-        """, params
+        """, params << [shellCommandWithBashLogin: true]
     )
 }
 
