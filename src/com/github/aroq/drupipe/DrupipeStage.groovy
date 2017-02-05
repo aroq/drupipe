@@ -19,6 +19,7 @@ class DrupipeStage implements Serializable {
                 if (actions) {
                     try {
                         for (action in this.actions) {
+                            echo "BLOCK 3: ${this.params.block}"
                             this.params << action.execute(this.params)
                         }
                         this.params

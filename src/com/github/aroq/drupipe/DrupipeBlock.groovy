@@ -23,7 +23,7 @@ class DrupipeBlock implements Serializable {
             nodeName = context.nodeName
         }
 
-        if (dockerImage == 'use_default') {
+        if (withDocker && dockerImage == 'use_default') {
             dockerImage = context.dockerImage
         }
         context.dockerImage = dockerImage
@@ -57,6 +57,7 @@ class DrupipeBlock implements Serializable {
 
     def _execute(body = null) {
         if (stages) {
+            echo "BLOCK 1: ${context.block}"
             context << context.pipeline.executeStages(stages, context)
         }
         else {
