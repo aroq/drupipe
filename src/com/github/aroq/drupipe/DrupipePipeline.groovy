@@ -113,7 +113,7 @@ class DrupipePipeline implements Serializable {
             actionParams = action.params
         }
         def values = actionName.split("\\.")
-        script.echo "defaultParams: ${actionParams.defaultParams}"
+        script.echo "defaultParams PIPELINE: ${actionParams.defaultParams}"
         new DrupipeAction(name: values[0], methodName: values[1], params: actionParams, context: context)
     }
 
