@@ -1,15 +1,15 @@
-def call(commandParams = [:], body) {
-    commandParams << commandParams.actionParams['drupipeWithKubernetes'] << commandParams
-    container(commandParams.containerName) {
+def call(context = [:], body) {
+    context << context.actionParams['drupipeWithKubernetes'] << context
+    container(context.containerName) {
         drupipeAction(action: 'GitConfig.set', context)
-        commandParams.workspace = pwd()
-        sshagent([commandParams.credentialsID]) {
-            result = body(commandParams)
+        context.workspace = pwd()
+        sshagent([context.credentialsID]) {
+            result = body(context)
             if (result) {
-                commandParams << result
+                context << result
             }
         }
     }
 
-    commandParams
+    context
 }
