@@ -10,7 +10,7 @@ def deployWithGit(params) {
 
 def deployWithAnsistrano(params) {
     // TODO: refactor it.
-    sh("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback")
+    drupipeShell("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback", params)
     utils = new com.github.aroq.drupipe.Utils()
     utils.loadLibrary(this, params)
     // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
@@ -32,9 +32,10 @@ def executeAnsiblePlaybook(params, environmentVariables = [:]) {
     echo "Ansible command: ${command}"
 
     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
-        sh"""#!/bin/bash -l
+        drupipeShell("""
             ${command}
-        """
+            """, params << [shellCommandWithBashLogin: true]
+        )
     }
 }
 

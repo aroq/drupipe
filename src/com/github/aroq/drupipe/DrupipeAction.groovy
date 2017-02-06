@@ -22,6 +22,7 @@ class DrupipeAction implements Serializable {
         }
         def actionParams = [:]
 
+
         try {
             def utils = new com.github.aroq.drupipe.Utils()
             String drupipeStageName

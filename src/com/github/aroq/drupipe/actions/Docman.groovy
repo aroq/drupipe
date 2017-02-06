@@ -23,12 +23,12 @@ def jsonConfig(params) {
 def info(params) {
     if (params.force == '1') {
         echo "Force mode"
-        sh(
-            """#!/bin/bash -l
+        drupipeShell(
+            """
             if [ "${params.force}" == "1" ]; then
               rm -fR ${params.docrootDir}
             fi
-            """
+            """, params << [shellCommandWithBashLogin: true]
         )
     }
 
@@ -45,19 +45,18 @@ def info(params) {
     echo "Config repo: ${configRepo}"
 
     if (configRepo && !fileExists('docroot')) {
-        echo 'Docman init'
-        sh(
-            """#!/bin/bash -l
-            docman init ${params.docrootDir} ${configRepo} -s
+        drupipeShell(
             """
+            docman init ${params.docrootDir} ${configRepo} -s
+            """, params << [shellCommandWithBashLogin: true]
         )
     }
     echo 'Docman info'
-    sh(
-        """#!/bin/bash -l
+    drupipeShell(
+        """
         cd ${params.docrootDir}
         docman info full config.json
-        """
+        """, params << [shellCommandWithBashLogin: true]
     )
 }
 
@@ -84,15 +83,15 @@ def deploy(params) {
 
     echo "docman deploy git_target ${deployProjectName} branch ${version} ${flag}"
 
-    sh(
-        """#!/bin/bash -l
+    drupipeShell(
+        """
         if [ "${params.force}" == "1" ]; then
           rm -fR ${params.docrootDir}
         fi
         docman init ${params.docrootDir} ${config_repo} -s
         cd docroot
         docman deploy git_target ${deployProjectName} branch ${version} ${flag}
-        """
+        """, params << [shellCommandWithBashLogin: true]
     )
 }
 
@@ -104,10 +103,10 @@ def init(params) {
         configRepo = config_repo
     }
     if (configRepo) {
-        sh(
-            """#!/bin/bash -l
-            docman init ${params.path} ${configRepo} -s
+        drupipeShell(
             """
+            docman init ${params.path} ${configRepo} -s
+            """, params << [shellCommandWithBashLogin: true]
         )
         params.dir
     }

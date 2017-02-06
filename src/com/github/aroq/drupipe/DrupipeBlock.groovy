@@ -21,7 +21,7 @@ class DrupipeBlock implements Serializable {
             nodeName = context.nodeName
         }
 
-        if (dockerImage == 'use_default') {
+        if (withDocker && dockerImage == 'use_default') {
             dockerImage = context.dockerImage
         }
         context.dockerImage = dockerImage
@@ -32,8 +32,15 @@ class DrupipeBlock implements Serializable {
         if (nodeName) {
             context.pipeline.script.node(nodeName) {
                 if (withDocker) {
-                    context.pipeline.script.drupipeWithDocker(context) {
-                        result = _execute(body)
+                    if (context.containerMode == 'kubernetes') {
+                        context.pipeline.script.drupipeWithKubernetes(context) {
+                            result = _execute(body)
+                        }
+                    }
+                    else if (context.containerMode == 'docker') {
+                        context.pipeline.script.drupipeWithDocker(context) {
+                            result = _execute(body)
+                        }
                     }
                 }
                 else {
@@ -53,7 +60,10 @@ class DrupipeBlock implements Serializable {
             context << context.pipeline.executeStages(stages, context)
         }
         else {
-            context << body()
+            def result = body()
+            if (result) {
+                context << body()
+            }
         }
         context
     }

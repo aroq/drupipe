@@ -1,21 +1,21 @@
-def call(commandParams = [:], body) {
-    commandParams << commandParams.actionParams['drupipeWithDocker'] << commandParams
-    if (commandParams.dockerfile) {
-        image = docker.build(commandParams.dockerfile, 'docroot/config')
+def call(context = [:], body) {
+    context << context.actionParams['drupipeWithDocker'] << context
+    if (context.dockerfile) {
+        image = docker.build(context.dockerfile, 'docroot/config')
     }
     else {
-        image = docker.image(commandParams.dockerImage)
+        image = docker.image(context.dockerImage)
         image.pull()
     }
-    image.inside(commandParams.drupipeDockerArgs) {
-        commandParams.workspace = pwd()
-        sshagent([commandParams.credentialsID]) {
-            result = body(commandParams)
+    image.inside(context.drupipeDockerArgs) {
+        context.workspace = pwd()
+        sshagent([context.credentialsID]) {
+            result = body(context)
             if (result) {
-                commandParams << result
+                context << result
             }
         }
     }
 
-    commandParams
+    context
 }
