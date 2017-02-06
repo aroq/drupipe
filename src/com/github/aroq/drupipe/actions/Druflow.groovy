@@ -8,8 +8,6 @@ def deployFlow(params) {
         executeEnvironment = environment
     }
 
-    echo "PARAMS DEPLOY FLOW: ${params}"
-
     executeDruflowCommand(params, [env: executeEnvironment, projectName: params.projectName])
 }
 
