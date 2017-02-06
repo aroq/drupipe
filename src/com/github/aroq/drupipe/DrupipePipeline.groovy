@@ -104,6 +104,7 @@ class DrupipePipeline implements Serializable {
 
     @NonCPS
     DrupipeAction processPipelineAction(action, context) {
+        script.echo "defaultParams processPipelineAction1: ${action.params.defaultParams}"
         def actionName
         def actionParams
         if (action.getClass() == java.lang.String) {
@@ -115,7 +116,7 @@ class DrupipePipeline implements Serializable {
             actionParams = action.params
         }
         def values = actionName.split("\\.")
-        script.echo "defaultParams PIPELINE: ${actionParams.defaultParams}"
+        script.echo "defaultParams processPipelineAction2: ${actionParams.defaultParams}"
         new DrupipeAction(name: values[0], methodName: values[1], params: actionParams, context: context)
     }
 
