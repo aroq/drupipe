@@ -33,7 +33,7 @@ def perform(commandParams) {
     commandParams << commandParams.pipeline.executePipelineActionList(providers, commandParams)
     commandParams << commandParams.env
     commandParams << ['Config_perform': true, returnConfig: true]
-    commandParams << params.defaultParams
+    commandParams << commandParams.defaultParams
 }
 
 def mothershipConfig(commandParams) {
