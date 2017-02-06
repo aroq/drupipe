@@ -32,7 +32,7 @@ def executeAnsiblePlaybook(params, environmentVariables = [:]) {
     echo "Ansible command: ${command}"
 
     wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
-        drupipeShell("""#!/bin/bash -l
+        drupipeShell("""
             ${command}
             """, params << [shellCommandWithBashLogin: true]
         )
