@@ -19,11 +19,13 @@ def perform(params) {
     // TODO: Add settings to exit with error on Behat errors.
     if (fileExists("${params.masterPath}/${params.behatExecutable}")) {
         if (fileExists("${params.masterPath}/${params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml")) {
-            sh """#!/bin/bash -l
-cd ${params.masterPath}/${params.docrootDir}
-mkdir -p ${params.workspaceRelativePath}/reports
-${params.masterRelativePath}/${params.behatExecutable} --config=${params.masterRelativePath}/${params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml ${params.behat_args} --out=${params.workspaceRelativePath}/reports ${tags} ${features}
-"""
+            drupipeShell(
+                """
+                cd ${params.masterPath}/${params.docrootDir}
+                mkdir -p ${params.workspaceRelativePath}/reports
+                ${params.masterRelativePath}/${params.behatExecutable} --config=${params.masterRelativePath}/${params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml ${params.behat_args} --out=${params.workspaceRelativePath}/reports ${tags} ${features}
+            """, params << [shellCommandWithBashLogin: true]
+            )
         }
         else {
             throw new Exception("Behat config file not found: ${params.masterPath}/${params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml")
