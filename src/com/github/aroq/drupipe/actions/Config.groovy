@@ -31,6 +31,7 @@ def perform(commandParams) {
     checkout scm
 
     commandParams << commandParams.pipeline.executePipelineActionList(providers, commandParams)
+    commandParams << commandParams.env
     commandParams << ['Config_perform': true, returnConfig: true]
 }
 
