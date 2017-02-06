@@ -1,7 +1,7 @@
 #!groovy
 
 def call(shellCommand, context) {
-    if (context.block.withKubernetes) {
+    if (context.containerMode == 'kubernetes') {
         echo "Executing ssh with SSH_AUTH_SOCK manually set"
         if (context.shellCommandWithBashLogin) {
             echo "With bash login session"
