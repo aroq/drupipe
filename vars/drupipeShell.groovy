@@ -11,7 +11,7 @@ def call(shellCommand, context) {
                 """
         }
         else {
-            sh("export SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK} ${shellCommand}")
+            sh("export SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK}; ${shellCommand}")
         }
     }
     else {
