@@ -24,7 +24,6 @@ class DrupipeAction implements Serializable {
 
 
         try {
-            this.context.pipeline.script.echo "defaultParams ACTION: ${params.defaultParams}"
             def utils = new com.github.aroq.drupipe.Utils()
             String drupipeStageName
             if (this.context.stage) {
@@ -67,7 +66,6 @@ class DrupipeAction implements Serializable {
             }
             if (!actionFile) {
                 try {
-                    this.context.pipeline.script.echo "defaultParams ACTION2: ${actionParams.defaultParams}"
                     def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance()
                     actionResult = actionInstance."${this.methodName}"(actionParams)
                 }

@@ -21,7 +21,6 @@ class DrupipePipeline implements Serializable {
                     script.echo "DRUPIPE: BEFORE: debugEnabled: ${params.debugEnabled}"
                     params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
                     script.echo "DRUPIPE: AFTER: debugEnabled: ${params.debugEnabled}"
-                    script.echo "defaultParams PIPELINE1: ${params}"
 
                     def configParams = script.drupipeAction([action: 'Config.perform', params: [defaultParams: params]], context.clone() << params)
                     script.echo "DRUPIPE configParams: debugEnabled: ${configParams.debugEnabled}"
@@ -104,7 +103,6 @@ class DrupipePipeline implements Serializable {
 
     @NonCPS
     DrupipeAction processPipelineAction(action, context) {
-        script.echo "defaultParams processPipelineAction1: ${action.params.defaultParams}"
         def actionName
         def actionParams
         if (action.getClass() == java.lang.String) {
@@ -116,7 +114,6 @@ class DrupipePipeline implements Serializable {
             actionParams = action.params
         }
         def values = actionName.split("\\.")
-        script.echo "defaultParams processPipelineAction2: ${actionParams.defaultParams}"
         new DrupipeAction(name: values[0], methodName: values[1], params: actionParams, context: context)
     }
 
