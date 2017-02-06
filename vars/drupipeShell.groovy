@@ -15,7 +15,13 @@ def call(shellCommand, context) {
         }
     }
     else {
-        sh(shellCommand)
+        if (context.shellCommandWithBashLogin) {
+            echo "With bash login session"
+            sh """#!/bin/bash -l
+                export SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK}
+                ${shellCommand}
+                """
+        }
     }
 }
 
