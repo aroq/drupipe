@@ -8,8 +8,6 @@ class DrupipeBlock implements Serializable {
 
     Boolean withDocker = false
 
-    Boolean withKubernetes = false
-
     String dockerImage = 'use_default'
 
     LinkedHashMap context = [:]
@@ -34,13 +32,15 @@ class DrupipeBlock implements Serializable {
         if (nodeName) {
             context.pipeline.script.node(nodeName) {
                 if (withDocker) {
-                    context.pipeline.script.drupipeWithDocker(context) {
-                        result = _execute(body)
+                    if (containerMode == 'kubernetes') {
+                        context.pipeline.script.drupipeWithKubernetes(context) {
+                            result = _execute(body)
+                        }
                     }
-                }
-                else if (withKubernetes) {
-                    context.pipeline.script.drupipeWithKubernetes(context) {
-                        result = _execute(body)
+                    else if (containerMode == 'docker') {
+                        context.pipeline.script.drupipeWithDocker(context) {
+                            result = _execute(body)
+                        }
                     }
                 }
                 else {

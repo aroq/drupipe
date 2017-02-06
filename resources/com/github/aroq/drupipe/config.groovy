@@ -9,6 +9,7 @@ drupipeLibraryBranch = 'master'
 drupipeLibraryType = 'branch'
 dockerImage = 'aroq/drudock:1.3.0'
 nodeName = 'default'
+containerMode = 'docker'
 
 // Environments section.
 environments {
