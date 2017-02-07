@@ -8,8 +8,6 @@ def deployFlow(params) {
         executeEnvironment = environment
     }
 
-    echo "PARAMS DEPLOY FLOW: ${params}"
-
     executeDruflowCommand(params, [env: executeEnvironment, projectName: params.projectName])
 }
 
@@ -38,7 +36,6 @@ def prepareDruflowCommand(params, overrides) {
 }
 
 def executeDruflowCommand(params, overrides = [:]) {
-    echo "CHECKING DIRS"
     def druflowCommand = prepareDruflowCommand(params, overrides)
     druflowGet(params)
     drupipeShell(druflowCommand, params)

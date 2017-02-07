@@ -54,9 +54,15 @@ def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName
 }
 
 def envToMap() {
+    def result = [:]
     sh 'env > env.txt'
-    def result = envTextToMap(readFile('env.txt'))
-    sh 'rm -fR env.txt'
+    if (fileExists('env.txt')) {
+        result = envTextToMap(readFile('env.txt'))
+        sh 'rm -fR env.txt'
+    }
+    else {
+        throw "No env.txt file created."
+    }
     result
 }
 
@@ -68,6 +74,7 @@ def dumpConfigFile(config, fileName = 'config.dump.groovy') {
 
 @NonCPS
 def envTextToMap(env) {
+    echo "ENV: ${env}"
     def result = [:]
     env.split("\r?\n").each {
         if (it.indexOf('=') > 0) {
@@ -202,7 +209,7 @@ def debugLog(params, value, dumpName = '', debugParams = [:]) {
         }
         else {
             if (debugParams?.debugMode == 'json' || params.debugMode == 'json') {
-//                jsonDump(value, dumpName)
+                jsonDump(value, dumpName)
             }
             else {
                 dump(value, dumpName)

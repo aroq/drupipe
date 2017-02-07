@@ -50,7 +50,6 @@ actionParams = [
         containerName: 'drudock',
     ],
     Docman: [
-        debugEnabled: true,
         docmanJsonConfigFile: 'config.json',
     ],
     // TODO: add private (that will not go into common config) params section.
