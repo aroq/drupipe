@@ -17,7 +17,7 @@ environments {
         drupipeLibraryBranch = 'develop'
         dockerImage = 'aroq/drudock:dev'
     }
-    test {
+    stage {
         drupipeLibraryBranch = 'master'
         dockerImage = 'aroq/drudock:latest'
     }
