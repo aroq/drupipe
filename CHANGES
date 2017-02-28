@@ -1,3 +1,68 @@
+Version 0.4.3:
+ - Changed drupipe version to 0.4.3 for PROD env
+ - Fixed stage config env
+ - Merge branch 'develop'
+ - debugEnabled debug
+ - debugEnabled debug
+ - debugEnabled debug
+ - debugEnabled debug
+ - debugEnabled debug
+ - debugEnabled debug
+ - debugEnabled debug
+ - debugEnabled debug
+ - debugEnabled debug
+ - debugEnabled debug
+ - Fixed conflicts
+ - added containerMode
+ - added containerMode
+ - added containerMode
+ - added containerMode
+ - added containerMode
+ - added containerMode
+ - Added env params to config
+ - Added GitConfig action
+ - Added GitConfig action
+ - Added GitConfig action
+ - Added GitConfig action
+ - Added GitConfig action
+ - Changed shell command for k8s
+ - Changed shell command for k8s
+ - Changed shell command for k8s
+ - Changed shell command for k8s
+ - Changed shell command for k8s
+ - Changed shell command for k8s
+ - Changed shell command for k8s
+ - Changed shell command for k8s
+ - Changed shell command for k8s
+ - Changed shell command for k8s
+ - debug
+ - Added drupipeShell command
+ - Added drupipeShell command
+ - Added drupipeShell command
+ - Added kubernetes mode
+ - Added kubernetes mode
+ - Added kubernetes mode
+ - env.txt check
+ - env.txt check
+ - env.txt check
+ - Refactoring debugEnabled
+ - Refactoring debugEnabled
+ - Refactoring debugEnabled
+ - Refactoring debugEnabled
+ - Refactoring debugEnabled
+ - Refactoring debugEnabled
+ - Refactoring debugEnabled
+ - Refactoring debugEnabled
+ - Refactoring debugEnabled
+ - Enabled jsonDump
+ - Merge branch 'master' into develop
+ - Removed debug info
+ - Test source add
+ - Test source add
+ - Test source add
+ - Revert "Test source add"
+ - Test source add
+
 Version 0.4.2:
  - version changed
  - Added Shell action
