@@ -1,3 +1,8 @@
+Version 0.4.4:
+ - Changed drupipe to v0.4.4
+ - Changed drudock default to 1.3.3
+ - Changed docker image to drudock latest
+
 Version 0.4.3:
  - Changed drupipe version to 0.4.3 for PROD env
  - Fixed stage config env
