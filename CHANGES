@@ -1,3 +1,6 @@
+Version 0.4.6:
+ - Refactored builder
+
 Version 0.4.5:
  - Changed drudock to dev version, and drupipe to 0.4.5
 
