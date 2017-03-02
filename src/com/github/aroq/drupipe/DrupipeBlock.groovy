@@ -12,10 +12,15 @@ class DrupipeBlock implements Serializable {
 
     LinkedHashMap context = [:]
 
+    LinkedHashMap config = [:]
+
     def execute(c, body = null) {
+        def utils = new com.github.aroq.drupipe.Utils()
         if (c) {
             this.context = c
         }
+
+        this.context = utils.merge(this.context, this.config)
 
         if (nodeName == 'use_default') {
             nodeName = context.nodeName

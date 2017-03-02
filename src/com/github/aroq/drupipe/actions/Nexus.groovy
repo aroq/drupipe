@@ -1,66 +1,37 @@
 package com.github.aroq.drupipe.actions
 
-@Grab('org.yaml:snakeyaml:1.17')
-import org.yaml.snakeyaml.Yaml
+def uploadArtifact(params) {
+    def builder = params.builder
+    def version = builder['version']
+    def artifactId = builder['buildName']
+    def fileName = builder['artifactFileName']
+    def groupId = builder['groupId']
 
-import com.github.aroq.StateStableInfo
-
-def deploy(params) {
-    if (params.projectName) {
-        echo "PROJECT NAME: ${params.projectName}"
-        def fileBaseName = "${params.projectName}"
-
-        dir("${params.projectName}") {
-            git credentialsId: params.credentialsID, url: env.gitlabSourceRepoURL, branch: env.gitlabSourceBranch
-        }
-
-        StateStableInfo stateStableInfo = getStableTag(readFile("${fileBaseName}/info.yaml"))
-        echo "VERSION: ${stateStableInfo.version}"
-
-        if (params.nexusReleaseType == 'release') {
-            params.nexusReleaseVersion = stateStableInfo.version
-        }
-        else {
-            params.nexusReleaseVersion = 'SNAPSHOT'
-        }
-
-        fileName = "${fileBaseName}-${params.nexusReleaseVersion}.tar.gz"
-        
-        sh """#!/bin/bash -l
-            rm -fR ${params.projectName}
-            git clone --depth 1 -b ${stateStableInfo.version} ${env.gitlabSourceRepoURL} ${fileBaseName}
-            rm -fR ${fileBaseName}/.git
-            tar -czvf ${fileName} ${fileBaseName}
-            ls -l
-        """
-
-        echo "fileBaseName: ${fileBaseName}"
-
+    if (artifactId && groupId && version && fileName) {
+        // Upload artifact.
         nexusArtifactUploader(
-            groupId: env.gitlabSourceNamespace.toLowerCase(),
+            groupId: groupId,
             credentialsId: params.nexusCredentialsId,
             nexusUrl: params.nexusUrl,
             nexusVersion: params.nexusVersion,
             protocol: params.nexusProtocol,
             repository: params.nexusRepository,
-            version: params.nexusReleaseVersion,
+            version: version,
             artifacts: [
                 [
-                    artifactId: params.projectName,
+                    artifactId: artifactId,
                     classifier: '',
                     file: fileName,
                     type: params.nexusFileType
                 ]
-          ]
-       )
-       sh "rm -f ${fileName}"
-    }
-    params
-}
+            ]
+        )
 
-@NonCPS
-def getStableTag(yamlFile) {
-    Yaml yaml = new Yaml();
-    StateStableInfo stableStableInfo = yaml.loadAs(yamlFile, StateStableInfo.class);
-    return stableStableInfo
+        // Remove artifact.
+        drupipeShell(
+            "rm -f ${fileName}", params
+        )
+    }
+
+    params
 }

@@ -8,6 +8,8 @@ class DrupipePipeline implements Serializable {
 
     LinkedHashMap params = [:]
 
+    LinkedHashMap config = [:]
+
     def script
 
     def execute(body = null) {
@@ -18,10 +20,12 @@ class DrupipePipeline implements Serializable {
             utils.pipelineNotify(context)
             script.timestamps {
                 script.node('master') {
+                    utils.dump(config, 'PIPELINE-CONFIG')
                     params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 
                     def configParams = script.drupipeAction([action: 'Config.perform', params: [defaultParams: params]], context.clone() << params)
-                    context << (configParams << context)
+                    context << (configParams << config << context)
+                    utils.dump(context, 'PIPELINE-CONTEXT')
                     // Secret option for emergency remove workspace.
                     if (context.force == '11') {
                         script.echo 'FORCE REMOVE DIR'

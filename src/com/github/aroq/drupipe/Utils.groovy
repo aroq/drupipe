@@ -250,4 +250,18 @@ def jsonDump(value, String dumpName = '') {
     echo JsonOutput.prettyPrint(JsonOutput.toJson(value))
 }
 
+@NonCPS
+Map merge(Map[] sources) {
+    if (sources.length == 0) return [:]
+    if (sources.length == 1) return sources[0]
+
+    sources.inject([:]) { result, source ->
+        source.each { k, v ->
+            result[k] = result[k] instanceof Map && v instanceof Map ? merge(result[k], v) : v
+        }
+        result
+    }
+}
+
+
 return this

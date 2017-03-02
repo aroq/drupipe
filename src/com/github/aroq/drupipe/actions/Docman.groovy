@@ -1,5 +1,12 @@
 package com.github.aroq.drupipe.actions
 
+import groovy.json.JsonSlurperClassic
+
+def init(params) {
+    jsonConfig(params)
+}
+
+// For compatibility with previous versions.
 def jsonConfig(params) {
     info(params)
 
@@ -8,50 +15,14 @@ def jsonConfig(params) {
     if (env.gitlabSourceNamespace) {
        params.projectName = utils.projectNameByGroupAndRepoName(this, docrootConfigJson, env.gitlabSourceNamespace, env.gitlabSourceRepoName)
     }
-    else if (projectName) {
-        params.projectName = projectName
-    }
-    else {
-        // TODO: refactor it
-        params.projectName = 'common'
-    }
     echo "PROJECT NAME: ${params.projectName}"
 
     params << [returnConfig: true]
 }
 
 def info(params) {
-    if (params.force == '1') {
-        echo "Force mode"
-        drupipeShell(
-            """
-            if [ "${params.force}" == "1" ]; then
-              rm -fR ${params.docrootDir}
-            fi
-            """, params << [shellCommandWithBashLogin: true]
-        )
-    }
-
-    configRepo = false
-    try {
-        if (config_repo) {
-            configRepo = config_repo
-        }
-    }
-    catch (err) {
-
-    }
-
-    echo "Config repo: ${configRepo}"
-
-    if (configRepo && !fileExists('docroot')) {
-        drupipeShell(
-            """
-            docman init ${params.docrootDir} ${configRepo} -s
-            """, params << [shellCommandWithBashLogin: true]
-        )
-    }
-    echo 'Docman info'
+    echo "Config repo: ${params.configRepo}"
+    prepare(params)
     drupipeShell(
         """
         cd ${params.docrootDir}
@@ -61,57 +32,85 @@ def info(params) {
 }
 
 def build(params) {
-    jsonConfig(params)
+    init(params)
     deploy(params)
     params << [returnConfig: true]
     params
 }
 
+def stripedBuild(params) {
+    info(params)
+    docrootConfigJson = readFile("${params.docmanConfigPath}/${params.docmanJsonConfigFile}")
+    def componentVersions = component_versions(params, docrootConfigJson)
+    echo "Component versions:${componentVersions}"
+
+    drupipeShell(
+        """
+        cd docroot
+        docman build striped stable ${componentVersions} ${forceFlag(params)}
+        """, params << [shellCommandWithBashLogin: true]
+    )
+    if (!params['builder']) {
+        params['builder'] = [:]
+    }
+    params.builder['buildDir'] = "${params.docrootDir}/master"
+    params.builder['buildName'] = params.jenkinsFolderName
+    params.builder['version'] = (new Date()).format('yyyy-MM-dd--hh-mm-ss')
+    params << [returnConfig: true]
+    params
+}
+
 def deploy(params) {
-    echo "FORCE MODE: ${params.force}"
+    drupipeShell(
+        """
+        cd docroot
+        docman deploy git_target ${params.projectName} branch ${version} ${forceFlag(params)}
+        """, params << [shellCommandWithBashLogin: true]
+    )
+}
+
+def forceFlag(params) {
     def flag = ''
     if (params.force == '1') {
         flag = '-f'
     }
+    flag
+}
 
-    if (params.projectName) {
-        deployProjectName = params.projectName
-    }
-    else {
-        deployProjectName = projectName
-    }
-
-    echo "docman deploy git_target ${deployProjectName} branch ${version} ${flag}"
-
+def prepare(params) {
+    echo "FORCE MODE: ${params.force}"
     drupipeShell(
         """
         if [ "${params.force}" == "1" ]; then
           rm -fR ${params.docrootDir}
         fi
-        docman init ${params.docrootDir} ${config_repo} -s
-        cd docroot
-        docman deploy git_target ${deployProjectName} branch ${version} ${flag}
         """, params << [shellCommandWithBashLogin: true]
     )
-}
-
-def init(params) {
-    if (params.configRepo) {
-        configRepo = params.configRepo
-    }
-    if (config_repo) {
-        configRepo = config_repo
-    }
-    if (configRepo) {
+    if (params.configRepo && !fileExists(params.docrootDir)) {
         drupipeShell(
             """
-            docman init ${params.path} ${configRepo} -s
+            if [ "${params.force}" == "1" ]; then
+              rm -fR ${params.docrootDir}
+            fi
+            docman init ${params.docrootDir} ${params.configRepo} -s
             """, params << [shellCommandWithBashLogin: true]
         )
         params.dir
     }
-    else {
-        null
+}
+
+@NonCPS
+def component_versions(params, docrootConfigJson) {
+    docmanConfig = JsonSlurperClassic.newInstance().parseText(docrootConfigJson)
+    versions = []
+    docmanConfig.projects.each { project ->
+        if (params["${project.key}_version"]) {
+            versions << /"${project.key}": / + params["${project.key}_version"]
+        }
     }
+    if (versions) {
+        result = /--config="{\"projects\": {${versions.join(', ').replaceAll("\"", "\\\\\"")}}}"/
+    }
+    result
 }
 
