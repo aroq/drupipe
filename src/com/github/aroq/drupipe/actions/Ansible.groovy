@@ -28,8 +28,7 @@ def executeAnsiblePlaybook(params, environmentVariables = [:]) {
         user=${params.ansible_user} \
         repo=${params.ansible_repo} \
         reference=${params.ansible_reference} \
-        ansistrano_deploy_via=${params.ansistrano_current_via} \
-        deploy_from=${params.ansistrano_deploy_from} \
+        deploy_from=docroot/master \
         deploy_to=${params.ansible_deploy_to}'"
 
     echo "Ansible command: ${command}"
