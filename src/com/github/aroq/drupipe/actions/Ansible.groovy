@@ -19,6 +19,7 @@ def deployWithAnsistrano(params) {
     executeAnsiblePlaybook(params)
 }
 
+// TODO: Provide Ansible parameters from settings container.
 def executeAnsiblePlaybook(params, environmentVariables = [:]) {
     def command =
         "ansible-playbook ${params.ansible_playbook} \
@@ -27,6 +28,7 @@ def executeAnsiblePlaybook(params, environmentVariables = [:]) {
         user=${params.ansible_user} \
         repo=${params.ansible_repo} \
         reference=${params.ansible_reference} \
+        ansistrano_current_via=${params.ansistrano_current_via} \
         deploy_to=${params.ansible_deploy_to}'"
 
     echo "Ansible command: ${command}"
