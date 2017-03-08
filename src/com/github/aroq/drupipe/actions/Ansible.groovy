@@ -30,7 +30,7 @@ def deployWithAnsistrano(params) {
 
 // TODO: Provide Ansible parameters from settings container.
 def executeAnsiblePlaybook(params, environmentVariables = [:]) {
-    def ansiblePlaybookParamsJoined = ansiblePlaybookParams.join(' ')
+    def ansiblePlaybookParamsJoined = params.ansiblePlaybookParams.join(' ')
     def command =
         "ansible-playbook ${params.ansible_playbook} \
         -i ${params.ansible_hostsFile} \
