@@ -90,7 +90,7 @@ actionParams = [
     ],
     Ansible_deployWithAnsistrano: [
         ansible_playbook: 'library/ansible/deployWithAnsistrano.yml',
-        ansistrano_current_via: 'git'
+        ansistrano_deploy_via: 'rsync',
     ],
     Common_confirm: [
         timeToConfirm: 60,

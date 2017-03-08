@@ -26,10 +26,11 @@ def executeAnsiblePlaybook(params, environmentVariables = [:]) {
         -i ${params.ansible_hostsFile} \
         -e 'target=${params.ansible_target} \
         user=${params.ansible_user} \
-        repo=${params.ansible_repo} \
-        reference=${params.ansible_reference} \
+        ansistrano_git_repo=${params.ansible_repo} \
+        ansistrano_git_branch=${params.ansible_reference} \
         ansistrano_deploy_from=../../docroot/master/ \
-        deploy_to=${params.ansible_deploy_to}'"
+        ansistrano_deploy_via=${params.ansistrano_deploy_via} \
+        ansistrano_deploy_to=${params.ansible_deploy_to}'"
 
     echo "Ansible command: ${command}"
 
