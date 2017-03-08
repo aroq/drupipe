@@ -24,19 +24,18 @@ def deployWithAnsistrano(params) {
 
     if (params.ansistrano_deploy_via == 'rsync') {
         params.ansiblePlaybookParams << [
-            ansistrano_deploy_from: '../../docroot/master',
+            ansistrano_deploy_from: params.ansistrano_deploy_from,
         ]
     }
     else if (params.ansistrano_deploy_via == 'git') {
+        def version = readFile('docroot/master/VERSION')
         params.ansiblePlaybookParams << [
-            ansible_reference:     version,
             ansistrano_git_repo:   params.ansible_repo,
-            ansistrano_git_branch: params.ansible_reference,
+            ansistrano_git_branch: version,
         ]
     }
 
     // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
-    def version = readFile('docroot/master/VERSION')
     executeAnsiblePlaybook(params)
 }
 
