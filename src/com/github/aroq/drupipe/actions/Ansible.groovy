@@ -1,18 +1,20 @@
 package com.github.aroq.drupipe.actions
 
 def deployWithGit(params) {
-    utils = new com.github.aroq.drupipe.Utils()
-    utils.loadLibrary(this, params)
     // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
-    // params.ansible << [:]
+    params.ansiblePlaybookParams = [
+        target:    params.ansible_target,
+        user:      params.ansible_user,
+        repo:      params.ansible_repo,
+        reference: params.ansible_reference,
+        deploy_to: params.ansible_deploy_to,
+    ]
     executeAnsiblePlaybook(params)
 }
 
 def deployWithAnsistrano(params) {
     // TODO: refactor it.
     drupipeShell("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback", params)
-    utils = new com.github.aroq.drupipe.Utils()
-    utils.loadLibrary(this, params)
     // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
     def version = readFile('docroot/master/VERSION')
     params.ansiblePlaybookParams = [
@@ -30,6 +32,8 @@ def deployWithAnsistrano(params) {
 
 // TODO: Provide Ansible parameters from settings container.
 def executeAnsiblePlaybook(params, environmentVariables = [:]) {
+    utils = new com.github.aroq.drupipe.Utils()
+    utils.loadLibrary(this, params)
     def command =
         "ansible-playbook ${params.ansible_playbook} \
         -i ${params.ansible_hostsFile} \
