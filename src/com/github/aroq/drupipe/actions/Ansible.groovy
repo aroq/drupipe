@@ -15,7 +15,14 @@ def deployWithAnsistrano(params) {
     utils.loadLibrary(this, params)
     // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
     def version = readFile('docroot/master/VERSION')
-    params << [ansible_reference: version]
+    params << [
+        ansible_reference:      version,
+        ansistrano_deploy_from: '../../docroot/master',
+        ansistrano_git_repo:    params.ansible_repo,
+        ansistrano_git_branch:  params.ansible_reference,
+        ansistrano_deploy_via:  params.ansistrano_deploy_via,
+        ansistrano_deploy_to:   params.ansible_deploy_to,
+    ]
     executeAnsiblePlaybook(params)
 }
 
@@ -28,7 +35,7 @@ def executeAnsiblePlaybook(params, environmentVariables = [:]) {
         user=${params.ansible_user} \
         ansistrano_git_repo=${params.ansible_repo} \
         ansistrano_git_branch=${params.ansible_reference} \
-        ansistrano_deploy_from=../../docroot/master/ \
+        ansistrano_deploy_from=${params.ansible_deploy_from} \
         ansistrano_deploy_via=${params.ansistrano_deploy_via} \
         ansistrano_deploy_to=${params.ansible_deploy_to}'"
 
