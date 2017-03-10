@@ -42,6 +42,7 @@ def deployWithAnsistrano(params) {
 
     // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
     executeAnsiblePlaybook(params)
+    deleteDir()
 }
 
 // TODO: Provide Ansible parameters from settings container.
@@ -61,7 +62,6 @@ def executeAnsiblePlaybook(params) {
             """, params << [shellCommandWithBashLogin: true]
         )
     }
-    deleteDir()
 }
 
 @NonCPS
