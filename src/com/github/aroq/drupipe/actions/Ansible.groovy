@@ -23,6 +23,7 @@ def deployWithAnsistrano(params) {
     ]
 
     if (params.ansistrano_deploy_via == 'rsync') {
+        drupipeShell("sh -fR docroot/master/.git")
         params.ansiblePlaybookParams << [
             ansistrano_deploy_from: params.ansistrano_deploy_from,
         ]
@@ -56,6 +57,7 @@ def executeAnsiblePlaybook(params) {
             """, params << [shellCommandWithBashLogin: true]
         )
     }
+    deleteDir()
 }
 
 @NonCPS
