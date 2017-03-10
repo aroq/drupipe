@@ -23,7 +23,7 @@ def deployWithAnsistrano(params) {
     ]
 
     if (params.ansistrano_deploy_via == 'rsync') {
-        drupipeShell("sh -fR docroot/master/.git")
+        drupipeShell("sh -fR docroot/master/.git", params)
         params.ansiblePlaybookParams << [
             ansistrano_deploy_from: params.ansistrano_deploy_from,
         ]
