@@ -1,5 +1,7 @@
 package com.github.aroq.drupipe.actions
 
+import groovy.json.JsonOutput
+
 def deployWithGit(params) {
     // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
     params.ansiblePlaybookParams = [
@@ -20,6 +22,7 @@ def deployWithAnsistrano(params) {
         user:                  params.ansible_user,
         ansistrano_deploy_via: params.ansistrano_deploy_via,
         ansistrano_deploy_to:  params.ansible_deploy_to,
+        ansistrano_shared_paths:  params.ansistrano_shared_paths,
     ]
 
     if (params.ansistrano_deploy_via == 'rsync') {
@@ -47,7 +50,7 @@ def executeAnsiblePlaybook(params) {
     def command =
         "ansible-playbook ${params.ansible_playbook} \
         -i ${params.ansible_hostsFile} \
-        -e '${joinParams(params.ansiblePlaybookParams)}'"
+        -e '${joinParams(params.ansiblePlaybookParams, 'json')}'"
 
     echo "Ansible command: ${command}"
 
@@ -61,10 +64,13 @@ def executeAnsiblePlaybook(params) {
 }
 
 @NonCPS
-def joinParams(params) {
-    params.inject([]) { result, entry ->
-        result << "${entry.key}=${entry.value.toString()}"
-    }.join(' ')
+def joinParams(params, mode = 'plain') {
+    if (mode == 'plain') {
+        params.inject([]) { result, entry ->
+            result << "${entry.key}=${entry.value.toString()}"
+        }.join(' ')
+    }
+    else if (mode == 'json') {
+        JsonOutput.toJson(params)
+    }
 }
-
-
