@@ -18,11 +18,12 @@ def deployWithAnsistrano(params) {
     drupipeShell("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback", params)
 
     params.ansiblePlaybookParams = [
-        target:                params.ansible_target,
-        user:                  params.ansible_user,
-        ansistrano_deploy_via: params.ansistrano_deploy_via,
-        ansistrano_deploy_to:  params.ansible_deploy_to,
-        ansistrano_shared_paths:  params.ansistrano_shared_paths,
+        target:                  params.ansible_target,
+        user:                    params.ansible_user,
+        ansistrano_deploy_via:   params.ansistrano_deploy_via,
+        ansistrano_deploy_to:    params.ansible_deploy_to,
+        ansistrano_shared_paths: params.ansistrano_shared_paths,
+        ansistrano_shared_files: params.ansistrano_shared_files,
     ]
 
     if (params.ansistrano_deploy_via == 'rsync') {
