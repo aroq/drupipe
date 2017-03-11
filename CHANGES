@@ -1,3 +1,14 @@
+Version 0.4.9:
+ - Updated drupipe to 0.4.9
+ - Added check for repo type in gitlab webhooks creation
+ - Added check for repo type in gitlab webhooks creation
+ - Refactoring
+ - Refactoring
+ - Refactoring
+ - Refactoring
+ - Refactoring
+ - Temporary changes for ansistrano
+
 Version 0.4.8:
  - Updated drupipe to 0.4.8
  - Ansistrano mode
