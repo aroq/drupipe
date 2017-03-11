@@ -1,9 +1,6 @@
 package com.github.aroq
 
-import groovy.json.JsonSlurper
-
 @Grab('org.codehaus.groovy.modules.http-builder:http-builder:0.7')
-import groovyx.net.http.RESTClient
 import groovyx.net.http.HTTPBuilder
 import static groovyx.net.http.Method.*
 import static groovyx.net.http.ContentType.*
