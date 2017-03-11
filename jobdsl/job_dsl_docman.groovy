@@ -101,7 +101,7 @@ docmanConfig.states?.each { state ->
     }
     if (config.env.GITLAB_API_TOKEN_TEXT) {
         docmanConfig.projects?.each { project ->
-            if (project.value.repo && isGitlabRepo(project.value.repo, config)) {
+            if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
                 if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
                     gitlabHelper.addWebhook(
                         project.value.repo,
