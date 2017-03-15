@@ -1,5 +1,5 @@
 def call(context = [:], body) {
-    context << context.actionParams['drupipeWithDocker'] << context
+    context << context.defaultActionParams['drupipeWithDocker'] << context
     if (context.dockerfile) {
         image = docker.build(context.dockerfile, 'docroot/config')
     }
@@ -9,7 +9,7 @@ def call(context = [:], body) {
     }
     image.inside(context.drupipeDockerArgs) {
         context.workspace = pwd()
-        sshagent([context.credentialsID]) {
+        sshagent([context.credentialsId]) {
             result = body(context)
             if (result) {
                 context << result

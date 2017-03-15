@@ -12,18 +12,21 @@ class DrupipePipeline implements Serializable {
 
     def script
 
+    def utils
+
     def execute(body = null) {
         context.pipeline = this
-        def utils = new com.github.aroq.drupipe.Utils()
+        utils = new com.github.aroq.drupipe.Utils()
 
         try {
             utils.pipelineNotify(context)
             script.timestamps {
                 script.node('master') {
                     utils.dump(config, 'PIPELINE-CONFIG')
+                    context.utils = utils
                     params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 
-                    def configParams = script.drupipeAction([action: 'Config.perform', params: [defaultParams: params]], context.clone() << params)
+                    def configParams = script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params]], context.clone() << params)
                     context << (configParams << config << context)
                     utils.dump(context, 'PIPELINE-CONTEXT')
                     // Secret option for emergency remove workspace.
@@ -32,7 +35,6 @@ class DrupipePipeline implements Serializable {
                         script.deleteDir()
                     }
                 }
-
 
                 if (blocks) {
                     blocks.each { block ->
@@ -125,7 +127,7 @@ class DrupipePipeline implements Serializable {
     def executeActionList(actionList, params) {
         try {
             for (action in actionList) {
-                params << action.execute(params)
+                params = utils.merge(params, action.execute(params))
             }
             params
         }

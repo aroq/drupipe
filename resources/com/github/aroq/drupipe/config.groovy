@@ -2,7 +2,6 @@ debugEnabled = false
 docrootDir = 'docroot'
 docmanConfigPath = 'docroot/config'
 docmanConfigFile = 'docroot.config'
-docmanJsonConfigFile = 'config.json'
 
 drupipeLibraryUrl = 'https://github.com/aroq/drupipe.git'
 drupipeLibraryBranch = 'master'
@@ -28,11 +27,11 @@ environments {
     }
 }
 
-actionParams = [
+defaultActionParams = [
     // TODO: add params subsections (that will be containerized inside common config).
     Config: [
-        projectConfigPath: 'docroot/config',
-        projectConfigFile: 'docroot.config',
+        //projectConfigPath: 'docroot/config',
+        //projectConfigFile: 'docroot.config',
         mothershipConfigFile: 'mothership.config',
     ],
     Behat: [
@@ -53,9 +52,6 @@ actionParams = [
         docmanJsonConfigFile: 'config.json',
     ],
     // TODO: add private (that will not go into common config) params section.
-    Docman_config: [
-        docmanJsonConfigFile: 'config.json',
-    ],
     Publish_junit: [
         reportsPath: 'reports/*.xml'
     ],
@@ -83,6 +79,7 @@ actionParams = [
         executeCommand: 'dbBackupSite',
     ],
     Ansible: [
+        debugEnabled: true,
         ansible_hostsFile: 'docroot/config/ansible/inventory.ini',
     ],
     Ansible_deployWithGit: [
@@ -97,7 +94,6 @@ actionParams = [
         timeToConfirm: 60,
     ],
     Builder: [
-        builderType: 'docroot',
         builderHandler: 'Docman',
         builderMethod: 'build',
     ],

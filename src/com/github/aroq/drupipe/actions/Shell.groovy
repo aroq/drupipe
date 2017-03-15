@@ -1,5 +1,9 @@
 package com.github.aroq.drupipe.actions
 
-def execute(params) {
-    drupipeShell(params.shellCommand, params)
+class Shell extends BaseAction {
+    def execute() {
+        drupipeShell(action.params.shellCommand, context)
+    }
 }
+
+

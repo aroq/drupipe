@@ -1,14 +1,14 @@
 package com.github.aroq.drupipe.actions
 
-def perform(params) {
-    utils = new com.github.aroq.drupipe.Utils()
-    utils.dumpConfigFile(params)
-    utils.loadLibrary(this, params)
+class JobDslSeed extends BaseAction {
+    def perform() {
+        utils.dumpConfigFile(context)
+        utils.loadLibrary(script, context)
 
-    jobDsl targets: params.jobsPattern.join('\n'),
-            removedJobAction: params.removedJobAction,
-            removedViewAction: params.removedViewAction,
-            lookupStrategy: params.lookupStrategy,
-            additionalClasspath: params.additionalClasspath.join('\n')
+        script.jobDsl targets: action.params.jobsPattern.join('\n'),
+            removedJobAction: action.params.removedJobAction,
+            removedViewAction: action.params.removedViewAction,
+            lookupStrategy: action.params.lookupStrategy,
+            additionalClasspath: action.params.additionalClasspath.join('\n')
+    }
 }
-

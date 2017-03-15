@@ -1,7 +1,10 @@
 package com.github.aroq.drupipe.actions
 
-def confirm(params) {
-    timeout(time: params.timeToConfirm, unit: 'MINUTES') {
-        input params.message
+class Common extends BaseAction {
+    def confirm() {
+        script.timeout(time: action.params.timeToConfirm, unit: 'MINUTES') {
+            script.input context.message
+        }
     }
 }
+

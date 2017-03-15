@@ -20,11 +20,11 @@ class DrupipeAction implements Serializable {
         if (c) {
             this.context << c
         }
-        def actionParams = [:]
-
 
         try {
             def utils = new com.github.aroq.drupipe.Utils()
+
+            // Stage name & echo.
             String drupipeStageName
             if (this.context.stage) {
                 drupipeStageName = "${this.context.stage.name}"
@@ -32,25 +32,26 @@ class DrupipeAction implements Serializable {
             else {
                 drupipeStageName = 'config'
             }
-
             utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} start <-")
-            actionParams << this.context
+
+            // Define action params.
+            //def actionParams = this.context
+            def actionParams = [:]
+            actionParams << ['action': this]
+            def defaultActionParams = [:]
+            for (actionName in [this.name, this.name + '_' + this.methodName]) {
+                if (actionName in context.defaultActionParams) {
+                    defaultActionParams = utils.merge(defaultActionParams, context.defaultActionParams[actionName])
+                }
+            }
             if (!this.params) {
                 this.params = [:]
             }
-            actionParams << ['action': this]
-            def defaultParams = [:]
-            for (actionName in [this.name, this.name + '_' + this.methodName]) {
-                if (actionName in context.actionParams) {
-                    defaultParams << context.actionParams[actionName]
-                    //defaultParams = utils.merge(defaultParams, context.actionParams[actionName])
-                }
-            }
-            actionParams << context
-            actionParams << defaultParams << this.params
+            this.params = utils.merge(defaultActionParams, this.params)
+            actionParams << this.params
+            utils.debugLog(context, actionParams, "${this.fullName} action params")
 
-            utils.debugLog(actionParams, actionParams, "${this.fullName} action params")
-            // TODO: configure it:
+            // Execute action from file if exist in sources...
             def actionFile = null
             def actionResult = null
             if (context.sourcesList) {
@@ -65,10 +66,17 @@ class DrupipeAction implements Serializable {
                     }
                 }
             }
+            // ...Otherwise execute from class.
             if (!actionFile) {
                 try {
-                    def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance()
-                    actionResult = actionInstance."${this.methodName}"(actionParams)
+                    def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance(
+                        context: context,
+                        action: this,
+                        script: context.pipeline.script,
+                        utils: utils,
+                    )
+
+                    actionResult = actionInstance."${this.methodName}"()
                 }
                 catch (err) {
                     this.context.pipeline.script.echo err.toString()
@@ -76,16 +84,19 @@ class DrupipeAction implements Serializable {
                 }
             }
 
+            // Put action result into context.
             if (actionResult && actionResult.returnConfig) {
                 if (utils.isCollectionOrList(actionResult)) {
                     context << actionResult
+                    utils.debugLog(context, actionResult, "${this.fullName} action result")
                 }
                 else {
                     // TODO: check if this should be in else clause.
                     context << ["${action.name}.${action.methodName}": actionResult]
                 }
             }
-            utils.debugLog(actionParams, context, "${this.fullName} action result")
+            //utils.debugLog(context, context, "${this.fullName} action result")
+
             context.returnConfig = false
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} end <-"
 

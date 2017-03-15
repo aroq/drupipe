@@ -2,76 +2,80 @@ package com.github.aroq.drupipe.actions
 
 import groovy.json.JsonOutput
 
-def deployWithGit(params) {
-    // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
-    params.ansiblePlaybookParams = [
-        target:    params.ansible_target,
-        user:      params.ansible_user,
-        repo:      params.ansible_repo,
-        reference: params.ansible_reference,
-        deploy_to: params.ansible_deploy_to,
-    ]
-    executeAnsiblePlaybook(params)
-}
-
-def deployWithAnsistrano(params) {
-    drupipeShell("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback", params)
-
-    params.ansiblePlaybookParams = [
-        target:                  params.ansible_target,
-        user:                    params.ansible_user,
-        ansistrano_deploy_via:   params.ansistrano_deploy_via,
-        ansistrano_deploy_to:    params.ansible_deploy_to,
-        ansistrano_shared_paths: params.ansistrano_shared_paths,
-        ansistrano_shared_files: params.ansistrano_shared_files,
-    ]
-
-    if (params.ansistrano_deploy_via == 'rsync') {
-        drupipeShell("rm -fR docroot/master/.git", params)
-        params.ansiblePlaybookParams << [
-            ansistrano_deploy_from: params.ansistrano_deploy_from,
+class Builder extends BaseAction {
+    def deployWithGit() {
+        // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
+        action.params.ansiblePlaybookParams = [
+            target:    action.params.ansible_target,
+            user:      action.params.ansible_user,
+            repo:      action.params.ansible_repo,
+            reference: action.params.ansible_reference,
+            deploy_to: action.params.ansible_deploy_to,
         ]
-    }
-    else if (params.ansistrano_deploy_via == 'git') {
-        def version = readFile('docroot/master/VERSION')
-        params.ansiblePlaybookParams << [
-            ansistrano_git_repo:   params.ansible_repo,
-            ansistrano_git_branch: version,
-        ]
+        executeAnsiblePlaybook()
     }
 
-    // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
-    executeAnsiblePlaybook(params)
-    deleteDir()
-}
+    def installAnsistranoRole() {
+        script.drupipeShell("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback", context)
+    }
 
-// TODO: Provide Ansible parameters from settings container.
-def executeAnsiblePlaybook(params) {
-    utils = new com.github.aroq.drupipe.Utils()
-    utils.loadLibrary(this, params)
-    def command =
-        "ansible-playbook ${params.ansible_playbook} \
-        -i ${params.ansible_hostsFile} \
-        -e '${joinParams(params.ansiblePlaybookParams, 'json')}'"
+    def deployWithAnsistrano() {
+        installAnsistranoRole()
 
-    echo "Ansible command: ${command}"
+        action.params.ansiblePlaybookParams = [
+            target:                  action.params.ansible_target,
+            user:                    action.params.ansible_user,
+            ansistrano_deploy_via:   action.params.ansistrano_deploy_via,
+            ansistrano_deploy_to:    action.params.ansible_deploy_to,
+            ansistrano_shared_paths: action.params.ansistrano_shared_paths,
+            ansistrano_shared_files: action.params.ansistrano_shared_files,
+        ]
 
-    wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
-        drupipeShell("""
+        if (action.params.ansistrano_deploy_via == 'rsync') {
+            script.drupipeShell("rm -fR docroot/master/.git", context)
+            action.params.ansiblePlaybookParams << [
+                ansistrano_deploy_from: action.params.ansistrano_deploy_from,
+            ]
+        }
+        else if (action.params.ansistrano_deploy_via == 'git') {
+            def version = readFile('docroot/master/VERSION')
+            action.params.ansiblePlaybookParams << [
+                ansistrano_git_repo:   params.ansible_repo,
+                ansistrano_git_branch: version,
+            ]
+        }
+
+        // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
+        executeAnsiblePlaybook()
+        script.deleteDir()
+    }
+
+    // TODO: Provide Ansible parameters from settings container.
+    def executeAnsiblePlaybook() {
+        utils.loadLibrary(script, context)
+        def command =
+            "ansible-playbook ${action.params.ansible_playbook} \
+        -i ${action.params.ansible_hostsFile} \
+        -e '${joinParams(action.params.ansiblePlaybookParams, 'json')}'"
+
+        script.echo "Ansible command: ${command}"
+
+        script.drupipeShell("""
             ${command}
-            """, params << [shellCommandWithBashLogin: true]
+            """, context << [shellCommandWithBashLogin: true]
         )
     }
-}
 
-@NonCPS
-def joinParams(params, mode = 'plain') {
-    if (mode == 'plain') {
-        params.inject([]) { result, entry ->
-            result << "${entry.key}=${entry.value.toString()}"
-        }.join(' ')
-    }
-    else if (mode == 'json') {
-        JsonOutput.toJson(params)
+    @NonCPS
+    def joinParams(params, mode = 'plain') {
+        params = params.findAll{k, v -> v != null}
+        if (mode == 'plain') {
+            params.inject([]) { result, entry ->
+                result << "${entry.key}=${entry.value.toString()}"
+            }.join(' ')
+        }
+        else if (mode == 'json') {
+            JsonOutput.toJson(params)
+        }
     }
 }

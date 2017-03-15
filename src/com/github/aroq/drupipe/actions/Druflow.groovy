@@ -1,92 +1,86 @@
 package com.github.aroq.drupipe.actions
 
-def deployFlow(params) {
-   if (params.executeEnvironment) {
-        executeEnvironment = params.executeEnvironment
-    }
-    else {
-        executeEnvironment = environment
+class Druflow extends BaseAction {
+    def deployFlow() {
+        def executeEnvironment = action.params.executeEnvironment ? action.params.executeEnvironment : context.environment
+        executeDruflowCommand([env: executeEnvironment, projectName: context.projectName])
     }
 
-    executeDruflowCommand(params, [env: executeEnvironment, projectName: params.projectName])
-}
-
-def prepareDruflowCommandParams(params, overrides = [:]) {
-    defaultParams = [
-        debug: debugFlag(),
-        executeCommand: params.executeCommand,
-        workspace: params.workspace,
-        // TODO: review this parameter handling.
-        docrootDir: docrootDir,
-    ]
-    commandParams = defaultParams
-    commandParams << overrides
-}
-
-def prepareDruflowCommand(params, overrides) {
-    commandParams = prepareDruflowCommandParams(params, overrides)
-
-    options = ''
-    options += getOptions(commandParams)
-    if (params.propertiesFile && fileExists(file: params.propertiesFile)) {
-        options += getOptions(readProperties(file: params.propertiesFile))
+    def prepareDruflowCommandParams(overrides = [:]) {
+        def defaultParams = [
+            debug: debugFlag(),
+            executeCommand: action.params.executeCommand,
+            workspace: context.workspace,
+            // TODO: review this parameter handling.
+            docrootDir: context.docrootDir,
+        ]
+        def commandParams = defaultParams
+        commandParams << overrides
     }
 
-    "cd ${params.druflowDir} && ./gradlew app ${options}"
-}
+    def prepareDruflowCommand(overrides) {
+        def commandParams = prepareDruflowCommandParams(overrides)
 
-def executeDruflowCommand(params, overrides = [:]) {
-    def druflowCommand = prepareDruflowCommand(params, overrides)
-    druflowGet(params)
-    drupipeShell(druflowCommand, params)
-}
-
-def druflowGet(params) {
-    if (fileExists(params.druflowDir)) {
-        dir(params.druflowDir) {
-            deleteDir()
+        def options = ''
+        options += getOptions(commandParams)
+        if (action.params.propertiesFile && script.fileExists(file: action.params.propertiesFile)) {
+            options += getOptions(script.readProperties(file: action.params.propertiesFile))
         }
 
+        "cd ${action.params.druflowDir} && ./gradlew app ${options}"
     }
-    drupipeShell("git clone ${params.druflowRepo} --branch ${params.druflowGitReference} --depth 1 ${params.druflowDir}", params)
+
+    def executeDruflowCommand(overrides = [:]) {
+        def druflowCommand = prepareDruflowCommand(overrides)
+        druflowGet()
+        script.drupipeShell(druflowCommand, context)
+    }
+
+    def druflowGet() {
+        if (script.fileExists(action.params.druflowDir)) {
+            script.dir(action.params.druflowDir) {
+                script.deleteDir()
+            }
+
+        }
+        script.drupipeShell("git clone ${action.params.druflowRepo} --branch ${action.params.druflowGitReference} --depth 1 ${action.params.druflowDir}", context)
+    }
+
+    def copySite() {
+        for (db in getDbs()) {
+            executeDruflowCommand([argument: "'${db} ${action.params.toEnvironment}'", env: action.params.executeEnvironment, site: 'default'])
+        }
+    }
+
+    def dbBackupSite() {
+        for (db in getDbs()) {
+            executeDruflowCommand([argument: db, env: action.params.executeEnvironment, site: 'default'])
+        }
+    }
+
+    def getDbs() {
+        def dbs = []
+        if (action.params.db instanceof java.lang.String) {
+            dbs << action.params.db
+        }
+        else {
+            dbs = action.params.db
+        }
+        dbs
+    }
+
+    @NonCPS
+    def getOptions(props) {
+        def result = ''
+        for (prop in props) {
+            result += " -D${prop.key}=${prop.value}"
+        }
+        result
+    }
+
+    def debugFlag() {
+        context.debugEnabled && context.debugEnabled != '0' ? '1' : '0'
+    }
 }
 
-def copySite(params) {
-    def dbs = []
-    if (params.db instanceof java.lang.String) {
-        dbs << params.db
-    }
-    else {
-        dbs = params.db
-    }
-    for (db in dbs) {
-        executeDruflowCommand(params, [argument: "'${db} ${params.toEnvironment}'", env: params.executeEnvironment, site: 'default'])
-    }
-}
-
-def dbBackupSite(params) {
-    def dbs = []
-    if (params.db instanceof java.lang.String) {
-        dbs << params.db
-    }
-    else {
-        dbs = params.db
-    }
-    for (db in dbs) {
-        executeDruflowCommand(params, [argument: db, env: params.executeEnvironment, site: 'default'])
-    }
-}
-
-@NonCPS
-def getOptions(props) {
-    result = ''
-    for (prop in props) {
-        result += " -D${prop.key}=${prop.value}"
-    }
-    result
-}
-
-def debugFlag() {
-    params.debugEnabled && params.debugEnabled != '0' ? '1' : '0'
-}
 

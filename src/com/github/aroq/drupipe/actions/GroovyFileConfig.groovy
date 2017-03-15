@@ -1,24 +1,28 @@
 package com.github.aroq.drupipe.actions
 
-def load(params) {
-    if (params.configFileName && fileExists(params.configFileName)) {
-        params << readGroovyConfig(params.configFileName)
+class GroovyFileConfig extends BaseAction {
+
+    def load() {
+        if (action.params.configFileName && script.fileExists(action.params.configFileName)) {
+            context = utils.merge(context, readGroovyConfig(action.params.configFileName))
+        }
+        context << [returnConfig: true]
     }
-    params << [returnConfig: true]
-}
 
-def readGroovyConfig(filePath) {
-    def text = readFile(filePath)
-    groovyConfig(text)
-}
+    def groovyConfigFromLibraryResource() {
+        context << groovyConfig(script.libraryResource(action.params.resource))
+        context << [returnConfig: true]
+    }
 
-def groovyConfigFromLibraryResource(params) {
-    params << groovyConfig(libraryResource(params.resource))
-    params << [returnConfig: true]
-}
+    def readGroovyConfig(filePath) {
+        def text = script.readFile(filePath)
+        groovyConfig(text)
+    }
 
-@NonCPS
-def groovyConfig(text) {
-    return new HashMap<>(ConfigSlurper.newInstance(env.drupipeEnvironment).parse(text))
+    @NonCPS
+    def groovyConfig(text) {
+        return new HashMap<>(ConfigSlurper.newInstance(script.env.drupipeEnvironment).parse(text))
+    }
+
 }
 

@@ -1,26 +1,30 @@
 package com.github.aroq.drupipe.actions
 
-def build(params) {
-    if (!params['builder']) {
-        params['builder'] = [:]
+class Builder extends BaseAction {
+
+    def build() {
+        if (!context['builder']) {
+            context['builder'] = [:]
+        }
+        // Dispatch the action.
+        context << script.drupipeAction([action: "${action.params.builderHandler}.${action.params.builderMethod}"], context)
+        context << [returnConfig: true]
     }
-    // Dispatch the action.
-    params << drupipeAction([action: "${params.builderHandler}.${params.builderMethod}"], params)
-    params << [returnConfig: true]
-}
 
-def createArtifact(params) {
-    def sourceDir = params.builder['buildDir']
-    def fileName = "${params.builder['buildName']}-${params.builder['version']}.tar.gz"
-    params.builder['artifactFileName'] = fileName
-    params.builder['groupId'] = params.jenkinsFolderName
+    def createArtifact() {
+        def sourceDir = context.builder['buildDir']
+        def fileName = "${context.builder['buildName']}-${context.builder['version']}.tar.gz"
+        context.builder['artifactFileName'] = fileName
+        context.builder['groupId'] = context.jenkinsFolderName
 
-    drupipeShell(
-        """
-        rm -fR ${sourceDir}/.git
-        tar -czf ${fileName} ${sourceDir}
-    """, params << [shellCommandWithBashLogin: true]
-    )
-    params << [returnConfig: true]
+        script.drupipeShell(
+            """
+                rm -fR ${sourceDir}/.git
+                tar -czf ${fileName} ${sourceDir}
+            """, context << [shellCommandWithBashLogin: true]
+        )
+        context << [returnConfig: true]
+    }
+
 }
 

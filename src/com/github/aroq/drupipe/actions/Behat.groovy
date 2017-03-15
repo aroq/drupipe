@@ -1,39 +1,37 @@
 package com.github.aroq.drupipe.actions
 
-def perform(params) {
-    if (params.testEnvironment) {
-        testEnvironment = params.testEnvironment
-    }
-    else {
-        testEnvironment = environment
-    }
-    features = ''
-    if (params.features) {
-        features = params.features
-    }
-    tags = ''
-    if (params.tags) {
-        tags = "--tags=${params.tags}"
-    }
+class Behat extends BaseAction {
 
-    // TODO: Add settings to exit with error on Behat errors.
-    if (fileExists("${params.masterPath}/${params.behatExecutable}")) {
-        if (fileExists("${params.masterPath}/${params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml")) {
-            drupipeShell(
-                """
-                cd ${params.masterPath}/${params.docrootDir}
-                mkdir -p ${params.workspaceRelativePath}/reports
-                ${params.masterRelativePath}/${params.behatExecutable} --config=${params.masterRelativePath}/${params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml ${params.behat_args} --out=${params.workspaceRelativePath}/reports ${tags} ${features}
-            """, params << [shellCommandWithBashLogin: true]
-            )
+    def perform() {
+        def testEnvironment = action.params.testEnvironment ? action.params.testEnvironment : context.environment
+        def features = ''
+        if (action.params.features) {
+            features = action.params.features
+        }
+        def tags = ''
+        if (context.tags) {
+            tags = "--tags=${context.tags}"
+        }
+
+        // TODO: Add settings to exit with error on Behat errors.
+        if (script.fileExists("${action.params.masterPath}/${action.params.behatExecutable}")) {
+            if (script.fileExists("${action.params.masterPath}/${action.params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml")) {
+                script.drupipeShell(
+                    """
+                cd ${action.params.masterPath}/${context.docrootDir}
+                mkdir -p ${action.params.workspaceRelativePath}/reports
+                ${action.params.masterRelativePath}/${action.params.behatExecutable} --config=${action.params.masterRelativePath}/${action.params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml ${action.params.behat_args} --out=${action.params.workspaceRelativePath}/reports ${tags} ${features}
+            """, context << [shellCommandWithBashLogin: true]
+                )
+            }
+            else {
+                throw new Exception("Behat config file not found: ${action.params.masterPath}/${action.params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml")
+            }
         }
         else {
-            throw new Exception("Behat config file not found: ${params.masterPath}/${params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml")
+            throw new Exception("Behat execution file doesn't present: ${action.params.masterPath}/${action.params.behatExecutable}")
         }
     }
-    else {
-        throw new Exception("Behat execution file doesn't present: ${params.masterPath}/${params.behatExecutable}")
-    }
-}
 
+}
 

@@ -1,6 +1,8 @@
 package com.github.aroq.drupipe.actions
 
-def execute(params) {
-    sh "${params.script} ${params.args.join(' ')}"
+class Script extends BaseAction {
+    def execute() {
+        sh "${action.params.script} ${action.params.args.join(' ')}"
+    }
 }
 

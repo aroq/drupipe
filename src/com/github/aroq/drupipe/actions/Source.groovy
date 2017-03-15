@@ -1,65 +1,64 @@
 package com.github.aroq.drupipe.actions
 
-def add(params) {
-    def source = params.source
-    def result
-    utils = new com.github.aroq.drupipe.Utils()
-    switch (source.type) {
-        case 'git':
-            if (!source.refType) {
-                source.refType = 'branch'
-            }
-            dir(source.path) {
-                deleteDir()
-            }
-            dir(source.path) {
-                if (source.refType == 'branch') {
-                    if (params.credentialsID) {
-                        echo "With credentials: ${params.credentialsID}"
-                        git credentialsId: params.credentialsID, url: source.url, branch: source.branch
-                    }
-                    else {
-                        echo "Without credentials"
-                        git url: source.url, branch: source.branch
+class Source extends BaseAction {
+    def add() {
+        def source = this.action.params.source
+        def result
+        switch (source.type) {
+            case 'git':
+                if (!source.refType) {
+                    source.refType = 'branch'
+                }
+                this.script.dir(source.path) {
+                    this.script.deleteDir()
+                }
+                this.script.dir(source.path) {
+                    if (source.refType == 'branch') {
+                        if (this.action.params.credentialsId) {
+                            this.script.echo "With credentials: ${this.action.params.credentialsId}"
+                            this.script.git credentialsId: this.action.params.credentialsId, url: source.url, branch: source.branch
+                        }
+                        else {
+                            this.script.echo "Without credentials"
+                            this.script.git url: source.url, branch: source.branch
+                        }
                     }
                 }
-            }
-            if (source.refType == 'tag') {
-                sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
-            }
-            result = source.path
-            break
+                if (source.refType == 'tag') {
+                    sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
+                }
+                result = source.path
+                break
 
-        case 'dir':
-            result = source.path
-            break
-    }
-    if (!params.sources) {
-        params.sources = [:]
-        params.sourcesList = []
-    }
-    utils = new com.github.aroq.drupipe.Utils()
-    if (result) {
-        params.sources[source.name] = new com.github.aroq.drupipe.DrupipeSource(name: source.name, type: source.type, path: source.path)
-        params.sourcesList << params.sources[source.name]
-
-    }
-    params.remove('source')
-    params << [returnConfig: true]
-}
-
-def loadConfig(params) {
-    utils = new com.github.aroq.drupipe.Utils()
-    if (params.configPath) {
-        configFilePath = utils.sourcePath(params, params.sourceName, params.configPath)
-//        debugLog "CONFIG FILE PATH: ${configFilePath}"
-
-        if (params.configType == 'groovy') {
-            params << drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], params)
+            case 'dir':
+                result = source.path
+                break
         }
-        params.remove('sourceName')
-        params.remove('configPath')
-        params.remove('configType')
+        if (!context.sources) {
+            context.sources = [:]
+            context.sourcesList = []
+        }
+        if (result) {
+            context.sources[source.name] = new com.github.aroq.drupipe.DrupipeSource(name: source.name, type: source.type, path: source.path)
+            context.sourcesList << context.sources[source.name]
+
+        }
+        context.remove('source')
+        context << [returnConfig: true]
     }
-    params << [returnConfig: true]
+
+    def loadConfig() {
+        if (action.params.configPath) {
+            def configFilePath = utils.sourcePath(context, action.params.sourceName, action.params.configPath)
+
+            if (action.params.configType == 'groovy') {
+                context << this.script.drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], context)
+            }
+            context.remove('sourceName')
+            context.remove('configPath')
+            context.remove('configType')
+        }
+        context << [returnConfig: true]
+    }
 }
+

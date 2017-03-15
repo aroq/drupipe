@@ -2,17 +2,14 @@
 
 // Pipeline used to create project specific pipelines.
 def call(body) {
-    drupipe() { config ->
-        node(config.nodeName) {
-            drupipeWithDocker(config) {
-                checkout scm
-                drupipeAction(action: 'Docman.info', config)
-
-                stash name: 'config', includes: 'docroot/config/**, library/**, mothership/**', excludes: '.git, .git/**'
-            }
+    drupipe { context ->
+        drupipeBlock(withDocker: true, nodeName: 'default', context) {
+            checkout scm
+            drupipeAction(action: 'Docman.info', context)
+            stash name: 'config', includes: 'docroot/config/**, library/**, mothership/**', excludes: '.git, .git/**'
         }
 
-        node('master') {
+        drupipeBlock(nodeName: 'master', context) {
             if (fileExists('docroot/config')) {
                 dir('docroot/config') {
                     deleteDir()
@@ -27,9 +24,9 @@ def call(body) {
 
             unstash 'config'
             if (fileExists('docroot/config/pipelines/jobdsl')) {
-                config.actionParams.JobDslSeed_perform.jobsPattern << 'docroot/config/pipelines/jobdsl/*.groovy'
+                context.defaultActionParams.JobDslSeed_perform.jobsPattern << 'docroot/config/pipelines/jobdsl/*.groovy'
             }
-            drupipeAction(action: 'JobDslSeed.perform', config)
+            drupipeAction(action: 'JobDslSeed.perform', context)
         }
     }
 }
