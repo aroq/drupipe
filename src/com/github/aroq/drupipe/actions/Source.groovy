@@ -25,7 +25,7 @@ class Source extends BaseAction {
                     }
                 }
                 if (source.refType == 'tag') {
-                    sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
+                    script.sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
                 }
                 result = source.path
                 break
