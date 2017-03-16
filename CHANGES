@@ -1,3 +1,6 @@
+Version 0.5.2:
+ - Removed deleteDir() in Ansistrano
+
 Version 0.5.1:
  - updated drupipe to 0.5.1
 
