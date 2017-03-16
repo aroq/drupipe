@@ -47,7 +47,8 @@ class Builder extends BaseAction {
 
         // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
         executeAnsiblePlaybook()
-        script.deleteDir()
+        // TODO: Commented for now, need to check how to deal with it.
+        // script.deleteDir()
     }
 
     // TODO: Provide Ansible parameters from settings container.
