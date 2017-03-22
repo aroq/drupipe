@@ -1,3 +1,7 @@
+Version 0.5.4:
+ - Changed drupipe version to 0.5.4
+ - Changed deletedir for sh rm -fR docroot/master in Ansistrano
+
 Version 0.5.3:
  - Changed drupipe version to 0.5.3
  - Added release permissions fix for ansistrano
