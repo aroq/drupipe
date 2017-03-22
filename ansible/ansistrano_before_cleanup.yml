@@ -1,0 +1,8 @@
+- name: Find releases to be deleted
+  shell: ls -1dt {{ ansistrano_releases_path }}/* | tail -n +{{ ansistrano_keep_releases | int + 1 }}
+  when: ansistrano_keep_releases > 0
+  register: releases
+
+- name: Change permissions for releases to be deleted
+  command: chmod -R 777 "{{ item }}"
+  with_items: "{{ releases.stdout_lines }}"
