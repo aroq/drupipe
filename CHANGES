@@ -1,3 +1,7 @@
+Version 0.5.3:
+ - Changed drupipe version to 0.5.3
+ - Added release permissions fix for ansistrano
+
 Version 0.5.2:
  - Removed deleteDir() in Ansistrano
 
