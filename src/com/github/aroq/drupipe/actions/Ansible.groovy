@@ -49,6 +49,10 @@ class Builder extends BaseAction {
         executeAnsiblePlaybook()
         // TODO: Commented for now, need to check how to deal with it.
         // script.deleteDir()
+        script.drupipeShell("""
+            rm -fR docroot/master
+            """, context
+        )
     }
 
     // TODO: Provide Ansible parameters from settings container.
