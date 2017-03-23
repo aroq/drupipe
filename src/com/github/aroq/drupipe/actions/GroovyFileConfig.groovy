@@ -1,6 +1,9 @@
 package com.github.aroq.drupipe.actions
 
 class GroovyFileConfig extends BaseAction {
+
+    def context
+
     def load() {
         if (action.params.configFileName && script.fileExists(action.params.configFileName)) {
             context = utils.merge(context, readGroovyConfig(action.params.configFileName))
@@ -9,9 +12,6 @@ class GroovyFileConfig extends BaseAction {
     }
 
     def groovyConfigFromLibraryResource() {
-        if (!this.context) {
-            this.context = [:]
-        }
         this.context << groovyConfig(script.libraryResource(action.params.resource))
         this.context << [returnConfig: true]
     }
