@@ -35,6 +35,7 @@ class DrupipeBlock implements Serializable {
         context.block = this
 
         if (nodeName) {
+            context.pipeline.script.echo "NODE NAME: ${nodeName}"
             context.pipeline.script.node(nodeName) {
                 if (withDocker) {
                     if (context.containerMode == 'kubernetes') {
