@@ -9,11 +9,11 @@ class GroovyFileConfig extends BaseAction {
     }
 
     def groovyConfigFromLibraryResource() {
-        if (!context) {
-            context = [:]
+        if (!this.context) {
+            this.context = [:]
         }
-        context << groovyConfig(script.libraryResource(action.params.resource))
-        context << [returnConfig: true]
+        this.context << groovyConfig(script.libraryResource(action.params.resource))
+        this.context << [returnConfig: true]
     }
 
     def readGroovyConfig(filePath) {
