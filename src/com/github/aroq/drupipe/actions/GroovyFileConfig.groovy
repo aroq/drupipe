@@ -4,6 +4,10 @@ class GroovyFileConfig extends BaseAction {
 
     def context
 
+    def script
+
+    def utils
+
     def load() {
         if (action.params.configFileName && script.fileExists(action.params.configFileName)) {
             context = utils.merge(context, readGroovyConfig(action.params.configFileName))
