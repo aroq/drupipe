@@ -1,5 +1,7 @@
 package com.github.aroq.drupipe.actions
 
+import com.github.aroq.drupipe.DrupipeAction
+
 @Grab('org.yaml:snakeyaml:1.17')
 
 import org.yaml.snakeyaml.Yaml
@@ -9,6 +11,14 @@ import com.github.aroq.StateStableInfo
 import com.github.aroq.BuildFileInfo
 
 class Repo extends BaseAction {
+
+    def context
+
+    def script
+
+    def utils
+
+    def DrupipeAction action
     def init() {
         context << script.drupipeAction([action: "Docman.init"], context)
         context << [returnConfig: true]

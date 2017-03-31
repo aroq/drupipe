@@ -12,8 +12,4 @@ class BaseAction implements Serializable {
 
     def DrupipeAction action
 
-    def dumpParams() {
-        utils.jsonDump(action.params, 'ACTION PARAMS')
-    }
-
 }

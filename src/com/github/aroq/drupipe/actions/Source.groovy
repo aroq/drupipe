@@ -1,6 +1,17 @@
 package com.github.aroq.drupipe.actions
 
+import com.github.aroq.drupipe.DrupipeAction
+
 class Source extends BaseAction {
+
+    def context
+
+    def script
+
+    def utils
+
+    def DrupipeAction action
+
     def add() {
         def source = this.action.params.source
         def result

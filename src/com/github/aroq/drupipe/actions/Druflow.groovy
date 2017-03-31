@@ -1,6 +1,17 @@
 package com.github.aroq.drupipe.actions
 
+import com.github.aroq.drupipe.DrupipeAction
+
 class Druflow extends BaseAction {
+
+    def context
+
+    def script
+
+    def utils
+
+    def DrupipeAction action
+
     def deployFlow() {
         def executeEnvironment = action.params.executeEnvironment ? action.params.executeEnvironment : context.environment
         executeDruflowCommand([env: executeEnvironment, projectName: context.projectName])
@@ -38,10 +49,7 @@ class Druflow extends BaseAction {
 
     def druflowGet() {
         if (script.fileExists(action.params.druflowDir)) {
-            script.dir(action.params.druflowDir) {
-                script.deleteDir()
-            }
-
+            utils.removeDir(action.params.druflowDir, context)
         }
         script.drupipeShell("git clone ${action.params.druflowRepo} --branch ${action.params.druflowGitReference} --depth 1 ${action.params.druflowDir}", context)
     }
@@ -56,6 +64,13 @@ class Druflow extends BaseAction {
         for (db in getDbs()) {
             executeDruflowCommand([argument: db, env: action.params.executeEnvironment, site: 'default'])
         }
+    }
+
+
+    def getGitRepo() {
+        script.echo "DRUFLOW getGitRepo()"
+        def executeEnvironment = action.params.executeEnvironment ? action.params.executeEnvironment : context.environment
+        executeDruflowCommand([env: executeEnvironment, projectName: context.projectName])
     }
 
     def getDbs() {

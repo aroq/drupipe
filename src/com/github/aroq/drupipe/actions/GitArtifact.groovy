@@ -2,7 +2,7 @@ package com.github.aroq.drupipe.actions
 
 import com.github.aroq.drupipe.DrupipeAction
 
-class Publish extends BaseAction {
+class GitArtifact extends BaseAction {
 
     def context
 
@@ -11,10 +11,9 @@ class Publish extends BaseAction {
     def utils
 
     def DrupipeAction action
-    def junit() {
-        script.step([$class: 'JUnitResultArchiver', testResults: action.params.reportsPath])
+
+    def retrieve() {
+        script.drupipeAction([action: "Git.clone", params: context.builder.artifactParams], context)
     }
 }
-
-
 

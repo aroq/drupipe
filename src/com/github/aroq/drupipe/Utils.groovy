@@ -263,5 +263,13 @@ Map merge(Map[] sources) {
     }
 }
 
+def removeDir(dir, context) {
+    if (fileExists(dir)) {
+        drupipeShell("""
+            rm -fR ${dir}
+            """, context
+        )
+    }
+}
 
 return this

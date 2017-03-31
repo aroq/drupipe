@@ -1,6 +1,17 @@
 package com.github.aroq.drupipe.actions
 
+import com.github.aroq.drupipe.DrupipeAction
+
 class JobDslSeed extends BaseAction {
+
+    def context
+
+    def script
+
+    def utils
+
+    def DrupipeAction action
+
     def perform() {
         utils.dumpConfigFile(context)
         utils.loadLibrary(script, context)

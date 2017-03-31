@@ -1,6 +1,16 @@
 package com.github.aroq.drupipe.actions
 
+import com.github.aroq.drupipe.DrupipeAction
+
 class Builder extends BaseAction {
+
+    def context
+
+    def script
+
+    def utils
+
+    def DrupipeAction action
 
     def build() {
         if (!context['builder']) {
@@ -26,5 +36,20 @@ class Builder extends BaseAction {
         context << [returnConfig: true]
     }
 
-}
+    def retrieveArtifact() {
+        if (!context['builder']) {
+            context['builder'] = [:]
+        }
+        script.drupipeAction([action: "${action.params.builderHandler}.artifactParams"], context)
+        context << script.drupipeAction([action: "${action.params.artifactHandler}.retrieve", params: context.builder.artifactParams], context)
+        context.projectName = 'master'
+        script.drupipeShell(
+            """
+                ls -l docroot/master
+                cat docroot/master/version.properties
+            """, context << [shellCommandWithBashLogin: true]
+        )
+        context << [returnConfig: true]
+    }
 
+}

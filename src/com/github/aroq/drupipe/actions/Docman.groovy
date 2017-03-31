@@ -1,8 +1,18 @@
 package com.github.aroq.drupipe.actions
 
+import com.github.aroq.drupipe.DrupipeAction
+import groovy.json.JsonOutput
 import groovy.json.JsonSlurperClassic
 
 class Docman extends BaseAction {
+
+    def context
+
+    def script
+
+    def utils
+
+    def DrupipeAction action
 
     def init() {
         jsonConfig()
@@ -42,14 +52,14 @@ class Docman extends BaseAction {
     def stripedBuild() {
         info()
         def docrootConfigJson = script.readFile("${context.docmanConfigPath}/${action.params.docmanJsonConfigFile}")
-        def componentVersions = component_versions(docrootConfigJson)
+        def componentVersions = component_versions(docrootConfigJson, 'nexus')
         script.echo "Component versions:${componentVersions}"
 
         script.drupipeShell(
             """
-        cd docroot
-        docman build striped stable ${componentVersions} ${forceFlag(context)}
-        """, context << [shellCommandWithBashLogin: true]
+            cd docroot
+            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(context)}
+            """, context << [shellCommandWithBashLogin: true]
         )
         if (!context['builder']) {
             context['builder'] = [:]
@@ -61,12 +71,27 @@ class Docman extends BaseAction {
         context
     }
 
+    def releaseBuild() {
+        info()
+        def docrootConfigJson = script.readFile("${context.docmanConfigPath}/${action.params.docmanJsonConfigFile}")
+        def componentVersions = component_versions(docrootConfigJson)
+        script.echo "Component versions:${componentVersions}"
+
+        script.drupipeShell(
+            """
+            cd docroot
+            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(context)}
+            """, context << [shellCommandWithBashLogin: true]
+        )
+        context
+    }
+
     def deploy() {
         script.drupipeShell(
             """
-        cd docroot
-        docman deploy git_target ${context.projectName} branch ${context.version} ${forceFlag(context)}
-        """, context << [shellCommandWithBashLogin: true]
+            cd docroot
+            docman deploy git_target ${context.projectName} branch ${context.version} ${forceFlag(context)}
+            """, context << [shellCommandWithBashLogin: true]
         )
     }
 
@@ -100,21 +125,54 @@ class Docman extends BaseAction {
         }
     }
 
+    def repoParams(String configPath) {
+        prepare()
+        def masterConfig = script.readYaml(file: "docroot/config/${configPath}/info.yaml")
+        script.echo "MASTER CONFIG: ${masterConfig}"
+        def repo = masterConfig.type == 'root' ? masterConfig.repo : masterConfig.root_repo
+        script.echo "REPO: ${repo}"
+        script.echo "reference: ${context.release}"
+        return [
+            repoAddress: repo,
+            reference: context.release,
+            // TODO: refactor it.
+            projectName: configPath,
+        ]
+    }
+
+    def artifactParams() {
+        context.builder.artifactParams = repoParams('master')
+        context
+    }
+
     @NonCPS
-    def component_versions(docrootConfigJson) {
+    def component_versions(docrootConfigJson, mode = 'default') {
         def docmanConfig = JsonSlurperClassic.newInstance().parseText(docrootConfigJson)
-        def versions = []
-        docmanConfig.projects.each { project ->
-            if (context["${project.key}_version"]) {
-                versions << /"${project.key}": / + context["${project.key}_version"]
+        def result = ''
+        if (mode == 'nexus') {
+            def versions = []
+            docmanConfig.projects.each { project ->
+                if (context["${project.key}_version"]) {
+                    versions << /"${project.key}": / + context["${project.key}_version"]
+                }
+            }
+            if (versions) {
+                result = /--config="{\"projects\": {${versions.join(', ').replaceAll("\"", "\\\\\"")}}}"/
             }
         }
-        def result = ''
-        if (versions) {
-            result = /--config="{\"projects\": {${versions.join(', ').replaceAll("\"", "\\\\\"")}}}"/
+        else if (mode == 'default') {
+            def projects = [:]
+            docmanConfig.projects.each { project ->
+                if (context["${project.key}_version"]) {
+                    projects[project.key] = [states: [stable: [type: 'branch', version: context["${project.key}_version"]]]]
+                }
+            }
+            if (projects) {
+                def json = JsonOutput.toJson([projects: projects]).replaceAll("\"", "\\\\\"")
+                result = /--config="${json}"/
+            }
         }
         result
     }
-
 }
 

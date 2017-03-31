@@ -1,8 +1,18 @@
 package com.github.aroq.drupipe.actions
 
 import groovy.json.JsonOutput
+import com.github.aroq.drupipe.DrupipeAction
 
-class Builder extends BaseAction {
+class Ansible extends BaseAction {
+
+    def context
+
+    def script
+
+    def utils
+
+    def DrupipeAction action
+
     def deployWithGit() {
         // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
         action.params.ansiblePlaybookParams = [
