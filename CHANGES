@@ -1,3 +1,14 @@
+Version 0.5.5:
+ - Changed drupipe version to 0.5.5
+ - Refactoring of actions & Added Git actions
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - Added debug info
+
 Version 0.5.4:
  - Changed drupipe version to 0.5.4
  - Changed deletedir for sh rm -fR docroot/master in Ansistrano
