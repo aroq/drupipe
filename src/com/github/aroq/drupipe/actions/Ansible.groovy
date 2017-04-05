@@ -57,12 +57,14 @@ class Ansible extends BaseAction {
 
         // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
         executeAnsiblePlaybook()
-        // TODO: Commented for now, need to check how to deal with it.
+        // TODO: Move delete dir to somewhere else.
         // script.deleteDir()
-        script.drupipeShell("""
-            rm -fR docroot/master
-            """, context
-        )
+        if (action.params.deleteDir) {
+            script.drupipeShell("""
+                rm -fR docroot/master
+                """, context
+            )
+        }
     }
 
     // TODO: Provide Ansible parameters from settings container.
