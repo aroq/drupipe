@@ -67,7 +67,7 @@ defaultActionParams = [
         lookupStrategy: 'SEED_JOB',
         additionalClasspath: ['library/src'],
         // TODO: Need another way of providing dsl scripts.
-        jobsPattern: ['library/jobdsl/job_dsl_docman.groovy'],
+        jobsPattern: ['library/jobdsl/seed/*.groovy'],
     ],
     Druflow: [
         druflowDir: 'druflow',
