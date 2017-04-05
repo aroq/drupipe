@@ -1,3 +1,6 @@
+Version 0.6.1:
+ - updated drupipe to 0.6.1
+
 Version 0.6.0:
  - Removed root repo type from release build
  - Moved jobdsls
