@@ -1,3 +1,8 @@
+Version 0.6.0:
+ - Removed root repo type from release build
+ - Moved jobdsls
+ - Added release build & deploy jobdsls
+
 Version 0.5.5:
  - Changed drupipe version to 0.5.5
  - Refactoring of actions & Added Git actions
