@@ -16,7 +16,7 @@ if (config.releaseEnvs) {
         logRotator(-1, 30)
         parameters {
             docmanConfig.projects?.each { project ->
-                if (project.value.repo) {
+                if (project.value.repo && (project.value.type != 'root')) {
                     println "Project: ${project.value.name}"
                     def repo = project.value.repo
                     println "Repo: ${repo}"
