@@ -45,7 +45,6 @@ class Builder extends BaseAction {
         context.projectName = 'master'
         script.drupipeShell(
             """
-                ls -l docroot/master
                 cat docroot/master/version.properties
             """, context << [shellCommandWithBashLogin: true]
         )
