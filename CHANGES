@@ -1,3 +1,8 @@
+Version 0.6.2:
+ - Changed drupipe version to 0.6.2
+ - Removed debug info
+ - Added condition to delete dir in Ansible
+
 Version 0.6.1:
  - updated drupipe to 0.6.1
 
