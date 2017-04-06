@@ -13,7 +13,7 @@ class Git extends BaseAction {
     def DrupipeAction action
 
     def clone() {
-        context.pipeline.script.echo 'GitArtifact retrieve'
+        context.pipeline.script.echo 'Git clone'
 
         def repoDir = action.params.dir + '/' + action.params.repoDirName
 

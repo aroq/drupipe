@@ -13,7 +13,7 @@ class GitArtifact extends BaseAction {
     def DrupipeAction action
 
     def retrieve() {
-        script.drupipeAction([action: "Git.clone", params: context.builder.artifactParams], context)
+        script.drupipeAction([action: "Git.clone", params: context.builder.artifactParams << action.params], context)
     }
 }
 

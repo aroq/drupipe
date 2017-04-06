@@ -11,9 +11,9 @@ class Shell extends BaseAction {
     def utils
 
     def DrupipeAction action
+
     def execute() {
-        drupipeShell(action.params.shellCommand, context)
+        script.drupipeShell(action.params.shellCommand, context)
     }
 }
-
 
