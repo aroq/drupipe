@@ -36,22 +36,23 @@ class Ansible extends BaseAction {
     def deployWithAnsistrano() {
         installAnsistranoRole()
 
-        action.params.playbookParams = [
-            target:                  action.params.ansible_target,
-            user:                    action.params.ansible_user,
-            ansistrano_deploy_via:   action.params.ansistrano_deploy_via,
-            ansistrano_deploy_to:    action.params.ansible_deploy_to,
-            ansistrano_shared_paths: action.params.ansistrano_shared_paths,
-            ansistrano_shared_files: action.params.ansistrano_shared_files,
-        ]
+//        action.params.playbookParams = [
+//            target:                  action.params.ansible_target,
+//            user:                    action.params.ansible_user,
+//            ansistrano_deploy_via:   action.params.ansistrano_deploy_via,
+//            ansistrano_deploy_to:    action.params.ansible_deploy_to,
+//            ansistrano_shared_paths: action.params.ansistrano_shared_paths,
+//            ansistrano_shared_files: action.params.ansistrano_shared_files,
+//        ]
 
-        if (action.params.ansistrano_deploy_via == 'rsync') {
+        // TODO: do it outside of this method.
+        if (action.params.playbookParams.ansistrano_deploy_via == 'rsync') {
             script.drupipeShell("rm -fR docroot/master/.git", context)
-            action.params.playbookParams << [
-                ansistrano_deploy_from: action.params.ansistrano_deploy_from,
-            ]
+//            action.params.playbookParams << [
+//                ansistrano_deploy_from: action.params.ansistrano_deploy_from,
+//            ]
         }
-        else if (action.params.ansistrano_deploy_via == 'git') {
+        else if (action.params.playbookParams.ansistrano_deploy_via == 'git') {
             def version = readFile('docroot/master/VERSION')
             action.params.playbookParams << [
                 ansistrano_git_repo:   params.ansible_repo,

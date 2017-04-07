@@ -96,8 +96,10 @@ defaultActionParams = [
     ],
     Ansible_deployWithAnsistrano: [
         playbook: 'library/ansible/deployWithAnsistrano.yml',
-        ansistrano_deploy_via: 'rsync',
-        ansistrano_deploy_from: '../../docroot/master/',
+        playbookParams: [
+            ansistrano_deploy_via: 'rsync',
+            ansistrano_deploy_from: '../../docroot/master/',
+        ],
     ],
     Common_confirm: [
         timeToConfirm: 60,
