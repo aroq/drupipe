@@ -13,9 +13,13 @@ class Ansible extends BaseAction {
 
     def DrupipeAction action
 
+    def execute() {
+        executeAnsiblePlaybook()
+    }
+
     def deployWithGit() {
         // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
-        action.params.ansiblePlaybookParams = [
+        action.params.playbookParams = [
             target:    action.params.ansible_target,
             user:      action.params.ansible_user,
             repo:      action.params.ansible_repo,
@@ -32,7 +36,7 @@ class Ansible extends BaseAction {
     def deployWithAnsistrano() {
         installAnsistranoRole()
 
-        action.params.ansiblePlaybookParams = [
+        action.params.playbookParams = [
             target:                  action.params.ansible_target,
             user:                    action.params.ansible_user,
             ansistrano_deploy_via:   action.params.ansistrano_deploy_via,
@@ -43,13 +47,13 @@ class Ansible extends BaseAction {
 
         if (action.params.ansistrano_deploy_via == 'rsync') {
             script.drupipeShell("rm -fR docroot/master/.git", context)
-            action.params.ansiblePlaybookParams << [
+            action.params.playbookParams << [
                 ansistrano_deploy_from: action.params.ansistrano_deploy_from,
             ]
         }
         else if (action.params.ansistrano_deploy_via == 'git') {
             def version = readFile('docroot/master/VERSION')
-            action.params.ansiblePlaybookParams << [
+            action.params.playbookParams << [
                 ansistrano_git_repo:   params.ansible_repo,
                 ansistrano_git_branch: version,
             ]
@@ -73,7 +77,7 @@ class Ansible extends BaseAction {
         def command =
             "ansible-playbook ${action.params.ansible_playbook} \
         -i ${action.params.ansible_hostsFile} \
-        -e '${joinParams(action.params.ansiblePlaybookParams, 'json')}'"
+        -e '${joinParams(action.params.playbookParams, 'json')}'"
 
         script.echo "Ansible command: ${command}"
 
