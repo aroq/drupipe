@@ -92,10 +92,10 @@ defaultActionParams = [
         ansible_hostsFile: 'docroot/config/ansible/inventory.ini',
     ],
     Ansible_deployWithGit: [
-        ansible_playbook: 'library/ansible/deployWithGit.yml',
+        playbook: 'library/ansible/deployWithGit.yml',
     ],
     Ansible_deployWithAnsistrano: [
-        ansible_playbook: 'library/ansible/deployWithAnsistrano.yml',
+        playbook: 'library/ansible/deployWithAnsistrano.yml',
         ansistrano_deploy_via: 'rsync',
         ansistrano_deploy_from: '../../docroot/master/',
     ],
