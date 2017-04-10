@@ -66,6 +66,9 @@ class Source extends BaseAction {
                 if (action.params.configType == 'groovy') {
                     context << this.script.drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], context)
                 }
+                else if (action.params.configType == 'yaml') {
+                    context << this.script.drupipeAction([action: 'YamlFileConfig.load', params: [configFileName: configFilePath]], context)
+                }
             }
 
             context.remove('sourceName')

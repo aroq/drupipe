@@ -100,6 +100,14 @@ class Config extends BaseAction {
                     configType: 'groovy',
                     configPath: context.docmanConfigFile
                 ]
+            ],
+            [
+                action: 'Source.loadConfig',
+                params: [
+                    sourceName: 'projectConfig',
+                    configType: 'yaml',
+                    configPath: context.docmanConfigFile
+                ]
             ]
         ]
         context << context.pipeline.executePipelineActionList(providers, context)
