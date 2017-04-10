@@ -62,9 +62,12 @@ class Source extends BaseAction {
         if (action.params.configPath) {
             def configFilePath = utils.sourcePath(context, action.params.sourceName, action.params.configPath)
 
-            if (action.params.configType == 'groovy') {
-                context << this.script.drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], context)
+            if (script.fileExists(configFilePath)) {
+                if (action.params.configType == 'groovy') {
+                    context << this.script.drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], context)
+                }
             }
+
             context.remove('sourceName')
             context.remove('configPath')
             context.remove('configType')
