@@ -1,3 +1,13 @@
+Version 0.6.3:
+ - Updated drupipe to 0.6.3
+ - Added check for fileExists in source command
+ - Ansible update
+ - Ansible refactoring
+ - Ansible refactoring
+ - Ansible refactoring
+ - Fixed drupipeShell command
+ - Fixed drupipeShell command
+
 Version 0.6.2:
  - Changed drupipe version to 0.6.2
  - Removed debug info
