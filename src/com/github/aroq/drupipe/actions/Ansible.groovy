@@ -36,21 +36,9 @@ class Ansible extends BaseAction {
     def deployWithAnsistrano() {
         installAnsistranoRole()
 
-//        action.params.playbookParams = [
-//            target:                  action.params.ansible_target,
-//            user:                    action.params.ansible_user,
-//            ansistrano_deploy_via:   action.params.ansistrano_deploy_via,
-//            ansistrano_deploy_to:    action.params.ansible_deploy_to,
-//            ansistrano_shared_paths: action.params.ansistrano_shared_paths,
-//            ansistrano_shared_files: action.params.ansistrano_shared_files,
-//        ]
-
         // TODO: do it outside of this method.
         if (action.params.playbookParams.ansistrano_deploy_via == 'rsync') {
             script.drupipeShell("rm -fR docroot/master/.git", context)
-//            action.params.playbookParams << [
-//                ansistrano_deploy_from: action.params.ansistrano_deploy_from,
-//            ]
         }
         else if (action.params.playbookParams.ansistrano_deploy_via == 'git') {
             def version = readFile('docroot/master/VERSION')
@@ -63,7 +51,6 @@ class Ansible extends BaseAction {
         // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
         executeAnsiblePlaybook()
         // TODO: Move delete dir to somewhere else.
-        // script.deleteDir()
         if (action.params.deleteDir) {
             script.drupipeShell("""
                 rm -fR docroot/master
