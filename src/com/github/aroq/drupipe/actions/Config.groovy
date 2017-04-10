@@ -106,7 +106,7 @@ class Config extends BaseAction {
                 params: [
                     sourceName: 'projectConfig',
                     configType: 'yaml',
-                    configPath: context.docmanConfigFile
+                    configPath: 'config.yaml'
                 ]
             ]
         ]
