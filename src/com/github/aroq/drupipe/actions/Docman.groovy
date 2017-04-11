@@ -138,10 +138,18 @@ class Docman extends BaseAction {
             repo = context.components.master.root_repo ? context.components.master.root_repo : context.components.master.repo
         }
         script.echo "REPO: ${repo}"
-        script.echo "reference: ${context.release}"
+
+        String reference = null
+        if (context.release) {
+            reference = context.release
+        }
+        else {
+            reference = context.environmentParams.git_reference
+        }
+        script.echo "reference: ${reference}"
         return [
             repoAddress: repo,
-            reference: context.release,
+            reference: reference,
             // TODO: refactor it.
             projectName: configPath,
         ]
