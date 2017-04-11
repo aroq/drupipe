@@ -13,6 +13,17 @@ class Ansible extends BaseAction {
 
     def DrupipeAction action
 
+    def deploy() {
+        action.params.playbookParams = [
+            target:    action.params.ansible_target,
+            user:      action.params.ansible_user,
+            repo:      action.params.ansible_repo,
+            reference: action.params.ansible_reference,
+            deploy_to: action.params.ansible_deploy_to,
+        ]
+        deployWithAnsistrano()
+    }
+
     def execute() {
         executeAnsiblePlaybook()
     }
