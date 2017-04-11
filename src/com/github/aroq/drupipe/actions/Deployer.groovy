@@ -29,7 +29,7 @@ class Deployer extends BaseAction {
             context['builder'] = [:]
         }
         script.drupipeAction([action: "${action.params.buildHandler}.artifactParams"], context)
-        context << script.drupipeAction([action: "${action.params.deployHandler}.retrieve", params: context.builder.artifactParams], context)
+        context << script.drupipeAction([action: "${action.params.artifactHandler}.retrieve", params: context.builder.artifactParams], context)
         context.projectName = 'master'
         script.drupipeShell(
             """
