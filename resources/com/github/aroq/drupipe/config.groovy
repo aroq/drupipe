@@ -90,7 +90,7 @@ defaultActionParams = [
     ],
     Ansible: [
         debugEnabled: true,
-        ansible_hostsFile: 'docroot/config/ansible/inventory.ini',
+        hosts: 'docroot/config/ansible/inventory.ini',
     ],
     Ansible_deployWithGit: [
         playbook: 'library/ansible/deployWithGit.yml',

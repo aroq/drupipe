@@ -15,12 +15,10 @@ class Ansible extends BaseAction {
 
     def deploy() {
         action.params.playbookParams = [
-            target:    action.params.ansible_target,
-            user:      action.params.ansible_user,
-            repo:      action.params.ansible_repo,
-            reference: action.params.ansible_reference,
-            deploy_to: action.params.ansible_deploy_to,
+            user:      context.environmentParams.user,
+            deploy_to: context.environmentParams.root,
         ]
+        action.params.hosts = "${context.environmentParams.host},"
         deployWithAnsistrano()
     }
 
@@ -75,7 +73,7 @@ class Ansible extends BaseAction {
         utils.loadLibrary(script, context)
         def command =
             "ansible-playbook ${action.params.playbook} \
-        -i ${action.params.ansible_hostsFile} \
+        -i ${action.params.hosts} \
         -e '${joinParams(action.params.playbookParams, 'json')}'"
 
         script.echo "Ansible command: ${command}"
