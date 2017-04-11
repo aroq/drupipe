@@ -110,6 +110,10 @@ defaultActionParams = [
         buildMethod: 'build',
         artifactHandler: 'GitArtifact',
     ],
+    Deployer: [
+        buildHandler: 'Docman',
+        artifactHandler: 'GitArtifact',
+    ],
     Git: [
         dir: 'docroot',
         repoDirName: 'master',
