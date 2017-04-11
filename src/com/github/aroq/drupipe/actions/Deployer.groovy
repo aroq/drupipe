@@ -18,7 +18,7 @@ class Deployer extends BaseAction {
         def environmentParams = utils.merge(server.params, environment.params)
         utils.jsonDump(environmentParams, 'ENVIRONMENT PARAMS')
         action.params = utils.merge(action.params, environmentParams)
-        utils.jsonDump(action.params, action.params)
+        utils.jsonDump(action.params, 'ACTION PARAMS')
     }
 
     def deploy() {
@@ -34,8 +34,8 @@ class Deployer extends BaseAction {
         if (!context['builder']) {
             context['builder'] = [:]
         }
-        script.drupipeAction([action: "${action.params.builderHandler}.artifactParams"], context)
-        context << script.drupipeAction([action: "${action.params.artifactHandler}.retrieve", params: context.builder.artifactParams], context)
+        script.drupipeAction([action: "${action.params.deployer}.artifactParams"], context)
+        context << script.drupipeAction([action: "${action.params.deployer}.retrieve", params: context.builder.artifactParams], context)
         context.projectName = 'master'
         script.drupipeShell(
             """
