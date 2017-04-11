@@ -127,9 +127,16 @@ class Docman extends BaseAction {
 
     def repoParams(String configPath) {
         info()
-        def masterConfig = script.readYaml(file: "docroot/config/${configPath}/info.yaml")
-        script.echo "MASTER CONFIG: ${masterConfig}"
-        def repo = masterConfig.type == 'root' ? masterConfig.repo : masterConfig.root_repo
+        def repo = null
+        def masterInfoFile = "docroot/config/${configPath}/info.yaml"
+        if (script.fileExists(masterInfoFile)) {
+            def masterConfig = script.readYaml(file: masterInfoFile)
+            script.echo "MASTER CONFIG: ${masterConfig}"
+            repo = masterConfig.type == 'root' ? masterConfig.repo : masterConfig.root_repo
+        }
+        else {
+            repo = context.components.master.root_repo ? context.components.master.root_repo : context.components.master.repo
+        }
         script.echo "REPO: ${repo}"
         script.echo "reference: ${context.release}"
         return [
