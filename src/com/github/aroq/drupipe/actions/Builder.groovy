@@ -17,7 +17,7 @@ class Builder extends BaseAction {
             context['builder'] = [:]
         }
         // Dispatch the action.
-        context << script.drupipeAction([action: "${action.params.builderHandler}.${action.params.builderMethod}"], context)
+        context << script.drupipeAction([action: "${action.params.buildHandler}.${action.params.buildMethod}"], context)
         context << [returnConfig: true]
     }
 
@@ -40,7 +40,7 @@ class Builder extends BaseAction {
         if (!context['builder']) {
             context['builder'] = [:]
         }
-        script.drupipeAction([action: "${action.params.builderHandler}.artifactParams"], context)
+        script.drupipeAction([action: "${action.params.buildHandler}.artifactParams"], context)
         context << script.drupipeAction([action: "${action.params.artifactHandler}.retrieve", params: context.builder.artifactParams], context)
         context.projectName = 'master'
         script.drupipeShell(

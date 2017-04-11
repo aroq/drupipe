@@ -106,8 +106,8 @@ defaultActionParams = [
         timeToConfirm: 60,
     ],
     Builder: [
-        builderHandler: 'Docman',
-        builderMethod: 'build',
+        buildHandler: 'Docman',
+        buildMethod: 'build',
         artifactHandler: 'GitArtifact',
     ],
     Git: [
