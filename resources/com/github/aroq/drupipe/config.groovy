@@ -114,9 +114,12 @@ defaultActionParams = [
         buildHandler: 'Docman',
         artifactHandler: 'GitArtifact',
     ],
-    Git: [
-        dir: 'docroot',
+
+    GitArtifact: [
+        dir: 'artifacts',
         repoDirName: 'master',
+    ],
+    Git: [
         singleBranch: true,
         depth: 1,
     ],

@@ -31,11 +31,6 @@ class Deployer extends BaseAction {
         script.drupipeAction([action: "${action.params.buildHandler}.artifactParams"], context)
         context << script.drupipeAction([action: "${action.params.artifactHandler}.retrieve", params: context.builder.artifactParams], context)
         context.projectName = 'master'
-        script.drupipeShell(
-            """
-                cat docroot/master/version.properties
-            """, context << [shellCommandWithBashLogin: true]
-        )
         context << [returnConfig: true]
     }
 
