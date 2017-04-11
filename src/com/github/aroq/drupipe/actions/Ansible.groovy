@@ -15,8 +15,9 @@ class Ansible extends BaseAction {
 
     def deploy() {
         action.params.playbookParams = [
-            user:      context.environmentParams.user,
-            deploy_to: context.environmentParams.root,
+            user:                   context.environmentParams.user,
+            ansistrano_deploy_to:   context.environmentParams.root,
+            ansistrano_deploy_from: context.builder.artifactParams.dir,
         ]
         action.params.hosts = "${context.environmentParams.host},"
         deployWithAnsistrano()
