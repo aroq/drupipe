@@ -37,7 +37,7 @@ class Docman extends BaseAction {
         script.drupipeShell(
             """
         cd ${context.docrootDir}
-        docman info full config.json
+        docman info full config.json ${mothershipConfigRepoOption()}
         """, context << [shellCommandWithBashLogin: true]
         )
     }
