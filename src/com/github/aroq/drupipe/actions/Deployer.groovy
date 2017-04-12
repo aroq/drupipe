@@ -18,7 +18,12 @@ class Deployer extends BaseAction {
     def deploy() {
         setParams()
         retrieveArtifact()
-        context << script.drupipeAction([action: "${action.params.deployHandler}.deploy", params: context.builder.artifactParams], context)
+        if (action.params.deployHandler) {
+            context << script.drupipeAction([action: "${action.params.deployHandler}.deploy", params: context.builder.artifactParams], context)
+        }
+        else {
+            script.echo "No deploy handler defined"
+        }
     }
 
     def operations() {
