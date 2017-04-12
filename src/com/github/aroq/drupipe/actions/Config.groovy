@@ -94,12 +94,12 @@ class Config extends BaseAction {
         context << [returnConfig: true]
     }
 
-    @NonCPS
     def mergeScenariosConfigs(context, config, sourceDir) {
         def scenariosConfig = [:]
         if (config.scenarios) {
             script.echo "Scenarios exists"
-            config.scenarios.each { scenario ->
+            for (def i = 0; i < config.scenarios.size(); i++) {
+                def scenario = config.scenarios[i]
                 script.echo "Scenario: ${scenario}"
                 def fileName = "${sourceDir}/scenarios/${scenario}/config.yaml"
                 script.echo "Scenario file name: ${fileName}"
