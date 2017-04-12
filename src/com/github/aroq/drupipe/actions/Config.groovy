@@ -62,10 +62,10 @@ class Config extends BaseAction {
     def mothershipConfig() {
         if (this.script.env.MOTHERSHIP_REPO) {
             def sourceObject = [
-                name: 'mothershipConfig',
-                type: 'git',
-                path: 'mothership',
-                url: this.script.env.MOTHERSHIP_REPO,
+                name:   'mothershipConfig',
+                type:   'git',
+                path:   'mothership',
+                url:    script.env.MOTHERSHIP_REPO,
                 branch: 'master',
             ]
 
