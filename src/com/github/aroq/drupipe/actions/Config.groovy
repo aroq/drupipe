@@ -33,9 +33,6 @@ class Config extends BaseAction {
             [
                 action: "Config.projectConfig"
             ],
-//            [
-//                action: "Config.scenarioConfig"
-//            ],
         ]
 
         if (context.configProviders) {
@@ -105,6 +102,7 @@ class Config extends BaseAction {
                 def fileName = utils.sourcePath(context, sourceName, "scenarios/${scenario}/config.yaml")
                 if (script.fileExists(fileName)) {
                     def scenarioConfig = mergeScenariosConfigs(context, script.readYaml(file: fileName), sourceName)
+                    utils.dump(scenarioConfig)
                     scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
                 }
             }
