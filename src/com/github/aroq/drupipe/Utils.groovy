@@ -201,6 +201,11 @@ def sourcePath(params, sourceName, String path) {
     }
 }
 
+def sourceDir(params, sourceName) {
+    if (sourceName in params.sources) {
+        params.sources[sourceName].path
+    }
+}
 
 def debugLog(params, value, dumpName = '', debugParams = [:]) {
     if (params.debugEnabled) {

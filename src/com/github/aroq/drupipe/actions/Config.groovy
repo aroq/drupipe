@@ -95,13 +95,13 @@ class Config extends BaseAction {
     }
 
     @NonCPS
-    def mergeScenariosConfigs(context, config, sourceName) {
+    def mergeScenariosConfigs(context, config, sourceDir) {
         def scenariosConfig = [:]
         if (config.scenarios) {
             script.echo "Scenarios exists"
             config.scenarios.each { scenario ->
                 script.echo "Scenario: ${scenario}"
-                def fileName = utils.sourcePath(context, sourceName, "scenarios/${scenario}/config.yaml")
+                def fileName = "${sourceDir}/scenarios/${scenario}/config.yaml"
                 script.echo "Scenario file name: ${fileName}"
                 if (script.fileExists(fileName)) {
                     def scenarioConfig = mergeScenariosConfigs(context, script.readYaml(file: fileName), sourceName)
@@ -144,7 +144,9 @@ class Config extends BaseAction {
         ]
         context << context.pipeline.executePipelineActionList(providers, context)
 
-        mergeScenariosConfigs(context, context, 'mothershipConfig')
+        def sourceDir = utils.sourceDir(context, 'mothershipConfig')
+
+        mergeScenariosConfigs(context, context, sourceDir)
 
         context << [returnConfig: true]
     }
