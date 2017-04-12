@@ -92,7 +92,6 @@ class Config extends BaseAction {
             def json = this.script.readFile('mothership/projects.json')
             context << this.utils.getMothershipProjectParams(context, json)
 
-            context << mergeScenariosConfigs(context, context, 'mothershipConfig')
 
         }
         context << [returnConfig: true]
@@ -143,6 +142,8 @@ class Config extends BaseAction {
             ]
         ]
         context << context.pipeline.executePipelineActionList(providers, context)
+
+        context << mergeScenariosConfigs(context, context, 'mothershipConfig')
 
         context << [returnConfig: true]
     }
