@@ -33,9 +33,9 @@ class Config extends BaseAction {
             [
                 action: "Config.projectConfig"
             ],
-            [
-                action: "Config.scenarioConfig"
-            ],
+//            [
+//                action: "Config.scenarioConfig"
+//            ],
         ]
 
         if (context.configProviders) {
@@ -91,8 +91,26 @@ class Config extends BaseAction {
             context << context.pipeline.executePipelineActionList(providers, context)
             def json = this.script.readFile('mothership/projects.json')
             context << this.utils.getMothershipProjectParams(context, json)
+
+            context << mergeScenariosConfigs(context, context, 'mothershipConfig')
+
         }
         context << [returnConfig: true]
+    }
+
+    @NonCPS
+    def mergeScenariosConfigs(context, config, sourceName) {
+        def scenariosConfig = [:]
+        if (config.scenarios) {
+            config.scenarios.each { scenario ->
+                def fileName = utils.sourcePath(context, sourceName, "scenarios/${scenario}/config.yaml")
+                if (script.fileExists(fileName)) {
+                    def scenarioConfig = mergeScenariosConfigs(context, script.readYaml(file: fileName), sourceName)
+                    scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
+                }
+            }
+        }
+        utils.merge(scenariosConfig, config)
     }
 
     def projectConfig() {
@@ -129,18 +147,4 @@ class Config extends BaseAction {
         context << [returnConfig: true]
     }
 
-    def scenarioConfig() {
-        if (context.sourcesList) {
-            for (def i = 0; i < context.sourcesList.size(); i++) {
-                def source = context.sourcesList[i]
-                def fileName = utils.sourcePath(context, source.name, "scenarios/${context.scenario}/config.yaml")
-                if (script.fileExists(fileName)) {
-                    context = utils.merge(script.readYaml(file: fileName), context)
-                }
-            }
-        }
-        utils.dump(context, 'context')
-
-        context << [returnConfig: true]
-    }
 }
