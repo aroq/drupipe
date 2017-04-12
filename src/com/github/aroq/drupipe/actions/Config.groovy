@@ -33,6 +33,9 @@ class Config extends BaseAction {
             [
                 action: "Config.projectConfig"
             ],
+            [
+                action: "Config.scenarioConfig"
+            ],
         ]
 
         if (context.configProviders) {
@@ -120,6 +123,20 @@ class Config extends BaseAction {
             ]
         ]
         context << context.pipeline.executePipelineActionList(providers, context)
+
+        context << [returnConfig: true]
+    }
+
+    def scenarioConfig() {
+        if (context.sourcesList) {
+            for (def i = 0; i < context.sourcesList.size(); i++) {
+                def source = context.sourcesList[i]
+                def fileName = utils.sourcePath(context, source.name, "scenarios/${context.scenario}/config.yaml")
+                if (script.fileExists(fileName)) {
+                    context << script.readYaml(file: fileName)
+                }
+            }
+        }
 
         context << [returnConfig: true]
     }
