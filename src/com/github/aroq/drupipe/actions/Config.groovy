@@ -46,11 +46,14 @@ class Config extends BaseAction {
         context << ['Config_perform': true, returnConfig: true]
         context << action.params.jenkinsParams
 
-        def environment = context.environments[context.environment]
-        def server = context.servers[environment['server']]
-        context.environmentParams = utils.merge(server, environment)
-        context.defaultActionParams = utils.merge(context.defaultActionParams, context.environmentParams.defaultActionParams)
-        utils.jsonDump(context.environmentParams, 'ENVIRONMENT PARAMS')
+        context.environmentParams = [:]
+        if (context.environments) {
+            def environment = context.environments[context.environment]
+            def server = context.servers[environment['server']]
+            context.environmentParams = utils.merge(server, environment)
+            context.defaultActionParams = utils.merge(context.defaultActionParams, context.environmentParams.defaultActionParams)
+            utils.jsonDump(context.environmentParams, 'ENVIRONMENT PARAMS')
+        }
     }
 
     def mothershipConfig() {
