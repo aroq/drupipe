@@ -51,11 +51,13 @@ class Config extends BaseAction {
 
         context.environmentParams = [:]
         if (context.environments && context.servers) {
-            def environment = context.environments[context.environment]
-            def server = context.servers[environment['server']]
-            context.environmentParams = utils.merge(server, environment)
-            context.defaultActionParams = utils.merge(context.defaultActionParams, context.environmentParams.defaultActionParams)
-            utils.jsonDump(context.environmentParams, 'ENVIRONMENT PARAMS')
+            if (context.environment) {
+                def environment = context.environments[context.environment]
+                def server = context.servers[environment['server']]
+                context.environmentParams = utils.merge(server, environment)
+                context.defaultActionParams = utils.merge(context.defaultActionParams, context.environmentParams.defaultActionParams)
+                utils.jsonDump(context.environmentParams, 'ENVIRONMENT PARAMS')
+            }
         }
     }
 
