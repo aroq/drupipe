@@ -137,7 +137,7 @@ class Config extends BaseAction {
                 }
             }
         }
-        utils.jsonDump(context, 'context')
+        utils.dump(context, 'context')
 
         context << [returnConfig: true]
     }
