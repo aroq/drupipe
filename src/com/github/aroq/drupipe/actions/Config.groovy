@@ -143,7 +143,7 @@ class Config extends BaseAction {
         ]
         context << context.pipeline.executePipelineActionList(providers, context)
 
-        context << mergeScenariosConfigs(context, context, 'mothershipConfig')
+        script.dump(mergeScenariosConfigs(context, context, 'mothershipConfig'))
 
         context << [returnConfig: true]
     }
