@@ -135,7 +135,7 @@ class Config extends BaseAction {
                 def source = context.sourcesList[i]
                 def fileName = utils.sourcePath(context, source.name, "scenarios/${context.scenario}/config.yaml")
                 if (script.fileExists(fileName)) {
-                    context = utils.merge(context, script.readYaml(file: fileName))
+                    context = utils.merge(script.readYaml(file: fileName), context)
                 }
             }
         }
