@@ -98,8 +98,11 @@ class Config extends BaseAction {
     def mergeScenariosConfigs(context, config, sourceName) {
         def scenariosConfig = [:]
         if (config.scenarios) {
+            script.echo "Scenarios exists"
             config.scenarios.each { scenario ->
+                script.echo "Scenario: ${scenario}"
                 def fileName = utils.sourcePath(context, sourceName, "scenarios/${scenario}/config.yaml")
+                script.echo "Scenario file name: ${fileName}"
                 if (script.fileExists(fileName)) {
                     def scenarioConfig = mergeScenariosConfigs(context, script.readYaml(file: fileName), sourceName)
                     utils.dump(scenarioConfig)
