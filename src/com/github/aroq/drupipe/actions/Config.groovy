@@ -147,7 +147,7 @@ class Config extends BaseAction {
 
         def sourceDir = utils.sourceDir(context, 'mothershipConfig')
 
-        mergeScenariosConfigs(context, context, sourceDir)
+        context << mergeScenariosConfigs(context, context, sourceDir)
 
         context << [returnConfig: true]
     }
