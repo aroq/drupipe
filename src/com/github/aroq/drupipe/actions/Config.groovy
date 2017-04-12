@@ -47,7 +47,7 @@ class Config extends BaseAction {
         context << action.params.jenkinsParams
 
         context.environmentParams = [:]
-        if (context.environments) {
+        if (context.environments && context.servers) {
             def environment = context.environments[context.environment]
             def server = context.servers[environment['server']]
             context.environmentParams = utils.merge(server, environment)
