@@ -60,6 +60,7 @@ class Config extends BaseAction {
     }
 
     def mothershipConfig() {
+        def result =
         if (this.script.env.MOTHERSHIP_REPO) {
             def sourceObject = [
                 name:   'mothershipConfig',
@@ -86,13 +87,11 @@ class Config extends BaseAction {
                     ]
                 ]
             ]
-            context << context.pipeline.executePipelineActionList(providers, context)
+            result = context.pipeline.executePipelineActionList(providers, context)
             def json = this.script.readFile('mothership/projects.json')
-            context << this.utils.getMothershipProjectParams(context, json)
-
-
+            result = utils.merge(result, this.utils.getMothershipProjectParams(context, json))
         }
-        context << [returnContext: true]
+        result
     }
 
     def mergeScenariosConfigs(context, config, sourceDir) {
@@ -144,13 +143,11 @@ class Config extends BaseAction {
                 ]
             ]
         ]
-        context << context.pipeline.executePipelineActionList(providers, context)
+        def projectConfig = context.pipeline.executePipelineActionList(providers, context)
 
         def sourceDir = utils.sourceDir(context, 'mothershipConfig')
 
-        context << mergeScenariosConfigs(context, context, sourceDir)
-
-        context << [returnContext: true]
+        mergeScenariosConfigs(context, projectConfig, sourceDir)
     }
 
 }
