@@ -56,6 +56,7 @@ class Config extends BaseAction {
                 utils.jsonDump(context.environmentParams, 'ENVIRONMENT PARAMS')
             }
         }
+        context
     }
 
     def mothershipConfig() {
