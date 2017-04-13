@@ -113,19 +113,22 @@ def getMothershipProjectParams(config, json) {
 }
 
 def loadLibrary(script, params) {
-    script.drupipeAction([
-        action: 'Source.add',
-        params: [
-            source: [
-                name: 'library',
-                type: 'git',
-                path: 'library',
-                url: params.drupipeLibraryUrl,
-                branch: params.drupipeLibraryBranch,
-                refType: params.drupipeLibraryType,
+    if (!context.libraryLoaded) {
+        script.drupipeAction([
+            action: 'Source.add',
+            params: [
+                source: [
+                    name: 'library',
+                    type: 'git',
+                    path: 'library',
+                    url: params.drupipeLibraryUrl,
+                    branch: params.drupipeLibraryBranch,
+                    refType: params.drupipeLibraryType,
+                ],
             ],
-        ],
-    ], params)
+        ], params)
+        context.libraryLoaded = true
+    }
 }
 
 boolean isCollectionOrList(object) {
