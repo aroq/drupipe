@@ -90,7 +90,7 @@ defaultActionParams = [
     ],
     Ansible: [
         debugEnabled: true,
-        hosts: 'docroot/config/ansible/inventory.ini',
+        //hosts: 'docroot/config/ansible/inventory.ini',
         playbook: 'library/ansible/deployWithAnsistrano.yml',
         playbookParams: [
             ansistrano_deploy_via: 'rsync',
