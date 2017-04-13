@@ -16,16 +16,13 @@ class Config extends BaseAction {
         if (context['Config_perform']) {
             return context
         }
-        context.workspace = this.script.pwd()
-
-        context.env = this.utils.envToMap()
-
-        context.jenkinsFolderName = this.utils.getJenkinsFolderName(this.script.env.BUILD_URL)
-        context.jenkinsJobName = this.utils.getJenkinsJobName(this.script.env.BUILD_URL)
 
         def providers = [
             [
-                action: 'GroovyFileConfig.groovyConfigFromLibraryResource', params: [returnContext: true, resource: 'com/github/aroq/drupipe/config.groovy']
+                action: "Config.jenkinsConfig"
+            ],
+            [
+                action: 'GroovyFileConfig.groovyConfigFromLibraryResource', params: [resource: 'com/github/aroq/drupipe/config.groovy']
             ],
             [
                 action: "Config.mothershipConfig"
@@ -57,6 +54,15 @@ class Config extends BaseAction {
             }
         }
         context
+    }
+
+    def jenkinsConfig() {
+        def result = [:]
+        result.workspace = this.script.pwd()
+        result.env = this.utils.envToMap()
+        result.jenkinsFolderName = this.utils.getJenkinsFolderName(this.script.env.BUILD_URL)
+        result.jenkinsJobName = this.utils.getJenkinsJobName(this.script.env.BUILD_URL)
+        result
     }
 
     def mothershipConfig() {
