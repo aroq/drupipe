@@ -13,21 +13,32 @@ class Ansible extends BaseAction {
 
     def DrupipeAction action
 
+    def init() {
+        if (!action.params.playbookParams) {
+            action.params.playbookParams = [:]
+        }
+        action.params.playbookParams <<  [
+            user: context.environmentParams.user,
+            hosts: "${context.environmentParams.host},",
+        ]
+    }
+
     def deploy() {
-        action.params.playbookParams = [
-            user:                   context.environmentParams.user,
+        init()
+        action.params.playbookParams << [
             ansistrano_deploy_to:   context.environmentParams.root,
             ansistrano_deploy_from: context.builder.artifactParams.dir,
         ]
-        action.params.hosts = "${context.environmentParams.host},"
         deployWithAnsistrano()
     }
 
     def execute() {
+        init()
         executeAnsiblePlaybook()
     }
 
     def deployWithGit() {
+        init()
         // TODO: Provide Ansible parameters automatically when possible (e.g. from Docman).
         action.params.playbookParams = [
             target:    action.params.ansible_target,
