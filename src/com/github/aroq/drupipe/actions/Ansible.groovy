@@ -19,8 +19,8 @@ class Ansible extends BaseAction {
         }
         action.params.playbookParams <<  [
             user: context.environmentParams.user,
-            hosts: "${context.environmentParams.host},",
         ]
+        action.params.hosts = "${context.environmentParams.host},"
     }
 
     def deploy() {
