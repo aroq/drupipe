@@ -52,30 +52,31 @@ class Source extends BaseAction {
         if (result) {
             context.sources[source.name] = new com.github.aroq.drupipe.DrupipeSource(name: source.name, type: source.type, path: source.path)
             context.sourcesList << context.sources[source.name]
-
         }
-        context.remove('source')
-        context << [returnContext: true]
+//        context.remove('source')
+//        context << [returnContext: true]
+        [:]
     }
 
     def loadConfig() {
+        def result = [:]
         if (action.params.configPath) {
             def configFilePath = utils.sourcePath(context, action.params.sourceName, action.params.configPath)
 
             if (script.fileExists(configFilePath)) {
                 if (action.params.configType == 'groovy') {
-                    context << this.script.drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], context)
+                    result = this.script.drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], context)
                 }
                 else if (action.params.configType == 'yaml') {
-                    context << this.script.drupipeAction([action: 'YamlFileConfig.load', params: [configFileName: configFilePath]], context)
+                    result = this.script.drupipeAction([action: 'YamlFileConfig.load', params: [configFileName: configFilePath]], context)
                 }
             }
 
-            context.remove('sourceName')
-            context.remove('configPath')
-            context.remove('configType')
+            result.remove('sourceName')
+            result.remove('configPath')
+            result.remove('configType')
         }
-        context << [returnContext: true]
+        result
     }
 }
 

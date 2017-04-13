@@ -120,22 +120,20 @@ class DrupipePipeline implements Serializable {
     }
 
     def executePipelineActionList(actions, context) {
-        def actionList = processPipelineActionList(actions, context)
-        context << executeActionList(actionList, context)
+        executeActionList(processPipelineActionList(actions, context), context)
     }
 
     def executeActionList(actionList, params) {
+        def result = [:]
         try {
             for (action in actionList) {
-                params = utils.merge(params, action.execute(params))
+                result = utils.merge(result, action.execute(params))
             }
-            params
+            result
         }
         catch (err) {
             script.echo err.toString()
             throw err
         }
-
-        params
     }
 }
