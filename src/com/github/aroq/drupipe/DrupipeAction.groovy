@@ -105,6 +105,7 @@ class DrupipeAction implements Serializable {
                 }
                 //context[this.fullName] = actionResult
             }
+            utils.debugLog(context, context, "${this.fullName} - CONTEXT")
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} end <-"
 
