@@ -158,6 +158,8 @@ class Config extends BaseAction {
         ]
         def projectConfig = context.pipeline.executePipelineActionList(providers, context)
 
+        utils.dump(projectConfig, 'projectConfig')
+
         def sourceDir = utils.sourceDir(context, 'mothershipConfig')
 
         mergeScenariosConfigs(context, projectConfig, sourceDir)
