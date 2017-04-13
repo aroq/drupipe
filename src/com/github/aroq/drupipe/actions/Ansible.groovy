@@ -59,10 +59,11 @@ class Ansible extends BaseAction {
         installAnsistranoRole()
 
         // TODO: do it outside of this method.
-        if (action.params.playbookParams.ansistrano_deploy_via == 'rsync') {
-            script.drupipeShell("rm -fR docroot/master/.git", context)
-        }
-        else if (action.params.playbookParams.ansistrano_deploy_via == 'git') {
+//        if (action.params.playbookParams.ansistrano_deploy_via == 'rsync') {
+//            script.drupipeShell("rm -fR docroot/master/.git", context)
+//        }
+
+        if (action.params.playbookParams.ansistrano_deploy_via == 'git') {
             def version = readFile('docroot/master/VERSION')
             action.params.playbookParams << [
                 ansistrano_git_repo:   params.ansible_repo,
