@@ -112,7 +112,7 @@ def getMothershipProjectParams(config, json) {
     projects[config.jenkinsFolderName] ? projects[config.jenkinsFolderName] : [:]
 }
 
-def loadLibrary(script, params) {
+def loadLibrary(script, context) {
     if (!context.libraryLoaded) {
         script.drupipeAction([
             action: 'Source.add',
@@ -121,12 +121,12 @@ def loadLibrary(script, params) {
                     name: 'library',
                     type: 'git',
                     path: 'library',
-                    url: params.drupipeLibraryUrl,
-                    branch: params.drupipeLibraryBranch,
-                    refType: params.drupipeLibraryType,
+                    url: context.drupipeLibraryUrl,
+                    branch: context.drupipeLibraryBranch,
+                    refType: context.drupipeLibraryType,
                 ],
             ],
-        ], params)
+        ], context)
         context.libraryLoaded = true
     }
 }
