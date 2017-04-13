@@ -88,10 +88,10 @@ class DrupipeAction implements Serializable {
 
             // Put action result into context.
             if (actionResult) {
+                utils.debugLog(context, actionResult, "${this.fullName} action result")
                 if (actionResult.returnContext) {
                     if (utils.isCollectionOrList(actionResult)) {
                         context << actionResult
-                        utils.debugLog(context, actionResult, "${this.fullName} action result")
                     }
                     else {
                         // TODO: check if this should be in else clause.
