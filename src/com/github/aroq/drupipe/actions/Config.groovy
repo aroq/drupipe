@@ -25,7 +25,7 @@ class Config extends BaseAction {
 
         def providers = [
             [
-                action: 'GroovyFileConfig.groovyConfigFromLibraryResource', params: [resource: 'com/github/aroq/drupipe/config.groovy']
+                action: 'GroovyFileConfig.groovyConfigFromLibraryResource', params: [returnContext: true, resource: 'com/github/aroq/drupipe/config.groovy']
             ],
             [
                 action: "Config.mothershipConfig"
