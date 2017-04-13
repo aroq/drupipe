@@ -121,7 +121,6 @@ defaultActionParams = [
             method: 'build',
         ],
         deployHandler: [
-            handler: false,
             method: 'deploy',
         ],
         artifactHandler: [
