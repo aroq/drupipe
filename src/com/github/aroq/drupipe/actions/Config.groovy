@@ -43,7 +43,7 @@ class Config extends BaseAction {
 
         context << context.pipeline.executePipelineActionList(providers, context)
         context << context.env
-        context << ['Config_perform': true, returnConfig: true]
+        context << ['Config_perform': true, returnContext: true]
         context << action.params.jenkinsParams
 
         context.environmentParams = [:]
@@ -91,7 +91,7 @@ class Config extends BaseAction {
 
 
         }
-        context << [returnConfig: true]
+        context << [returnContext: true]
     }
 
     def mergeScenariosConfigs(context, config, sourceDir) {
@@ -149,7 +149,7 @@ class Config extends BaseAction {
 
         context << mergeScenariosConfigs(context, context, sourceDir)
 
-        context << [returnConfig: true]
+        context << [returnContext: true]
     }
 
 }

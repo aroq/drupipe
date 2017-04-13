@@ -48,7 +48,7 @@ class Deployer extends BaseAction {
         else {
             script.echo "No build handler defined"
         }
-        context << [returnConfig: true]
+        context << [returnContext: true]
     }
 
 }

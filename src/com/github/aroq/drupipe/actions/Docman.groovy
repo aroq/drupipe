@@ -28,7 +28,7 @@ class Docman extends BaseAction {
         }
         script.echo "PROJECT NAME: ${context.projectName}"
 
-        context << [returnConfig: true]
+        context << [returnContext: true]
     }
 
     def info() {
@@ -45,7 +45,7 @@ class Docman extends BaseAction {
     def build() {
         init()
         deploy()
-        context << [returnConfig: true]
+        context << [returnContext: true]
         context
     }
 
@@ -71,7 +71,7 @@ class Docman extends BaseAction {
         context.builder['buildDir'] = "${context.docrootDir}/master"
         context.builder['buildName'] = context.jenkinsFolderName
         context.builder['version'] = (new Date()).format('yyyy-MM-dd--hh-mm-ss')
-        context << [returnConfig: true]
+        context << [returnContext: true]
         context
     }
 

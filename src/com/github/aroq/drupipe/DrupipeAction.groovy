@@ -84,23 +84,31 @@ class DrupipeAction implements Serializable {
                 }
             }
 
+            def result = [:]
+
             // Put action result into context.
-            if (actionResult && actionResult.returnConfig) {
-                if (utils.isCollectionOrList(actionResult)) {
-                    context << actionResult
-                    utils.debugLog(context, actionResult, "${this.fullName} action result")
+            if (actionResult) {
+                if (actionResult.returnContext) {
+                    if (utils.isCollectionOrList(actionResult)) {
+                        context << actionResult
+                        utils.debugLog(context, actionResult, "${this.fullName} action result")
+                    }
+                    else {
+                        // TODO: check if this should be in else clause.
+                        context << ["${action.name}.${action.methodName}": actionResult]
+                    }
+                    context.returnContext = false
+                    result = context
                 }
                 else {
-                    // TODO: check if this should be in else clause.
-                    context << ["${action.name}.${action.methodName}": actionResult]
+                    result = actionResult
                 }
+                context[this.fullName] = actionResult
             }
-            //utils.debugLog(context, context, "${this.fullName} action result")
 
-            context.returnConfig = false
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} end <-"
 
-            context
+            result
         }
         catch (err) {
             this.context.pipeline.script.echo err.toString()

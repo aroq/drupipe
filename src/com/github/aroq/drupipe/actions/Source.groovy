@@ -55,7 +55,7 @@ class Source extends BaseAction {
 
         }
         context.remove('source')
-        context << [returnConfig: true]
+        context << [returnContext: true]
     }
 
     def loadConfig() {
@@ -75,7 +75,7 @@ class Source extends BaseAction {
             context.remove('configPath')
             context.remove('configType')
         }
-        context << [returnConfig: true]
+        context << [returnContext: true]
     }
 }
 
