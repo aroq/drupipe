@@ -27,7 +27,7 @@ class Ansible extends BaseAction {
         init()
         action.params.playbookParams << [
             ansistrano_deploy_to:   context.environmentParams.root,
-            ansistrano_deploy_from: context.builder.artifactParams.dir,
+            ansistrano_deploy_from: context.builder.artifactParams.dir + '/',
         ]
         deployWithAnsistrano()
     }
