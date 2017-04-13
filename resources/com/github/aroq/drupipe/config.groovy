@@ -121,6 +121,7 @@ defaultActionParams = [
             method: 'build',
         ],
         deployHandler: [
+            handler: 'Druflow',
             method: 'deploy',
         ],
         artifactHandler: [
