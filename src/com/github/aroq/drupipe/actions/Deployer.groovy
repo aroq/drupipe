@@ -18,8 +18,8 @@ class Deployer extends BaseAction {
     def deploy() {
         setParams()
         retrieveArtifact()
-        if (action.params.deployHandler) {
-            context << script.drupipeAction([action: "${action.params.deployHandler}.deploy", params: context.builder.artifactParams], context)
+        if (action.params.deployHandler.handler) {
+            context << script.drupipeAction([action: "${action.params.deployHandler.handler}.${action.params.deployHandler.method}", params: context.builder.artifactParams], context)
         }
         else {
             script.echo "No deploy handler defined"
@@ -28,11 +28,11 @@ class Deployer extends BaseAction {
 
     def operations() {
         setParams()
-        if (action.params.operationsHandler) {
-            context << script.drupipeAction([action: "${action.params.operationsHandler}.operations"], context)
+        if (action.params.operationsHandler.handler) {
+            context << script.drupipeAction([action: "${action.params.operationsHandler.handler}.${action.params.operationsHandler.method}"], context)
         }
         else {
-            script.echo "No deploy handler defined"
+            script.echo "No operations handler defined"
         }
     }
 
@@ -40,8 +40,8 @@ class Deployer extends BaseAction {
         if (!context['builder']) {
             context['builder'] = [:]
         }
-        script.drupipeAction([action: "${action.params.buildHandler}.artifactParams"], context)
-        context << script.drupipeAction([action: "${action.params.artifactHandler}.retrieve", params: context.builder.artifactParams], context)
+        script.drupipeAction([action: "${action.params.buildHandler.handler}.artifactParams"], context)
+        context << script.drupipeAction([action: "${action.params.artifactHandler.handler}.${action.params.artifactHandler.method}", params: context.builder.artifactParams], context)
         context.projectName = 'master'
         context << [returnConfig: true]
     }

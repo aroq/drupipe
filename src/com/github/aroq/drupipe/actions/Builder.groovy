@@ -17,7 +17,7 @@ class Builder extends BaseAction {
             context['builder'] = [:]
         }
         // Dispatch the action.
-        context << script.drupipeAction([action: "${action.params.buildHandler}.${action.params.buildMethod}"], context)
+        context << script.drupipeAction([action: "${action.params.buildHandler.handler}.${action.params.buildHandler.method}"], context)
         context << [returnConfig: true]
     }
 
@@ -36,14 +36,14 @@ class Builder extends BaseAction {
         context << [returnConfig: true]
     }
 
-    def retrieveArtifact() {
-        if (!context['builder']) {
-            context['builder'] = [:]
-        }
-        script.drupipeAction([action: "${action.params.buildHandler}.artifactParams"], context)
-        context << script.drupipeAction([action: "${action.params.artifactHandler}.retrieve", params: context.builder.artifactParams], context)
-        context.projectName = 'master'
-        context << [returnConfig: true]
-    }
+//    def retrieveArtifact() {
+//        if (!context['builder']) {
+//            context['builder'] = [:]
+//        }
+//        script.drupipeAction([action: "${action.params.buildHandler.handler}.artifactParams"], context)
+//        context << script.drupipeAction([action: "${action.params.artifactHandler.handler}.${action.params.artifactHandler.method}", params: context.builder.artifactParams], context)
+//        context.projectName = 'master'
+//        context << [returnConfig: true]
+//    }
 
 }

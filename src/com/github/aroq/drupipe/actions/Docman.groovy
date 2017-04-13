@@ -131,7 +131,7 @@ class Docman extends BaseAction {
 
     def repoParams(String configPath) {
         info()
-        def repo = null
+        def repo
         def masterInfoFile = "docroot/config/${configPath}/info.yaml"
         if (script.fileExists(masterInfoFile)) {
             def masterConfig = script.readYaml(file: masterInfoFile)
@@ -143,7 +143,7 @@ class Docman extends BaseAction {
         }
         script.echo "REPO: ${repo}"
 
-        String reference = null
+        String reference
         if (context.release) {
             reference = context.release
         }

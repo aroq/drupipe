@@ -110,15 +110,25 @@ defaultActionParams = [
         timeToConfirm: 60,
     ],
     Builder: [
-        buildHandler: 'Docman',
-        buildMethod: 'build',
-        artifactHandler: 'GitArtifact',
+        buildHandler: [
+            handler: 'Docman',
+            method: 'build',
+        ],
     ],
     Deployer: [
-        buildHandler: 'Docman',
-        artifactHandler: 'GitArtifact',
+        buildHandler: [
+            handler: 'Docman',
+            method: 'build',
+        ],
+        deployHandler: [
+            handler: false,
+            method: 'deploy',
+        ],
+        artifactHandler: [
+            handler: 'GitArtifact',
+            method: 'retrieve',
+        ],
     ],
-
     GitArtifact: [
         dir: 'artifacts',
         repoDirName: 'master',
