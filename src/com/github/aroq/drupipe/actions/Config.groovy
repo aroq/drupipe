@@ -42,7 +42,7 @@ class Config extends BaseAction {
         this.script.checkout this.script.scm
 
         context << context.pipeline.executePipelineActionList(providers, context)
-        context << context.env
+        //context << context.env
         //context << ['Config_perform': true, returnContext: true]
 
         context.environmentParams = [:]
@@ -66,6 +66,7 @@ class Config extends BaseAction {
         def result = [:]
         result.workspace = this.script.pwd()
         result.env = this.utils.envToMap()
+        result << result.env
         result.jenkinsFolderName = this.utils.getJenkinsFolderName(this.script.env.BUILD_URL)
         result.jenkinsJobName = this.utils.getJenkinsJobName(this.script.env.BUILD_URL)
         result
