@@ -21,7 +21,8 @@ class Repo extends BaseAction {
     def DrupipeAction action
     def init() {
         context << script.drupipeAction([action: "Docman.init"], context)
-        context << [returnContext: true]
+        //context << [returnContext: true]
+        context
     }
 
     // Build project from repo & execute commands from .build.yaml.
@@ -63,7 +64,8 @@ class Repo extends BaseAction {
                 }
             }
         }
-        context << [returnContext: true]
+        //context << [returnContext: true]
+        context
     }
 
     def getStableInfo(repoUrl, repoVersionBranch) {

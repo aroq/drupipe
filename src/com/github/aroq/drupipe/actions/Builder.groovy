@@ -18,7 +18,7 @@ class Builder extends BaseAction {
         }
         // Dispatch the action.
         context << script.drupipeAction([action: "${action.params.buildHandler.handler}.${action.params.buildHandler.method}"], context)
-        context << [returnContext: true]
+        //context << [returnContext: true]
     }
 
     def createArtifact() {
@@ -33,7 +33,8 @@ class Builder extends BaseAction {
                 tar -czf ${fileName} ${sourceDir}
             """, context << [shellCommandWithBashLogin: true]
         )
-        context << [returnContext: true]
+        context
+        //context << [returnContext: true]
     }
 
 //    def retrieveArtifact() {

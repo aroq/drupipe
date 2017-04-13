@@ -19,7 +19,7 @@ class Config extends BaseAction {
 
         def providers = [
             [
-                action: "Config.jenkinsConfig"
+                action: "Config.envConfig"
             ],
             [
                 action: 'GroovyFileConfig.groovyConfigFromLibraryResource', params: [resource: 'com/github/aroq/drupipe/config.groovy']
@@ -29,6 +29,9 @@ class Config extends BaseAction {
             ],
             [
                 action: "Config.projectConfig"
+            ],
+            [
+                action: "Config.jenkinsConfig"
             ],
         ]
 
@@ -40,8 +43,7 @@ class Config extends BaseAction {
 
         context << context.pipeline.executePipelineActionList(providers, context)
         context << context.env
-        context << ['Config_perform': true, returnContext: true]
-        context << action.params.jenkinsParams
+        //context << ['Config_perform': true, returnContext: true]
 
         context.environmentParams = [:]
         if (context.environments && context.servers) {
@@ -57,6 +59,10 @@ class Config extends BaseAction {
     }
 
     def jenkinsConfig() {
+        action.params.jenkinsParams
+    }
+
+    def envConfig() {
         def result = [:]
         result.workspace = this.script.pwd()
         result.env = this.utils.envToMap()
