@@ -124,6 +124,9 @@ defaultActionParams = [
             handler: 'GitArtifact',
             method: 'retrieve',
         ],
+        operationsHandler: [
+            method: 'operations',
+        ],
     ],
     GitArtifact: [
         dir: 'artifacts',
