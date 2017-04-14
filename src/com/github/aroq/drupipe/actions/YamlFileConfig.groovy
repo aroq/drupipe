@@ -15,7 +15,7 @@ class YamlFileConfig extends BaseAction {
     def load() {
         def result = [:]
         if (action.params.configFileName && script.fileExists(action.params.configFileName)) {
-            result = utils.merge(context, script.readYaml(file: action.params.configFileName))
+            result = script.readYaml(file: action.params.configFileName)
         }
         result
     }
