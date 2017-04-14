@@ -109,13 +109,7 @@ defaultActionParams = [
     Common_confirm: [
         timeToConfirm: 60,
     ],
-    Builder: [
-        buildHandler: [
-            handler: 'Docman',
-            method: 'build',
-        ],
-    ],
-    Deployer: [
+    PipelineController: [
         buildHandler: [
             handler: 'Docman',
             method: 'build',

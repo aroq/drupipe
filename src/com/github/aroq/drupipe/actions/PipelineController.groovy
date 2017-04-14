@@ -2,7 +2,7 @@ package com.github.aroq.drupipe.actions
 
 import com.github.aroq.drupipe.DrupipeAction
 
-class Deployer extends BaseAction {
+class PipelineController extends BaseAction {
 
     def context
 
@@ -12,11 +12,31 @@ class Deployer extends BaseAction {
 
     def DrupipeAction action
 
-    def setParams() {
+    def build() {
+        if (!context['builder']) {
+            context['builder'] = [:]
+        }
+        // Dispatch the action.
+        context << script.drupipeAction([action: "${action.params.buildHandler.handler}.${action.params.buildHandler.method}"], context)
+    }
+
+    // TODO: move to artifact handler.
+    def createArtifact() {
+        def sourceDir = context.builder['buildDir']
+        def fileName = "${context.builder['buildName']}-${context.builder['version']}.tar.gz"
+        context.builder['artifactFileName'] = fileName
+        context.builder['groupId'] = context.jenkinsFolderName
+
+        script.drupipeShell(
+            """
+                rm -fR ${sourceDir}/.git
+                tar -czf ${fileName} ${sourceDir}
+            """, context << [shellCommandWithBashLogin: true]
+        )
+        context
     }
 
     def deploy() {
-        setParams()
         retrieveArtifact()
         if (action.params.deployHandler && action.params.deployHandler.handler) {
             context << script.drupipeAction([action: "${action.params.deployHandler.handler}.${action.params.deployHandler.method}", params: context.builder.artifactParams], context)
@@ -27,7 +47,6 @@ class Deployer extends BaseAction {
     }
 
     def operations() {
-        setParams()
         if (action.params.operationsHandler && action.params.operationsHandler.handler) {
             context << script.drupipeAction([action: "${action.params.operationsHandler.handler}.${action.params.operationsHandler.method}"], context)
         }
@@ -49,7 +68,6 @@ class Deployer extends BaseAction {
             script.echo "No build handler defined"
         }
         context
-        //context << [returnContext: true]
     }
 
 }
