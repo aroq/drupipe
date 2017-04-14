@@ -30,6 +30,8 @@ if (config.releaseEnvs) {
                             }
                         }
                         stringParam('environment', e.name)
+                        stringParam('debugEnabled', '0')
+                        stringParam('force', '0')
                     }
                 }
             }
