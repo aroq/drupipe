@@ -107,7 +107,7 @@ class Config extends BaseAction {
         result
     }
 
-    def mergeScenariosConfigs(context, config, sourceDir) {
+    def mergeScenariosConfigs(config, sourceDir) {
         def scenariosConfig = [:]
         if (config.scenarios) {
             script.echo "Scenarios exists"
@@ -118,7 +118,7 @@ class Config extends BaseAction {
                 script.echo "Scenario file name: ${fileName}"
                 if (script.fileExists(fileName)) {
                     script.echo "Scenario file name: ${fileName} exists"
-                    def scenarioConfig = mergeScenariosConfigs(context, script.readYaml(file: fileName), sourceDir)
+                    def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), sourceDir)
                     utils.dump(scenarioConfig)
                     scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
                 }
@@ -162,7 +162,7 @@ class Config extends BaseAction {
 
         def sourceDir = utils.sourceDir(context, 'mothershipConfig')
 
-        mergeScenariosConfigs(context, projectConfig, sourceDir)
+        mergeScenariosConfigs(projectConfig, sourceDir)
     }
 
 }

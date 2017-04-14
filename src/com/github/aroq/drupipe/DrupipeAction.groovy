@@ -91,6 +91,7 @@ class DrupipeAction implements Serializable {
                 utils.debugLog(context, actionResult, "${this.fullName} action result")
                 if (actionResult.returnContext) {
                     if (utils.isCollectionOrList(actionResult)) {
+                        this.context.pipeline.script.echo "RETURN CONTEXT"
                         context << actionResult
                     }
                     else {
