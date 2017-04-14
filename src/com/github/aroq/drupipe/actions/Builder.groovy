@@ -18,7 +18,6 @@ class Builder extends BaseAction {
         }
         // Dispatch the action.
         context << script.drupipeAction([action: "${action.params.buildHandler.handler}.${action.params.buildHandler.method}"], context)
-        //context << [returnContext: true]
     }
 
     def createArtifact() {
@@ -34,17 +33,6 @@ class Builder extends BaseAction {
             """, context << [shellCommandWithBashLogin: true]
         )
         context
-        //context << [returnContext: true]
     }
-
-//    def retrieveArtifact() {
-//        if (!context['builder']) {
-//            context['builder'] = [:]
-//        }
-//        script.drupipeAction([action: "${action.params.buildHandler.handler}.artifactParams"], context)
-//        context << script.drupipeAction([action: "${action.params.artifactHandler.handler}.${action.params.artifactHandler.method}", params: context.builder.artifactParams], context)
-//        context.projectName = 'master'
-//        context << [returnContext: true]
-//    }
 
 }

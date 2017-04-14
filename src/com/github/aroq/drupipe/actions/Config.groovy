@@ -19,10 +19,10 @@ class Config extends BaseAction {
 
         def providers = [
             [
-                action: "Config.envConfig"
+                action: 'GroovyFileConfig.groovyConfigFromLibraryResource', params: [resource: 'com/github/aroq/drupipe/config.groovy']
             ],
             [
-                action: 'GroovyFileConfig.groovyConfigFromLibraryResource', params: [resource: 'com/github/aroq/drupipe/config.groovy']
+                action: "Config.envConfig"
             ],
             [
                 action: "Config.mothershipConfig"
@@ -157,8 +157,6 @@ class Config extends BaseAction {
             ]
         ]
         def projectConfig = context.pipeline.executePipelineActionList(providers, context)
-
-        utils.dump(projectConfig, 'projectConfig')
 
         def sourceDir = utils.sourceDir(context, 'mothershipConfig')
 

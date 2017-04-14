@@ -18,7 +18,7 @@ class Deployer extends BaseAction {
     def deploy() {
         setParams()
         retrieveArtifact()
-        if (action.params.deployHandler?.handler) {
+        if (action.params.deployHandler && action.params.deployHandler.handler) {
             context << script.drupipeAction([action: "${action.params.deployHandler.handler}.${action.params.deployHandler.method}", params: context.builder.artifactParams], context)
         }
         else {
@@ -28,7 +28,7 @@ class Deployer extends BaseAction {
 
     def operations() {
         setParams()
-        if (action.params.operationsHandler?.handler) {
+        if (action.params.operationsHandler && action.params.operationsHandler.handler) {
             context << script.drupipeAction([action: "${action.params.operationsHandler.handler}.${action.params.operationsHandler.method}"], context)
         }
         else {
@@ -40,7 +40,7 @@ class Deployer extends BaseAction {
         if (!context['builder']) {
             context['builder'] = [:]
         }
-        if (action.params.buildHandler?.handler) {
+        if (action.params.buildHandler && action.params.buildHandler.handler) {
             script.drupipeAction([action: "${action.params.buildHandler.handler}.artifactParams"], context)
             context << script.drupipeAction([action: "${action.params.artifactHandler.handler}.${action.params.artifactHandler.method}", params: context.builder.artifactParams], context)
             context.projectName = 'master'
