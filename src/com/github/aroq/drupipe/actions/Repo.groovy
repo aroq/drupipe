@@ -21,7 +21,6 @@ class Repo extends BaseAction {
     def DrupipeAction action
     def init() {
         context << script.drupipeAction([action: "Docman.init"], context)
-        //context << [returnContext: true]
         context
     }
 
@@ -64,7 +63,6 @@ class Repo extends BaseAction {
                 }
             }
         }
-        //context << [returnContext: true]
         context
     }
 

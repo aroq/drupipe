@@ -53,8 +53,6 @@ class Source extends BaseAction {
             context.sources[source.name] = new com.github.aroq.drupipe.DrupipeSource(name: source.name, type: source.type, path: source.path)
             context.sourcesList << context.sources[source.name]
         }
-//        context.remove('source')
-//        context << [returnContext: true]
         [:]
     }
 

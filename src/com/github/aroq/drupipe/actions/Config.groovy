@@ -42,8 +42,6 @@ class Config extends BaseAction {
         this.script.checkout this.script.scm
 
         context << context.pipeline.executePipelineActionList(providers, context)
-        //context << context.env
-        //context << ['Config_perform': true, returnContext: true]
 
         context.environmentParams = [:]
         if (context.environments && context.servers) {
