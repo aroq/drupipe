@@ -29,6 +29,7 @@ if (config.releaseEnvs) {
                                 parameter('tagPattern', "stable-*")
                             }
                         }
+                        stringParam('environment', e.name)
                     }
                 }
             }
