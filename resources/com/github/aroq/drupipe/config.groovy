@@ -17,13 +17,12 @@ environments {
         dockerImage = 'aroq/drudock:dev'
     }
     stage {
-        drupipeLibraryBranch = 'develop'
+        drupipeLibraryBranch = 'master'
         dockerImage = 'aroq/drudock:dev'
     }
     prod {
-//        drupipeLibraryBranch = 'v0.6.3'
-//        drupipeLibraryType = 'tag'
-        drupipeLibraryBranch = 'develop'
+        drupipeLibraryBranch = 'v0.6.4'
+        drupipeLibraryType = 'tag'
         dockerImage = 'aroq/drudock:dev'
     }
 }
