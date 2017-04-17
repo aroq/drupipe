@@ -17,11 +17,14 @@ environments {
         dockerImage = 'aroq/drudock:dev'
     }
     stage {
-        drupipeLibraryBranch = 'master'
+        drupipeLibraryBranch = 'develop'
+        dockerImage = 'aroq/drudock:dev'
     }
     prod {
-        drupipeLibraryBranch = 'v0.6.3'
-        drupipeLibraryType = 'tag'
+//        drupipeLibraryBranch = 'v0.6.3'
+//        drupipeLibraryType = 'tag'
+        drupipeLibraryBranch = 'develop'
+        dockerImage = 'aroq/drudock:dev'
     }
 }
 
@@ -74,6 +77,10 @@ defaultActionParams = [
         druflowRepo: 'https://github.com/aroq/druflow.git',
         druflowGitReference: 'v0.1.0',
     ],
+    Druflow_operations: [
+        propertiesFile: 'docroot/master/version.properties',
+        executeCommand: 'deployFlow',
+    ],
     Druflow_deployFlow: [
         propertiesFile: 'docroot/master/version.properties',
         executeCommand: 'deployFlow',
@@ -89,7 +96,11 @@ defaultActionParams = [
     ],
     Ansible: [
         debugEnabled: true,
-        ansible_hostsFile: 'docroot/config/ansible/inventory.ini',
+        //hosts: 'docroot/config/ansible/inventory.ini',
+        playbook: 'library/ansible/deployWithAnsistrano.yml',
+        playbookParams: [
+            ansistrano_deploy_via: 'rsync',
+        ],
     ],
     Ansible_deployWithGit: [
         playbook: 'library/ansible/deployWithGit.yml',
@@ -104,14 +115,28 @@ defaultActionParams = [
     Common_confirm: [
         timeToConfirm: 60,
     ],
-    Builder: [
-        builderHandler: 'Docman',
-        builderMethod: 'build',
-        artifactHandler: 'GitArtifact',
+    PipelineController: [
+        buildHandler: [
+            handler: 'Docman',
+            method: 'build',
+        ],
+        deployHandler: [
+            handler: 'Druflow',
+            method: 'deploy',
+        ],
+        artifactHandler: [
+            handler: 'GitArtifact',
+            method: 'retrieve',
+        ],
+        operationsHandler: [
+            method: 'operations',
+        ],
+    ],
+    GitArtifact: [
+        dir: 'artifacts',
+        repoDirName: 'master',
     ],
     Git: [
-        dir: 'docroot',
-        repoDirName: 'master',
         singleBranch: true,
         depth: 1,
     ],

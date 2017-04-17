@@ -16,22 +16,22 @@ class Config extends BaseAction {
         if (context['Config_perform']) {
             return context
         }
-        context.workspace = this.script.pwd()
-
-        context.env = this.utils.envToMap()
-
-        context.jenkinsFolderName = this.utils.getJenkinsFolderName(this.script.env.BUILD_URL)
-        context.jenkinsJobName = this.utils.getJenkinsJobName(this.script.env.BUILD_URL)
 
         def providers = [
             [
                 action: 'GroovyFileConfig.groovyConfigFromLibraryResource', params: [resource: 'com/github/aroq/drupipe/config.groovy']
             ],
             [
+                action: "Config.envConfig"
+            ],
+            [
                 action: "Config.mothershipConfig"
             ],
             [
                 action: "Config.projectConfig"
+            ],
+            [
+                action: "Config.jenkinsConfig"
             ],
         ]
 
@@ -42,18 +42,42 @@ class Config extends BaseAction {
         this.script.checkout this.script.scm
 
         context << context.pipeline.executePipelineActionList(providers, context)
-        context << context.env
-        context << ['Config_perform': true, returnConfig: true]
-        context << action.params.jenkinsParams
+
+        context.environmentParams = [:]
+        if (context.environments && context.servers) {
+            if (context.environment) {
+                def environment = context.environments[context.environment]
+                def server = context.servers[environment['server']]
+                context.environmentParams = utils.merge(server, environment)
+                context.defaultActionParams = utils.merge(context.defaultActionParams, context.environmentParams.defaultActionParams)
+                utils.jsonDump(context.environmentParams, 'ENVIRONMENT PARAMS')
+            }
+        }
+        context
+    }
+
+    def jenkinsConfig() {
+        action.params.jenkinsParams
+    }
+
+    def envConfig() {
+        def result = [:]
+        result.workspace = this.script.pwd()
+        result.env = this.utils.envToMap()
+        result << result.env
+        result.jenkinsFolderName = this.utils.getJenkinsFolderName(this.script.env.BUILD_URL)
+        result.jenkinsJobName = this.utils.getJenkinsJobName(this.script.env.BUILD_URL)
+        result
     }
 
     def mothershipConfig() {
+        def result
         if (this.script.env.MOTHERSHIP_REPO) {
             def sourceObject = [
-                name: 'mothershipConfig',
-                type: 'git',
-                path: 'mothership',
-                url: this.script.env.MOTHERSHIP_REPO,
+                name:   'mothershipConfig',
+                type:   'git',
+                path:   'mothership',
+                url:    script.env.MOTHERSHIP_REPO,
                 branch: 'master',
             ]
 
@@ -74,11 +98,31 @@ class Config extends BaseAction {
                     ]
                 ]
             ]
-            context << context.pipeline.executePipelineActionList(providers, context)
+            result = context.pipeline.executePipelineActionList(providers, context)
             def json = this.script.readFile('mothership/projects.json')
-            context << this.utils.getMothershipProjectParams(context, json)
+            result = utils.merge(result, this.utils.getMothershipProjectParams(context, json))
         }
-        context << [returnConfig: true]
+        result
+    }
+
+    def mergeScenariosConfigs(config, sourceDir) {
+        def scenariosConfig = [:]
+        if (config.scenarios) {
+            script.echo "Scenarios exists"
+            for (def i = 0; i < config.scenarios.size(); i++) {
+                def scenario = config.scenarios[i]
+                script.echo "Scenario: ${scenario}"
+                def fileName = "${sourceDir}/scenarios/${scenario}/config.yaml"
+                script.echo "Scenario file name: ${fileName}"
+                if (script.fileExists(fileName)) {
+                    script.echo "Scenario file name: ${fileName} exists"
+                    def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), sourceDir)
+                    utils.dump(scenarioConfig)
+                    scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
+                }
+            }
+        }
+        utils.merge(scenariosConfig, config)
     }
 
     def projectConfig() {
@@ -100,10 +144,21 @@ class Config extends BaseAction {
                     configType: 'groovy',
                     configPath: context.docmanConfigFile
                 ]
+            ],
+            [
+                action: 'Source.loadConfig',
+                params: [
+                    sourceName: 'projectConfig',
+                    configType: 'yaml',
+                    configPath: 'config.yaml'
+                ]
             ]
         ]
-        context << context.pipeline.executePipelineActionList(providers, context)
+        def projectConfig = context.pipeline.executePipelineActionList(providers, context)
 
-        context << [returnConfig: true]
+        def sourceDir = utils.sourceDir(context, 'mothershipConfig')
+
+        mergeScenariosConfigs(projectConfig, sourceDir)
     }
+
 }

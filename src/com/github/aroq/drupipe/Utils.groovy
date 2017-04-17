@@ -112,20 +112,23 @@ def getMothershipProjectParams(config, json) {
     projects[config.jenkinsFolderName] ? projects[config.jenkinsFolderName] : [:]
 }
 
-def loadLibrary(script, params) {
-    script.drupipeAction([
-        action: 'Source.add',
-        params: [
-            source: [
-                name: 'library',
-                type: 'git',
-                path: 'library',
-                url: params.drupipeLibraryUrl,
-                branch: params.drupipeLibraryBranch,
-                refType: params.drupipeLibraryType,
+def loadLibrary(script, context) {
+    if (!context.libraryLoaded) {
+        script.drupipeAction([
+            action: 'Source.add',
+            params: [
+                source: [
+                    name: 'library',
+                    type: 'git',
+                    path: 'library',
+                    url: context.drupipeLibraryUrl,
+                    branch: context.drupipeLibraryBranch,
+                    refType: context.drupipeLibraryType,
+                ],
             ],
-        ],
-    ], params)
+        ], context)
+        context.libraryLoaded = true
+    }
 }
 
 boolean isCollectionOrList(object) {
@@ -201,6 +204,11 @@ def sourcePath(params, sourceName, String path) {
     }
 }
 
+def sourceDir(params, sourceName) {
+    if (sourceName in params.sources) {
+        params.sources[sourceName].path
+    }
+}
 
 def debugLog(params, value, dumpName = '', debugParams = [:]) {
     if (params.debugEnabled) {

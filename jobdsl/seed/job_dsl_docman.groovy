@@ -16,18 +16,20 @@ if (config.env.GITLAB_API_TOKEN_TEXT) {
     gitlabHelper = new GitlabHelper(script: this, config: config)
 }
 
+def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipeline'
+
 // TODO: Use docman config to retrieve info.
 branches = [
     development: [
-        pipeline: 'pipeline',
+        pipeline: pipelineScript,
         quietPeriodSeconds: 5,
     ],
     staging: [
-        pipeline: 'pipeline',
+        pipeline: pipelineScript,
         quietPeriodSeconds: 5,
     ],
     stable: [
-        pipeline: 'pipeline',
+        pipeline: pipelineScript,
         quietPeriodSeconds: 5,
     ],
 ]

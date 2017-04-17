@@ -84,8 +84,14 @@ class DrupipePipeline implements Serializable {
         if (stage instanceof DrupipeStage) {
             for (action in stage.actions) {
                 def values = action.action.split("\\.")
-                action.name = values[0]
-                action.methodName = values[1]
+                if (values.size() > 1) {
+                    action.name = values[0]
+                    action.methodName = values[1]
+                }
+                else {
+                    action.name = 'PipelineController'
+                    action.methodName = values[0]
+                }
             }
             stage
         }
@@ -106,6 +112,7 @@ class DrupipePipeline implements Serializable {
     @NonCPS
     DrupipeAction processPipelineAction(action, context) {
         def actionName
+        def actionMethodName
         def actionParams
         if (action.getClass() == java.lang.String) {
             actionName = action
@@ -116,26 +123,32 @@ class DrupipePipeline implements Serializable {
             actionParams = action.params
         }
         def values = actionName.split("\\.")
-        new DrupipeAction(name: values[0], methodName: values[1], params: actionParams, context: context)
+        if (values.size() > 1) {
+            actionName = values[0]
+            actionMethodName = values[1]
+        }
+        else {
+            actionName = 'PipelineController'
+            actionMethodName = values[0]
+        }
+
+        new DrupipeAction(name: actionName, methodName: actionMethodName, params: actionParams, context: context)
     }
 
     def executePipelineActionList(actions, context) {
         def actionList = processPipelineActionList(actions, context)
-        context << executeActionList(actionList, context)
-    }
-
-    def executeActionList(actionList, params) {
+        def result = [:]
         try {
             for (action in actionList) {
-                params = utils.merge(params, action.execute(params))
+                def actionResult = action.execute(result)
+                result = utils.merge(result, actionResult)
             }
-            params
+            result
         }
         catch (err) {
             script.echo err.toString()
             throw err
         }
-
-        params
     }
+
 }

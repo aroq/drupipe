@@ -21,7 +21,7 @@ class Repo extends BaseAction {
     def DrupipeAction action
     def init() {
         context << script.drupipeAction([action: "Docman.init"], context)
-        context << [returnConfig: true]
+        context
     }
 
     // Build project from repo & execute commands from .build.yaml.
@@ -63,13 +63,13 @@ class Repo extends BaseAction {
                 }
             }
         }
-        context << [returnConfig: true]
+        context
     }
 
     def getStableInfo(repoUrl, repoVersionBranch) {
         // Get stable version from repo.
         script.dir("${context.projectName}") {
-            script.git credentialsId: context.credentialsId, url: repoUrl, branch: repoVersionBranch
+            git credentialsId: context.credentialsId, url: repoUrl, branch: repoVersionBranch
         }
         StateStableInfo stateStableInfo = getStableTag(script.readFile("${context.projectName}/info.yaml"))
         script.echo "VERSION: ${stateStableInfo.version}"

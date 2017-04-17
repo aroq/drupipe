@@ -28,7 +28,7 @@ class Docman extends BaseAction {
         }
         script.echo "PROJECT NAME: ${context.projectName}"
 
-        context << [returnConfig: true]
+        context
     }
 
     def info() {
@@ -37,7 +37,7 @@ class Docman extends BaseAction {
         script.drupipeShell(
             """
         cd ${context.docrootDir}
-        docman info full config.json
+        docman info full config.json ${mothershipConfigRepoOption()}
         """, context << [shellCommandWithBashLogin: true]
         )
     }
@@ -45,8 +45,11 @@ class Docman extends BaseAction {
     def build() {
         init()
         deploy()
-        context << [returnConfig: true]
         context
+    }
+
+    String mothershipConfigRepoOption() {
+        " --config_repo=${script.env.MOTHERSHIP_REPO} --config_repo_branch=master"
     }
 
     def stripedBuild() {
@@ -58,7 +61,7 @@ class Docman extends BaseAction {
         script.drupipeShell(
             """
             cd docroot
-            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(context)}
+            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(context)} ${mothershipConfigRepoOption()}
             """, context << [shellCommandWithBashLogin: true]
         )
         if (!context['builder']) {
@@ -67,7 +70,6 @@ class Docman extends BaseAction {
         context.builder['buildDir'] = "${context.docrootDir}/master"
         context.builder['buildName'] = context.jenkinsFolderName
         context.builder['version'] = (new Date()).format('yyyy-MM-dd--hh-mm-ss')
-        context << [returnConfig: true]
         context
     }
 
@@ -80,7 +82,7 @@ class Docman extends BaseAction {
         script.drupipeShell(
             """
             cd docroot
-            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(context)}
+            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(context)} ${mothershipConfigRepoOption()}
             """, context << [shellCommandWithBashLogin: true]
         )
         context
@@ -90,7 +92,7 @@ class Docman extends BaseAction {
         script.drupipeShell(
             """
             cd docroot
-            docman deploy git_target ${context.projectName} branch ${context.version} ${forceFlag(context)}
+            docman deploy git_target ${context.projectName} branch ${context.version} ${forceFlag(context)} ${mothershipConfigRepoOption()}
             """, context << [shellCommandWithBashLogin: true]
         )
     }
@@ -127,14 +129,29 @@ class Docman extends BaseAction {
 
     def repoParams(String configPath) {
         info()
-        def masterConfig = script.readYaml(file: "docroot/config/${configPath}/info.yaml")
-        script.echo "MASTER CONFIG: ${masterConfig}"
-        def repo = masterConfig.type == 'root' ? masterConfig.repo : masterConfig.root_repo
+        def repo
+        def masterInfoFile = "docroot/config/${configPath}/info.yaml"
+        if (script.fileExists(masterInfoFile)) {
+            def masterConfig = script.readYaml(file: masterInfoFile)
+            script.echo "MASTER CONFIG: ${masterConfig}"
+            repo = masterConfig.type == 'root' ? masterConfig.repo : masterConfig.root_repo
+        }
+        else {
+            repo = context.components.master.root_repo ? context.components.master.root_repo : context.components.master.repo
+        }
         script.echo "REPO: ${repo}"
-        script.echo "reference: ${context.release}"
+
+        String reference
+        if (context.release) {
+            reference = context.release
+        }
+        else {
+            reference = context.environmentParams.git_reference
+        }
+        script.echo "reference: ${reference}"
         return [
             repoAddress: repo,
-            reference: context.release,
+            reference: reference,
             // TODO: refactor it.
             projectName: configPath,
         ]

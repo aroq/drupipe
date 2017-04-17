@@ -32,6 +32,7 @@ class Git extends BaseAction {
             options += "--depth ${action.params.depth}"
         }
         script.drupipeShell("""
+            mkdir -p ${action.params.dir}
             cd ${action.params.dir}
             git clone ${options} ${action.params.repoAddress} ${action.params.repoDirName}
             """, context

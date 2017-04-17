@@ -29,6 +29,9 @@ if (config.releaseEnvs) {
                                 parameter('tagPattern', "stable-*")
                             }
                         }
+                        stringParam('environment', e.name)
+                        stringParam('debugEnabled', '0')
+                        stringParam('force', '0')
                     }
                 }
             }
