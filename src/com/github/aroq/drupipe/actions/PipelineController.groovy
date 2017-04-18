@@ -37,8 +37,8 @@ class PipelineController extends BaseAction {
     }
 
     def deploy() {
-        retrieveArtifact()
         if (action.params.deployHandler && action.params.deployHandler.handler) {
+            retrieveArtifact()
             context << script.drupipeAction([action: "${action.params.deployHandler.handler}.${action.params.deployHandler.method}", params: context.builder.artifactParams], context)
         }
         else {
