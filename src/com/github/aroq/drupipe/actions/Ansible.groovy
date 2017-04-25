@@ -20,10 +20,9 @@ class Ansible extends BaseAction {
         action.params.playbookParams <<  [
             user: context.environmentParams.user,
         ]
-        if (action.params.inventory && action.params.default_group) {
+        if (action.params.inventory && context.environmentParams.default_group) {
             action.params.inventoryArgument = context.workspace + '/' + action.params.inventory.path
             action.params.playbookParams.target = "${context.environmentParams.default_group}"
-            utils.dump(action.params, 'ACTION PARAMS')
         }
         else {
             action.params.inventoryArgument = "${context.environmentParams.host},"
