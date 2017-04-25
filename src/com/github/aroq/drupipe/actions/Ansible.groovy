@@ -22,11 +22,11 @@ class Ansible extends BaseAction {
         ]
         if (action.params.inventory && action.params.default_group) {
             action.params.inventoryArgument = context.workspace + '/' + action.params.inventory.path
-            action.params.host = "${context.environmentParams.default_group}"
+            action.params.playbookParams.target = "${context.environmentParams.default_group}"
+            utils.dump(action.params, 'ACTION PARAMS')
         }
         else {
             action.params.inventoryArgument = "${context.environmentParams.host},"
-            action.params.host = ''
         }
     }
 
@@ -77,7 +77,7 @@ class Ansible extends BaseAction {
     def executeAnsiblePlaybook() {
         utils.loadLibrary(script, context)
         def command =
-            "ansible-playbook ${action.params.host} ${action.params.playbook} \
+            "ansible-playbook ${action.params.playbook} \
             -i ${action.params.inventoryArgument} \
             -e '${joinParams(action.params.playbookParams, 'json')}'"
 
