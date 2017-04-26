@@ -19,7 +19,7 @@ class Ansible extends BaseAction {
         }
         action.params.playbookParams <<  [
             user: context.environmentParams.user,
-            environment: context.environment,
+            drupipe_environment: context.environment,
         ]
         if (action.params.inventory && context.environmentParams.default_group) {
             action.params.inventoryArgument = action.params.inventory.path
