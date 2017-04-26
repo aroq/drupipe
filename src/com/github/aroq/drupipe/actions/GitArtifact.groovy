@@ -14,6 +14,15 @@ class GitArtifact extends BaseAction {
 
     def retrieve() {
         script.drupipeAction([action: "Git.clone", params: context.builder.artifactParams << action.params], context)
+
+        def repoDir = action.params.dir + '/' + action.params.repoDirName
+
+        script.drupipeShell(
+            """
+                rm -fR ${repoDir}/.git
+            """, context << [shellCommandWithBashLogin: true]
+        )
+
         context.builder.artifactParams.dir = "${context.workspace}/${action.params.dir}/${action.params.repoDirName}"
     }
 }
