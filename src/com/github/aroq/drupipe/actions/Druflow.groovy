@@ -27,7 +27,7 @@ class Druflow extends BaseAction {
             executeCommand: action.params.executeCommand,
             workspace: context.workspace,
             // TODO: review this parameter handling.
-            docrootDir: context.docrootDir,
+            docrootDir: action.params.docrootDir ? action.params.docrootDir : context.docrootDir,
         ]
         def commandParams = defaultParams
         commandParams << overrides
