@@ -44,7 +44,7 @@ defaultActionParams = [
         behat_args: '--format=pretty --out=std --format=junit',
     ],
     drupipeWithDocker: [
-        drupipeDockerArgs: '--user root:root -v /etc/hosts:/etc/hosts',
+        drupipeDockerArgs: '--user root:root',
     ],
     drupipeWithKubernetes: [
         containerName: 'drudock',
