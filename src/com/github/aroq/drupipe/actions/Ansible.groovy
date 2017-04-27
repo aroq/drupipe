@@ -78,7 +78,7 @@ class Ansible extends BaseAction {
     def executeAnsiblePlaybook() {
         utils.loadLibrary(script, context)
         def command =
-            "ansible-playbook -v ${action.params.playbook} \
+            "ansible-playbook ${action.params.playbook} \
             -i ${action.params.inventoryArgument} \
             -e '${joinParams(action.params.playbookParams, 'json')}'"
 
