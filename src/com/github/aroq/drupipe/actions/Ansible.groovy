@@ -27,6 +27,7 @@ class Ansible extends BaseAction {
         }
         else {
             action.params.inventoryArgument = "${context.environmentParams.host},"
+            action.params.playbookParams.target = "${context.environmentParams.host}"
         }
     }
 
