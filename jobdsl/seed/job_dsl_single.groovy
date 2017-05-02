@@ -24,16 +24,19 @@ if (config.configSeedType == 'single') {
             pipeline: pipelineScript,
             quietPeriodSeconds: 5,
             environment: 'dev',
+            branch: 'develop',
         ],
         staging: [
             pipeline: pipelineScript,
             quietPeriodSeconds: 5,
             environment: 'stage',
+            branch: 'staging',
         ],
         stable: [
             pipeline: pipelineScript,
             quietPeriodSeconds: 5,
             environment: 'prod',
+            branch: 'state_stable',
         ],
     ]
 
