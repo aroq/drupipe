@@ -128,7 +128,7 @@ class Docman extends BaseAction {
     }
 
     def repoParams(String configPath) {
-        info()
+        //info()
         def repo
         def masterInfoFile = "docroot/config/${configPath}/info.yaml"
         if (script.fileExists(masterInfoFile)) {
