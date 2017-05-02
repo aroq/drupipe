@@ -1,7 +1,7 @@
 #!groovy
 
 // Pipeline used to create project specific pipelines.
-def call(body, p) {
+def call(body, p = [:]) {
     echo "Params:"
     echo "type: p.type"
     drupipe { context ->
