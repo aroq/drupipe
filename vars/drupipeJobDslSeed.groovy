@@ -1,7 +1,9 @@
 #!groovy
 
 // Pipeline used to create project specific pipelines.
-def call(body) {
+def call(body, p) {
+    echo "Params:"
+    echo "type: p.type"
     drupipe { context ->
         drupipeBlock(withDocker: true, nodeName: 'default', context) {
             checkout scm
