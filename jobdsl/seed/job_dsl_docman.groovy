@@ -8,6 +8,8 @@ def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dum
 docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : 'docroot/config/config.json'
 docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 
+println "Config: ${config}"
+
 if (config.configSeedType == 'docman') {
     // Retrieve Docman config from json file (prepared by "docman info" command).
     def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
