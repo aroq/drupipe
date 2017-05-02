@@ -61,7 +61,7 @@ class Ansible extends BaseAction {
     }
 
     def deployWithAnsistrano() {
-        //installAnsistranoRole()
+        installAnsistranoRole()
 
 //        if (action.params.playbookParams.ansistrano_deploy_via == 'git') {
 //            def version = readFile('docroot/master/VERSION')
