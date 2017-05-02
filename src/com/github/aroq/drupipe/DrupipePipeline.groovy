@@ -37,8 +37,10 @@ class DrupipePipeline implements Serializable {
                 }
 
                 if (blocks) {
-                    blocks.each { block ->
-                        context << block.execute(context)
+                    for (def i = 0; i < blocks.size(); i++) {
+                        script.echo 'BLOCK EXECUTE START'
+                        context << blocks[i].execute(context)
+                        script.echo 'BLOCK EXECUTE END'
                     }
                 }
 

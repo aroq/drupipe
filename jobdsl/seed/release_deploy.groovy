@@ -24,12 +24,12 @@ if (config.releaseEnvs) {
                             description('Allows user choose from multiple choices')
                             filterable()
                             choiceType('SINGLE_SELECT')
-                            scriptlerScript('git_tags.groovy') {
+                            scriptlerScript("git_${e.type}.groovy") {
                                 parameter('url', repo)
-                                parameter('tagPattern', "stable-*")
+                                parameter('tagPattern', e.pattern)
                             }
                         }
-                        stringParam('environment', e.name)
+                        stringParam('environment', e.env)
                         stringParam('debugEnabled', '0')
                         stringParam('force', '0')
                     }

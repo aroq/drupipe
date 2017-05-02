@@ -1,3 +1,96 @@
+Version 0.6.4:
+ - Changed drupipe version
+ - Merge branch 'develop'
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Added deployer action
+ - Changed pipeline script in dsls
+ - Changed pipeline script in dsls
+ - config yaml
+ - Added yaml config
+ - Changed versions
+
 Version 0.6.3:
  - Updated drupipe to 0.6.3
  - Added check for fileExists in source command

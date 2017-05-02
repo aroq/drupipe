@@ -19,8 +19,16 @@ class Ansible extends BaseAction {
         }
         action.params.playbookParams <<  [
             user: context.environmentParams.user,
+            drupipe_environment: context.environment,
         ]
-        action.params.hosts = "${context.environmentParams.host},"
+        if (action.params.inventory && context.environmentParams.default_group) {
+            action.params.inventoryArgument = action.params.inventory.path
+            action.params.playbookParams.target = "${context.environmentParams.default_group}"
+        }
+        else {
+            action.params.inventoryArgument = "${context.environmentParams.host},"
+            action.params.playbookParams.target = "${context.environmentParams.host}"
+        }
     }
 
     def deploy() {
@@ -71,8 +79,8 @@ class Ansible extends BaseAction {
         utils.loadLibrary(script, context)
         def command =
             "ansible-playbook ${action.params.playbook} \
-        -i ${action.params.hosts} \
-        -e '${joinParams(action.params.playbookParams, 'json')}'"
+            -i ${action.params.inventoryArgument} \
+            -e '${joinParams(action.params.playbookParams, 'json')}'"
 
         script.echo "Ansible command: ${command}"
 

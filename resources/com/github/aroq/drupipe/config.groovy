@@ -17,13 +17,13 @@ environments {
         dockerImage = 'aroq/drudock:dev'
     }
     stage {
-        drupipeLibraryBranch = 'develop'
+        drupipeLibraryBranch = 'master'
         dockerImage = 'aroq/drudock:dev'
     }
     prod {
-//        drupipeLibraryBranch = 'v0.6.3'
-//        drupipeLibraryType = 'tag'
-        drupipeLibraryBranch = 'develop'
+        //drupipeLibraryBranch = 'v0.6.4'
+        // drupipeLibraryType = 'tag'
+        drupipeLibraryBranch = 'master'
         dockerImage = 'aroq/drudock:dev'
     }
 }
@@ -44,7 +44,7 @@ defaultActionParams = [
         behat_args: '--format=pretty --out=std --format=junit',
     ],
     drupipeWithDocker: [
-        drupipeDockerArgs: '--user root:root',
+        drupipeDockerArgs: '--user root:root --net=host',
     ],
     drupipeWithKubernetes: [
         containerName: 'drudock',
@@ -121,7 +121,6 @@ defaultActionParams = [
             method: 'build',
         ],
         deployHandler: [
-            handler: 'Druflow',
             method: 'deploy',
         ],
         artifactHandler: [
