@@ -51,9 +51,6 @@ if (config.configSeedType == 'single') {
         if (branches[state.key]?.branch) {
             branch = branches[state.key]?.branch
         }
-        else {
-            branch = docmanConfig.getVersionBranch('', state.key)
-        }
         buildEnvironment = branches[state.key].environment
         pipelineJob(state.key) {
             if (params.quietPeriodSeconds) {
