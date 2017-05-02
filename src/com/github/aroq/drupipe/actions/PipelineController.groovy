@@ -64,14 +64,14 @@ class PipelineController extends BaseAction {
         if (!context['builder']) {
             context['builder'] = [:]
         }
-        if (action.params.buildHandler && action.params.buildHandler.handler) {
+        if (action.params.artifactHandler && action.params.artifactHandler.handler) {
             //script.drupipeAction([action: "${action.params.buildHandler.handler}.artifactParams"], context)
             artifactParams()
             context << script.drupipeAction([action: "${action.params.artifactHandler.handler}.${action.params.artifactHandler.method}", params: context.builder.artifactParams], context)
             context.projectName = 'master'
         }
         else {
-            script.echo "No build handler defined"
+            script.echo "No artifact handler defined"
         }
         context
     }
