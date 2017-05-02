@@ -1,7 +1,7 @@
 #!groovy
 
 // Pipeline used to create project specific pipelines.
-def call(body, LinkedHashMap p = [:]) {
+def call(LinkedHashMap p = [:]) {
     echo "Params:"
     echo "type: p.type"
     drupipe { context ->
