@@ -108,10 +108,8 @@ class Config extends BaseAction {
     def mergeScenariosConfigs(config, sourceDir) {
         def scenariosConfig = [:]
         if (config.scenarios) {
-            script.echo "Scenarios exists"
             for (def i = 0; i < config.scenarios.size(); i++) {
                 def scenario = config.scenarios[i]
-                script.echo "Scenario: ${scenario}"
                 def fileName = "${sourceDir}/scenarios/${scenario}/config.yaml"
                 script.echo "Scenario file name: ${fileName}"
                 if (script.fileExists(fileName)) {
