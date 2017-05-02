@@ -20,6 +20,9 @@ class PipelineController extends BaseAction {
             // Dispatch the action.
             context << script.drupipeAction([action: "${action.params.buildHandler.handler}.${action.params.buildHandler.method}"], context)
         }
+        else {
+            script.echo "No builder handler defined"
+        }
     }
 
     // TODO: move to artifact handler.
@@ -62,7 +65,8 @@ class PipelineController extends BaseAction {
             context['builder'] = [:]
         }
         if (action.params.buildHandler && action.params.buildHandler.handler) {
-            script.drupipeAction([action: "${action.params.buildHandler.handler}.artifactParams"], context)
+            //script.drupipeAction([action: "${action.params.buildHandler.handler}.artifactParams"], context)
+            artifactParams()
             context << script.drupipeAction([action: "${action.params.artifactHandler.handler}.${action.params.artifactHandler.method}", params: context.builder.artifactParams], context)
             context.projectName = 'master'
         }
@@ -71,5 +75,41 @@ class PipelineController extends BaseAction {
         }
         context
     }
+
+    def repoParams(String configPath) {
+        //info()
+        def repo
+        def masterInfoFile = "docroot/config/${configPath}/info.yaml"
+        if (script.fileExists(masterInfoFile)) {
+            def masterConfig = script.readYaml(file: masterInfoFile)
+            script.echo "MASTER CONFIG: ${masterConfig}"
+            repo = masterConfig.type == 'root' ? masterConfig.repo : masterConfig.root_repo
+        }
+        else {
+            repo = context.components.master.root_repo ? context.components.master.root_repo : context.components.master.repo
+        }
+        script.echo "REPO: ${repo}"
+
+        String reference
+        if (context.release) {
+            reference = context.release
+        }
+        else {
+            reference = context.environmentParams.git_reference
+        }
+        script.echo "reference: ${reference}"
+        return [
+            repoAddress: repo,
+            reference: reference,
+            // TODO: refactor it.
+            projectName: configPath,
+        ]
+    }
+
+    def artifactParams() {
+        context.builder.artifactParams = repoParams('master')
+        context
+    }
+
 
 }
