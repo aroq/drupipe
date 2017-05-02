@@ -153,6 +153,8 @@ class Config extends BaseAction {
             ]
         ]
         def projectConfig = context.pipeline.executePipelineActionList(providers, context)
+        scriot.echo "Project config"
+        utils.dump(projectConfig)
 
         def sourceDir = utils.sourceDir(context, 'mothershipConfig')
 
