@@ -13,7 +13,7 @@ class SeleneseTester extends BaseAction {
     def DrupipeAction action
 
     def test() {
-        sshagent([context.credentialsId]) {
+        script.sshagent([context.credentialsId]) {
             script.drupipeAction([action: "Git.clone", params: action.params], context)
 
             script.drupipeShell(
