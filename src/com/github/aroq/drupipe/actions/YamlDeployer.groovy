@@ -20,7 +20,7 @@ class YamlDeployer extends BaseAction {
             def commands = []
             if (deployYAML.deploy) {
                 for (def i = 0; i < deployYAML.deploy.size(); i++) {
-                    commands << setVariables(deployYAML.deploy[i])
+                    commands << interpolateCommand(deployYAML.deploy[i])
                 }
             }
             if (commands) {
@@ -33,8 +33,11 @@ class YamlDeployer extends BaseAction {
         }
     }
 
-    def setVariables(String command) {
-        command
+    def interpolateCommand(String command) {
+        def binding = [context: context, action: action]
+        def engine = new groovy.text.SimpleTemplateEngine()
+        def result = engine.createTemplate(command).make(binding)
+        result
     }
 
     def executeCommand(String command) {
