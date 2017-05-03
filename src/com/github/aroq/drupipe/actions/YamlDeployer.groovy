@@ -12,16 +12,35 @@ class YamlDeployer extends BaseAction {
 
     def DrupipeAction action
 
+    def build() {
+        process('build')
+    }
+
     def deploy() {
+        process('deploy')
+    }
+
+    def operations() {
+        process('operations')
+    }
+
+    def test() {
+        process('test')
+    }
+
+    def process(String stage) {
         def deployFile = context.builder.artifactParams.dir + '/' + action.params.deployFile
         if (script.fileExists(deployFile)) {
             def deployYAML = script.readYaml(file: deployFile)
             utils.dump(deployYAML, 'DEPLOY YAML')
             def commands = []
-            if (deployYAML.deploy) {
-                for (def i = 0; i < deployYAML.deploy.size(); i++) {
-                    commands << interpolateCommand(deployYAML.deploy[i])
+            if (deployYAML[stage]) {
+                for (def i = 0; i < deployYAML[stage].size(); i++) {
+                    commands << interpolateCommand(deployYAML[stage][i])
                 }
+            }
+            else {
+                script.echo "No ${stage} defined in ${deployFile}"
             }
             if (commands) {
                 def joinedCommands = commands.join("\n")
