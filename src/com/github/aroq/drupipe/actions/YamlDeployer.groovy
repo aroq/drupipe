@@ -33,6 +33,7 @@ class YamlDeployer extends BaseAction {
         }
     }
 
+    @NonCPS
     def interpolateCommand(String command) {
         def binding = [context: context, action: action]
         def engine = new groovy.text.SimpleTemplateEngine()
