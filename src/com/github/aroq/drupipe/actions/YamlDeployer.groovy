@@ -20,7 +20,7 @@ class YamlDeployer extends BaseAction {
             def commands = []
             if (deployYAML.deploy) {
                 for (def i = 0; i < deployYAML.deploy.size(); i++) {
-                    commands << setVariables(deployYaml.deploy[i])
+                    commands << setVariables(deployYAML.deploy[i])
                 }
             }
             if (commands) {
