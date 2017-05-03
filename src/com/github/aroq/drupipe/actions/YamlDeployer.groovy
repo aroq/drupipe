@@ -37,8 +37,8 @@ class YamlDeployer extends BaseAction {
     def interpolateCommand(String command) {
         def binding = [context: context, action: action]
         def engine = new groovy.text.SimpleTemplateEngine()
-        def result = engine.createTemplate(command).make(binding)
-        result
+        def template = engine.createTemplate(command).make(binding)
+        template.toString()
     }
 
     def executeCommand(String command) {
