@@ -15,7 +15,7 @@ class YamlDeployer extends BaseAction {
     def deploy() {
         def deployFile = context.builder.artifactParams.dir + '/' + action.params.deployFile
         if (script.fileExists(deployFile)) {
-            def deployYAML = readYaml(file: deployFile)
+            def deployYAML = script.readYaml(file: deployFile)
             utils.dump(deployYAML, 'DEPLOY YAML')
         }
         else {
