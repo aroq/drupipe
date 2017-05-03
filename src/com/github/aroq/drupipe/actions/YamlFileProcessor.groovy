@@ -29,7 +29,12 @@ class YamlFileProcessor extends BaseAction {
     }
 
     def process(String stage) {
-        def deployFile = context.builder.artifactParams.dir + '/' + action.params.deployFile
+        if (context.builder) {
+            def deployFile = context.builder.artifactParams.dir + '/' + action.params.deployFile
+        }
+        else {
+            def deployFile = 'docroot/master/' + action.params.deployFile
+        }
         if (script.fileExists(deployFile)) {
             def deployYAML = script.readYaml(file: deployFile)
             utils.dump(deployYAML, 'DEPLOY YAML')
