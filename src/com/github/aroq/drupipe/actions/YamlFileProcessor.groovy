@@ -70,7 +70,7 @@ class YamlFileProcessor extends BaseAction {
     def executeCommand(String command) {
         script.drupipeShell(
             """
-            ssh ${context.environmentParams.user}@${context.environmentParams.host} ${command}
+            ssh ${context.environmentParams.user}@${context.environmentParams.host} "${command}"
             """, context
         )
 
