@@ -142,6 +142,6 @@ defaultActionParams = [
         depth: 1,
     ],
     YamlFileProcessor: [
-        deployFile: '.drupipe.deploy.yml',
+        deployFile: '.drupipe.yml',
     ],
 ]
