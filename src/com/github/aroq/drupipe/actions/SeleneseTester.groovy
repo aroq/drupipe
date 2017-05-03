@@ -14,9 +14,9 @@ class SeleneseTester extends BaseAction {
 
     def test() {
         script.sshagent([context.credentialsId]) {
-            script.drupipeAction([action: "Git.clone", params: action.params], context)
+            drupipeAction([action: "Git.clone", params: action.params], context)
 
-            script.drupipeShell(
+            drupipeShell(
                 """
         docker run --rm --user root:root -v "${context.workspace}:${context.workspace}" -e "SELENSE_BASE_URL=${
                     action.params.SELENESE_BASE_URL
