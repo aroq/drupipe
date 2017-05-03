@@ -14,7 +14,7 @@ class YamlFileProcessor extends BaseAction {
 
     def build() {
         def repoParams = [
-            repo: context.components['master'].repo,
+            repoAddress: context.components['master'].repo,
             reference: context.environmentParams.git_reference,
             dir: 'docroot',
             repoDirName: 'master',
