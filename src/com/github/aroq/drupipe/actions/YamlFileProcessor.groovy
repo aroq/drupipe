@@ -73,7 +73,6 @@ class YamlFileProcessor extends BaseAction {
             ssh ${context.environmentParams.user}@${context.environmentParams.host} "${command}"
             """, context
         )
-
     }
 }
 
