@@ -13,12 +13,13 @@ class YamlDeployer extends BaseAction {
     def DrupipeAction action
 
     def deploy() {
-        if (script.fileExists(action.params.deployFile)) {
-            def deployYAML = readYaml(file: action.params.deployFile)
+        def deployFile = context.builder.artifactParams.dir + '/' + action.params.deployFile
+        if (script.fileExists(deployFile)) {
+            def deployYAML = readYaml(file: deployFile)
             utils.dump(deployYAML, 'DEPLOY YAML')
         }
         else {
-            script.echo "Deploy file ${action.params.deployFile} doesn't exist"
+            script.echo "Deploy file ${deployFile} doesn't exist"
         }
     }
 }
