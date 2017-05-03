@@ -2,7 +2,7 @@ package com.github.aroq.drupipe.actions
 
 import com.github.aroq.drupipe.DrupipeAction
 
-class YamlDeployer extends BaseAction {
+class YamlFileProcessor extends BaseAction {
 
     def context
 
