@@ -18,8 +18,8 @@ class YamlDeployer extends BaseAction {
             def deployYAML = script.readYaml(file: deployFile)
             utils.dump(deployYAML, 'DEPLOY YAML')
             def commands = []
-            if (deployYaml.deploy) {
-                for (def i=0; i < deployYAML.deploy.size(); i++) {
+            if (deployYAML.deploy) {
+                for (def i = 0; i < deployYAML.deploy.size(); i++) {
                     commands << setVariables(deployYaml.deploy[i])
                 }
             }
