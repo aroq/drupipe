@@ -44,8 +44,8 @@ class YamlDeployer extends BaseAction {
     def executeCommand(String command) {
         script.drupipeShell(
             """
-            ${command}
-            """, context << [shellCommandWithBashLogin: true]
+            ssh ${context.environmentParams.user}@${context.environmentParams.host} ${command}
+            """, context
         )
 
     }
