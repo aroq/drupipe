@@ -13,6 +13,13 @@ class YamlFileProcessor extends BaseAction {
     def DrupipeAction action
 
     def build() {
+        def repoParams = [
+            repo: context.components['master'].repo,
+            branch: context.environmentParams.git_reference,
+            dir: 'docroot',
+            repoDirName: 'master',
+        ]
+        script.drupipeAction([action: "Git.clone", params: repoParams << action.params], context)
         process('build')
     }
 
