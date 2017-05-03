@@ -62,7 +62,7 @@ class PipelineController extends BaseAction {
 
     def test() {
         if (action.params.testHandler && action.params.testHandler.handler) {
-            context << script.drupipeAction([action: "${action.params.testHandler.handler}.${action.params.testHandler.method}", params: context.builder.artifactParams], context)
+            context << script.drupipeAction([action: "${action.params.testHandler.handler}.${action.params.testHandler.method}"], context)
         }
         else {
             script.echo "No test handler defined"
