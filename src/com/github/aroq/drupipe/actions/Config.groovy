@@ -104,10 +104,10 @@ class Config extends BaseAction {
             def json = this.script.readFile('mothership/projects.json')
             result = utils.merge(result, this.utils.getMothershipProjectParams(context, json))
 
-            if (!context.scenario_sources) {
-                context.scenario_sources = [:]
+            if (!result.scenario_sources) {
+                result.scenario_sources = [:]
             }
-            context.scenario_sources << [
+            result.scenario_sources << [
                 mothership: [
                     repo: this.script.env.MOTHERSHIP_REPO
                 ]
@@ -172,12 +172,12 @@ class Config extends BaseAction {
                         }
                     }
                     else {
-                        throw "No scenario source with name: ${scenarioSource}"
+                        throw "No scenario source with name: ${scenarioSource}".toString()
                     }
 
                 }
                 else {
-                    throw "Not proper scenario config: ${s}"
+                    throw "Not proper scenario config: ${s}".toString()
                 }
             }
         }
