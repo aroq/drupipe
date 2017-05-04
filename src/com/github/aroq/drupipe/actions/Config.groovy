@@ -191,9 +191,9 @@ class Config extends BaseAction {
         script.echo "Project config"
         utils.dump(projectConfig)
 
-        def sourceDir = utils.sourceDir(context, 'mothershipConfig')
+//        def sourceDir = utils.sourceDir(context, 'mothershipConfig')
 
-        mergeScenariosConfigs(projectConfig, sourceDir)
+        mergeScenariosConfigs(projectConfig)
     }
 
 }
