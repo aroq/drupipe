@@ -122,29 +122,31 @@ class Config extends BaseAction {
                         scenario.name = values[1]
                     }
                     else {
+                        script.echo "Current scenario source: ${current_scenario_source}"
                         scenarioSource = current_scenario_source ? current_scenario_source : config.default_scenario_source
                         scenario.name = values[0]
                     }
                     script.echo "Scenario source: ${scenarioSource}"
                     if (config.scenario_sources[scenarioSource]) {
                         scenario.source = config.scenario_sources[scenarioSource]
+                        scenario.source.repoParams = [
+                            repoAddress: scenario.source.repo,
+                            reference: scenario.source.ref ? scenario.source.ref : 'master',
+                            dir: 'scenarios',
+                            repoDirName: scenarioSource,
+                        ]
                         if (!this.scenarioSources[scenario.source]) {
-                            scenario.source.repoParams = [
-                                repoAddress: scenario.source.repo,
-                                reference: scenario.source.ref ? scenario.source.ref : 'master',
-                                dir: 'scenarios',
-                                repoDirName: scenarioSource,
-                            ]
                             script.sshagent([context.credentialsId]) {
                                 this.script.drupipeAction([action: "Git.clone", params: scenario.source.repoParams], context)
                             }
+                            this.scenarioSources << scenarioSource
                         }
                         def sourceDir = scenario.source.repoParams.dir + '/' + scenario.source.repoParams.repoDirName
                         def fileName = "${sourceDir}/scenarios/${scenario.name}/config.yaml"
                         script.echo "Scenario file name: ${fileName}"
                         if (script.fileExists(fileName)) {
                             script.echo "Scenario file name: ${fileName} exists"
-                            def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), scenario.source.name)
+                            def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), scenarioSource)
                             utils.dump(scenarioConfig)
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
                         }
