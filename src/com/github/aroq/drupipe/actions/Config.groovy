@@ -12,6 +12,8 @@ class Config extends BaseAction {
 
     def DrupipeAction action
 
+    LinkedHashMap scenarioSources = [:]
+
     def perform() {
         if (context['Config_perform']) {
             return context
@@ -105,18 +107,51 @@ class Config extends BaseAction {
         result
     }
 
-    def mergeScenariosConfigs(config, sourceDir) {
+    def mergeScenariosConfigs(config) {
         def scenariosConfig = [:]
-        if (config.scenarios) {
-            for (def i = 0; i < config.scenarios.size(); i++) {
-                def scenario = config.scenarios[i]
-                def fileName = "${sourceDir}/scenarios/${scenario}/config.yaml"
-                script.echo "Scenario file name: ${fileName}"
-                if (script.fileExists(fileName)) {
-                    script.echo "Scenario file name: ${fileName} exists"
-                    def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), sourceDir)
-                    utils.dump(scenarioConfig)
-                    scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
+        if (context.scenarios) {
+            for (def i = 0; i < context.scenarios.size(); i++) {
+                def s = context.scenarios[i]
+                if (s instanceof String) {
+                    def values = s.split(":")
+                    def scenario = [:]
+                    String scenarioSource
+                    if (values.size() > 1) {
+                        scenarioSource = values[0]
+                        scenario.name = values[1]
+                    }
+                    else {
+                        scenarioSource = context.default_scenario_source
+                        scenario.name = values[0]
+                    }
+                    if (context.scenario_sources[scenarioSource]) {
+                        scenario.source = context.scenario_sources[scenarioSource]
+                        if (!this.scenarioSources[scenario.source]) {
+                            scenario.source.repoParams = [
+                                repoAddress: scenario.source.repo,
+                                reference: scenario.source.repo,
+                                dir: 'scenarios',
+                                repoDirName: scenario.name,
+                            ]
+                            script.drupipeAction([action: "Git.clone", params: scenario.source.repoParams], context)
+                        }
+                        def sourceDir = scenario.source.repoParams.dir + '/' + scenario.source.repoParams.repoDirName
+                        def fileName = "${sourceDir}/scenarios/${scenario}/config.yaml"
+                        script.echo "Scenario file name: ${fileName}"
+                        if (script.fileExists(fileName)) {
+                            script.echo "Scenario file name: ${fileName} exists"
+                            def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName))
+                            utils.dump(scenarioConfig)
+                            scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
+                        }
+                    }
+                    else {
+                        throw "No scenario source with name: ${scenarioSource}"
+                    }
+
+                }
+                else {
+                    throw "Not proper scenario config: ${s}"
                 }
             }
         }

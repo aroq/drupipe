@@ -1,4 +1,3 @@
-import com.github.aroq.DocmanConfig
 import com.github.aroq.GitlabHelper
 
 println "Docman Job DSL processing"
