@@ -107,8 +107,12 @@ class Config extends BaseAction {
         result
     }
 
-    def mergeScenariosConfigs(config, current_scenario_source = null) {
+    def mergeScenariosConfigs(config, tempContext = [:], current_scenario_source = null) {
         def scenariosConfig = [:]
+        if (!tempContext) {
+            tempContext << context
+        }
+        tempContext << config
         if (config.scenarios) {
             for (def i = 0; i < config.scenarios.size(); i++) {
                 def s = config.scenarios[i]
@@ -128,7 +132,7 @@ class Config extends BaseAction {
                     }
                     script.echo "Scenario source: ${scenarioSource}"
                     utils.dump(config.scenario_sources, "Scenario sources")
-                    if (config.scenario_sources[scenarioSource]) {
+                    if (context.scenario_sources[scenarioSource]) {
                         scenario.source = config.scenario_sources[scenarioSource]
                         if (!this.scenarioSources[scenario.source]) {
                             scenario.source.repoParams = [
@@ -150,7 +154,7 @@ class Config extends BaseAction {
                         script.echo "Scenario file name: ${fileName}"
                         if (script.fileExists(fileName)) {
                             script.echo "Scenario file name: ${fileName} exists"
-                            def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), scenarioSource)
+                            def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSource)
                             utils.dump(scenarioConfig)
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
                         }
