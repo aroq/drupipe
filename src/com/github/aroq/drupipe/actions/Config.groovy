@@ -124,6 +124,7 @@ class Config extends BaseAction {
                         scenarioSource = config.default_scenario_source
                         scenario.name = values[0]
                     }
+                    script.echo "Scenario source: ${scenarioSource}"
                     if (config.scenario_sources[scenarioSource]) {
                         scenario.source = config.scenario_sources[scenarioSource]
                         if (!this.scenarioSources[scenario.source]) {
@@ -131,7 +132,7 @@ class Config extends BaseAction {
                                 repoAddress: scenario.source.repo,
                                 reference: scenario.source.ref ? scenario.source.ref : 'master',
                                 dir: 'scenarios',
-                                repoDirName: scenario.name,
+                                repoDirName: scenarioSource,
                             ]
                             script.sshagent([context.credentialsId]) {
                                 this.script.drupipeAction([action: "Git.clone", params: scenario.source.repoParams], context)
