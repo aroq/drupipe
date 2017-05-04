@@ -124,7 +124,7 @@ class Config extends BaseAction {
                         scenarioSource = config.default_scenario_source
                         scenario.name = values[0]
                     }
-                    if (context.scenario_sources[scenarioSource]) {
+                    if (cnofig.scenario_sources[scenarioSource]) {
                         scenario.source = config.scenario_sources[scenarioSource]
                         if (!this.scenarioSources[scenario.source]) {
                             scenario.source.repoParams = [
