@@ -113,6 +113,7 @@ class Config extends BaseAction {
             for (def i = 0; i < config.scenarios.size(); i++) {
                 def s = config.scenarios[i]
                 if (s instanceof String) {
+                    script.echo "Scenario: ${s}"
                     def values = s.split(":")
                     def scenario = [:]
                     String scenarioSource
