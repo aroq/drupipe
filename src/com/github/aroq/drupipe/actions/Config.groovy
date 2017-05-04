@@ -129,7 +129,7 @@ class Config extends BaseAction {
                         if (!this.scenarioSources[scenario.source]) {
                             scenario.source.repoParams = [
                                 repoAddress: scenario.source.repo,
-                                reference: scenario.source.ref,
+                                reference: scenario.source.ref ? scenario.source.ref : 'master',
                                 dir: 'scenarios',
                                 repoDirName: scenario.name,
                             ]
