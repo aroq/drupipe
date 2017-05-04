@@ -103,6 +103,10 @@ class Config extends BaseAction {
             result = context.pipeline.executePipelineActionList(providers, context)
             def json = this.script.readFile('mothership/projects.json')
             result = utils.merge(result, this.utils.getMothershipProjectParams(context, json))
+
+            if (!context.scenario_sources) {
+                context.scenario_sources = [:]
+            }
             context.scenario_sources << [
                 mothership: [
                     repo: this.script.env.MOTHERSHIP_REPO
