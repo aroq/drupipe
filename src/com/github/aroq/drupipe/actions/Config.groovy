@@ -127,13 +127,13 @@ class Config extends BaseAction {
                     }
                     else {
                         script.echo "Current scenario source: ${current_scenario_source}"
-                        scenarioSource = current_scenario_source ? current_scenario_source : config.default_scenario_source
+                        scenarioSource = current_scenario_source ? current_scenario_source : tempContext.default_scenario_source
                         scenario.name = values[0]
                     }
                     script.echo "Scenario source: ${scenarioSource}"
                     utils.dump(config.scenario_sources, "Scenario sources")
-                    if (context.scenario_sources[scenarioSource]) {
-                        scenario.source = config.scenario_sources[scenarioSource]
+                    if (tempContext.scenario_sources[scenarioSource]) {
+                        scenario.source = tempContext.scenario_sources[scenarioSource]
                         if (!this.scenarioSources[scenario.source]) {
                             scenario.source.repoParams = [
                                 repoAddress: scenario.source.repo,
