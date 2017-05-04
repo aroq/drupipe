@@ -127,6 +127,7 @@ class Config extends BaseAction {
                         scenario.name = values[0]
                     }
                     script.echo "Scenario source: ${scenarioSource}"
+                    utils.dump(config.scenario_sources, "Scenario sources")
                     if (config.scenario_sources[scenarioSource]) {
                         scenario.source = config.scenario_sources[scenarioSource]
                         if (!this.scenarioSources[scenario.source]) {
