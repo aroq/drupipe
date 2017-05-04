@@ -172,12 +172,12 @@ class Config extends BaseAction {
                         }
                     }
                     else {
-                        throw "No scenario source with name: ${scenarioSource}".toString()
+                        throw new RuntimeException("No scenario source with name: ${scenarioSource}")
                     }
 
                 }
                 else {
-                    throw "Not proper scenario config: ${s}".toString()
+                    throw new RuntimeException("Not proper scenario config: ${s}")
                 }
             }
         }
