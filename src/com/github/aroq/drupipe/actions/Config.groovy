@@ -134,7 +134,8 @@ class Config extends BaseAction {
                     utils.dump(config.scenario_sources, "Scenario sources")
                     if (tempContext.scenario_sources[scenarioSource]) {
                         scenario.source = tempContext.scenario_sources[scenarioSource]
-                        if (!this.scenarioSources[scenario.source]) {
+                        if (!this.scenarioSources[scenarioSource]) {
+                            script.echo "Scenario source ${scenarioSource} not loaded yet"
                             scenario.source.repoParams = [
                                 repoAddress: scenario.source.repo,
                                 reference: scenario.source.ref ? scenario.source.ref : 'master',
@@ -147,6 +148,7 @@ class Config extends BaseAction {
                             this.scenarioSources[scenarioSource] = scenario.source
                         }
                         else {
+                            script.echo "Scenario source ${scenarioSource} already loaded"
                             scenario.source = this.scenarioSources[scenarioSource]
                         }
                         def sourceDir = scenario.source.repoParams.dir + '/' + scenario.source.repoParams.repoDirName
