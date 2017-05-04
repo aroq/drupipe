@@ -103,6 +103,12 @@ class Config extends BaseAction {
             result = context.pipeline.executePipelineActionList(providers, context)
             def json = this.script.readFile('mothership/projects.json')
             result = utils.merge(result, this.utils.getMothershipProjectParams(context, json))
+            context.scenario_sources << [
+                mothership: [
+                    repo: this.script.env.MOTHERSHIP_REPO
+                ]
+            ]
+
         }
         result
     }
@@ -206,8 +212,6 @@ class Config extends BaseAction {
         def projectConfig = context.pipeline.executePipelineActionList(providers, context)
         script.echo "Project config"
         utils.dump(projectConfig)
-
-//        def sourceDir = utils.sourceDir(context, 'mothershipConfig')
 
         mergeScenariosConfigs(projectConfig)
     }
