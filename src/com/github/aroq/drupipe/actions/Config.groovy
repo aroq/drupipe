@@ -138,7 +138,7 @@ class Config extends BaseAction {
                             }
                         }
                         def sourceDir = scenario.source.repoParams.dir + '/' + scenario.source.repoParams.repoDirName
-                        def fileName = "${sourceDir}/scenarios/${scenario}/config.yaml"
+                        def fileName = "${sourceDir}/scenarios/${scenario.name}/config.yaml"
                         script.echo "Scenario file name: ${fileName}"
                         if (script.fileExists(fileName)) {
                             script.echo "Scenario file name: ${fileName} exists"
