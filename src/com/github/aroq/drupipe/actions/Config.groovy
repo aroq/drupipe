@@ -109,9 +109,9 @@ class Config extends BaseAction {
 
     def mergeScenariosConfigs(config) {
         def scenariosConfig = [:]
-        if (context.scenarios) {
-            for (def i = 0; i < context.scenarios.size(); i++) {
-                def s = context.scenarios[i]
+        if (config.scenarios) {
+            for (def i = 0; i < config.scenarios.size(); i++) {
+                def s = config.scenarios[i]
                 if (s instanceof String) {
                     def values = s.split(":")
                     def scenario = [:]
@@ -121,11 +121,11 @@ class Config extends BaseAction {
                         scenario.name = values[1]
                     }
                     else {
-                        scenarioSource = context.default_scenario_source
+                        scenarioSource = config.default_scenario_source
                         scenario.name = values[0]
                     }
                     if (context.scenario_sources[scenarioSource]) {
-                        scenario.source = context.scenario_sources[scenarioSource]
+                        scenario.source = config.scenario_sources[scenarioSource]
                         if (!this.scenarioSources[scenario.source]) {
                             scenario.source.repoParams = [
                                 repoAddress: scenario.source.repo,
