@@ -129,11 +129,13 @@ class Config extends BaseAction {
                         if (!this.scenarioSources[scenario.source]) {
                             scenario.source.repoParams = [
                                 repoAddress: scenario.source.repo,
-                                reference: scenario.source.repo,
+                                reference: scenario.source.ref,
                                 dir: 'scenarios',
                                 repoDirName: scenario.name,
                             ]
-                            script.drupipeAction([action: "Git.clone", params: scenario.source.repoParams], context)
+                            script.sshagent([context.credentialsId]) {
+                                this.script.drupipeAction([action: "Git.clone", params: scenario.source.repoParams], context)
+                            }
                         }
                         def sourceDir = scenario.source.repoParams.dir + '/' + scenario.source.repoParams.repoDirName
                         def fileName = "${sourceDir}/scenarios/${scenario}/config.yaml"

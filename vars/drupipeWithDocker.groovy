@@ -9,11 +9,9 @@ def call(context = [:], body) {
     }
     image.inside(context.drupipeDockerArgs) {
         context.workspace = pwd()
-        sshagent([context.credentialsId]) {
-            result = body(context)
-            if (result) {
-                context << result
-            }
+        result = body(context)
+        if (result) {
+            context << result
         }
     }
 
