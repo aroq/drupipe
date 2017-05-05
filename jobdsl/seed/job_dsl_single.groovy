@@ -4,11 +4,6 @@ println "Docman Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 
-docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : 'docroot/config/config.json'
-docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
-
-println "Config: ${config}"
-
 if (config.configSeedType == 'single') {
     if (config.env.GITLAB_API_TOKEN_TEXT) {
         println "Initialize Gitlab Helper"

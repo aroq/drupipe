@@ -134,8 +134,8 @@ class Config extends BaseAction {
                     script.echo "Scenario source: ${scenarioSource}"
                     utils.dump(tempContext.scenario_sources, "Scenario sources")
                     if (tempContext.scenario_sources[scenarioSource]) {
-                        scenario.source = tempContext.scenario_sources[scenarioSource]
                         if (!this.scenarioSources[scenarioSource]) {
+                            scenario.source = tempContext.scenario_sources[scenarioSource]
                             script.echo "Scenario source ${scenarioSource} not loaded yet"
                             scenario.source.repoParams = [
                                 repoAddress: scenario.source.repo,
@@ -205,8 +205,7 @@ class Config extends BaseAction {
             ]
         ]
         def projectConfig = context.pipeline.executePipelineActionList(providers, context)
-        script.echo "Project config"
-        utils.dump(projectConfig)
+        utils.jsonDump(projectConfig, 'Project config')
 
         if (!projectConfig.scenario_sources) {
             projectConfig.scenario_sources = [:]
@@ -221,7 +220,7 @@ class Config extends BaseAction {
         def result = mergeScenariosConfigs(projectConfig)
 
         utils.jsonDump(this.scenarioSources.keySet() as List, "Scenarios loaded")
-        utils.jsonDump(result, 'Config')
+        utils.jsonDump(result, 'Project config with scenarios loaded')
         result
     }
 
