@@ -205,7 +205,7 @@ class Config extends BaseAction {
             ]
         ]
         def projectConfig = context.pipeline.executePipelineActionList(providers, context)
-        utils.jsonDump(projectConfig, 'Project config')
+        //utils.jsonDump(projectConfig, 'Project config')
 
         if (!projectConfig.scenario_sources) {
             projectConfig.scenario_sources = [:]
@@ -219,8 +219,8 @@ class Config extends BaseAction {
 
         def result = mergeScenariosConfigs(projectConfig)
 
-        utils.jsonDump(this.scenarioSources.keySet() as List, "Scenarios loaded")
-        utils.jsonDump(result, 'Project config with scenarios loaded')
+        //utils.jsonDump(this.scenarioSources.keySet() as List, "Scenarios loaded")
+        //utils.jsonDump(result, 'Project config with scenarios loaded')
         result
     }
 
