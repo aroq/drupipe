@@ -224,10 +224,10 @@ class Config extends BaseAction {
             ]
         ]
 
-        projectConfig.scenarioSources = [:]
-        projectConfig.scenarioSources << rootConfigSource
+        projectConfig.scenarioSources += rootConfigSource
 
-        this.scenarioSources = rootConfigSource
+        this.scenarioSources = [:]
+        this.scenarioSources += rootConfigSource
 
         def result = mergeScenariosConfigs(projectConfig, [:], 'root_config')
 
