@@ -108,7 +108,7 @@ class Config extends BaseAction {
         result
     }
 
-    def mergeScenariosConfigs(config, tempContext = [:], current_scenario_source = null) {
+    def mergeScenariosConfigs(config, tempContext = [:], currentScenarioSourceName = null) {
         def scenariosConfig = [:]
         if (!tempContext) {
             tempContext << context
@@ -121,49 +121,49 @@ class Config extends BaseAction {
                     script.echo "Scenario: ${s}"
                     def values = s.split(":")
                     def scenario = [:]
-                    String scenarioSource
+                    String scenarioSourceName
                     if (values.size() > 1) {
-                        scenarioSource = values[0]
+                        scenarioSourceName = values[0]
                         scenario.name = values[1]
                     }
                     else {
-                        script.echo "Current scenario source: ${current_scenario_source}"
-                        scenarioSource = current_scenario_source ? current_scenario_source : tempContext.default_scenario_source
+                        script.echo "Current scenario source: ${currentScenarioSourceName}"
+                        scenarioSourceName = currentScenarioSourceName
                         scenario.name = values[0]
                     }
-                    script.echo "Scenario source: ${scenarioSource}"
+                    script.echo "Scenario source: ${scenarioSourceName}"
                     utils.dump(tempContext.scenario_sources, "Scenario sources")
-                    if (tempContext.scenario_sources[scenarioSource]) {
-                        if (!this.scenarioSources[scenarioSource]) {
-                            scenario.source = tempContext.scenario_sources[scenarioSource]
-                            script.echo "Scenario source ${scenarioSource} not loaded yet"
+                    if (tempContext.scenario_sources[scenarioSourceName]) {
+                        if (!this.scenarioSources[scenarioSourceName]) {
+                            scenario.source = tempContext.scenario_sources[scenarioSourceName]
+                            script.echo "Scenario source ${scenarioSourceName} not loaded yet"
                             scenario.source.repoParams = [
                                 repoAddress: scenario.source.repo,
                                 reference: scenario.source.ref ? scenario.source.ref : 'master',
                                 dir: 'scenarios',
-                                repoDirName: scenarioSource,
+                                repoDirName: scenarioSourceName,
                             ]
                             script.sshagent([context.credentialsId]) {
                                 this.script.drupipeAction([action: "Git.clone", params: scenario.source.repoParams], context)
                             }
-                            this.scenarioSources[scenarioSource] = scenario.source
+                            this.scenarioSources[scenarioSourceName] = scenario.source
                         }
                         else {
-                            script.echo "Scenario source ${scenarioSource} already loaded"
-                            scenario.source = this.scenarioSources[scenarioSource]
+                            script.echo "Scenario source ${scenarioSourceName} already loaded"
+                            scenario.source = this.scenarioSources[scenarioSourceName]
                         }
                         def sourceDir = scenario.source.repoParams.dir + '/' + scenario.source.repoParams.repoDirName
                         def fileName = "${sourceDir}/scenarios/${scenario.name}/config.yaml"
                         script.echo "Scenario file name: ${fileName}"
                         if (script.fileExists(fileName)) {
                             script.echo "Scenario file name: ${fileName} exists"
-                            def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSource)
+                            def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSourceName)
                             utils.dump(scenarioConfig)
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
                         }
                     }
                     else {
-                        throw new RuntimeException("No scenario source with name: ${scenarioSource}")
+                        throw new RuntimeException("No scenario source with name: ${scenarioSourceName}")
                     }
 
                 }
@@ -215,11 +215,22 @@ class Config extends BaseAction {
                 repo: this.script.env.MOTHERSHIP_REPO
             ]
         ]
+        def rootConfigSource = [
+            root_config: [
+                repoParams: [
+                    dir: 'docroot',
+                    repoDirName: 'config',
+                ]
+            ]
+        ]
 
+        projectConfig.scenarioSources << rootConfigSource
 
-        def result = mergeScenariosConfigs(projectConfig)
+        this.scenarioSources = rootConfigSource
 
-        //utils.jsonDump(this.scenarioSources.keySet() as List, "Scenarios loaded")
+        def result = mergeScenariosConfigs(projectConfig, [:], 'root_config')
+
+        //utils.jsonDump(Vjthis.scenarioSources.keySet() as List, "Scenarios loaded")
         //utils.jsonDump(result, 'Project config with scenarios loaded')
         result
     }

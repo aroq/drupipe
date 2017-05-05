@@ -12,8 +12,6 @@ containerMode = 'docker'
 
 configSeedType = 'docman'
 
-default_scenario_source = 'mothership'
-
 // Environments section.
 environments {
     dev {
