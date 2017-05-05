@@ -47,7 +47,7 @@ class DocmanConfig {
                 script.println "First project name: ${project}"
             }
             else {
-                throw RuntimeException("Project with states is not found in ${docmanConfig.projects}")
+                throw new RuntimeException("Project with states is not found in ${docmanConfig.projects}")
             }
 
         }
