@@ -224,6 +224,7 @@ class Config extends BaseAction {
             ]
         ]
 
+        projectConfig.scenarioSources = [:]
         projectConfig.scenarioSources << rootConfigSource
 
         this.scenarioSources = rootConfigSource
