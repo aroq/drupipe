@@ -220,7 +220,7 @@ class Config extends BaseAction {
 
         def result = mergeScenariosConfigs(projectConfig)
 
-        utils.dump(this.scenarioSources, "Scenarios loaded")
+        utils.dump(this.scenarioSources.keySet(), "Scenarios loaded")
         utils.dump(result, 'Config')
         result
     }
