@@ -119,7 +119,6 @@ defaultActionParams = [
     ],
     PipelineController: [
         buildHandler: [
-            handler: 'Docman',
             method: 'build',
         ],
         deployHandler: [
