@@ -51,11 +51,16 @@ class DocmanConfig {
             }
 
         }
-        if (docmanConfig.projects[project]['states'][stateName]['version']) {
-            docmanConfig.projects[project]['states'][stateName]['version']
+        if (docmanConfig.projects[project]['states'][stateName]) {
+            if (docmanConfig.projects[project]['states'][stateName]['version']) {
+                docmanConfig.projects[project]['states'][stateName]['version']
+            }
+            else if (docmanConfig.projects[project]['states'][stateName]['source']) {
+                docmanConfig.projects[project]['states'][stateName]['source']['branch']
+            }
         }
-        else if (docmanConfig.projects[project]['states'][stateName]['source']) {
-            docmanConfig.projects[project]['states'][stateName]['source']['branch']
+        else {
+            throw new RuntimeException("There is no state ${stateName} defined in project ${docmanConfig.projects[project]}")
         }
     }
 
