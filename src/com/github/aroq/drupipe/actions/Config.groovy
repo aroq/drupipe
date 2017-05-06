@@ -132,10 +132,10 @@ class Config extends BaseAction {
                         scenario.name = values[0]
                     }
                     script.echo "Scenario source: ${scenarioSourceName}"
-                    utils.dump(tempContext.scenario_sources, "Scenario sources")
-                    if (tempContext.scenario_sources[scenarioSourceName]) {
+                    utils.dump(tempContext.scenarioSources, "Scenario sources")
+                    if (tempContext.scenarioSources[scenarioSourceName]) {
                         if (!this.scenarioSources[scenarioSourceName]) {
-                            scenario.source = tempContext.scenario_sources[scenarioSourceName]
+                            scenario.source = tempContext.scenarioSources[scenarioSourceName]
                             script.echo "Scenario source ${scenarioSourceName} not loaded yet"
                             scenario.source.repoParams = [
                                 repoAddress: scenario.source.repo,
@@ -207,10 +207,10 @@ class Config extends BaseAction {
         def projectConfig = context.pipeline.executePipelineActionList(providers, context)
         //utils.jsonDump(projectConfig, 'Project config')
 
-        if (!projectConfig.scenario_sources) {
-            projectConfig.scenario_sources = [:]
+        if (!projectConfig.scenarioSources) {
+            projectConfig.scenarioSources = [:]
         }
-        projectConfig.scenario_sources << [
+        projectConfig.scenarioSources << [
             mothership: [
                 repo: this.script.env.MOTHERSHIP_REPO
             ]
