@@ -13,7 +13,7 @@ println "Config: ${config}"
 if (config.configSeedType == 'docman') {
     // Retrieve Docman config from json file (prepared by "docman info" command).
     def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
-    println "Docman config: ${docmanConfig}"
+    println "Docman config: ${docmanConfig.docmanConfig}"
 
     if (config.env.GITLAB_API_TOKEN_TEXT) {
         println "Initialize Gitlab Helper"
