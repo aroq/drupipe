@@ -69,8 +69,8 @@ def processJob(jobs, currentName, users, repo, branch) {
             }
         }
 
-        if (job.children) {
-            processJob(job.children, currentFolder, users, repo, branch)
+        if (j.children) {
+            processJob(j.children, currentFolder, users, repo, branch)
         }
     }
 }
