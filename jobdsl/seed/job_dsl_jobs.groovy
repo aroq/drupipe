@@ -24,10 +24,10 @@ if (config.jobs) {
 }
 
 def processJob(jobs, currentName, users, repo, branch) {
-    jobs.each { job ->
-        println "Processing job: ${job.name}"
-        if (job.type == 'folder') {
-            currentName = currentName ? "${currentName}/${job.name}" : ${job.name}
+    jobs.each { j ->
+        println "Processing job: ${j.name}"
+        if (j.type == 'folder') {
+            currentName = currentName ? "${currentName}/${j.name}" : ${j.name}
             folder(currentName) {
                 authorization {
                     users.each { user ->
