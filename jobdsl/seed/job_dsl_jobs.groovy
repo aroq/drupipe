@@ -23,7 +23,7 @@ if (config.jobs) {
 
 }
 
-def processJob(jobs, currentName, users, repo) {
+def processJob(jobs, currentName, users, repo, branch) {
     jobs.each { job ->
         println "Processing job: ${job.name}"
         if (job.type == 'folder') {
