@@ -4,7 +4,7 @@ println "Subjobs Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 
-def gitlabHelper = new GitlabHelper(script: this, config: configMain)
+def gitlabHelper = new GitlabHelper(script: this, config: config)
 
 if (config.jobs) {
     def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipeline'
