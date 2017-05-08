@@ -37,7 +37,7 @@ class Docman extends BaseAction {
         script.drupipeShell(
             """
         cd ${context.docrootDir}
-        docman info full config.json ${mothershipConfigRepoOption()}
+        docman info full config.json
         """, context << [shellCommandWithBashLogin: true]
         )
     }
@@ -46,10 +46,6 @@ class Docman extends BaseAction {
         init()
         deploy()
         context
-    }
-
-    String mothershipConfigRepoOption() {
-        " --config_repo=${script.env.MOTHERSHIP_REPO} --config_repo_branch=master"
     }
 
     def stripedBuild() {
@@ -61,7 +57,7 @@ class Docman extends BaseAction {
         script.drupipeShell(
             """
             cd docroot
-            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(context)} ${mothershipConfigRepoOption()}
+            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(context)}
             """, context << [shellCommandWithBashLogin: true]
         )
         if (!context['builder']) {
@@ -82,7 +78,7 @@ class Docman extends BaseAction {
         script.drupipeShell(
             """
             cd docroot
-            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(context)} ${mothershipConfigRepoOption()}
+            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(context)}
             """, context << [shellCommandWithBashLogin: true]
         )
         context
@@ -92,7 +88,7 @@ class Docman extends BaseAction {
         script.drupipeShell(
             """
             cd docroot
-            docman deploy git_target ${context.projectName} branch ${context.version} ${forceFlag(context)} ${mothershipConfigRepoOption()}
+            docman deploy git_target ${context.projectName} branch ${context.version} ${forceFlag(context)}
             """, context << [shellCommandWithBashLogin: true]
         )
     }
