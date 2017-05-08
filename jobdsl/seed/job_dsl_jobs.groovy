@@ -44,7 +44,7 @@ def processJob(jobs, currentName, users, repo, branch) {
                 }
             }
         }
-        else if (job.type == 'selenese') {
+        else if (j.type == 'selenese') {
             pipelineJob("${currentName}") {
                 concurrentBuild(false)
                 logRotator(-1, 30)
