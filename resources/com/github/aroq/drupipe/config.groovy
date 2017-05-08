@@ -10,6 +10,8 @@ dockerImage = 'aroq/drudock:1.4.0'
 nodeName = 'default'
 containerMode = 'docker'
 
+configSeedType = 'docman'
+
 // Environments section.
 environments {
     dev {
@@ -17,7 +19,7 @@ environments {
         dockerImage = 'aroq/drudock:dev'
     }
     stage {
-        drupipeLibraryBranch = 'master'
+        drupipeLibraryBranch = 'develop'
         dockerImage = 'aroq/drudock:dev'
     }
     prod {
@@ -117,7 +119,6 @@ defaultActionParams = [
     ],
     PipelineController: [
         buildHandler: [
-            handler: 'Docman',
             method: 'build',
         ],
         deployHandler: [
@@ -138,5 +139,8 @@ defaultActionParams = [
     Git: [
         singleBranch: true,
         depth: 1,
+    ],
+    YamlFileProcessor: [
+        deployFile: '.drupipe.yml',
     ],
 ]

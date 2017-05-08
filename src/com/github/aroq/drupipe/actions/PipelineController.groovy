@@ -16,8 +16,13 @@ class PipelineController extends BaseAction {
         if (!context['builder']) {
             context['builder'] = [:]
         }
-        // Dispatch the action.
-        context << script.drupipeAction([action: "${action.params.buildHandler.handler}.${action.params.buildHandler.method}"], context)
+        if (action.params.buildHandler && action.params.buildHandler.handler) {
+            // Dispatch the action.
+            context << script.drupipeAction([action: "${action.params.buildHandler.handler}.${action.params.buildHandler.method}"], context)
+        }
+        else {
+            script.echo "No builder handler defined"
+        }
     }
 
     // TODO: move to artifact handler.
@@ -55,19 +60,65 @@ class PipelineController extends BaseAction {
         }
     }
 
+    def test() {
+        if (action.params.testHandler && action.params.testHandler.handler) {
+            context << script.drupipeAction([action: "${action.params.testHandler.handler}.${action.params.testHandler.method}"], context)
+        }
+        else {
+            script.echo "No test handler defined"
+        }
+    }
+
     def retrieveArtifact() {
         if (!context['builder']) {
             context['builder'] = [:]
         }
-        if (action.params.buildHandler && action.params.buildHandler.handler) {
-            script.drupipeAction([action: "${action.params.buildHandler.handler}.artifactParams"], context)
+        if (action.params.artifactHandler && action.params.artifactHandler.handler) {
+            //script.drupipeAction([action: "${action.params.buildHandler.handler}.artifactParams"], context)
+            artifactParams()
             context << script.drupipeAction([action: "${action.params.artifactHandler.handler}.${action.params.artifactHandler.method}", params: context.builder.artifactParams], context)
             context.projectName = 'master'
         }
         else {
-            script.echo "No build handler defined"
+            script.echo "No artifact handler defined"
         }
         context
     }
+
+    def repoParams(String configPath) {
+        //info()
+        def repo
+        def masterInfoFile = "docroot/config/${configPath}/info.yaml"
+        if (script.fileExists(masterInfoFile)) {
+            def masterConfig = script.readYaml(file: masterInfoFile)
+            script.echo "MASTER CONFIG: ${masterConfig}"
+            repo = masterConfig.type == 'root' ? masterConfig.repo : masterConfig.root_repo
+        }
+        else {
+            repo = context.components.master.root_repo ? context.components.master.root_repo : context.components.master.repo
+        }
+        script.echo "REPO: ${repo}"
+
+        String reference
+        if (context.release) {
+            reference = context.release
+        }
+        else {
+            reference = context.environmentParams.git_reference
+        }
+        script.echo "reference: ${reference}"
+        return [
+            repoAddress: repo,
+            reference: reference,
+            // TODO: refactor it.
+            projectName: configPath,
+        ]
+    }
+
+    def artifactParams() {
+        context.builder.artifactParams = repoParams('master')
+        context
+    }
+
 
 }

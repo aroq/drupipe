@@ -1,20 +1,13 @@
-import com.github.aroq.DocmanConfig
 import com.github.aroq.GitlabHelper
 
-println "Docman Job DSL processing"
+println "Subconfigs Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 
 docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : 'docroot/config/config.json'
 docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 
-println "Config: ${config}"
-
-if (config.configSeedType == 'docman') {
-    // Retrieve Docman config from json file (prepared by "docman info" command).
-    def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
-    println "Docman config: ${docmanConfig.init()}"
-
+if (config.subconfigs) {
     if (config.env.GITLAB_API_TOKEN_TEXT) {
         println "Initialize Gitlab Helper"
         gitlabHelper = new GitlabHelper(script: this, config: config)
@@ -22,28 +15,8 @@ if (config.configSeedType == 'docman') {
 
     def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipeline'
 
-// TODO: Use docman config to retrieve info.
-    branches = [
-        development: [
-            pipeline: pipelineScript,
-            quietPeriodSeconds: 5,
-        ],
-        staging: [
-            pipeline: pipelineScript,
-            quietPeriodSeconds: 5,
-        ],
-        stable: [
-            pipeline: pipelineScript,
-            quietPeriodSeconds: 5,
-        ],
-    ]
-
-    if (config.branches) {
-        branches = merge(branches, config.branches)
-    }
-
 // Create pipeline jobs for each state defined in Docman config.
-    docmanConfig.states?.each { state ->
+    config.states?.each { state ->
         def params = config
         println "Processing state: ${state.key}"
         if (branches[state.key]) {
@@ -52,10 +25,7 @@ if (config.configSeedType == 'docman') {
         if (branches[state.key]?.branch) {
             branch = branches[state.key]?.branch
         }
-        else {
-            branch = docmanConfig.getVersionBranch('', state.key)
-        }
-        buildEnvironment = docmanConfig.getEnvironmentByState(state.key)
+        buildEnvironment = branches[state.key].environment
         pipelineJob(state.key) {
             if (params.quietPeriodSeconds) {
                 quietPeriod(params.quietPeriodSeconds)
@@ -106,7 +76,7 @@ if (config.configSeedType == 'docman') {
             }
         }
         if (config.env.GITLAB_API_TOKEN_TEXT) {
-            docmanConfig.projects?.each { project ->
+            config.components.each { project ->
                 if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
                     if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
                         gitlabHelper.addWebhook(

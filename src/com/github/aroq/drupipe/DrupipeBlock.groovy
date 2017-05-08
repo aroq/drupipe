@@ -50,7 +50,9 @@ class DrupipeBlock implements Serializable {
                     }
                 }
                 else {
-                    result = _execute(body)
+                    context.pipeline.script.sshagent([context.credentialsId]) {
+                        result = _execute(body)
+                    }
                 }
             }
         }

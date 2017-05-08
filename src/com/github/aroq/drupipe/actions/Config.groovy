@@ -12,6 +12,8 @@ class Config extends BaseAction {
 
     def DrupipeAction action
 
+    LinkedHashMap scenarioSources = [:]
+
     def perform() {
         if (context['Config_perform']) {
             return context
@@ -101,24 +103,72 @@ class Config extends BaseAction {
             result = context.pipeline.executePipelineActionList(providers, context)
             def json = this.script.readFile('mothership/projects.json')
             result = utils.merge(result, this.utils.getMothershipProjectParams(context, json))
+
         }
         result
     }
 
-    def mergeScenariosConfigs(config, sourceDir) {
+    def mergeScenariosConfigs(config, tempContext = [:], currentScenarioSourceName = null) {
         def scenariosConfig = [:]
+        if (!tempContext) {
+            tempContext << context
+        }
+        tempContext << config
         if (config.scenarios) {
-            script.echo "Scenarios exists"
             for (def i = 0; i < config.scenarios.size(); i++) {
-                def scenario = config.scenarios[i]
-                script.echo "Scenario: ${scenario}"
-                def fileName = "${sourceDir}/scenarios/${scenario}/config.yaml"
-                script.echo "Scenario file name: ${fileName}"
-                if (script.fileExists(fileName)) {
-                    script.echo "Scenario file name: ${fileName} exists"
-                    def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), sourceDir)
-                    utils.dump(scenarioConfig)
-                    scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
+                def s = config.scenarios[i]
+                if (s instanceof String) {
+                    script.echo "Scenario: ${s}"
+                    def values = s.split(":")
+                    def scenario = [:]
+                    String scenarioSourceName
+                    if (values.size() > 1) {
+                        scenarioSourceName = values[0]
+                        scenario.name = values[1]
+                    }
+                    else {
+                        script.echo "Current scenario source: ${currentScenarioSourceName}"
+                        scenarioSourceName = currentScenarioSourceName
+                        scenario.name = values[0]
+                    }
+                    script.echo "Scenario source: ${scenarioSourceName}"
+                    utils.dump(tempContext.scenarioSources, "Scenario sources")
+                    if (tempContext.scenarioSources[scenarioSourceName]) {
+                        if (!this.scenarioSources[scenarioSourceName]) {
+                            scenario.source = tempContext.scenarioSources[scenarioSourceName]
+                            script.echo "Scenario source ${scenarioSourceName} not loaded yet"
+                            scenario.source.repoParams = [
+                                repoAddress: scenario.source.repo,
+                                reference: scenario.source.ref ? scenario.source.ref : 'master',
+                                dir: 'scenarios',
+                                repoDirName: scenarioSourceName,
+                            ]
+                            script.sshagent([context.credentialsId]) {
+                                this.script.drupipeAction([action: "Git.clone", params: scenario.source.repoParams], context)
+                            }
+                            this.scenarioSources[scenarioSourceName] = scenario.source
+                        }
+                        else {
+                            script.echo "Scenario source ${scenarioSourceName} already loaded"
+                            scenario.source = this.scenarioSources[scenarioSourceName]
+                        }
+                        def sourceDir = scenario.source.repoParams.dir + '/' + scenario.source.repoParams.repoDirName
+                        def fileName = "${sourceDir}/scenarios/${scenario.name}/config.yaml"
+                        script.echo "Scenario file name: ${fileName}"
+                        if (script.fileExists(fileName)) {
+                            script.echo "Scenario file name: ${fileName} exists"
+                            def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSourceName)
+                            utils.dump(scenarioConfig)
+                            scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
+                        }
+                    }
+                    else {
+                        throw new RuntimeException("No scenario source with name: ${scenarioSourceName}")
+                    }
+
+                }
+                else {
+                    throw new RuntimeException("Not proper scenario config: ${s}")
                 }
             }
         }
@@ -155,10 +205,35 @@ class Config extends BaseAction {
             ]
         ]
         def projectConfig = context.pipeline.executePipelineActionList(providers, context)
+        //utils.jsonDump(projectConfig, 'Project config')
 
-        def sourceDir = utils.sourceDir(context, 'mothershipConfig')
+        if (!projectConfig.scenarioSources) {
+            projectConfig.scenarioSources = [:]
+        }
+        projectConfig.scenarioSources << [
+            mothership: [
+                repo: this.script.env.MOTHERSHIP_REPO
+            ]
+        ]
+        def rootConfigSource = [
+            root_config: [
+                repoParams: [
+                    dir: 'docroot',
+                    repoDirName: 'config',
+                ]
+            ]
+        ]
 
-        mergeScenariosConfigs(projectConfig, sourceDir)
+        projectConfig.scenarioSources << rootConfigSource
+
+        this.scenarioSources = [:]
+        this.scenarioSources << rootConfigSource
+
+        def result = mergeScenariosConfigs(projectConfig, [:], 'root_config')
+
+        utils.jsonDump(this.scenarioSources.keySet() as List, "Scenarios loaded")
+        utils.dump(result, 'Project config with scenarios loaded')
+        result
     }
 
 }
