@@ -45,6 +45,14 @@ class Config extends BaseAction {
 
         context << context.pipeline.executePipelineActionList(providers, context)
 
+        if (!context.environments) {
+            throw new RuntimeException('No context.environments defined')
+        }
+
+        if (!context.servers) {
+            throw new RuntimeException('No context.servers defined')
+        }
+
         context.environmentParams = [:]
         if (context.environments && context.servers) {
             if (context.environment) {
@@ -118,7 +126,6 @@ class Config extends BaseAction {
             for (def i = 0; i < config.scenarios.size(); i++) {
                 def s = config.scenarios[i]
                 if (s instanceof String) {
-                    script.echo "Scenario: ${s}"
                     def values = s.split(":")
                     def scenario = [:]
                     String scenarioSourceName
@@ -127,16 +134,12 @@ class Config extends BaseAction {
                         scenario.name = values[1]
                     }
                     else {
-                        script.echo "Current scenario source: ${currentScenarioSourceName}"
                         scenarioSourceName = currentScenarioSourceName
                         scenario.name = values[0]
                     }
-                    script.echo "Scenario source: ${scenarioSourceName}"
-                    utils.dump(tempContext.scenarioSources, "Scenario sources")
                     if (tempContext.scenarioSources[scenarioSourceName]) {
                         if (!this.scenarioSources[scenarioSourceName]) {
                             scenario.source = tempContext.scenarioSources[scenarioSourceName]
-                            script.echo "Scenario source ${scenarioSourceName} not loaded yet"
                             scenario.source.repoParams = [
                                 repoAddress: scenario.source.repo,
                                 reference: scenario.source.ref ? scenario.source.ref : 'master',
@@ -149,12 +152,10 @@ class Config extends BaseAction {
                             this.scenarioSources[scenarioSourceName] = scenario.source
                         }
                         else {
-                            script.echo "Scenario source ${scenarioSourceName} already loaded"
                             scenario.source = this.scenarioSources[scenarioSourceName]
                         }
                         def sourceDir = scenario.source.repoParams.dir + '/' + scenario.source.repoParams.repoDirName
                         def fileName = "${sourceDir}/scenarios/${scenario.name}/config.yaml"
-                        script.echo "Scenario file name: ${fileName}"
                         if (script.fileExists(fileName)) {
                             script.echo "Scenario file name: ${fileName} exists"
                             def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSourceName)
