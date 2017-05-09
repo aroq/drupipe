@@ -65,6 +65,9 @@ def processJob(jobs, currentFolder, users, repo, b, config) {
                                         url(repo)
                                         credentials(config.credentialsId)
                                     }
+                                    extensions {
+                                        relativeTargetDirectory(config.projectConfigPath)
+                                    }
                                     branch(b)
                                 }
                                 scriptPath(job.pipeline.file)

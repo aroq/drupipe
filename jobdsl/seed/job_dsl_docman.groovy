@@ -83,7 +83,7 @@ if (config.configSeedType == 'docman') {
                                 credentials(params.credentialsId)
                             }
                             extensions {
-                                relativeTargetDirectory("${config.projectConfigPath}")
+                                relativeTargetDirectory(config.projectConfigPath)
                             }
                         }
                         scriptPath("${config.projectConfigPath}/pipelines/${params.pipeline}.groovy")
