@@ -137,6 +137,7 @@ class Config extends BaseAction {
                         scenarioSourceName = currentScenarioSourceName
                         scenario.name = values[0]
                     }
+                    utils.dump(tempContext.scenarioSources, 'Scenario sources')
                     if (tempContext.scenarioSources[scenarioSourceName]) {
                         if (!this.scenarioSources[scenarioSourceName]) {
                             scenario.source = tempContext.scenarioSources[scenarioSourceName]
@@ -164,7 +165,6 @@ class Config extends BaseAction {
                         }
                     }
                     else {
-                        utils.dump(tempContext.scenarioSources, 'Scenario sources')
                         throw new RuntimeException("No scenario source with name: ${scenarioSourceName}")
                     }
 
