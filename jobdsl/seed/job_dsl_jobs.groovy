@@ -55,6 +55,15 @@ def processJob(jobs, currentFolder, users, repo, b, config) {
                     logRotator(-1, 30)
                     parameters {
                         stringParam('debugEnabled', '0')
+                        activeChoiceParam('suites') {
+                            description('Select one or more suites, if you select none - every suite will be executed')
+                            filterable()
+                            choiceType('MULTI_SELECT')
+                            groovyScript {
+//                                script('["choice1", "choice2"]'
+                                script('["' + job.suites.join('", "') + '"]')
+                            }
+                        }
                         textParam('suites', job.suites.join("\n"))
                     }
                     definition {
