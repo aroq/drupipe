@@ -12,7 +12,7 @@ def call(LinkedHashMap commandParams = [:]) {
     def projectConfig = 'docroot/config'
     node('master') {
         checkout scm
-        yamlFileName = yamlFileName ? yamlFileName : "${env.JOB_BASE_NAME}.yaml"
+        yamlFileName = commandParams.yamlFileName ? commandParams.yamlFileName : "${env.JOB_BASE_NAME}.yaml"
         pipe = drupipeGetPipeline(readFile("${projectConfig}/pipelines/${yamlFileName}"))
     }
     pipe.execute()
