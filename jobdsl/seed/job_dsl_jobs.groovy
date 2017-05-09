@@ -12,7 +12,7 @@ if (config.jobs) {
     def currentName = ''
 
     def repo = config.defaultActionParams.SeleneseTester.repoAddress
-    def branch = config.defaultActionParams.SeleneseTester.reference
+    def branch = config.defaultActionParams.SeleneseTester.reference ? config.defaultActionParams.SeleneseTester.reference : 'master'
 
     if (config.env.GITLAB_API_TOKEN_TEXT) {
         users = gitlabHelper.getUsers(repo)
