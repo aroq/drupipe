@@ -58,12 +58,12 @@ def processJob(jobs, currentFolder, users, repo, b, config) {
                     parameters {
                         stringParam('debugEnabled', '0')
                         activeChoiceParam('suites') {
-                            description('Select one or more suites, if you select none - every suite will be executed. If you see the empty list - please re-save the job, related to bug: https://issues.jenkins-ci.org/browse/JENKINS-42655')
+                            description('Select one or more suites. If you see the empty list - please re-save the job (related to bug: https://issues.jenkins-ci.org/browse/JENKINS-42655)')
                             filterable()
                             choiceType('MULTI_SELECT')
                             groovyScript {
                                 // NOTE: https://issues.jenkins-ci.org/browse/JENKINS-42655?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
-                                script('["' + job.suites.join('", "') + '"]')
+                                script('["' + job.suites.collect{ it += ':selected' }.join('", "') + '"]')
                             }
                         }
                     }
