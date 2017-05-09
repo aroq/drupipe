@@ -50,6 +50,8 @@ def processJob(jobs, currentFolder, users, repo, b, config) {
                 repo = config.configRepo
             }
             if (job.type == 'selenese') {
+                println "SUITES: "
+                println '["' + job.suites.join('", "') + '"]'
                 pipelineJob("${currentName}") {
                     concurrentBuild(false)
                     logRotator(-1, 30)
