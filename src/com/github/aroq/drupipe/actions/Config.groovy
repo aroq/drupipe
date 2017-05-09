@@ -67,7 +67,6 @@ class Config extends BaseAction {
     }
 
     def jenkinsConfig() {
-        context.jenkinsParams = action.params.jenkinsParams
         action.params.jenkinsParams
     }
 
