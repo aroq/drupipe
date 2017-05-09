@@ -9,8 +9,6 @@ def gitlabHelper = new GitlabHelper(script: this, config: config)
 if (config.jobs) {
     def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipeline'
 
-    def currentName = ''
-
     def repo = config.defaultActionParams.SeleneseTester.repoAddress
     def branch = config.defaultActionParams.SeleneseTester.reference ? config.defaultActionParams.SeleneseTester.reference : 'master'
 
@@ -19,14 +17,14 @@ if (config.jobs) {
         println "USERS: ${users}"
     }
 
-    processJob(config.jobs, currentName, users, repo, branch, config)
+    processJob(config.jobs, '', users, repo, branch, config)
 
 }
 
-def processJob(jobs, currentName, users, repo, b, config) {
+def processJob(jobs, currentFolder, users, repo, b, config) {
     jobs.each { job ->
         println "Processing job: ${job.name}"
-        currentName = currentName ? "${currentName}/${job.name}" : job.name
+        def currentName = currentFolder ? "${currentFolder}/${job.name}" : job.name
         println "Type: ${job.type}"
         println "Current name: ${currentName}"
         if (job.type == 'folder') {
@@ -45,6 +43,7 @@ def processJob(jobs, currentName, users, repo, b, config) {
                     }
                 }
             }
+            currentFolder = currentName
         }
         else if (job.type == 'selenese') {
             pipelineJob("${currentName}") {
@@ -72,7 +71,7 @@ def processJob(jobs, currentName, users, repo, b, config) {
         }
 
         if (job.children) {
-            processJob(job.children, currentName, users, repo, b, config)
+            processJob(job.children, currentFolder, users, repo, b, config)
         }
     }
 }
