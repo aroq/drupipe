@@ -59,7 +59,7 @@ def processJob(jobs, currentName, users, repo, branch) {
                             git() {
                                 remote {
                                     name('origin')
-                                    url(config.repo)
+                                    url(repo)
                                     credentials(config.credentialsId)
                                 }
                                 branch(branch)
