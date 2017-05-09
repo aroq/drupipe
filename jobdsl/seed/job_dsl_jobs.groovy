@@ -27,6 +27,8 @@ def processJob(jobs, currentName, users, repo, branch) {
     jobs.each { job ->
         println "Processing job: ${job.name}"
         currentName = currentName ? "${currentName}/${job.name}" : job.name
+        println "Type: ${job.type}"
+        prinln "Current name: ${currentName}"
         if (job.type == 'folder') {
             folder(currentName) {
                 authorization {
@@ -45,8 +47,6 @@ def processJob(jobs, currentName, users, repo, branch) {
             }
         }
         else if (job.type == 'selenese') {
-            println "Type: ${job.type}"
-            prinln "Current name: ${currentName}"
             pipelineJob("${currentName}") {
                 concurrentBuild(false)
                 logRotator(-1, 30)
