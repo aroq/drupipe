@@ -164,7 +164,7 @@ class Config extends BaseAction {
                         }
                     }
                     else {
-                        dump(tempContext.scenarioSources, 'Scenario sources')
+                        utils.dump(tempContext.scenarioSources, 'Scenario sources')
                         throw new RuntimeException("No scenario source with name: ${scenarioSourceName}")
                     }
 
