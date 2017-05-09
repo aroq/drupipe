@@ -18,18 +18,21 @@ class SeleneseTester extends BaseAction {
 
         def suites = context.suites.split("\n")
         for (def i = 0; i < suites.size(); i++) {
-            script.drupipeShell("""docker pull michaeltigr/zebra-selenium:latest""",context)
-            script.drupipeShell("""docker run --rm --user root:root -v "${workspace}:${workspace}" \
+            script.drupipeShell("""docker pull michaeltigr/zebra-selenium:latest""", context)
+            try {
+                script.drupipeShell("""docker run --rm --user root:root -v "${workspace}:${workspace}" \
 -e "SELENESE_BASE_URL=${action.params.SELENESE_BASE_URL}" \
 -e "SCREEN_WIDTH=1920" -e "SCREEN_HEIGHT=1080" -e "SCREEN_DEPTH=24" \
 --workdir "${workspace}/${action.params.dir}/${action.params.repoDirName}" \
 --entrypoint "/opt/bin/entry_point.sh" --shm-size=2g ${action.params.dockerImage} "${[suites[i]]}"
     """, context)
+            }
+            catch (e) {
+                script.currentBuild.result = "UNSTABLE"
+            }
         }
 
         script.step([$class: 'SeleniumHtmlReportPublisher', testResultsDir: 'reports'])
-
     }
-
 }
 
