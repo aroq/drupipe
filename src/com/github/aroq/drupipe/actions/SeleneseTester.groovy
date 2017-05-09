@@ -14,7 +14,7 @@ class SeleneseTester extends BaseAction {
 
     def test() {
         script.drupipeAction([action: "Git.clone", params: action.params], context)
-        def workspace = scrips.pwd()
+        def workspace = script.pwd()
 
         script.drupipeShell("""docker run --rm --user root:root -v "${workspace}:${workspace}" \
 -e "SELENESE_BASE_URL=${action.params.SELENESE_BASE_URL}" \
