@@ -24,10 +24,10 @@ if (config.jobs) {
 }
 
 def processJob(jobs, currentName, users, repo, branch) {
-    jobs.each { j ->
-        println "Processing job: ${j.name}"
-        if (j.type == 'folder') {
-            currentName = currentName ? "${currentName}/${j.name}" : j.name
+    jobs.each { job ->
+        println "Processing job: ${job.name}"
+        currentName = currentName ? "${currentName}/${job.name}" : job.name
+        if (job.type == 'folder') {
             folder(currentName) {
                 authorization {
                     users.each { user ->
@@ -44,7 +44,7 @@ def processJob(jobs, currentName, users, repo, branch) {
                 }
             }
         }
-        else if (j.type == 'selenese') {
+        else if (job.type == 'selenese') {
             pipelineJob("${currentName}") {
                 concurrentBuild(false)
                 logRotator(-1, 30)
@@ -69,8 +69,8 @@ def processJob(jobs, currentName, users, repo, branch) {
             }
         }
 
-        if (j.children) {
-            processJob(j.children, currentName, users, repo, branch)
+        if (job.children) {
+            processJob(job.children, currentName, users, repo, branch)
         }
     }
 }
