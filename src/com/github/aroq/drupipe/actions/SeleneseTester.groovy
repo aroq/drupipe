@@ -16,7 +16,7 @@ class SeleneseTester extends BaseAction {
         script.drupipeAction([action: "Git.clone", params: action.params], context)
         def workspace = script.pwd()
 
-        def suites = context.suites.split("\n")
+        def suites = context.suites.split(",")
         for (def i = 0; i < suites.size(); i++) {
             script.drupipeShell("""docker pull michaeltigr/zebra-selenium:latest""", context)
             try {
@@ -32,7 +32,7 @@ class SeleneseTester extends BaseAction {
             }
         }
 
-        script.step([$class: 'SeleniumHtmlReportPublisher', testResultsDir: 'reports'])
+        script.step([$class: 'SeleniumHtmlReportPublisher', testResultsDir: 'tests/selenese/reports'])
     }
 }
 
