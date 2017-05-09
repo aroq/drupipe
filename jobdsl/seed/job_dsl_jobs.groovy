@@ -28,7 +28,7 @@ def processJob(jobs, currentName, users, repo, branch) {
         println "Processing job: ${job.name}"
         currentName = currentName ? "${currentName}/${job.name}" : job.name
         println "Type: ${job.type}"
-        prinln "Current name: ${currentName}"
+        println "Current name: ${currentName}"
         if (job.type == 'folder') {
             folder(currentName) {
                 authorization {
