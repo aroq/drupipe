@@ -46,7 +46,7 @@ def processJob(jobs, currentFolder, users, repo, b, config) {
             currentFolder = currentName
         }
         else {
-            if (job.pipeline && job.pipeline.repo == 'config') {
+            if (job.pipeline && job.pipeline.repo_type == 'config') {
                 repo = config.configRepo
             }
             if (job.type == 'selenese') {
