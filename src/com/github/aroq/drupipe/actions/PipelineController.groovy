@@ -88,7 +88,7 @@ class PipelineController extends BaseAction {
     def repoParams(String configPath) {
         //info()
         def repo
-        def masterInfoFile = "docroot/config/${configPath}/info.yaml"
+        def masterInfoFile = "${context.projectConfigPath}/${configPath}/info.yaml"
         if (script.fileExists(masterInfoFile)) {
             def masterConfig = script.readYaml(file: masterInfoFile)
             script.echo "MASTER CONFIG: ${masterConfig}"

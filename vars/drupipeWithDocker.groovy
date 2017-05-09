@@ -1,7 +1,7 @@
 def call(context = [:], body) {
     context << context.defaultActionParams['drupipeWithDocker'] << context
     if (context.dockerfile) {
-        image = docker.build(context.dockerfile, 'docroot/config')
+        image = docker.build(context.dockerfile, context.projectConfigPath)
     }
     else {
         image = docker.image(context.dockerImage)
