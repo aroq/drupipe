@@ -26,6 +26,8 @@ class SeleneseTester extends BaseAction {
     """, context)
         }
 
+        script.step([$class: 'SeleniumHtmlReportPublisher', testResultsDir: 'reports'])
+
     }
 
 }
