@@ -23,7 +23,7 @@ if (config.jobs) {
 
 }
 
-def processJob(jobs, currentName, users, repo, branch, config) {
+def processJob(jobs, currentName, users, repo, b, config) {
     jobs.each { job ->
         println "Processing job: ${job.name}"
         currentName = currentName ? "${currentName}/${job.name}" : job.name
@@ -62,7 +62,7 @@ def processJob(jobs, currentName, users, repo, branch, config) {
                                     url(repo)
                                     credentials(config.credentialsId)
                                 }
-                                branch(branch)
+                                branch(b)
                             }
                             scriptPath("Jenkinsfile")
                         }
@@ -72,7 +72,7 @@ def processJob(jobs, currentName, users, repo, branch, config) {
         }
 
         if (job.children) {
-            processJob(job.children, currentName, users, repo, branch, config)
+            processJob(job.children, currentName, users, repo, b, config)
         }
     }
 }
