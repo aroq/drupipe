@@ -119,9 +119,9 @@ class Config extends BaseAction {
     def mergeScenariosConfigs(config, tempContext = [:], currentScenarioSourceName = null) {
         def scenariosConfig = [:]
         if (!tempContext) {
-            tempContext = utils.merge(tempContext, context)
+            tempContext << context
         }
-        tempContext << config
+        tempContext = utils.merge(tempContext, config)
         if (config.scenarios) {
             for (def i = 0; i < config.scenarios.size(); i++) {
                 def s = config.scenarios[i]
