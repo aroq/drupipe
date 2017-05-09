@@ -19,11 +19,11 @@ if (config.jobs) {
         println "USERS: ${users}"
     }
 
-    processJob(config.jobs, currentName, users, repo, branch)
+    processJob(config.jobs, currentName, users, repo, branch, config)
 
 }
 
-def processJob(jobs, currentName, users, repo, branch) {
+def processJob(jobs, currentName, users, repo, branch, config) {
     jobs.each { job ->
         println "Processing job: ${job.name}"
         currentName = currentName ? "${currentName}/${job.name}" : job.name
@@ -72,7 +72,7 @@ def processJob(jobs, currentName, users, repo, branch) {
         }
 
         if (job.children) {
-            processJob(job.children, currentName, users, repo, branch)
+            processJob(job.children, currentName, users, repo, branch, config)
         }
     }
 }
