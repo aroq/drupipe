@@ -24,7 +24,7 @@ class SeleneseTester extends BaseAction {
 -e "SELENESE_BASE_URL=${action.params.SELENESE_BASE_URL}" \
 -e "SCREEN_WIDTH=1920" -e "SCREEN_HEIGHT=1080" -e "SCREEN_DEPTH=24" \
 --workdir "${workspace}/${action.params.dir}/${action.params.repoDirName}" \
---entrypoint "/opt/bin/entry_point.sh" --shm-size=2g ${action.params.dockerImage} "${[suites[i]]}"
+--entrypoint "/opt/bin/entry_point.sh" --shm-size=2g ${action.params.dockerImage} "${suites[i]}"
     """, context)
             }
             catch (e) {
