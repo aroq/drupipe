@@ -180,7 +180,7 @@ class Config extends BaseAction {
         def sourceObject = [
             name: 'projectConfig',
             type: 'dir',
-            path: context.docmanConfigPath,
+            path: context.projectConfigPath,
         ]
 
         def providers = [
@@ -193,7 +193,7 @@ class Config extends BaseAction {
                 params: [
                     sourceName: 'projectConfig',
                     configType: 'groovy',
-                    configPath: context.docmanConfigFile
+                    configPath: context.projectConfigFile
                 ]
             ],
             [
