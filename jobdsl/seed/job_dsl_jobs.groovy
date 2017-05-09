@@ -64,7 +64,6 @@ def processJob(jobs, currentFolder, users, repo, b, config) {
                                 script('["' + job.suites.join('", "') + '"]')
                             }
                         }
-                        textParam('suites', job.suites.join("\n"))
                     }
                     definition {
                         cpsScm {
