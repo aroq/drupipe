@@ -12,7 +12,13 @@ def call(LinkedHashMap commandParams = [:]) {
     def projectConfig = 'docroot/config'
     node('master') {
         checkout scm
-        yamlFileName = commandParams.yamlFileName ? commandParams.yamlFileName : "${env.JOB_BASE_NAME}.yaml"
+        def yamlFileName = ''
+        if (commandParams.type == 'selenese') {
+            yamlFileName = "${commandParams.type}.yaml"
+        }
+        else {
+            yamlFileName = commandParams.yamlFileName ? commandParams.yamlFileName : "${env.JOB_BASE_NAME}.yaml"
+        }
         pipe = drupipeGetPipeline(readFile("${projectConfig}/pipelines/${yamlFileName}"))
     }
     pipe.execute()
