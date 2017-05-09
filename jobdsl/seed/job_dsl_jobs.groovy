@@ -55,6 +55,7 @@ def processJob(jobs, currentFolder, users, repo, b, config) {
                     logRotator(-1, 30)
                     parameters {
                         stringParam('debugEnabled', '0')
+                        textParam('suites', job.suites.join("\n"))
                     }
                     definition {
                         cpsScm {
