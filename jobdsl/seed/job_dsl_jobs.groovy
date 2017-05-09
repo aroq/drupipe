@@ -45,25 +45,30 @@ def processJob(jobs, currentFolder, users, repo, b, config) {
             }
             currentFolder = currentName
         }
-        else if (job.type == 'selenese') {
-            pipelineJob("${currentName}") {
-                concurrentBuild(false)
-                logRotator(-1, 30)
-                parameters {
-                    stringParam('debugEnabled', '0')
-                }
-                definition {
-                    cpsScm {
-                        scm {
-                            git() {
-                                remote {
-                                    name('origin')
-                                    url(repo)
-                                    credentials(config.credentialsId)
+        else {
+            if (job.pipeline && job.pipeline.repo == 'config') {
+                repo = config.configRepo
+            }
+            if (job.type == 'selenese') {
+                pipelineJob("${currentName}") {
+                    concurrentBuild(false)
+                    logRotator(-1, 30)
+                    parameters {
+                        stringParam('debugEnabled', '0')
+                    }
+                    definition {
+                        cpsScm {
+                            scm {
+                                git() {
+                                    remote {
+                                        name('origin')
+                                        url(repo)
+                                        credentials(config.credentialsId)
+                                    }
+                                    branch(b)
                                 }
-                                branch(b)
+                                scriptPath(job.pipeline.file)
                             }
-                            scriptPath("Jenkinsfile")
                         }
                     }
                 }
