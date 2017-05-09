@@ -6,7 +6,8 @@ import com.github.aroq.drupipe.DrupipePipeline
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor
 
-def call(yamlFileName = null) {
+def call(LinkedHashMap commandParams = [:]) {
+    echo "Pipeline type: ${commandParams.type}"
     def pipe
     def projectConfig = 'docroot/config'
     node('master') {
