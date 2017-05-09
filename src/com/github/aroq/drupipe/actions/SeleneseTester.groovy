@@ -32,7 +32,7 @@ class SeleneseTester extends BaseAction {
             }
         }
 
-        script.step([$class: 'SeleniumHtmlReportPublisher', testResultsDir: 'tests/selenese/reports'])
+        script.step([$class: 'SeleniumHtmlReportPublisher', testResultsDir: 'tests/selenese/reports-xml'])
     }
 }
 
