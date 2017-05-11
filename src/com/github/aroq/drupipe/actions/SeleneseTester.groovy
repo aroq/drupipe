@@ -18,7 +18,7 @@ class SeleneseTester extends BaseAction {
 
         def suites = context.suites.split(",")
         for (def i = 0; i < suites.size(); i++) {
-            script.drupipeShell("""docker pull michaeltigr/zebra-selenium:latest""", context)
+            script.drupipeShell("""docker pull michaeltigr/zebra-selenium-travis:latest""", context)
             try {
                 script.drupipeShell("""docker run --rm --user root:root -v "${workspace}:${workspace}" \
 -e "SELENESE_BASE_URL=${action.params.SELENESE_BASE_URL}" \
