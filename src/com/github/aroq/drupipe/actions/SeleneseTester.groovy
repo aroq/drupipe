@@ -16,20 +16,13 @@ class SeleneseTester extends BaseAction {
         script.drupipeAction([action: "Git.clone", params: action.params], context)
         def workspace = script.pwd()
 
-        script.echo "Context suites: ${context.suites}"
-
-        String s = context.suites as String
-
-        def suites = s.split(",").collect { /"${it}"/ }.join(' ')
-        script.echo "Suites: ${suites}"
-
         script.drupipeShell("""docker pull michaeltigr/zebra-selenium-travis:latest""", context)
         try {
             script.drupipeShell("""docker run --rm --user root:root -v "${workspace}:${workspace}" \
 -e "SELENESE_BASE_URL=${action.params.SELENESE_BASE_URL}" \
 -e "SCREEN_WIDTH=1920" -e "SCREEN_HEIGHT=1080" -e "SCREEN_DEPTH=24" \
 --workdir "${workspace}/${action.params.dir}/${action.params.repoDirName}" \
---entrypoint "/opt/bin/entry_point.sh" --shm-size=2g ${action.params.dockerImage} ${suites}
+--entrypoint "/opt/bin/entry_point.sh" --shm-size=2g ${action.params.dockerImage} ${getSuites(context.suites)}
     """, context)
         }
         catch (e) {
@@ -47,6 +40,11 @@ class SeleneseTester extends BaseAction {
 
 //        script.step([$class: 'SeleniumHtmlReportPublisher', testResultsDir: 'tests/selenese/reports-xml'])
 //        script.junit 'reports-xml/*.xml'
+    }
+
+    @NonCPS
+    def getSuites(suites) {
+        suites.split(",").collect { /"${it}"/ }.join(' ')
     }
 }
 
