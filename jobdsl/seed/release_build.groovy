@@ -25,6 +25,8 @@ if (config.releaseEnvs) {
                     def projectName   = repo.substring(repo.indexOf('/') + 1, repo.lastIndexOf("."));
                     def projectID     = "${groupName}%2F${projectName}"
                     def privateToken = "${config.env.GITLAB_API_TOKEN_TEXT}"
+                    stringParam('debugEnabled', '0')
+                    stringParam('force', '0')
                     activeChoiceParam("${project.value.name}_version") {
                         description('Allows user choose from multiple choices')
                         filterable()
