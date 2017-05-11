@@ -18,7 +18,9 @@ class SeleneseTester extends BaseAction {
 
         script.echo "Context suites: ${context.suites}"
 
-        def suites = context.suites.split(",").collect { """\"${it}\"""" }.join(' ')
+        String s = context.suites as String
+
+        def suites = s.split(",").collect { """\"${it}\"""" }.join(' ')
         script.echo "Suites: ${suites}"
 
         script.drupipeShell("""docker pull michaeltigr/zebra-selenium-travis:latest""", context)
