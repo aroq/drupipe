@@ -45,13 +45,13 @@ class Config extends BaseAction {
 
         context << context.pipeline.executePipelineActionList(providers, context)
 
-        if (!context.environments) {
-            throw new RuntimeException('No context.environments defined')
-        }
-
-        if (!context.servers) {
-            throw new RuntimeException('No context.servers defined')
-        }
+//        if (!context.environments) {
+//            throw new RuntimeException('No context.environments defined')
+//        }
+//
+//        if (!context.servers) {
+//            throw new RuntimeException('No context.servers defined')
+//        }
 
         context.environmentParams = [:]
         if (context.environments && context.servers) {
