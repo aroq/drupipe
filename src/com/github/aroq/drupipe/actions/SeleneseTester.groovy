@@ -16,20 +16,19 @@ class SeleneseTester extends BaseAction {
         script.drupipeAction([action: "Git.clone", params: action.params], context)
         def workspace = script.pwd()
 
-        def suites = context.suites.split(",")
-        for (def i = 0; i < suites.size(); i++) {
-            script.drupipeShell("""docker pull michaeltigr/zebra-selenium-travis:latest""", context)
-            try {
-                script.drupipeShell("""docker run --rm --user root:root -v "${workspace}:${workspace}" \
+        def suites = context.suites.split(",").collect { """\\"${it}\\""" }.join(' ')
+
+        script.drupipeShell("""docker pull michaeltigr/zebra-selenium-travis:latest""", context)
+        try {
+            script.drupipeShell("""docker run --rm --user root:root -v "${workspace}:${workspace}" \
 -e "SELENESE_BASE_URL=${action.params.SELENESE_BASE_URL}" \
 -e "SCREEN_WIDTH=1920" -e "SCREEN_HEIGHT=1080" -e "SCREEN_DEPTH=24" \
 --workdir "${workspace}/${action.params.dir}/${action.params.repoDirName}" \
---entrypoint "/opt/bin/entry_point.sh" --shm-size=2g ${action.params.dockerImage} "${suites[i]}"
+--entrypoint "/opt/bin/entry_point.sh" --shm-size=2g ${action.params.dockerImage} ${suites}
     """, context)
-            }
-            catch (e) {
-                script.currentBuild.result = "UNSTABLE"
-            }
+        }
+        catch (e) {
+            script.currentBuild.result = "UNSTABLE"
         }
 
         script.publishHTML (target: [
