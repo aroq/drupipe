@@ -16,7 +16,7 @@ class SeleneseTester extends BaseAction {
         script.drupipeAction([action: "Git.clone", params: action.params], context)
         def workspace = script.pwd()
 
-        def suites = context.suites.split(",").collect { """\\"${it}\\""" }.join(' ')
+        def suites = context.suites.split(",").collect { """\"${it}\"""" }.join(' ')
 
         script.drupipeShell("""docker pull michaeltigr/zebra-selenium-travis:latest""", context)
         try {
