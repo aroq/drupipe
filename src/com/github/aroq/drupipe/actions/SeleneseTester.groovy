@@ -22,7 +22,7 @@ class SeleneseTester extends BaseAction {
 
         utils.dump(s.split(","))
 
-        def suites = s.split(",").collect { """\"${it}\"""" }.join(' ')
+        def suites = s.split(",").collect { /"${it}"/ }.join(' ')
         script.echo "Suites: ${suites}"
 
         script.drupipeShell("""docker pull michaeltigr/zebra-selenium-travis:latest""", context)
