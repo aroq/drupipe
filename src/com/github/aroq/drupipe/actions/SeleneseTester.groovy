@@ -20,6 +20,8 @@ class SeleneseTester extends BaseAction {
 
         String s = context.suites as String
 
+        utils.dump(s.split(","))
+
         def suites = s.split(",").collect { """\"${it}\"""" }.join(' ')
         script.echo "Suites: ${suites}"
 
