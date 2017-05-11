@@ -32,7 +32,16 @@ class SeleneseTester extends BaseAction {
             }
         }
 
-        script.step([$class: 'SeleniumHtmlReportPublisher', testResultsDir: 'tests/selenese/reports-xml'])
+        script.publishHTML (target: [
+            allowMissing: false,
+            alwaysLinkToLastBuild: false,
+            keepAll: true,
+            reportDir: 'tests/selenese/reports',
+            reportFiles: 'index.html',
+            reportName: "Selenese report"
+        ])
+
+//        script.step([$class: 'SeleniumHtmlReportPublisher', testResultsDir: 'tests/selenese/reports-xml'])
 //        script.junit 'reports-xml/*.xml'
     }
 }
