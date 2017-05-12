@@ -10,16 +10,14 @@ if (config.tags.containsValue('docman')) {
     docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 
     // Retrieve Docman config from json file (prepared by "docman info" command).
-    docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
+    config.docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
 }
 
 
-def gitlabHelper = new GitlabHelper(script: this, config: config)
+config.gitlabHelper = new GitlabHelper(script: this, config: config)
 
 if (config.jobs) {
-
     processJob(config.jobs, '', config)
-
 }
 
 def processJob(jobs, currentFolder, config) {
@@ -56,7 +54,7 @@ def processJob(jobs, currentFolder, config) {
                     concurrentBuild(false)
                     logRotator(-1, 30)
                     parameters {
-                        docmanConfig.projects?.each { project ->
+                        config.docmanConfig.projects?.each { project ->
                             if ((project.value.type == 'root' || project.value.type == 'root_chain') && project.value.repo && config.env.GITLAB_HOST && project.value.repo.contains(config.env.GITLAB_HOST)) {
                                 println "Project: ${project.value.name}"
                                 def releaseRepo = project.value.type == 'root' ? project.value.repo : project.value.root_repo
@@ -100,7 +98,7 @@ def processJob(jobs, currentFolder, config) {
                 def b = config.defaultActionParams.SeleneseTester.reference ? config.defaultActionParams.SeleneseTester.reference : 'master'
 
                 if (config.env.GITLAB_API_TOKEN_TEXT) {
-                    users = gitlabHelper.getUsers(repo)
+                    users = config.gitlabHelper.getUsers(repo)
                     println "USERS: ${users}"
                 }
 
