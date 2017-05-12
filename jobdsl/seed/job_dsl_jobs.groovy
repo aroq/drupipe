@@ -1,4 +1,5 @@
 import com.github.aroq.GitlabHelper
+import com.github.aroq.DocmanConfig
 
 println "Subjobs Job DSL processing"
 
