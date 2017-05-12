@@ -72,31 +72,28 @@ def processJob(jobs, currentFolder, config) {
                                 stringParam('environment', job.env)
                                 stringParam('debugEnabled', '0')
                                 stringParam('force', '0')
+                                stringParam('yamlFileName', job.pipeline.file)
                             }
                         }
                     }
                     definition {
-                        cps {
-                            script("drupipeYamlPipeline(yamlFileName: '${job.pipeline.file}')")
+                        cpsScm {
+                            scm {
+                                git() {
+                                    remote {
+                                        name('origin')
+                                        url(config.configRepo)
+                                        credentials(config.credentialsId)
+                                    }
+                                    extensions {
+                                        relativeTargetDirectory(config.projectConfigPath)
+                                    }
+                                }
+                                scriptPath("${config.projectConfigPath}/pipelines/${pipelineScript}.groovy")
+                            }
                         }
-//                        cpsScm {
-//                            scm {
-//                                git() {
-//                                    remote {
-//                                        name('origin')
-//                                        url(config.configRepo)
-//                                        credentials(config.credentialsId)
-//                                    }
-//                                    extensions {
-//                                        relativeTargetDirectory(config.projectConfigPath)
-//                                    }
-//                                }
-//                                scriptPath("${config.projectConfigPath}/pipelines/${pipelineScript}.groovy")
-//                            }
-//                        }
                     }
                 }
-
             }
             if (job.type == 'selenese') {
                 def repo = config.defaultActionParams.SeleneseTester.repoAddress
