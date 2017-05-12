@@ -51,7 +51,49 @@ def processJob(jobs, currentFolder, config) {
             if (job.pipeline && job.pipeline.repo_type && job.pipeline.repo_type == 'config') {
                 repo = config.configRepo
             }
-            if (job.type == 'release-deploy') {
+            if (job.type == 'release-build') {
+                pipelineJob(currentName) {
+                    concurrentBuild(false)
+                    logRotator(-1, 30)
+                    parameters {
+                        config.docmanConfig.projects?.each { project ->
+                            if (project.value.repo && (project.value.type != 'root')) {
+                                println "Project: ${project.value.name}"
+                                def projectRepo = project.value.repo
+                                println "Repo: ${projectRepo}"
+                                activeChoiceParam("${project.value.name}_version") {
+                                    description('Allows user choose from multiple choices')
+                                    filterable()
+                                    choiceType('SINGLE_SELECT')
+                                    scriptlerScript('git_tags.groovy') {
+                                        parameter('url', projectRepo)
+                                        parameter('tagPattern', "*")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    definition {
+                        cpsScm {
+                            scm {
+                                git() {
+                                    remote {
+                                        name('origin')
+                                        url(config.configRepo)
+                                        credentials(config.credentialsId)
+                                    }
+                                    extensions {
+                                        relativeTargetDirectory(config.projectConfigPath)
+                                    }
+                                }
+                                scriptPath("${config.projectConfigPath}/pipelines/pipeline.groovy")
+                            }
+                        }
+                    }
+                }
+
+            }
+            else if (job.type == 'release-deploy') {
                 pipelineJob(currentName) {
                     concurrentBuild(false)
                     logRotator(-1, 30)
@@ -95,7 +137,7 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
             }
-            if (job.type == 'selenese') {
+            else if (job.type == 'selenese') {
                 def repo = config.defaultActionParams.SeleneseTester.repoAddress
                 def b = config.defaultActionParams.SeleneseTester.reference ? config.defaultActionParams.SeleneseTester.reference : 'master'
 
