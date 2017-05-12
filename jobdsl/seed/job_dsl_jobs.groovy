@@ -17,15 +17,13 @@ if (config.tags.containsValue('docman')) {
 def gitlabHelper = new GitlabHelper(script: this, config: config)
 
 if (config.jobs) {
-    def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipeline'
 
-
-
-    processJob(config.jobs, '', users, config)
+    processJob(config.jobs, '', config)
 
 }
 
-def processJob(jobs, currentFolder, users, config) {
+def processJob(jobs, currentFolder, config) {
+    def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipeline'
     jobs.each { job ->
         println "Processing job: ${job.name}"
         def currentName = currentFolder ? "${currentFolder}/${job.name}" : job.name
@@ -90,7 +88,7 @@ def processJob(jobs, currentFolder, users, config) {
                                         relativeTargetDirectory(config.projectConfigPath)
                                     }
                                 }
-                                scriptPath("${config.projectConfigPath}/pipelines/pipeline.groovy")
+                                scriptPath("${config.projectConfigPath}/pipelines/${pipelineScript}.groovy")
                             }
                         }
                     }
@@ -144,7 +142,7 @@ def processJob(jobs, currentFolder, users, config) {
         }
 
         if (job.children) {
-            processJob(job.children, currentFolder, users, config)
+            processJob(job.children, currentFolder, config)
         }
     }
 }
