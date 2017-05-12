@@ -64,7 +64,7 @@ def processJob(jobs, currentFolder, config) {
                                     description('Allows user choose from multiple choices')
                                     filterable()
                                     choiceType('SINGLE_SELECT')
-                                    scriptlerScript("git_${e.type}.groovy") {
+                                    scriptlerScript("git_${job.sourceRefs}.groovy") {
                                         parameter('url', releaseRepo)
                                         parameter('tagPattern', e.pattern)
                                     }
