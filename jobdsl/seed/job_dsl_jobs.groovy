@@ -48,7 +48,7 @@ def processJob(jobs, currentFolder, config) {
             currentFolder = currentName
         }
         else {
-            if (job.pipeline && job.pipeline.repo_type == 'config') {
+            if (job.pipeline && job.pipeline.repo_type && job.pipeline.repo_type == 'config') {
                 repo = config.configRepo
             }
             if (job.type == 'release-deploy') {
