@@ -77,7 +77,7 @@ def processJob(jobs, currentFolder, config) {
                     }
                     definition {
                         cps {
-                            script("drupipeYamlPipeline(yamlFileName: ${job.pipeline.file})")
+                            script("drupipeYamlPipeline(yamlFileName: '${job.pipeline.file}')")
                         }
 //                        cpsScm {
 //                            scm {
