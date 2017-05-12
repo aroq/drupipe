@@ -66,10 +66,10 @@ def processJob(jobs, currentFolder, config) {
                                     choiceType('SINGLE_SELECT')
                                     scriptlerScript("git_${job.source.type}.groovy") {
                                         parameter('url', releaseRepo)
-                                        parameter('tagPattern', ${job.source.pattern})
+                                        parameter('tagPattern', job.source.pattern)
                                     }
                                 }
-                                stringParam('environment', ${job.env})
+                                stringParam('environment', job.env)
                                 stringParam('debugEnabled', '0')
                                 stringParam('force', '0')
                             }
