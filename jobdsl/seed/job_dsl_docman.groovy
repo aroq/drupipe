@@ -5,7 +5,7 @@ println "Docman Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 
-docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : 'docroot/config/config.json'
+docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : "${config.projectConfigPath}/config.json"
 docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 
 println "Config: ${config}"
@@ -83,10 +83,10 @@ if (config.configSeedType == 'docman') {
                                 credentials(params.credentialsId)
                             }
                             extensions {
-                                relativeTargetDirectory('docroot/config')
+                                relativeTargetDirectory(config.projectConfigPath)
                             }
                         }
-                        scriptPath("docroot/config/pipelines/${params.pipeline}.groovy")
+                        scriptPath("${config.projectConfigPath}/pipelines/${params.pipeline}.groovy")
                     }
                 }
             }

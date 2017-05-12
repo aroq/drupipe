@@ -76,10 +76,10 @@ if (config.configSeedType == 'single') {
                                 credentials(params.credentialsId)
                             }
                             extensions {
-                                relativeTargetDirectory('docroot/config')
+                                relativeTargetDirectory(config.projectConfigPath)
                             }
                         }
-                        scriptPath("docroot/config/pipelines/${params.pipeline}.groovy")
+                        scriptPath("${config.projectConfigPath}/pipelines/${params.pipeline}.groovy")
                     }
                 }
             }

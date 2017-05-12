@@ -4,7 +4,7 @@ println "Release build Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 
-docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : 'docroot/config/config.json'
+docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : "${config.projectConfigPath}/config.json"
 docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 
 // Retrieve Docman config from json file (prepared by "docman info" command).
@@ -45,10 +45,10 @@ if (config.releaseEnvs) {
                                 credentials(config.credentialsId)
                             }
                             extensions {
-                                relativeTargetDirectory('docroot/config')
+                                relativeTargetDirectory(config.projectConfigPath)
                             }
                         }
-                        scriptPath("docroot/config/pipelines/pipeline.groovy")
+                        scriptPath("${config.projectConfigPath}/pipelines/pipeline.groovy")
                     }
                 }
             }

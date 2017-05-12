@@ -6,12 +6,20 @@ import com.github.aroq.drupipe.DrupipePipeline
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor
 
-def call(yamlFileName = null) {
+def call(LinkedHashMap commandParams = [:]) {
+    echo "Pipeline type: ${commandParams.type}"
     def pipe
+    def projectConfig = 'docroot/config'
     node('master') {
         checkout scm
-        yamlFileName = yamlFileName ? yamlFileName : "${env.JOB_BASE_NAME}.yaml"
-        pipe = drupipeGetPipeline(readFile("docroot/config/pipelines/${yamlFileName}"))
+        def yamlFileName
+        if (commandParams.type == 'selenese') {
+            yamlFileName = "pipelines/${commandParams.type}.yaml"
+        }
+        else {
+            yamlFileName = params.yamlFileName ? params.yamlFileName : "pipelines/${env.JOB_BASE_NAME}.yaml"
+        }
+        pipe = drupipeGetPipeline(readFile("${projectConfig}/${yamlFileName}"))
     }
     pipe.execute()
 }

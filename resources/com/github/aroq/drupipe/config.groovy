@@ -1,7 +1,7 @@
 debugEnabled = false
 docrootDir = 'docroot'
-docmanConfigPath = 'docroot/config'
-docmanConfigFile = 'docroot.config'
+projectConfigPath = 'docroot/config'
+projectConfigFile = 'docroot.config'
 
 drupipeLibraryUrl = 'https://github.com/aroq/drupipe.git'
 drupipeLibraryBranch = 'master'
