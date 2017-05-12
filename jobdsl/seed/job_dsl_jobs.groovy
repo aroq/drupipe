@@ -64,12 +64,12 @@ def processJob(jobs, currentFolder, config) {
                                     description('Allows user choose from multiple choices')
                                     filterable()
                                     choiceType('SINGLE_SELECT')
-                                    scriptlerScript("git_${job.sourceRefs}.groovy") {
+                                    scriptlerScript("git_${job.source.type}.groovy") {
                                         parameter('url', releaseRepo)
-                                        parameter('tagPattern', e.pattern)
+                                        parameter('tagPattern', ${job.source.pattern})
                                     }
                                 }
-                                stringParam('environment', e.env)
+                                stringParam('environment', ${job.env})
                                 stringParam('debugEnabled', '0')
                                 stringParam('force', '0')
                             }
