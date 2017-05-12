@@ -5,6 +5,8 @@ println "Subjobs Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 
+println "Config tags: ${config.tags}"
+
 if (config.tags.containsValue('docman')) {
     docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : "${config.projectConfigPath}/config.json"
     docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
