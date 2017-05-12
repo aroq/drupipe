@@ -20,10 +20,6 @@ if (config.jobs) {
     def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipeline'
 
 
-    if (config.env.GITLAB_API_TOKEN_TEXT) {
-        users = gitlabHelper.getUsers(repo)
-        println "USERS: ${users}"
-    }
 
     processJob(config.jobs, '', users, config)
 
@@ -104,8 +100,12 @@ def processJob(jobs, currentFolder, users, config) {
             if (job.type == 'selenese') {
                 def repo = config.defaultActionParams.SeleneseTester.repoAddress
                 def b = config.defaultActionParams.SeleneseTester.reference ? config.defaultActionParams.SeleneseTester.reference : 'master'
-                println "SUITES: "
-                println '["' + job.suites.join('", "') + '"]'
+
+                if (config.env.GITLAB_API_TOKEN_TEXT) {
+                    users = gitlabHelper.getUsers(repo)
+                    println "USERS: ${users}"
+                }
+
                 pipelineJob("${currentName}") {
                     concurrentBuild(false)
                     logRotator(-1, 30)
