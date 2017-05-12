@@ -19,7 +19,7 @@ def call(LinkedHashMap commandParams = [:]) {
         else {
             yamlFileName = commandParams.yamlFileName ? commandParams.yamlFileName : "${env.JOB_BASE_NAME}.yaml"
         }
-        pipe = drupipeGetPipeline(readFile("${projectConfig}/pipelines/${yamlFileName}"))
+        pipe = drupipeGetPipeline(readFile("${projectConfig}/${yamlFileName}"))
     }
     pipe.execute()
 }

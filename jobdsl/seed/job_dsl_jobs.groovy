@@ -76,21 +76,24 @@ def processJob(jobs, currentFolder, config) {
                         }
                     }
                     definition {
-                        cpsScm {
-                            scm {
-                                git() {
-                                    remote {
-                                        name('origin')
-                                        url(config.configRepo)
-                                        credentials(config.credentialsId)
-                                    }
-                                    extensions {
-                                        relativeTargetDirectory(config.projectConfigPath)
-                                    }
-                                }
-                                scriptPath("${config.projectConfigPath}/pipelines/${pipelineScript}.groovy")
-                            }
+                        cps {
+                            script("drupipeYamlPipeline(yamlFileName: ${job.pipeline.file})")
                         }
+//                        cpsScm {
+//                            scm {
+//                                git() {
+//                                    remote {
+//                                        name('origin')
+//                                        url(config.configRepo)
+//                                        credentials(config.credentialsId)
+//                                    }
+//                                    extensions {
+//                                        relativeTargetDirectory(config.projectConfigPath)
+//                                    }
+//                                }
+//                                scriptPath("${config.projectConfigPath}/pipelines/${pipelineScript}.groovy")
+//                            }
+//                        }
                     }
                 }
 
