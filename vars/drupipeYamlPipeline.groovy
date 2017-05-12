@@ -14,7 +14,7 @@ def call(LinkedHashMap commandParams = [:]) {
         checkout scm
         def yamlFileName
         if (commandParams.type == 'selenese') {
-            yamlFileName = "${commandParams.type}.yaml"
+            yamlFileName = "pipelines/${commandParams.type}.yaml"
         }
         else {
             yamlFileName = params.yamlFileName ? params.yamlFileName : "pipelines/${env.JOB_BASE_NAME}.yaml"
