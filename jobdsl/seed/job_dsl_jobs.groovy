@@ -133,7 +133,7 @@ def processJob(jobs, currentFolder, config) {
                                             relativeTargetDirectory(config.projectConfigPath)
                                         }
                                     }
-                                    scriptPath("${config.projectConfigPath}/pipelines/pipelines/pipeline.groovy")
+                                    scriptPath("${config.projectConfigPath}/pipelines/pipeline.groovy")
                                 }
                             }
                         }
