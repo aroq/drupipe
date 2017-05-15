@@ -119,6 +119,7 @@ def processJob(jobs, currentFolder, config) {
                             stringParam('type', 'branch')
                             stringParam('environment', buildEnvironment)
                             stringParam('version', branch)
+                            stringParam('yamlFileName', job.pipeline.file)
                         }
                         definition {
                             cpsScm {
