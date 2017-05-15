@@ -275,3 +275,7 @@ Map merge(Map[] sources) {
         result
     }
 }
+
+def isGitlabRepo(repo, config) {
+    config.env.GITLAB_HOST && repo.contains(config.env.GITLAB_HOST)
+}
