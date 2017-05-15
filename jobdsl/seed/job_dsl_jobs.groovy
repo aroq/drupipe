@@ -97,7 +97,7 @@ def processJob(jobs, currentFolder, config) {
                     def state = job.state
                     if (config.docmanConfig) {
                         buildEnvironment = config.docmanConfig.getEnvironmentByState(state)
-                        branch = docmanConfig.getVersionBranch('', state.key)
+                        branch = config.docmanConfig.getVersionBranch('', state.key)
                     }
                     else {
                         // TODO: Check it.
@@ -154,7 +154,7 @@ def processJob(jobs, currentFolder, config) {
                     }
                     if (config.docmanConfig) {
                         if (config.env.GITLAB_API_TOKEN_TEXT) {
-                            docmanConfig.projects?.each { project ->
+                            config.docmanConfig.projects?.each { project ->
                                 if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
                                     if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
                                         gitlabHelper.addWebhook(
