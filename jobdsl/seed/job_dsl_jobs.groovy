@@ -15,7 +15,6 @@ if (config.tags.contains('docman')) {
     config.docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
 }
 
-
 config.gitlabHelper = new GitlabHelper(script: this, config: config)
 
 if (config.jobs) {
@@ -92,6 +91,82 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
 
+            }
+            else if (job.type == 'state') {
+                if (config.tags.contains('docman')) {
+                    def state = job.state
+                    if (config.docmanConfig) {
+                        buildEnvironment = config.docmanConfig.getEnvironmentByState(state)
+                        branch = docmanConfig.getVersionBranch('', state.key)
+                    }
+                    else {
+                        // TODO: Check it.
+                        buildEnvironment = job.env
+                        branch = job.branch
+                    }
+                    pipelineJob(state) {
+                        if (config.quietPeriodSeconds) {
+                            quietPeriod(config.quietPeriodSeconds)
+                        }
+                        concurrentBuild(false)
+                        logRotator(-1, 30)
+                        parameters {
+                            stringParam('projectName', 'master')
+                            stringParam('debugEnabled', '0')
+                            stringParam('force', '0')
+                            stringParam('simulate', '0')
+                            stringParam('docrootDir', 'docroot')
+                            stringParam('type', 'branch')
+                            stringParam('environment', buildEnvironment)
+                            stringParam('version', branch)
+                        }
+                        definition {
+                            cpsScm {
+                                scm {
+                                    git() {
+                                        remote {
+                                            name('origin')
+                                            url(config.configRepo)
+                                            credentials(config.credentialsId)
+                                        }
+                                        extensions {
+                                            relativeTargetDirectory(config.projectConfigPath)
+                                        }
+                                    }
+                                    scriptPath("${config.projectConfigPath}/pipelines/pipelines/pipeline.groovy")
+                                }
+                            }
+                        }
+                        triggers {
+                            gitlabPush {
+                                buildOnPushEvents()
+                                buildOnMergeRequestEvents(false)
+                                enableCiSkip()
+                                useCiFeatures()
+                                includeBranches(branch)
+                            }
+                        }
+                        properties {
+                            gitLabConnectionProperty {
+                                gitLabConnection('Gitlab')
+                            }
+                        }
+                    }
+                    if (config.docmanConfig) {
+                        if (config.env.GITLAB_API_TOKEN_TEXT) {
+                            docmanConfig.projects?.each { project ->
+                                if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
+                                    if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                                        gitlabHelper.addWebhook(
+                                            project.value.repo,
+                                            "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${state.key}"
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
             else if (job.type == 'release-deploy') {
                 pipelineJob(currentName) {
