@@ -97,7 +97,7 @@ def processJob(jobs, currentFolder, config) {
                     def state = job.state
                     if (config.docmanConfig) {
                         buildEnvironment = config.docmanConfig.getEnvironmentByState(state)
-                        branch = config.docmanConfig.getVersionBranch('', state.key)
+                        branch = config.docmanConfig.getVersionBranch('', state)
                     }
                     else {
                         // TODO: Check it.
