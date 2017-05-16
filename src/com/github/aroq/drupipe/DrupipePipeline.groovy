@@ -37,7 +37,10 @@ class DrupipePipeline implements Serializable {
                 }
 
                 if (!blocks) {
-
+                    def pipelineBlocks = getJobConfigByName(context.env.JOB_NAME).blocks
+                    for (def i = 0; i < pipelineBlocks.size(); i++) {
+                        blocks << context.blocks[pipelineBlocks[i]]
+                    }
                 }
 
                 if (blocks) {
@@ -65,6 +68,10 @@ class DrupipePipeline implements Serializable {
             utils.pipelineNotify(context, script.currentBuild.result)
             context
         }
+    }
+
+    def getJobConfigByName(String name) {
+        context.jobs[name]
     }
 
     def executeStages(stagesToExecute, context) {
