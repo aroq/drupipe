@@ -18,18 +18,21 @@ if (config.tags.contains('docman')) {
 config.gitlabHelper = new GitlabHelper(script: this, config: config)
 
 if (config.jobs) {
-    processJob(config.jobs, '', config)
+    processJob(context.jobs, '', config)
 }
 
 def processJob(jobs, currentFolder, config) {
 //    def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipeline'
     def pipelineScript = '.pipeline.dev'
-    jobs.each { jobName, job ->
+//    jobs.each { k, v ->
+//        println k
+//    }
+    jobs.each { jobName, j ->
         println "Processing job: ${jobName}"
         def currentName = currentFolder ? "${currentFolder}/${jobName}" : jobName
-        println "Type: ${job.type}"
+        println "Type: ${j.type}"
         println "Current name: ${currentName}"
-        if (job.type == 'folder') {
+        if (j.type == 'folder') {
             folder(currentName) {
                 authorization {
                     users.each { user ->
@@ -48,10 +51,10 @@ def processJob(jobs, currentFolder, config) {
             currentFolder = currentName
         }
         else {
-            if (job.pipeline && job.pipeline.repo_type && job.pipeline.repo_type == 'config') {
+            if (j.pipeline && j.pipeline.repo_type && j.pipeline.repo_type == 'config') {
                 repo = config.configRepo
             }
-            if (job.type == 'release-build') {
+            if (j.type == 'release-build') {
                 pipelineJob(currentName) {
                     concurrentBuild(false)
                     logRotator(-1, 30)
@@ -93,17 +96,17 @@ def processJob(jobs, currentFolder, config) {
                 }
 
             }
-            else if (job.type == 'state') {
+            else if (j.type == 'state') {
                 if (config.tags.contains('docman')) {
-                    def state = job.state
+                    def state = j.state
                     if (config.docmanConfig) {
                         buildEnvironment = config.docmanConfig.getEnvironmentByState(state)
                         branch = config.docmanConfig.getVersionBranch('', state)
                     }
                     else {
                         // TODO: Check it.
-                        buildEnvironment = job.env
-                        branch = job.branch
+                        buildEnvironment = j.env
+                        branch = j.branch
                     }
                     pipelineJob(currentName) {
                         if (config.quietPeriodSeconds) {
@@ -120,7 +123,7 @@ def processJob(jobs, currentFolder, config) {
                             stringParam('type', 'branch')
                             stringParam('environment', buildEnvironment)
                             stringParam('version', branch)
-                            stringParam('yamlFileName', job.pipeline.file)
+                            stringParam('yamlFileName', j.pipeline.file)
                         }
                         definition {
                             cpsScm {
@@ -170,7 +173,7 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
             }
-            else if (job.type == 'release-deploy') {
+            else if (j.type == 'release-deploy') {
                 pipelineJob(currentName) {
                     concurrentBuild(false)
                     logRotator(-1, 30)
@@ -183,15 +186,15 @@ def processJob(jobs, currentFolder, config) {
                                     description('Allows user choose from multiple choices')
                                     filterable()
                                     choiceType('SINGLE_SELECT')
-                                    scriptlerScript("git_${job.source.type}.groovy") {
+                                    scriptlerScript("git_${j.source.type}.groovy") {
                                         parameter('url', releaseRepo)
-                                        parameter('tagPattern', job.source.pattern)
+                                        parameter('tagPattern', j.source.pattern)
                                     }
                                 }
-                                stringParam('environment', job.env)
+                                stringParam('environment', j.env)
                                 stringParam('debugEnabled', '0')
                                 stringParam('force', '0')
-                                stringParam('yamlFileName', job.pipeline.file)
+                                stringParam('yamlFileName', j.pipeline.file)
                             }
                         }
                     }
@@ -214,7 +217,7 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
             }
-            else if (job.type == 'selenese') {
+            else if (j.type == 'selenese') {
                 def repo = config.defaultActionParams.SeleneseTester.repoAddress
                 def b = config.defaultActionParams.SeleneseTester.reference ? config.defaultActionParams.SeleneseTester.reference : 'master'
 
@@ -234,7 +237,7 @@ def processJob(jobs, currentFolder, config) {
                             choiceType('MULTI_SELECT')
                             groovyScript {
                                 // NOTE: https://issues.jenkins-ci.org/browse/JENKINS-42655?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
-                                script('["' + job.suites.collect{ it += ':selected' }.join('", "') + '"]')
+                                script('["' + j.suites.collect{ it += ':selected' }.join('", "') + '"]')
                             }
                         }
                     }
@@ -252,7 +255,7 @@ def processJob(jobs, currentFolder, config) {
                                     }
                                     branch(b)
                                 }
-                                scriptPath(job.pipeline.file)
+                                scriptPath(j.pipeline.file)
                             }
                         }
                     }
@@ -260,8 +263,8 @@ def processJob(jobs, currentFolder, config) {
             }
         }
 
-        if (job.children) {
-            processJob(job.children, currentFolder, config)
+        if (j.children) {
+            processJob(j.children, currentFolder, config)
         }
     }
 }
