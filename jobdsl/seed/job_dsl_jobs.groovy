@@ -105,7 +105,7 @@ def processJob(jobs, currentFolder, config) {
                         buildEnvironment = job.env
                         branch = job.branch
                     }
-                    pipelineJob(state) {
+                    pipelineJob(currentName) {
                         if (config.quietPeriodSeconds) {
                             quietPeriod(config.quietPeriodSeconds)
                         }
