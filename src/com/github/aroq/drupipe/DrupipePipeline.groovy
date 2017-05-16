@@ -76,7 +76,7 @@ class DrupipePipeline implements Serializable {
 
     def getJobConfigByName(String name) {
         def parts = name.split('/')
-        script.jsonDump(parts, "parts")
+        utils.jsonDump(parts, "parts")
         def job = context.jobs[parts[1]]
         job ? job.pipeline.blocks : null
     }
