@@ -76,7 +76,13 @@ class DrupipePipeline implements Serializable {
     }
 
     def getJobConfigByName(String name) {
-        context.jobs[name]
+        def parts = name.split('/')
+//        for (int i = 0; i < parts.size(); i++) {
+//
+//        }
+
+        // TODO: add search in jobs hierarchy.
+        context.jobs[parts[1]]
     }
 
     def executeStages(stagesToExecute, context) {
