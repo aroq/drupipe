@@ -38,7 +38,6 @@ class DrupipePipeline implements Serializable {
 
                 if (!blocks) {
                     script.echo "JOB NAME: ${context.env.JOB_NAME}"
-                    utils.jsonDump(context.jobs, "JOBS")
                     def pipelineBlocks = getJobConfigByName(context.env.JOB_NAME).blocks
                     for (def i = 0; i < pipelineBlocks.size(); i++) {
                         blocks << context.blocks[pipelineBlocks[i]]
@@ -75,12 +74,14 @@ class DrupipePipeline implements Serializable {
         }
     }
 
+    @NonCPS
     def getJobConfigByName(String name) {
         def parts = name.split('/')
 //        for (int i = 0; i < parts.size(); i++) {
 //
 //        }
 
+        utils.jsonDump(context.jobs, "JOBS")
         // TODO: add search in jobs hierarchy.
         utils.jsonDump(context.jobs.collect { it }, 'JOBS collect')
 
