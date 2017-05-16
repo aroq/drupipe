@@ -83,7 +83,6 @@ class DrupipePipeline implements Serializable {
         def parts = name.split('/')
         utils.jsonDump(parts, "parts")
         def job = context.jobs[parts[1]]
-        job ? job.pipeline.blocks : null
     }
 
     def executeStages(stagesToExecute, context) {
