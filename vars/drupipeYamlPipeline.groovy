@@ -26,7 +26,6 @@ def call(LinkedHashMap commandParams = [:]) {
         pipe = drupipeGetPipelineObject(p)
 
         utils = new com.github.aroq.drupipe.Utils()
-        utils.jsonDump(pipe, 'PIPELINE')
     }
     pipe.execute()
 }
