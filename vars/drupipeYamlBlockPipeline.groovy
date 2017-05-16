@@ -3,6 +3,6 @@
 import com.github.aroq.drupipe.DrupipePipeline
 
 def call() {
-    DrupipePipeline([script: this, params: params]).execute()
+    (new DrupipePipeline([script: this, params: params])).execute()
 }
 
