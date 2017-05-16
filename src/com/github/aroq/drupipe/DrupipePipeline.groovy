@@ -83,9 +83,9 @@ class DrupipePipeline implements Serializable {
     }
 
     @NonCPS
-    DrupipeStage processStage(stage, context) {
-        if (stage instanceof DrupipeStage) {
-            for (action in stage.actions) {
+    DrupipeStage processStage(s, context) {
+        if (s instanceof DrupipeStage) {
+            for (action in s.actions) {
                 def values = action.action.split("\\.")
                 if (values.size() > 1) {
                     action.name = values[0]
@@ -96,10 +96,11 @@ class DrupipePipeline implements Serializable {
                     action.methodName = values[0]
                 }
             }
-            stage
+            s
         }
         else {
-            new DrupipeStage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context))
+            //new DrupipeStage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context))
+            new DrupipeStage(s)
         }
     }
 
