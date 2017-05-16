@@ -37,6 +37,8 @@ class DrupipePipeline implements Serializable {
                 }
 
                 if (!blocks) {
+                    script.echo "JOB NAME: ${context.env.JOB_NAME}"
+                    utils.jsonDump(context.jobs, "JOBS")
                     def pipelineBlocks = getJobConfigByName(context.env.JOB_NAME).blocks
                     for (def i = 0; i < pipelineBlocks.size(); i++) {
                         blocks << context.blocks[pipelineBlocks[i]]
@@ -50,6 +52,9 @@ class DrupipePipeline implements Serializable {
                         context << block.execute(context)
                         script.echo 'BLOCK EXECUTE END'
                     }
+                }
+                else {
+                    script.echo "No pipeline blocks defined"
                 }
 
                 if (body) {
