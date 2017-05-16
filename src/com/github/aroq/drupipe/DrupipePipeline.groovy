@@ -38,13 +38,15 @@ class DrupipePipeline implements Serializable {
 
                 if (!blocks) {
                     script.echo "JOB NAME: ${context.env.JOB_NAME}"
-                    def job = getJobConfigByName(context.env.JOB_NAME)
-                    if (job) {
-                        utils.jsonDump(job, 'JOB')
-                        def pipelineBlocks = job.pipeline && job.pipeline.blocks ? job.pipeline.blocks : []
-                        if (pipelineBlocks) {
-                            for (def i = 0; i < pipelineBlocks.size(); i++) {
-                                blocks << context.blocks[pipelineBlocks[i]]
+                    if (context.jobs) {
+                        def job = getJobConfigByName(context.env.JOB_NAME)
+                        if (job) {
+                            utils.jsonDump(job, 'JOB')
+                            def pipelineBlocks = job.pipeline && job.pipeline.blocks ? job.pipeline.blocks : []
+                            if (pipelineBlocks) {
+                                for (def i = 0; i < pipelineBlocks.size(); i++) {
+                                    blocks << context.blocks[pipelineBlocks[i]]
+                                }
                             }
                         }
                     }

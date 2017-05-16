@@ -121,7 +121,9 @@ def processJob(jobs, currentFolder, config) {
                             stringParam('type', 'branch')
                             stringParam('environment', buildEnvironment)
                             stringParam('version', branch)
-                            stringParam('yamlFileName', job.value.pipeline.file)
+                            if (job.value.pipeline.file) {
+                                stringParam('yamlFileName', job.value.pipeline.file)
+                            }
                         }
                         definition {
                             cpsScm {
@@ -192,7 +194,9 @@ def processJob(jobs, currentFolder, config) {
                                 stringParam('environment', job.value.env)
                                 stringParam('debugEnabled', '0')
                                 stringParam('force', '0')
-                                stringParam('yamlFileName', job.value.pipeline.file)
+                                if (job.value.pipeline.file) {
+                                    stringParam('yamlFileName', job.value.pipeline.file)
+                                }
                             }
                         }
                     }
