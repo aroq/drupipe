@@ -24,9 +24,9 @@ if (config.jobs) {
 def processJob(jobs, currentFolder, config) {
 //    def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipeline'
     def pipelineScript = '.pipeline.dev'
-    jobs.each { job ->
-        println "Processing job: ${job.name}"
-        def currentName = currentFolder ? "${currentFolder}/${job.name}" : job.name
+    jobs.each { jobName, job ->
+        println "Processing job: ${jobName}"
+        def currentName = currentFolder ? "${currentFolder}/${jobName}" : jobName
         println "Type: ${job.type}"
         println "Current name: ${currentName}"
         if (job.type == 'folder') {
