@@ -68,8 +68,7 @@ class DrupipePipeline implements Serializable {
         stages += processStages(context.stages, context)
 
         for (int i = 0; i < stages.size(); i++) {
-            def s = new DrupipeStage(stages[i])
-            context << s.execute(context)
+            context << stages[i].execute(context)
         }
         context
     }
