@@ -9,6 +9,7 @@ class DrupipeStage implements Serializable {
     HashMap params = [:]
 
     def execute(params, body = null) {
+        def utils = new com.github.aroq.drupipe.Utils()
         this.params = params
         this.params.pipeline.script.stage(name) {
             this.params.pipeline.script.gitlabCommitStatus(name) {
@@ -19,7 +20,6 @@ class DrupipeStage implements Serializable {
                 if (actions) {
                     try {
                         for (a in this.actions) {
-                            utils = new com.github.aroq.drupipe.Utils()
                             utils.jsonDump(a, 'ACTION BEFORE')
                             def action = new DrupipeAction(a)
                             utils.jsonDump(action, 'ACTION AFTER')
