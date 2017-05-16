@@ -22,7 +22,8 @@ if (config.jobs) {
 }
 
 def processJob(jobs, currentFolder, config) {
-    def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipeline'
+//    def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipeline'
+    def pipelineScript = '.pipeline.dev'
     jobs.each { job ->
         println "Processing job: ${job.name}"
         def currentName = currentFolder ? "${currentFolder}/${job.name}" : job.name
@@ -85,7 +86,7 @@ def processJob(jobs, currentFolder, config) {
                                         relativeTargetDirectory(config.projectConfigPath)
                                     }
                                 }
-                                scriptPath("${config.projectConfigPath}/pipelines/pipeline.groovy")
+                                scriptPath("${config.projectConfigPath}/pipelines/${pipelineScript}.groovy")
                             }
                         }
                     }
@@ -134,7 +135,7 @@ def processJob(jobs, currentFolder, config) {
                                             relativeTargetDirectory(config.projectConfigPath)
                                         }
                                     }
-                                    scriptPath("${config.projectConfigPath}/pipelines/pipeline.groovy")
+                                    scriptPath("${config.projectConfigPath}/pipelines/${pipelineScript}.groovy")
                                 }
                             }
                         }

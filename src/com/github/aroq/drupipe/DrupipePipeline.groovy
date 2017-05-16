@@ -36,6 +36,10 @@ class DrupipePipeline implements Serializable {
                     }
                 }
 
+                if (!blocks) {
+
+                }
+
                 if (blocks) {
                     for (def i = 0; i < blocks.size(); i++) {
                         def block = new DrupipeBlock(blocks[i])
