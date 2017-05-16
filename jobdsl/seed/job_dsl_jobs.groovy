@@ -30,7 +30,7 @@ def processJob(jobs, currentFolder, config) {
         def currentName = currentFolder ? "${currentFolder}/${job.key}" : job.key
         println "Type: ${job.value.type}"
         println "Current name: ${currentName}"
-        if (job.type == 'folder') {
+        if (job.value.type == 'folder') {
             folder(currentName) {
                 authorization {
                     users.each { user ->
