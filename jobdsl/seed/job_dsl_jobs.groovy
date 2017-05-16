@@ -25,6 +25,7 @@ def processJob(jobs, currentFolder, config) {
 //    def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipeline'
     def pipelineScript = '.pipeline.dev'
     for (job in jobs) {
+        println job
         println "Processing job: ${job.key}"
         def currentName = currentFolder ? "${currentFolder}/${job.key}" : job.key
         println "Type: ${job.value.type}"
