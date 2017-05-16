@@ -40,11 +40,12 @@ def drupipeGetPipeline(yamlFile) {
 
 @NonCPS
 def drupipeGetPipelineObject(p) {
-    Yaml yaml = new Yaml(new CustomClassLoaderConstructor(getClass().getClassLoader()));
-    def yamlDoc = Yaml.dump(p)
-    drupipePipeline = yaml.loadAs(yamlDoc, DrupipePipeline.class);
-    drupipePipeline.script = this
-    drupipePipeline.params = params
-    return drupipePipeline
+//    Yaml yaml = new Yaml(new CustomClassLoaderConstructor(getClass().getClassLoader()));
+//    def yamlDoc = Yaml.dump(p)
+//    drupipePipeline = yaml.loadAs(yamlDoc, DrupipePipeline.class);
+//    drupipePipeline.script = this
+//    drupipePipeline.params = params
+//    return drupipePipeline
+    new DrupipePipeline(p)
 }
 
