@@ -49,6 +49,9 @@ def drupipeGetPipelineObject(p) {
 //    drupipePipeline.script = this
 //    drupipePipeline.params = params
 //    return drupipePipeline
-    new DrupipePipeline(p)
+    drupipePipeline = new DrupipePipeline(p)
+    drupipePipeline.script = this
+    drupipePipeline.params = params
+    drupipePipeline
 }
 
