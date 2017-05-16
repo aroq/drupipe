@@ -24,6 +24,9 @@ def call(LinkedHashMap commandParams = [:]) {
 
         def p = readYaml(file: "${projectConfig}/${yamlFileName}")
         pipe = drupipeGetPipelineObject(p)
+
+        utils = new com.github.aroq.drupipe.Utils()
+        utils.jsonDump(pipe, 'PIPELINE')
     }
     pipe.execute()
 }
