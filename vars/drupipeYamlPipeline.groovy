@@ -19,7 +19,11 @@ def call(LinkedHashMap commandParams = [:]) {
         else {
             yamlFileName = params.yamlFileName ? params.yamlFileName : "pipelines/${env.JOB_BASE_NAME}.yaml"
         }
-        pipe = drupipeGetPipeline(readFile("${projectConfig}/${yamlFileName}"))
+
+        //pipe = drupipeGetPipeline(readFile("${projectConfig}/${yamlFileName}"))
+
+        def p = readYaml(file: "${projectConfig}/${yamlFileName}")
+        pipe = drupipeGetPipelineObject(p)
     }
     pipe.execute()
 }
@@ -33,3 +37,14 @@ def drupipeGetPipeline(yamlFile) {
     drupipePipeline.params = params
     return drupipePipeline
 }
+
+@NonCPS
+def drupipeGetPipelineObject(p) {
+    Yaml yaml = new Yaml(new CustomClassLoaderConstructor(getClass().getClassLoader()));
+    def yamlDoc = Yaml.dump(p)
+    drupipePipeline = yaml.loadAs(yamlDoc, DrupipePipeline.class);
+    drupipePipeline.script = this
+    drupipePipeline.params = params
+    return drupipePipeline
+}
+
