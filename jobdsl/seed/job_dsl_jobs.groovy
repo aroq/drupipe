@@ -18,7 +18,7 @@ if (config.tags.contains('docman')) {
 config.gitlabHelper = new GitlabHelper(script: this, config: config)
 
 if (config.jobs) {
-    processJob(context.jobs, '', config)
+    processJob(config.jobs, '', config)
 }
 
 def processJob(jobs, currentFolder, config) {
