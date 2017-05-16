@@ -82,7 +82,7 @@ class DrupipePipeline implements Serializable {
 //        }
 
         // TODO: add search in jobs hierarchy.
-        utils.jsonDump(context.jobs.collect { it.name }, 'JOB')
+        utils.jsonDump(context.jobs.collect { it }, 'JOBS collect')
 
         def job = context.jobs.find { it.name == parts[1] }
         utils.jsonDump(job, 'JOB')
