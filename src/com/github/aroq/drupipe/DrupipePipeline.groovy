@@ -82,7 +82,7 @@ class DrupipePipeline implements Serializable {
 //        }
 
         // TODO: add search in jobs hierarchy.
-        context.jobs[parts[1]]
+        context.jobs.find { it.name == parts[1] }
     }
 
     def executeStages(stagesToExecute, context) {
