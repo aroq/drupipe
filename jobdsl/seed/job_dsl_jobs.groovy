@@ -22,8 +22,7 @@ if (config.jobs) {
 }
 
 def processJob(jobs, currentFolder, config) {
-    def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipeline'
-//    def pipelineScript = '.pipeline.dev'
+    def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipelines/pipeline'
     for (job in jobs) {
         println job
         println "Processing job: ${job.key}"
@@ -87,7 +86,7 @@ def processJob(jobs, currentFolder, config) {
                                         relativeTargetDirectory(config.projectConfigPath)
                                     }
                                 }
-                                scriptPath("${config.projectConfigPath}/pipelines/${pipelineScript}.groovy")
+                                scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
                             }
                         }
                     }
@@ -135,7 +134,7 @@ def processJob(jobs, currentFolder, config) {
                                             relativeTargetDirectory(config.projectConfigPath)
                                         }
                                     }
-                                    scriptPath("${config.projectConfigPath}/pipelines/${pipelineScript}.groovy")
+                                    scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
                                 }
                             }
                         }
@@ -159,9 +158,9 @@ def processJob(jobs, currentFolder, config) {
                             config.docmanConfig.projects?.each { project ->
                                 if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
                                     if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
-                                        gitlabHelper.addWebhook(
+                                        config.gitlabHelper.addWebhook(
                                             project.value.repo,
-                                            "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${state.key}"
+                                            "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${state}"
                                         )
                                     }
                                 }
@@ -210,7 +209,7 @@ def processJob(jobs, currentFolder, config) {
                                         relativeTargetDirectory(config.projectConfigPath)
                                     }
                                 }
-                                scriptPath("${config.projectConfigPath}/pipelines/${pipelineScript}.groovy")
+                                scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
                             }
                         }
                     }
