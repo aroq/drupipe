@@ -45,7 +45,12 @@ class DrupipePipeline implements Serializable {
                             def pipelineBlocks = job.pipeline && job.pipeline.blocks ? job.pipeline.blocks : []
                             if (pipelineBlocks) {
                                 for (def i = 0; i < pipelineBlocks.size(); i++) {
-                                    blocks << context.blocks[pipelineBlocks[i]]
+                                    if (context.blocks[pipelineBlocks[i]]) {
+                                        blocks << context.blocks[pipelineBlocks[i]]
+                                    }
+                                    else {
+                                        script.echo "No pipeline block: ${pipelineBlocks[i]} is defined."
+                                    }
                                 }
                             }
                             else {
