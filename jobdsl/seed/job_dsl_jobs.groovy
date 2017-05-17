@@ -22,8 +22,8 @@ if (config.jobs) {
 }
 
 def processJob(jobs, currentFolder, config) {
-//    def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipeline'
-    def pipelineScript = '.pipeline.dev'
+    def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipeline'
+//    def pipelineScript = '.pipeline.dev'
     for (job in jobs) {
         println job
         println "Processing job: ${job.key}"
@@ -121,9 +121,6 @@ def processJob(jobs, currentFolder, config) {
                             stringParam('type', 'branch')
                             stringParam('environment', buildEnvironment)
                             stringParam('version', branch)
-                            if (job.value.pipeline.file) {
-                                stringParam('yamlFileName', job.value.pipeline.file)
-                            }
                         }
                         definition {
                             cpsScm {
@@ -197,9 +194,6 @@ def processJob(jobs, currentFolder, config) {
                                 stringParam('environment', job.value.env)
                                 stringParam('debugEnabled', '0')
                                 stringParam('force', '0')
-                                if (job.value.pipeline.file) {
-                                    stringParam('yamlFileName', job.value.pipeline.file)
-                                }
                             }
                         }
                     }
