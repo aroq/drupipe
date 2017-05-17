@@ -63,7 +63,7 @@ class DrupipePipeline implements Serializable {
                     // TODO: to remove after updating all configs.
                     else {
                         script.node('master') {
-                            def yamlFileName = "pipelines/${env.JOB_BASE_NAME}.yaml"
+                            def yamlFileName = "pipelines/${context.env.JOB_BASE_NAME}.yaml"
                             def pipelineYamlFile = "${context.projectConfigPath}/${yamlFileName}"
                             if (script.fileExists(pipelineYamlFile)) {
                                 blocks = script.readYaml(file: pipelineYamlFile).blocks
