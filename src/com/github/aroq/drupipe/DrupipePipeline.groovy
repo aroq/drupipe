@@ -36,12 +36,52 @@ class DrupipePipeline implements Serializable {
                     }
                 }
 
+                if (!blocks) {
+                    script.echo "JOB NAME: ${context.env.JOB_NAME}"
+                    if (context.jobs) {
+                        def job = getJobConfigByName(context.env.JOB_NAME)
+                        if (job) {
+                            utils.jsonDump(job, 'JOB')
+                            def pipelineBlocks = job.pipeline && job.pipeline.blocks ? job.pipeline.blocks : []
+                            if (pipelineBlocks) {
+                                for (def i = 0; i < pipelineBlocks.size(); i++) {
+                                    blocks << context.blocks[pipelineBlocks[i]]
+                                }
+                            }
+                            else {
+                                // TODO: to remove after updating all configs.
+                                script.node('master') {
+                                    def yamlFileName = job.pipeline.file ? job.pipeline.file : "pipelines/${env.JOB_BASE_NAME}.yaml"
+                                    def pipelineYamlFile = "${context.projectConfigPath}/${yamlFileName}"
+                                    if (script.fileExists(pipelineYamlFile)) {
+                                        blocks = script.readYaml(file: pipelineYamlFile).blocks
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // TODO: to remove after updating all configs.
+                    else {
+                        script.node('master') {
+                            def yamlFileName = "pipelines/${context.env.JOB_BASE_NAME}.yaml"
+                            def pipelineYamlFile = "${context.projectConfigPath}/${yamlFileName}"
+                            if (script.fileExists(pipelineYamlFile)) {
+                                blocks = script.readYaml(file: pipelineYamlFile).blocks
+                            }
+                        }
+                    }
+                }
+
                 if (blocks) {
                     for (def i = 0; i < blocks.size(); i++) {
+                        def block = new DrupipeBlock(blocks[i])
                         script.echo 'BLOCK EXECUTE START'
-                        context << blocks[i].execute(context)
+                        context << block.execute(context)
                         script.echo 'BLOCK EXECUTE END'
                     }
+                }
+                else {
+                    script.echo "No pipeline blocks defined"
                 }
 
                 if (body) {
@@ -60,6 +100,14 @@ class DrupipePipeline implements Serializable {
             utils.pipelineNotify(context, script.currentBuild.result)
             context
         }
+    }
+
+    def getJobConfigByName(String name) {
+        def parts = name.split('/')
+        utils.jsonDump(parts, "parts")
+        def job = context.jobs[parts[1]]
+        utils.jsonDump(job, 'JOB')
+        job
     }
 
     def executeStages(stagesToExecute, context) {
@@ -82,9 +130,13 @@ class DrupipePipeline implements Serializable {
     }
 
     @NonCPS
-    DrupipeStage processStage(stage, context) {
-        if (stage instanceof DrupipeStage) {
-            for (action in stage.actions) {
+    DrupipeStage processStage(s, context) {
+        if (!(s instanceof DrupipeStage)) {
+            //new DrupipeStage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context))
+            s = new DrupipeStage(s)
+        }
+        if (s instanceof DrupipeStage) {
+            for (action in s.actions) {
                 def values = action.action.split("\\.")
                 if (values.size() > 1) {
                     action.name = values[0]
@@ -95,10 +147,7 @@ class DrupipePipeline implements Serializable {
                     action.methodName = values[0]
                 }
             }
-            stage
-        }
-        else {
-            new DrupipeStage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context))
+            s
         }
     }
 
