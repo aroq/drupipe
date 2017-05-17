@@ -159,7 +159,7 @@ def processJob(jobs, currentFolder, config) {
                             config.docmanConfig.projects?.each { project ->
                                 if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
                                     if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
-                                        gitlabHelper.addWebhook(
+                                        config.gitlabHelper.addWebhook(
                                             project.value.repo,
                                             "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${state.key}"
                                         )
