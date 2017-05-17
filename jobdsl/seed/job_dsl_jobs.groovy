@@ -172,6 +172,9 @@ def processJob(jobs, currentFolder, config) {
                         }
                     }
                 }
+                else {
+                    println "No docman tag defined, skipped."
+                }
             }
             else if (job.value.type == 'release-deploy') {
                 pipelineJob(currentName) {

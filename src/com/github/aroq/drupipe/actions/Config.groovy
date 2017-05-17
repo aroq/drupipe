@@ -137,7 +137,7 @@ class Config extends BaseAction {
                         scenarioSourceName = currentScenarioSourceName
                         scenario.name = values[0]
                     }
-                    utils.dump(tempContext.scenarioSources, 'Scenario sources')
+                    //utils.dump(tempContext.scenarioSources, 'Scenario sources')
                     if (tempContext.scenarioSources[scenarioSourceName]) {
                         if (!this.scenarioSources[scenarioSourceName]) {
                             scenario.source = tempContext.scenarioSources[scenarioSourceName]
@@ -160,7 +160,7 @@ class Config extends BaseAction {
                         if (script.fileExists(fileName)) {
                             script.echo "Scenario file name: ${fileName} exists"
                             def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSourceName)
-                            utils.dump(scenarioConfig)
+                            utils.dump(scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
                         }
                     }
