@@ -265,7 +265,15 @@ Map merge(Map[] sources) {
 
     sources.inject([:]) { result, source ->
         source.each { k, v ->
-            result[k] = result[k] instanceof Map && v instanceof Map ? merge(result[k], v) : v
+            if (result[k] instanceof Map && v instanceof Map ) {
+                result[k] = merge(result[k], v)
+            }
+            else if (result[k] instanceof List && v instanceof List) {
+                result[k] << v
+            }
+            else {
+                result[k] = v
+            }
         }
         result
     }

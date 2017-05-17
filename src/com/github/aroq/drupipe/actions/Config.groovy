@@ -162,6 +162,7 @@ class Config extends BaseAction {
                             def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSourceName)
                             utils.dump(scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
+                            utils.dump(scenariosConfig, "Scenarios config")
                         }
                     }
                     else {
