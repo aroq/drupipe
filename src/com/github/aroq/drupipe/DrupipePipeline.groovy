@@ -60,14 +60,14 @@ class DrupipePipeline implements Serializable {
                             }
                         }
                     }
-                }
-                // TODO: to remove after updating all configs.
-                else {
-                    script.node('master') {
-                        def yamlFileName = params.yamlFileName ? params.yamlFileName : "pipelines/${env.JOB_BASE_NAME}.yaml"
-                        def pipelineYamlFile = "${context.projectConfigPath}/${yamlFileName}"
-                        if (script.fileExists(pipelineYamlFile)) {
-                            blocks = script.readYaml(file: pipelineYamlFile).blocks
+                    // TODO: to remove after updating all configs.
+                    else {
+                        script.node('master') {
+                            def yamlFileName = context.jenkinsParams.yamlFileName ? context.jenkinsParams.yamlFileName : "pipelines/${env.JOB_BASE_NAME}.yaml"
+                            def pipelineYamlFile = "${context.projectConfigPath}/${yamlFileName}"
+                            if (script.fileExists(pipelineYamlFile)) {
+                                blocks = script.readYaml(file: pipelineYamlFile).blocks
+                            }
                         }
                     }
                 }
