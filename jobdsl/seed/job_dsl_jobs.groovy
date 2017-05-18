@@ -162,7 +162,7 @@ def processJob(jobs, currentFolder, config) {
                                     if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
                                         config.gitlabHelper.addWebhook(
                                             project.value.repo,
-                                            "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${state}"
+                                            "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}"
                                         )
                                         println "Webhook added for project ${project}"
                                     }
