@@ -181,14 +181,6 @@ def processJob(jobs, currentFolder, config) {
                             if ((project.value.type == 'root' || project.value.type == 'root_chain') && project.value.repo && config.env.GITLAB_HOST && project.value.repo.contains(config.env.GITLAB_HOST)) {
                                 println "Project: ${project.value.name}"
                                 def releaseRepo = project.value.type == 'root' ? project.value.repo : project.value.root_repo
-                                activeChoiceParam('operationsMode') {
-                                    description('Choose the mode for the operations')
-                                    choiceType('SINGLE_SELECT')
-                                    groovyScript {
-                                        // NOTE: https://issues.jenkins-ci.org/browse/JENKINS-42655?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
-                                        script('["full", "light", "no"]')
-                                    }
-                                }
                                 activeChoiceParam('release') {
                                     description('Allows user choose from multiple choices')
                                     filterable()
@@ -198,9 +190,26 @@ def processJob(jobs, currentFolder, config) {
                                         parameter('tagPattern', job.value.source.pattern)
                                     }
                                 }
+                                activeChoiceParam('CHOICE-1') {
+                                    description('Allows user choose from multiple choices')
+                                    filterable()
+                                    choiceType('SINGLE_SELECT')
+                                    groovyScript {
+                                        script('["choice1", "choice2"]')
+                                        fallbackScript('"fallback choice"')
+                                    }
+                                }
                                 if (config.operationsModes) {
                                     println "Operations modes: ${config.operationsModes}"
                                     println '["' + config.operationsModes.collect { it }.join('", "') + '"]'
+                                    activeChoiceParam('operationsMode') {
+                                        description('Choose the mode for the operations')
+                                        choiceType('SINGLE_SELECT')
+                                        groovyScript {
+                                            // NOTE: https://issues.jenkins-ci.org/browse/JENKINS-42655?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
+                                            script('["full", "light", "no"]')
+                                        }
+                                    }
                                 }
                                 stringParam('environment', job.value.env)
                                 stringParam('debugEnabled', '0')
