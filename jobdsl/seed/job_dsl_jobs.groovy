@@ -155,13 +155,16 @@ def processJob(jobs, currentFolder, config) {
                     }
                     if (config.docmanConfig) {
                         if (config.env.GITLAB_API_TOKEN_TEXT) {
+                            println "Processing Gitlab webhooks"
                             config.docmanConfig.projects?.each { project ->
+                                println "Project: ${project}"
                                 if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
                                     if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
                                         config.gitlabHelper.addWebhook(
                                             project.value.repo,
                                             "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${state}"
                                         )
+                                        println "Webhook added for project ${project}"
                                     }
                                 }
                             }
