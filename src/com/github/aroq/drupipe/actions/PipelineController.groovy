@@ -52,11 +52,16 @@ class PipelineController extends BaseAction {
     }
 
     def operations() {
-        if (action.params.operationsHandler && action.params.operationsHandler.handler) {
-            context << script.drupipeAction([action: "${action.params.operationsHandler.handler}.${action.params.operationsHandler.method}"], context)
+        if (context.operationsMode == 'no-ops') {
+            script.echo "No operations mode (no-ops) is selected"
         }
         else {
-            script.echo "No operations handler defined"
+            if (action.params.operationsHandler && action.params.operationsHandler.handler) {
+                context << script.drupipeAction([action: "${action.params.operationsHandler.handler}.${action.params.operationsHandler.method}"], context)
+            }
+            else {
+                script.echo "No operations handler defined"
+            }
         }
     }
 
