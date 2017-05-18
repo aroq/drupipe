@@ -192,6 +192,7 @@ def processJob(jobs, currentFolder, config) {
                                 }
                                 if (config.operationsModes) {
                                     println "Operations modes: ${config.operationsModes}"
+                                    println '["' + config.operationsModes.collect { it }.join('", "') + '"]'
                                     activeChoiceParam('operationsMode') {
                                         description('Choose the mode for the operations')
                                         groovyScript {
