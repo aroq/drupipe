@@ -190,24 +190,12 @@ def processJob(jobs, currentFolder, config) {
                                         parameter('tagPattern', job.value.source.pattern)
                                     }
                                 }
-                                activeChoiceParam('CHOICE-1') {
-                                    description('Allows user choose from multiple choices')
-                                    filterable()
-                                    choiceType('SINGLE_SELECT')
-                                    groovyScript {
-                                        script('["choice1", "choice2"]')
-                                        fallbackScript('"fallback choice"')
-                                    }
-                                }
                                 if (config.operationsModes) {
-                                    println "Operations modes: ${config.operationsModes}"
-                                    println '["' + config.operationsModes.collect { it }.join('", "') + '"]'
                                     activeChoiceParam('operationsMode') {
                                         description('Choose the mode for the operations')
-                                        choiceType('SINGLE_SELECT')
                                         groovyScript {
                                             // NOTE: https://issues.jenkins-ci.org/browse/JENKINS-42655?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
-                                            script('["full", "light", "no"]')
+                                            script('["' + config.operationsModes.join('", "') + '"]')
                                         }
                                     }
                                 }
