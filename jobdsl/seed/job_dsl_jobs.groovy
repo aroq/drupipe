@@ -191,9 +191,9 @@ def processJob(jobs, currentFolder, config) {
                                     }
                                 }
                                 if (config.operationsModes) {
+                                    println "Operations modes: ${config.operationsModes}"
                                     activeChoiceParam('operationsMode') {
                                         description('Choose the mode for the operations')
-                                        choiceType('MULTI_SELECT')
                                         groovyScript {
                                             // NOTE: https://issues.jenkins-ci.org/browse/JENKINS-42655?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
                                             script('["' + config.operationsModes.join('", "') + '"]')
