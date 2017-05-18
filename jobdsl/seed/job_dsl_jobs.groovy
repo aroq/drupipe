@@ -196,7 +196,7 @@ def processJob(jobs, currentFolder, config) {
                                         description('Choose the mode for the operations')
                                         groovyScript {
                                             // NOTE: https://issues.jenkins-ci.org/browse/JENKINS-42655?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
-                                            script('["' + config.operationsModes.join('", "') + '"]')
+                                            script('["' + config.operationsModes.collect { it }.join('", "') + '"]')
                                         }
                                     }
                                 }
