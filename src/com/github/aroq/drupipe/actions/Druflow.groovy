@@ -29,6 +29,9 @@ class Druflow extends BaseAction {
             // TODO: review this parameter handling.
             docrootDir: action.params.docrootDir ? action.params.docrootDir : context.docrootDir,
         ]
+        if (context.operationsMode) {
+            defaultParams['flowType'] = context.operationsMode
+        }
         def commandParams = defaultParams
         commandParams << overrides
     }
