@@ -193,6 +193,15 @@ def processJob(jobs, currentFolder, config) {
                                         parameter('tagPattern', job.value.source.pattern)
                                     }
                                 }
+                                if (config.operationsModes) {
+                                    activeChoiceParam('operationsMode') {
+                                        description('Choose the mode for the operations')
+                                        groovyScript {
+                                            // NOTE: https://issues.jenkins-ci.org/browse/JENKINS-42655?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
+                                            script('["' + config.operationsModes.join('", "') + '"]')
+                                        }
+                                    }
+                                }
                                 stringParam('environment', job.value.env)
                                 stringParam('debugEnabled', '0')
                                 stringParam('force', '0')
