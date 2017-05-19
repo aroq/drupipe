@@ -77,7 +77,8 @@ defaultActionParams = [
     Druflow: [
         druflowDir: 'druflow',
         druflowRepo: 'https://github.com/aroq/druflow.git',
-        druflowGitReference: 'v0.1.2',
+//        druflowGitReference: 'v0.1.2',
+        druflowGitReference: 'master',
     ],
     Druflow_operations: [
         propertiesFile: 'docroot/master/version.properties',
