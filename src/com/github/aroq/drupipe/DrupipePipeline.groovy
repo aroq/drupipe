@@ -137,7 +137,7 @@ class DrupipePipeline implements Serializable {
             }
         }
 
-        def r = job(context.jobs, parts.drop(1))
+        def r = job(context.jobs, parts.drop(1), 0)
         utils.jsonDump(r, "parts")
     }
 
