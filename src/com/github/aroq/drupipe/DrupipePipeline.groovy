@@ -114,10 +114,11 @@ class DrupipePipeline implements Serializable {
     def getJobConfigByName(String name) {
         LinkedHashMap result = [:]
         def parts = name.split('/')
-        parts.drop(1)
+
         utils.jsonDump(parts, "parts")
 
         def job = { jobs, p, counter = 0, r = [:] ->
+            script.echo
             def j = jobs[p[counter]] ? jobs[p[counter]] : [:]
             if (j) {
                 r = utils.merge(r, j)
@@ -133,7 +134,7 @@ class DrupipePipeline implements Serializable {
             }
         }
 
-        def r = job(context.jobs, parts)
+        def r = job(context.jobs, parts.drop(1))
         utils.jsonDump(r, "parts")
     }
 
