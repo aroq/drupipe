@@ -129,17 +129,18 @@ class DrupipePipeline implements Serializable {
             if (j) {
                 utils.jsonDump(j, "job")
                 def children = j.containsKey('children') ? j['children'] : [:]
-                utils.jsonDump(children, "children")
                 j.remove('children')
                 r = utils.merge(r, j)
                 utils.jsonDump(r, "result")
                 if (children) {
                     script.echo "Processing children"
+                    utils.jsonDump(children, "children")
                     job.trampoline(children, counter + 1, r)
                 }
                 else {
                     script.echo "Return merged job config"
-                    r
+                    //r
+                    [:]
                 }
             }
             else {
