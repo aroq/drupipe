@@ -111,41 +111,32 @@ class DrupipePipeline implements Serializable {
         }
     }
 
-    @NonCPS
     def getJobConfigByName(String name) {
-        LinkedHashMap result = [:]
-        def parts = name.split('/')
+        def parts = name.split('/').drop(1)
+        def r = getJobConfig(context.jobs, 0, [:])
+        utils.jsonDump(r, "result")
+        r
+    }
 
-        utils.jsonDump(parts, "parts")
-
-        parts = parts.drop(1)
-
-        def job
-        job = { jobs, counter = 0, r = [:] ->
-            script.echo "Counter: ${counter}"
-            def part = parts[counter]
-            script.echo "Part: ${part}"
-            def j = jobs[part] ? jobs[part] : [:]
-            if (j) {
-                def children = j.containsKey('children') ? j['children'] : [:]
-                j.remove('children')
-                r = utils.merge(r, j)
-                if (children) {
-                    job.trampoline(children, counter + 1, r)
-                }
-                else {
-                    r
-                }
+    def getJobConfig(jobs, parts, counter = 0, r = [:]) {
+        script.echo "Counter: ${counter}"
+        def part = parts[counter]
+        script.echo "Part: ${part}"
+        def j = jobs[part] ? jobs[part] : [:]
+        if (j) {
+            def children = j.containsKey('children') ? j['children'] : [:]
+            j.remove('children')
+            r = utils.merge(r, j)
+            if (children) {
+                getJobConfig(children, parts, counter + 1, r)
             }
             else {
-                [:]
+                r
             }
         }
-        job = job.trampoline()
-
-        def r = job(context.jobs, 0, [:])
-//        utils.jsonDump(r, "result")
-        r
+        else {
+            [:]
+        }
     }
 
     def executeStages(stagesToExecute, context) {
