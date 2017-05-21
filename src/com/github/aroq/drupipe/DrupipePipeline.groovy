@@ -127,9 +127,10 @@ class DrupipePipeline implements Serializable {
             def j = jobs[part] ? jobs[part] : [:]
             if (j) {
                 utils.jsonDump(j, "job")
-                r = utils.merge(r, j.clone().remove('children'))
+                def children = j.remove('children')
+                r = utils.merge(r, j)
                 utils.jsonDump(r, "result")
-                if (j.children) {
+                if (children) {
                     script.echo "Processing children"
                     job.trampoline(j.children, counter + 1, r)
                 }
