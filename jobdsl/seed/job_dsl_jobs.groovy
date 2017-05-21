@@ -15,7 +15,9 @@ if (config.tags.contains('docman')) {
     config.docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
 }
 
-config.gitlabHelper = new GitlabHelper(script: this, config: config)
+if (config.env.GITLAB_API_TOKEN_TEXT) {
+    config.gitlabHelper = new GitlabHelper(script: this, config: config)
+}
 
 
 if (config.jobs) {
@@ -32,8 +34,8 @@ def processJob(jobs, currentFolder, config) {
         println "Current name: ${currentName}"
         if (job.value.type == 'folder') {
             folder(currentName) {
-                if (config.env.GITLAB_API_TOKEN_TEXT) {
-                    users = gitlabHelper.getUsers(config.configRepo)
+                if (config.gitlabHelper) {
+                    users = config.gitlabHelper.getUsers(config.configRepo)
                     println "USERS: ${users}"
                     authorization {
                         users.each { user ->
