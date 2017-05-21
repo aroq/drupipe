@@ -131,6 +131,7 @@ class DrupipePipeline implements Serializable {
                 utils.jsonDump(r, "result")
                 if (j.children) {
                     script.echo "Processing children"
+                    script.echo "Parts (children): ${p}"
                     job.trampoline(j.children, p, counter + 1, r)
                 }
                 else {
