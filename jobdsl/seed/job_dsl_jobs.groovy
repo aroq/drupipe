@@ -272,7 +272,7 @@ def processJob(jobs, currentFolder, config) {
                                     }
                                     branch(b)
                                 }
-                                scriptPath(job.value.pipeline.file)
+                                scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
                             }
                         }
                     }
