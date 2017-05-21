@@ -124,6 +124,7 @@ class DrupipePipeline implements Serializable {
             script.echo "Counter: ${counter}"
             def part = parts[counter]
             script.echo "Part: ${part}"
+            utils.jsonDump(jobs, "jobs")
             def j = jobs[part] ? jobs[part] : [:]
             if (j) {
                 utils.jsonDump(j, "job")
