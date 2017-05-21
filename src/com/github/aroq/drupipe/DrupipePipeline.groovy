@@ -118,7 +118,6 @@ class DrupipePipeline implements Serializable {
         utils.jsonDump(parts, "parts")
 
         def job = { jobs, p, counter = 0, r = [:] ->
-            script.echo
             def j = jobs[p[counter]] ? jobs[p[counter]] : [:]
             if (j) {
                 r = utils.merge(r, j)
