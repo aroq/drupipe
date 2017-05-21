@@ -56,7 +56,7 @@ class DrupipePipeline implements Serializable {
                             else {
                                 // TODO: to remove after updating all configs.
                                 script.node('master') {
-                                    def yamlFileName = job.pipeline.file ? job.pipeline.file : "pipelines/${env.JOB_BASE_NAME}.yaml"
+                                    def yamlFileName = job.pipeline.file ? job.pipeline.file : "pipelines/${context.env.JOB_BASE_NAME}.yaml"
                                     def pipelineYamlFile = "${context.projectConfigPath}/${yamlFileName}"
                                     if (script.fileExists(pipelineYamlFile)) {
                                         blocks = script.readYaml(file: pipelineYamlFile).blocks
@@ -64,9 +64,13 @@ class DrupipePipeline implements Serializable {
                                 }
                             }
                         }
+                        else {
+                            script.echo "No job config is defined"
+                        }
                     }
                     // TODO: to remove after updating all configs.
                     else {
+                        script.echo "No jobs are defined in config"
                         script.node('master') {
                             def yamlFileName = "pipelines/${context.env.JOB_BASE_NAME}.yaml"
                             def pipelineYamlFile = "${context.projectConfigPath}/${yamlFileName}"
@@ -110,7 +114,7 @@ class DrupipePipeline implements Serializable {
     def getJobConfigByName(String name) {
         def parts = name.split('/')
         utils.jsonDump(parts, "parts")
-        def job = context.jobs[parts[1]]
+        def job = context.jobs[parts[1]] ? context.jobs[parts[1]] : null
         utils.jsonDump(job, 'JOB')
         job
     }
