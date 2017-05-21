@@ -235,7 +235,7 @@ def processJob(jobs, currentFolder, config) {
                 }
             }
             else if (job.value.type == 'selenese') {
-                def repo = config.defaultActionParams.SeleneseTester.repoAddress
+//                def repo = config.defaultActionParams.SeleneseTester.repoAddress
                 def b = config.defaultActionParams.SeleneseTester.reference ? config.defaultActionParams.SeleneseTester.reference : 'master'
 
                 if (config.env.GITLAB_API_TOKEN_TEXT) {
