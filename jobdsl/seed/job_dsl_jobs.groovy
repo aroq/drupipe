@@ -17,6 +17,7 @@ if (config.tags.contains('docman')) {
 
 config.gitlabHelper = new GitlabHelper(script: this, config: config)
 
+
 if (config.jobs) {
     processJob(config.jobs, '', config)
 }
@@ -31,16 +32,20 @@ def processJob(jobs, currentFolder, config) {
         println "Current name: ${currentName}"
         if (job.value.type == 'folder') {
             folder(currentName) {
-                authorization {
-                    users.each { user ->
-                        // TODO: make permissions configurable.
-                        if (user.value > 10) {
-                            permission('hudson.model.Item.Read', user.key)
-                        }
-                        if (user.value > 30) {
-                            permission('hudson.model.Run.Update', user.key)
-                            permission('hudson.model.Item.Build', user.key)
-                            permission('hudson.model.Item.Cancel', user.key)
+                if (config.env.GITLAB_API_TOKEN_TEXT) {
+                    users = gitlabHelper.getUsers(config.configRepo)
+                    println "USERS: ${users}"
+                    authorization {
+                        users.each { user ->
+                            // TODO: make permissions configurable.
+                            if (user.value > 10) {
+                                permission('hudson.model.Item.Read', user.key)
+                            }
+                            if (user.value > 30) {
+                                permission('hudson.model.Run.Update', user.key)
+                                permission('hudson.model.Item.Build', user.key)
+                                permission('hudson.model.Item.Cancel', user.key)
+                            }
                         }
                     }
                 }
