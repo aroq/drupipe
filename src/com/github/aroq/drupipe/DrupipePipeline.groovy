@@ -124,9 +124,11 @@ class DrupipePipeline implements Serializable {
             def part = p[counter]
             script.echo "Part: ${part}"
             def j = jobs[p[counter]] ? jobs[p[counter]] : [:]
+            script.echo "Job type: ${j.type}"
             if (j) {
                 r = utils.merge(r, j)
                 if (j.children) {
+                    script.echo "Processing children"
                     job.trampoline(j.children, p, counter + 1, r)
                 }
                 else {
@@ -134,6 +136,7 @@ class DrupipePipeline implements Serializable {
                 }
             }
             else {
+                script.echo "No job ${p[counter]} defined in jobs"
                 [:]
             }
         }
