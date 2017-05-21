@@ -132,6 +132,7 @@ class DrupipePipeline implements Serializable {
                     job.trampoline(j.children, p, counter + 1, r)
                 }
                 else {
+                    script.echo "Return merged job config"
                     r
                 }
             }
@@ -142,7 +143,7 @@ class DrupipePipeline implements Serializable {
         }
         job = job.trampoline()
 
-        def r = job(context.jobs, parts.drop(1), 0)
+        LinkedHashMap r = job(context.jobs, parts.drop(1), 0)
         utils.jsonDump(r, "parts")
     }
 
