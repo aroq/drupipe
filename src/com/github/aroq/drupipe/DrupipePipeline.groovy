@@ -117,13 +117,15 @@ class DrupipePipeline implements Serializable {
 
         utils.jsonDump(parts, "parts")
 
+        parts = parts.drop(1)
+
         def job
-        job = { jobs, p, counter = 0, r = [:] ->
-            script.echo "Parts: ${p}"
+        job = { jobs, counter = 0, r = [:] ->
+            script.echo "Parts: ${parts}"
             script.echo "Counter: ${counter}"
-            def part = p[counter]
+            def part = parts[counter]
             script.echo "Part: ${part}"
-            def j = jobs[p[counter]] ? jobs[p[counter]] : [:]
+            def j = jobs[parts[counter]] ? jobs[parts[counter]] : [:]
             script.echo "Job type: ${j.type}"
             if (j) {
                 utils.jsonDump(j, "job")
@@ -131,8 +133,8 @@ class DrupipePipeline implements Serializable {
                 utils.jsonDump(r, "result")
                 if (j.children) {
                     script.echo "Processing children"
-                    script.echo "Parts (children): ${p}"
-                    job.trampoline(j.children, p, counter + 1, r)
+                    script.echo "Parts (children): ${parts}"
+                    job.trampoline(j.children, counter + 1, r)
                 }
                 else {
                     script.echo "Return merged job config"
@@ -146,7 +148,7 @@ class DrupipePipeline implements Serializable {
         }
         job = job.trampoline()
 
-        def r = job(context.jobs, parts.drop(1), 0, [:])
+        def r = job(context.jobs, 0, [:])
         utils.jsonDump(r, "parts")
     }
 
