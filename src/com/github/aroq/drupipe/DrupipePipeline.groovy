@@ -111,6 +111,7 @@ class DrupipePipeline implements Serializable {
         }
     }
 
+    @NonCPS
     def getJobConfigByName(String name) {
         LinkedHashMap result = [:]
         def parts = name.split('/')
@@ -124,34 +125,27 @@ class DrupipePipeline implements Serializable {
             script.echo "Counter: ${counter}"
             def part = parts[counter]
             script.echo "Part: ${part}"
-            utils.jsonDump(jobs, "jobs")
             def j = jobs[part] ? jobs[part] : [:]
             if (j) {
-                utils.jsonDump(j, "job")
                 def children = j.containsKey('children') ? j['children'] : [:]
                 j.remove('children')
                 r = utils.merge(r, j)
-                utils.jsonDump(r, "result")
                 if (children) {
-                    script.echo "Processing children"
-                    utils.jsonDump(children, "children")
                     job.trampoline(children, counter + 1, r)
                 }
                 else {
-                    script.echo "Return merged job config"
-                    //r
-                    [:]
+                    r
                 }
             }
             else {
-                script.echo "No job ${part} defined in jobs"
                 [:]
             }
         }
         job = job.trampoline()
 
         def r = job(context.jobs, 0, [:])
-        utils.jsonDump(r, "result")
+//        utils.jsonDump(r, "result")
+        r
     }
 
     def executeStages(stagesToExecute, context) {
