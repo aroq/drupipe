@@ -126,7 +126,9 @@ class DrupipePipeline implements Serializable {
             def j = jobs[p[counter]] ? jobs[p[counter]] : [:]
             script.echo "Job type: ${j.type}"
             if (j) {
+                utils.jsonDump(j, "job")
                 r = utils.merge(r, j)
+                utils.jsonDump(r, "result")
                 if (j.children) {
                     script.echo "Processing children"
                     job.trampoline(j.children, p, counter + 1, r)
@@ -143,7 +145,7 @@ class DrupipePipeline implements Serializable {
         }
         job = job.trampoline()
 
-        LinkedHashMap r = job(context.jobs, parts.drop(1), 0)
+        def r = job(context.jobs, parts.drop(1), 0, [:])
         utils.jsonDump(r, "parts")
     }
 
