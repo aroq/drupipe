@@ -112,11 +112,29 @@ class DrupipePipeline implements Serializable {
     }
 
     def getJobConfigByName(String name) {
+        LinkedHashMap result = [:]
         def parts = name.split('/')
+        parts.drop(1)
         utils.jsonDump(parts, "parts")
-        def job = context.jobs[parts[1]] ? context.jobs[parts[1]] : null
-        utils.jsonDump(job, 'JOB')
-        job
+
+        def job = { jobs, p, counter = 0, r = [:] ->
+            def j = jobs[p[counter]] ? jobs[p[counter]] : [:]
+            if (j) {
+                r = utils.merge(r, j)
+                if (j.children) {
+                    job.trampoline(j.children, p, counter + 1, r)
+                }
+                else {
+                    r
+                }
+            }
+            else {
+                [:]
+            }
+        }
+
+        def r = job(context.jobs, parts)
+        utils.jsonDump(r, "parts")
     }
 
     def executeStages(stagesToExecute, context) {
