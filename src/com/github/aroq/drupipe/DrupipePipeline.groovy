@@ -127,7 +127,7 @@ class DrupipePipeline implements Serializable {
             script.echo "Job type: ${j.type}"
             if (j) {
                 utils.jsonDump(j, "job")
-                r = utils.merge(r, j)
+                r = utils.merge(r, j.remove('children'))
                 utils.jsonDump(r, "result")
                 if (j.children) {
                     script.echo "Processing children"
