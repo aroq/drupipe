@@ -128,7 +128,7 @@ class DrupipePipeline implements Serializable {
             def j = jobs[part] ? jobs[part] : [:]
             if (j) {
                 utils.jsonDump(j, "job")
-                def children = j['children'] ? j['children'] : [:]
+                def children = j.containsKey('children') ? j['children'] : [:]
                 utils.jsonDump(children, "children")
                 j.remove('children')
                 r = utils.merge(r, j)
