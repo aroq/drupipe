@@ -135,7 +135,7 @@ class DrupipePipeline implements Serializable {
                 utils.jsonDump(r, "result")
                 if (children) {
                     script.echo "Processing children"
-                    job.trampoline(j.children, counter + 1, r)
+                    job.trampoline(children, counter + 1, r)
                 }
                 else {
                     script.echo "Return merged job config"
