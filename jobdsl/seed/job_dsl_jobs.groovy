@@ -101,85 +101,80 @@ def processJob(jobs, currentFolder, config) {
 
             }
             else if (job.value.type == 'state') {
-                if (config.tags.contains('docman')) {
-                    def state = job.value.state
-                    if (config.docmanConfig) {
-                        buildEnvironment = config.docmanConfig.getEnvironmentByState(state)
-                        branch = config.docmanConfig.getVersionBranch('', state)
+                def state = job.value.state
+                if (config.docmanConfig) {
+                    buildEnvironment = config.docmanConfig.getEnvironmentByState(state)
+                    branch = config.docmanConfig.getVersionBranch('', state)
+                }
+                else {
+                    // TODO: Check it.
+                    buildEnvironment = job.value.env
+                    branch = job.value.branch
+                }
+                pipelineJob(currentName) {
+                    if (config.quietPeriodSeconds) {
+                        quietPeriod(config.quietPeriodSeconds)
                     }
-                    else {
-                        // TODO: Check it.
-                        buildEnvironment = job.value.env
-                        branch = job.value.branch
+                    concurrentBuild(false)
+                    logRotator(-1, 30)
+                    parameters {
+                        stringParam('projectName', 'master')
+                        stringParam('debugEnabled', '0')
+                        stringParam('force', '0')
+                        stringParam('simulate', '0')
+                        stringParam('docrootDir', 'docroot')
+                        stringParam('type', 'branch')
+                        stringParam('environment', buildEnvironment)
+                        stringParam('version', branch)
                     }
-                    pipelineJob(currentName) {
-                        if (config.quietPeriodSeconds) {
-                            quietPeriod(config.quietPeriodSeconds)
-                        }
-                        concurrentBuild(false)
-                        logRotator(-1, 30)
-                        parameters {
-                            stringParam('projectName', 'master')
-                            stringParam('debugEnabled', '0')
-                            stringParam('force', '0')
-                            stringParam('simulate', '0')
-                            stringParam('docrootDir', 'docroot')
-                            stringParam('type', 'branch')
-                            stringParam('environment', buildEnvironment)
-                            stringParam('version', branch)
-                        }
-                        definition {
-                            cpsScm {
-                                scm {
-                                    git() {
-                                        remote {
-                                            name('origin')
-                                            url(config.configRepo)
-                                            credentials(config.credentialsId)
-                                        }
-                                        extensions {
-                                            relativeTargetDirectory(config.projectConfigPath)
-                                        }
+                    definition {
+                        cpsScm {
+                            scm {
+                                git() {
+                                    remote {
+                                        name('origin')
+                                        url(config.configRepo)
+                                        credentials(config.credentialsId)
                                     }
-                                    scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
-                                }
-                            }
-                        }
-                        triggers {
-                            gitlabPush {
-                                buildOnPushEvents()
-                                buildOnMergeRequestEvents(false)
-                                enableCiSkip()
-                                useCiFeatures()
-                                includeBranches(branch)
-                            }
-                        }
-                        properties {
-                            gitLabConnectionProperty {
-                                gitLabConnection('Gitlab')
-                            }
-                        }
-                    }
-                    if (config.docmanConfig) {
-                        if (config.env.GITLAB_API_TOKEN_TEXT) {
-                            println "Processing Gitlab webhooks"
-                            config.docmanConfig.projects?.each { project ->
-                                println "Project: ${project}"
-                                if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
-                                    if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
-                                        config.gitlabHelper.addWebhook(
-                                            project.value.repo,
-                                            "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}"
-                                        )
-                                        println "Webhook added for project ${project}"
+                                    extensions {
+                                        relativeTargetDirectory(config.projectConfigPath)
                                     }
                                 }
+                                scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
                             }
+                        }
+                    }
+                    triggers {
+                        gitlabPush {
+                            buildOnPushEvents()
+                            buildOnMergeRequestEvents(false)
+                            enableCiSkip()
+                            useCiFeatures()
+                            includeBranches(branch)
+                        }
+                    }
+                    properties {
+                        gitLabConnectionProperty {
+                            gitLabConnection('Gitlab')
                         }
                     }
                 }
-                else {
-                    println "No docman tag defined, skipped."
+                if (config.docmanConfig) {
+                    if (config.env.GITLAB_API_TOKEN_TEXT) {
+                        println "Processing Gitlab webhooks"
+                        config.docmanConfig.projects?.each { project ->
+                            println "Project: ${project}"
+                            if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
+                                if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                                    config.gitlabHelper.addWebhook(
+                                        project.value.repo,
+                                        "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}"
+                                    )
+                                    println "Webhook added for project ${project}"
+                                }
+                            }
+                        }
+                    }
                 }
             }
             else if (job.value.type == 'release-deploy') {
