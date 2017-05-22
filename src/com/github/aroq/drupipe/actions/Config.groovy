@@ -84,7 +84,7 @@ class Config extends BaseAction {
         def result
         if (this.script.env.MOTHERSHIP_REPO) {
             def sourceObject = [
-                name:   'mothershipConfig',
+                name:   'mothership',
                 type:   'git',
                 path:   'mothership',
                 url:    script.env.MOTHERSHIP_REPO,
@@ -102,7 +102,7 @@ class Config extends BaseAction {
                 [
                     action: 'Source.loadConfig',
                     params: [
-                        sourceName: 'mothershipConfig',
+                        sourceName: 'mothership',
                         configType: 'groovy',
                         configPath: action.params.mothershipConfigFile
                     ]
@@ -193,7 +193,7 @@ class Config extends BaseAction {
 
     def projectConfig() {
         def sourceObject = [
-            name: 'projectConfig',
+            name: 'project',
             type: 'dir',
             path: context.projectConfigPath,
         ]
@@ -206,7 +206,7 @@ class Config extends BaseAction {
             [
                 action: 'Source.loadConfig',
                 params: [
-                    sourceName: 'projectConfig',
+                    sourceName: 'project',
                     configType: 'groovy',
                     configPath: context.projectConfigFile
                 ]
@@ -214,7 +214,7 @@ class Config extends BaseAction {
             [
                 action: 'Source.loadConfig',
                 params: [
-                    sourceName: 'projectConfig',
+                    sourceName: 'project',
                     configType: 'yaml',
                     configPath: 'config.yaml'
                 ]
