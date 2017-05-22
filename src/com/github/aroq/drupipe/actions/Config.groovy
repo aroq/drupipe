@@ -148,6 +148,8 @@ class Config extends BaseAction {
                                 repoDirName: scenarioSourceName,
                             ]
                             script.sshagent([context.credentialsId]) {
+                                this.script.drupipeAction([action: "Git.clone", ], context)
+
                                 def sourceObject = [
                                     name: scenarioSourceName,
                                     type: 'dir',
@@ -155,8 +157,11 @@ class Config extends BaseAction {
                                 ]
 
                                 this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
-
-                                this.script.drupipeAction([action: "Git.clone", params: scenario.source.repoParams], context)
+//                                this.script.drupipeAction([action: "Source.loadConfig", params: [
+//                                    sourceName: scenarioSourceName,
+//                                    configType: 'yaml',
+//                                    configPath: 'config.yaml',
+//                                ]])
                             }
                             this.scenarioSources[scenarioSourceName] = scenario.source
                         }
