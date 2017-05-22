@@ -232,7 +232,7 @@ class Config extends BaseAction {
             ]
         ]
         def rootConfigSource = [
-            root_config: [
+            project: [
                 repoParams: [
                     dir: 'docroot',
                     repoDirName: 'config',
@@ -245,7 +245,7 @@ class Config extends BaseAction {
         this.scenarioSources = [:]
         this.scenarioSources << rootConfigSource
 
-        def result = mergeScenariosConfigs(projectConfig, [:], 'root_config')
+        def result = mergeScenariosConfigs(projectConfig, [:], 'project')
 
         utils.jsonDump(this.scenarioSources.keySet() as List, "Scenarios loaded")
         utils.dump(result, 'Project config with scenarios loaded')
