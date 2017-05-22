@@ -4,7 +4,7 @@ println "Docman Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 
-if (config.configSeedType == 'single') {
+if (!config.tags.contains('drupipe') && config.configSeedType == 'single') {
     if (config.env.GITLAB_API_TOKEN_TEXT) {
         println "Initialize Gitlab Helper"
         gitlabHelper = new GitlabHelper(script: this, config: config)

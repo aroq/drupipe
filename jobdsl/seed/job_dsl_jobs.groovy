@@ -15,7 +15,10 @@ if (config.tags.contains('docman')) {
     config.docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
 }
 
-config.gitlabHelper = new GitlabHelper(script: this, config: config)
+if (config.env.GITLAB_API_TOKEN_TEXT) {
+    config.gitlabHelper = new GitlabHelper(script: this, config: config)
+}
+
 
 if (config.jobs) {
     processJob(config.jobs, '', config)
@@ -31,21 +34,25 @@ def processJob(jobs, currentFolder, config) {
         println "Current name: ${currentName}"
         if (job.value.type == 'folder') {
             folder(currentName) {
-                authorization {
-                    users.each { user ->
-                        // TODO: make permissions configurable.
-                        if (user.value > 10) {
-                            permission('hudson.model.Item.Read', user.key)
-                        }
-                        if (user.value > 30) {
-                            permission('hudson.model.Run.Update', user.key)
-                            permission('hudson.model.Item.Build', user.key)
-                            permission('hudson.model.Item.Cancel', user.key)
+                if (config.gitlabHelper) {
+                    users = config.gitlabHelper.getUsers(config.configRepo)
+                    println "USERS: ${users}"
+                    authorization {
+                        users.each { user ->
+                            // TODO: make permissions configurable.
+                            if (user.value > 10) {
+                                permission('hudson.model.Item.Read', user.key)
+                            }
+                            if (user.value > 30) {
+                                permission('hudson.model.Run.Update', user.key)
+                                permission('hudson.model.Item.Build', user.key)
+                                permission('hudson.model.Item.Cancel', user.key)
+                            }
                         }
                     }
                 }
             }
-            currentFolder = currentName
+//            currentFolder = currentName
         }
         else {
             if (job.value.pipeline && job.value.pipeline.repo_type && job.value.pipeline.repo_type == 'config') {
@@ -94,85 +101,80 @@ def processJob(jobs, currentFolder, config) {
 
             }
             else if (job.value.type == 'state') {
-                if (config.tags.contains('docman')) {
-                    def state = job.value.state
-                    if (config.docmanConfig) {
-                        buildEnvironment = config.docmanConfig.getEnvironmentByState(state)
-                        branch = config.docmanConfig.getVersionBranch('', state)
+                def state = job.value.state
+                if (config.docmanConfig) {
+                    buildEnvironment = config.docmanConfig.getEnvironmentByState(state)
+                    branch = config.docmanConfig.getVersionBranch('', state)
+                }
+                else {
+                    // TODO: Check it.
+                    buildEnvironment = job.value.env
+                    branch = job.value.branch
+                }
+                pipelineJob(currentName) {
+                    if (config.quietPeriodSeconds) {
+                        quietPeriod(config.quietPeriodSeconds)
                     }
-                    else {
-                        // TODO: Check it.
-                        buildEnvironment = job.value.env
-                        branch = job.value.branch
+                    concurrentBuild(false)
+                    logRotator(-1, 30)
+                    parameters {
+                        stringParam('projectName', 'master')
+                        stringParam('debugEnabled', '0')
+                        stringParam('force', '0')
+                        stringParam('simulate', '0')
+                        stringParam('docrootDir', 'docroot')
+                        stringParam('type', 'branch')
+                        stringParam('environment', buildEnvironment)
+                        stringParam('version', branch)
                     }
-                    pipelineJob(currentName) {
-                        if (config.quietPeriodSeconds) {
-                            quietPeriod(config.quietPeriodSeconds)
-                        }
-                        concurrentBuild(false)
-                        logRotator(-1, 30)
-                        parameters {
-                            stringParam('projectName', 'master')
-                            stringParam('debugEnabled', '0')
-                            stringParam('force', '0')
-                            stringParam('simulate', '0')
-                            stringParam('docrootDir', 'docroot')
-                            stringParam('type', 'branch')
-                            stringParam('environment', buildEnvironment)
-                            stringParam('version', branch)
-                        }
-                        definition {
-                            cpsScm {
-                                scm {
-                                    git() {
-                                        remote {
-                                            name('origin')
-                                            url(config.configRepo)
-                                            credentials(config.credentialsId)
-                                        }
-                                        extensions {
-                                            relativeTargetDirectory(config.projectConfigPath)
-                                        }
+                    definition {
+                        cpsScm {
+                            scm {
+                                git() {
+                                    remote {
+                                        name('origin')
+                                        url(config.configRepo)
+                                        credentials(config.credentialsId)
                                     }
-                                    scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
-                                }
-                            }
-                        }
-                        triggers {
-                            gitlabPush {
-                                buildOnPushEvents()
-                                buildOnMergeRequestEvents(false)
-                                enableCiSkip()
-                                useCiFeatures()
-                                includeBranches(branch)
-                            }
-                        }
-                        properties {
-                            gitLabConnectionProperty {
-                                gitLabConnection('Gitlab')
-                            }
-                        }
-                    }
-                    if (config.docmanConfig) {
-                        if (config.env.GITLAB_API_TOKEN_TEXT) {
-                            println "Processing Gitlab webhooks"
-                            config.docmanConfig.projects?.each { project ->
-                                println "Project: ${project}"
-                                if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
-                                    if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
-                                        config.gitlabHelper.addWebhook(
-                                            project.value.repo,
-                                            "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}"
-                                        )
-                                        println "Webhook added for project ${project}"
+                                    extensions {
+                                        relativeTargetDirectory(config.projectConfigPath)
                                     }
                                 }
+                                scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
                             }
+                        }
+                    }
+                    triggers {
+                        gitlabPush {
+                            buildOnPushEvents()
+                            buildOnMergeRequestEvents(false)
+                            enableCiSkip()
+                            useCiFeatures()
+                            includeBranches(branch)
+                        }
+                    }
+                    properties {
+                        gitLabConnectionProperty {
+                            gitLabConnection('Gitlab')
                         }
                     }
                 }
-                else {
-                    println "No docman tag defined, skipped."
+                if (config.docmanConfig) {
+                    if (config.env.GITLAB_API_TOKEN_TEXT) {
+                        println "Processing Gitlab webhooks"
+                        config.docmanConfig.projects?.each { project ->
+                            println "Project: ${project}"
+                            if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
+                                if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                                    config.gitlabHelper.addWebhook(
+                                        project.value.repo,
+                                        "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}"
+                                    )
+                                    println "Webhook added for project ${project}"
+                                }
+                            }
+                        }
+                    }
                 }
             }
             else if (job.value.type == 'release-deploy') {
@@ -228,7 +230,7 @@ def processJob(jobs, currentFolder, config) {
                 }
             }
             else if (job.value.type == 'selenese') {
-                def repo = config.defaultActionParams.SeleneseTester.repoAddress
+//                def repo = config.defaultActionParams.SeleneseTester.repoAddress
                 def b = config.defaultActionParams.SeleneseTester.reference ? config.defaultActionParams.SeleneseTester.reference : 'master'
 
                 if (config.env.GITLAB_API_TOKEN_TEXT) {
@@ -265,7 +267,7 @@ def processJob(jobs, currentFolder, config) {
                                     }
                                     branch(b)
                                 }
-                                scriptPath(job.value.pipeline.file)
+                                scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
                             }
                         }
                     }
@@ -274,7 +276,7 @@ def processJob(jobs, currentFolder, config) {
         }
 
         if (job.value.children) {
-            processJob(job.value.children, currentFolder, config)
+            processJob(job.value.children, currentName, config)
         }
     }
 }
