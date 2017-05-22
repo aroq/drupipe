@@ -139,7 +139,7 @@ class Config extends BaseAction {
                     }
                     //utils.dump(tempContext.scenarioSources, 'Scenario sources')
                     if (tempContext.scenarioSources[scenarioSourceName]) {
-                        if (!this.scenarioSources[scenarioSourceName]) {
+                        if (!context.sources[scenarioSourceName]) {
                             scenario.source = tempContext.scenarioSources[scenarioSourceName]
                             scenario.source.repoParams = [
                                 repoAddress: scenario.source.repo,
@@ -148,28 +148,34 @@ class Config extends BaseAction {
                                 repoDirName: scenarioSourceName,
                             ]
                             script.sshagent([context.credentialsId]) {
-                                this.script.drupipeAction([action: "Git.clone", params: scenario.source.repoParams], context)
+//                                this.script.drupipeAction([action: "Git.clone", params: scenario.source.repoParams], context)
 
                                 def sourceObject = [
                                     name: scenarioSourceName,
-                                    type: 'dir',
+                                    type: 'git',
                                     path: "${scenario.source.repoParams.dir}/${scenario.source.repoParams.repoDirName}",
+                                    url: scenario.source.repo,
+                                    branch: scenario.source.ref,
                                 ]
 
                                 this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
-//                                this.script.drupipeAction([action: "Source.loadConfig", params: [
-//                                    sourceName: scenarioSourceName,
-//                                    configType: 'yaml',
-//                                    configPath: 'config.yaml',
-//                                ]])
                             }
-                            this.scenarioSources[scenarioSourceName] = scenario.source
+                            //this.scenarioSources[scenarioSourceName] = scenario.source
                         }
                         else {
-                            scenario.source = this.scenarioSources[scenarioSourceName]
+                            scenario.source = context.sources[scenarioSourceName]
                         }
-                        def sourceDir = scenario.source.repoParams.dir + '/' + scenario.source.repoParams.repoDirName
-                        def fileName = "${sourceDir}/scenarios/${scenario.name}/config.yaml"
+
+//                        def sourcePath = scenario.source.repoParams.dir + '/' + scenario.source.repoParams.repoDirName
+                        def sourcePath = utils.sourcePath(scenarioSourceName)
+                        def fileName = "${sourcePath}/scenarios/${scenario.name}/config.yaml"
+
+//                        this.script.drupipeAction([action: "Source.loadConfig", params: [
+//                            sourceName: scenarioSourceName,
+//                            configType: 'yaml',
+//                            configPath: "scenarios/${scenario.name}/config.yaml",
+//                        ]])
+
                         if (script.fileExists(fileName)) {
                             script.echo "Scenario file name: ${fileName} exists"
                             def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSourceName)
