@@ -167,8 +167,8 @@ class Config extends BaseAction {
                         }
 
 //                        def sourcePath = scenario.source.repoParams.dir + '/' + scenario.source.repoParams.repoDirName
-                        def sourcePath = utils.sourcePath(scenarioSourceName)
-                        def fileName = "${sourcePath}/scenarios/${scenario.name}/config.yaml"
+                        def fileName = utils.sourcePath(context, scenarioSourceName, "scenarios/${scenario.name}/config.yaml")
+//                        def fileName = "${sourcePath}/scenarios/${scenario.name}/config.yaml"
 
 //                        this.script.drupipeAction([action: "Source.loadConfig", params: [
 //                            sourceName: scenarioSourceName,
