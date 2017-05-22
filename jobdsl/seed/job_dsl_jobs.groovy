@@ -52,7 +52,7 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
             }
-            currentFolder = currentName
+//            currentFolder = currentName
         }
         else {
             if (job.value.pipeline && job.value.pipeline.repo_type && job.value.pipeline.repo_type == 'config') {
@@ -276,7 +276,7 @@ def processJob(jobs, currentFolder, config) {
         }
 
         if (job.value.children) {
-            processJob(job.value.children, currentFolder, config)
+            processJob(job.value.children, currentName, config)
         }
     }
 }
