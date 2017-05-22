@@ -148,6 +148,14 @@ class Config extends BaseAction {
                                 repoDirName: scenarioSourceName,
                             ]
                             script.sshagent([context.credentialsId]) {
+                                def sourceObject = [
+                                    name: scenarioSourceName,
+                                    type: 'dir',
+                                    path: "${scenario.source.repoParams.dir}/${scenario.source.repoParams.repoDirName}",
+                                ]
+
+                                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
+
                                 this.script.drupipeAction([action: "Git.clone", params: scenario.source.repoParams], context)
                             }
                             this.scenarioSources[scenarioSourceName] = scenario.source
