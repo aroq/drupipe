@@ -118,7 +118,7 @@ def loadLibrary(script, context) {
             action: 'Source.add',
             params: [
                 source: [
-                    name: 'library',
+                    name: 'drupipe',
                     type: 'git',
                     path: 'library',
                     url: context.drupipeLibraryUrl,
