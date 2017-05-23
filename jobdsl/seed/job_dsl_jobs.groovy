@@ -79,6 +79,8 @@ def processJob(jobs, currentFolder, config) {
                                 }
                             }
                         }
+                        stringParam('debugEnabled', '0')
+                        stringParam('force', '0')
                     }
                     definition {
                         cpsScm {
