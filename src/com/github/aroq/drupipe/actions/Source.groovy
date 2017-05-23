@@ -54,7 +54,7 @@ class Source extends BaseAction {
         if (result) {
             context.loadedSources[source.name] = new com.github.aroq.drupipe.DrupipeSource(name: source.name, type: source.type, path: source.path)
             context.sourcesList << context.loadedSources[source.name]
-            utils.debugLog(context, context.loadedSources, "Loaded sources (after Source.add)")
+            utils.debugLog(context, context.loadedSources, "Loaded sources (after Source.add)", [debugMode: 'json'])
         }
         [:]
     }
