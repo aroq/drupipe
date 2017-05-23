@@ -156,6 +156,7 @@ class Config extends BaseAction {
                                     path: "${scenario.source.repoParams.dir}/${scenario.source.repoParams.repoDirName}",
                                     url: scenario.source.repo,
                                     branch: scenario.source.ref ? scenario.source.ref : 'master',
+                                    mode: 'shell',
                                 ]
 
                                 this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)

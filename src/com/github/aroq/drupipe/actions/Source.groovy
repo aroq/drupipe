@@ -23,19 +23,23 @@ class Source extends BaseAction {
                 this.script.dir(source.path) {
                     this.script.deleteDir()
                 }
-//                this.script.dir(source.path) {
-//                    if (source.refType == 'branch') {
-//                        if (this.action.params.credentialsId) {
-//                            this.script.echo "With credentials: ${this.action.params.credentialsId}"
-//                            this.script.git credentialsId: this.action.params.credentialsId, url: source.url, branch: source.branch
-//                        }
-//                        else {
-//                            this.script.echo "Without credentials"
-//                            this.script.git url: source.url, branch: source.branch
-//                        }
-//                    }
-//                }
-                script.sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
+
+                source.mode = source.mode ? source.mode : 'pipeline'
+
+                if (source.refType == 'branch' && source.mode == 'pipeline') {
+                    this.script.dir(source.path) {
+                        if (this.action.params.credentialsId) {
+                            this.script.echo "With credentials: ${this.action.params.credentialsId}"
+                            this.script.git credentialsId: this.action.params.credentialsId, url: source.url, branch: source.branch
+                        } else {
+                            this.script.echo "Without credentials"
+                            this.script.git url: source.url, branch: source.branch
+                        }
+                    }
+                }
+                else if (source.mode == 'shell') {
+                    this.script.sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
+                }
                 result = source.path
                 break
 
