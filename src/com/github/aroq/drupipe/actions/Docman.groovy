@@ -20,7 +20,7 @@ class Docman extends BaseAction {
 
     // For compatibility with previous versions.
     def jsonConfig() {
-//        info()
+        info()
 
         def docrootConfigJson = script.readFile("${context.projectConfigPath}/${action.params.docmanJsonConfigFile}")
         if (context.env.gitlabSourceNamespace) {
