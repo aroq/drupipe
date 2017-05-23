@@ -155,7 +155,7 @@ class Config extends BaseAction {
                                     type: 'git',
                                     path: "${scenario.source.repoParams.dir}/${scenario.source.repoParams.repoDirName}",
                                     url: scenario.source.repo,
-                                    branch: scenario.source.ref,
+                                    branch: scenario.source.ref ? scenario.source.ref : 'master',
                                 ]
 
                                 this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
