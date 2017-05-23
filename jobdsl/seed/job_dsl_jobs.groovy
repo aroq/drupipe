@@ -77,6 +77,8 @@ def processJob(jobs, currentFolder, config) {
                                         parameter('tagPattern', "*")
                                     }
                                 }
+                                stringParam('debugEnabled', '0')
+                                stringParam('force', '0')
                             }
                         }
                     }
