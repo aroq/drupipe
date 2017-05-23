@@ -8,9 +8,9 @@ def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dum
 docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : "${config.projectConfigPath}/config.json"
 docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 
-if (!config.tags || (!config.tags.contains('docman') && !config.tags.contains('drupipe'))) {
-    println "Config: ${config}"
+println "Config: ${config}"
 
+if (!config.tags || (!config.tags.contains('docman') && !config.tags.contains('drupipe'))) {
     if (config.configSeedType == 'docman') {
         // Retrieve Docman config from json file (prepared by "docman info" command).
         def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
@@ -56,11 +56,72 @@ if (!config.tags || (!config.tags.contains('docman') && !config.tags.contains('d
             else {
                 branch = docmanConfig.getVersionBranch('', state.key)
             }
+            buildEnvironment = docmanConfig.getEnvironmentByState(state.key)
+            pipelineJob(state.key) {
+                if (params.quietPeriodSeconds) {
+                    quietPeriod(params.quietPeriodSeconds)
+                }
+                concurrentBuild(false)
+                logRotator(-1, 30)
+                parameters {
+                    stringParam('projectName', '')
+                    stringParam('debugEnabled', '0')
+                    stringParam('force', '0')
+                    stringParam('simulate', '0')
+                    stringParam('docrootDir', 'docroot')
+                    stringParam('config_repo', params.configRepo)
+                    stringParam('type', 'branch')
+                    stringParam('environment', buildEnvironment)
+                    stringParam('version', branch)
+                }
+                definition {
+                    cpsScm {
+                        scm {
+                            git() {
+                                remote {
+                                    name('origin')
+                                    url(params.configRepo)
+                                    credentials(params.credentialsId)
+                                }
+                                extensions {
+                                    relativeTargetDirectory(config.projectConfigPath)
+                                }
+                            }
+                            scriptPath("${config.projectConfigPath}/pipelines/${params.pipeline}.groovy")
+                        }
+                    }
+                }
+                triggers {
+                    gitlabPush {
+                        buildOnPushEvents()
+                        buildOnMergeRequestEvents(false)
+                        enableCiSkip()
+                        useCiFeatures()
+                        includeBranches(branch)
+                    }
+                }
+                properties {
+                    gitLabConnectionProperty {
+                        gitLabConnection('Gitlab')
+                    }
+                }
+            }
+            if (config.env.GITLAB_API_TOKEN_TEXT) {
+                docmanConfig.projects?.each { project ->
+                    if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
+                        if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                            gitlabHelper.addWebhook(
+                                project.value.repo,
+                                "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${state.key}"
+                            )
+                        }
+                    }
+                }
+            }
         }
 
     }
 }
-
 
 def isGitlabRepo(repo, config) {
     config.env.GITLAB_HOST && repo.contains(config.env.GITLAB_HOST)

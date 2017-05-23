@@ -37,7 +37,6 @@ class DrupipePipeline implements Serializable {
                 }
 
                 if (!blocks) {
-                    script.echo "JOB NAME: ${context.env.JOB_NAME}"
                     if (context.jobs) {
                         def job = getJobConfigByName(context.env.JOB_NAME)
                         if (job) {
@@ -113,9 +112,7 @@ class DrupipePipeline implements Serializable {
 
     def getJobConfigByName(String name) {
         def parts = name.split('/').drop(1)
-        def r = getJobConfig(context.jobs, parts, 0, [:])
-        utils.jsonDump(r, "result")
-        r
+        getJobConfig(context.jobs, parts, 0, [:])
     }
 
     def getJobConfig(jobs, parts, counter = 0, r = [:]) {

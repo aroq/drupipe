@@ -12,8 +12,6 @@ class Config extends BaseAction {
 
     def DrupipeAction action
 
-    LinkedHashMap scenarioSources = [:]
-
     def perform() {
         if (context['Config_perform']) {
             return context
@@ -63,6 +61,10 @@ class Config extends BaseAction {
                 utils.jsonDump(context.environmentParams, 'ENVIRONMENT PARAMS')
             }
         }
+
+        def stashes = context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
+
+        script.stash name: 'config', includes: "${stashes}", excludes: ".git, .git/**"
         context
     }
 
@@ -137,45 +139,38 @@ class Config extends BaseAction {
                         scenarioSourceName = currentScenarioSourceName
                         scenario.name = values[0]
                     }
-                    //utils.dump(tempContext.scenarioSources, 'Scenario sources')
-                    if (tempContext.scenarioSources[scenarioSourceName]) {
-                        if (!this.scenarioSources[scenarioSourceName]) {
+                    utils.debugLog(context, tempContext.scenarioSources, 'Scenario sources')
+                    if ((tempContext.scenarioSources && tempContext.scenarioSources.containsKey(scenarioSourceName)) || context.loadedSources.containsKey(scenarioSourceName)) {
+                        if (!context.loadedSources[scenarioSourceName]) {
+                            script.echo "Adding source: ${scenarioSourceName}"
                             scenario.source = tempContext.scenarioSources[scenarioSourceName]
-                            scenario.source.repoParams = [
-                                repoAddress: scenario.source.repo,
-                                reference: scenario.source.ref ? scenario.source.ref : 'master',
-                                dir: 'scenarios',
-                                repoDirName: scenarioSourceName,
-                            ]
-                            script.sshagent([context.credentialsId]) {
-                                this.script.drupipeAction([action: "Git.clone", params: scenario.source.repoParams], context)
 
+                            script.sshagent([context.credentialsId]) {
                                 def sourceObject = [
                                     name: scenarioSourceName,
-                                    type: 'dir',
-                                    path: "${scenario.source.repoParams.dir}/${scenario.source.repoParams.repoDirName}",
+                                    type: 'git',
+                                    path: "scenarios/${scenarioSourceName}",
+                                    url: scenario.source.repo,
+                                    branch: scenario.source.ref ? scenario.source.ref : 'master',
+                                    mode: 'shell',
                                 ]
 
                                 this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
-//                                this.script.drupipeAction([action: "Source.loadConfig", params: [
-//                                    sourceName: scenarioSourceName,
-//                                    configType: 'yaml',
-//                                    configPath: 'config.yaml',
-//                                ]])
                             }
-                            this.scenarioSources[scenarioSourceName] = scenario.source
                         }
                         else {
-                            scenario.source = this.scenarioSources[scenarioSourceName]
+                            script.echo "Source: ${scenarioSourceName} already added"
+                            scenario.source = context.loadedSources[scenarioSourceName]
                         }
-                        def sourceDir = scenario.source.repoParams.dir + '/' + scenario.source.repoParams.repoDirName
-                        def fileName = "${sourceDir}/scenarios/${scenario.name}/config.yaml"
+
+                        def fileName = utils.sourcePath(context, scenarioSourceName, "scenarios/${scenario.name}/config.yaml")
+
                         if (script.fileExists(fileName)) {
                             script.echo "Scenario file name: ${fileName} exists"
                             def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSourceName)
-                            utils.dump(scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
+                            utils.debugLog(context, scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
-                            utils.dump(scenariosConfig, "Scenarios config")
+                            utils.debugLog(context, scenariosConfig, "Scenarios config")
                         }
                     }
                     else {
@@ -221,34 +216,30 @@ class Config extends BaseAction {
             ]
         ]
         def projectConfig = context.pipeline.executePipelineActionList(providers, context)
-        //utils.jsonDump(projectConfig, 'Project config')
+        utils.debugLog(context, projectConfig, 'Project config')
 
-        if (!projectConfig.scenarioSources) {
-            projectConfig.scenarioSources = [:]
-        }
-        projectConfig.scenarioSources << [
-            mothership: [
-                repo: this.script.env.MOTHERSHIP_REPO
-            ]
-        ]
-        def rootConfigSource = [
-            project: [
-                repoParams: [
-                    dir: 'docroot',
-                    repoDirName: 'config',
-                ]
-            ]
-        ]
-
-        projectConfig.scenarioSources << rootConfigSource
-
-        this.scenarioSources = [:]
-        this.scenarioSources << rootConfigSource
+//        if (!projectConfig.scenarioSources) {
+//            projectConfig.scenarioSources = [:]
+//        }
+//        projectConfig.scenarioSources << [
+//            mothership: [
+//                repo: this.script.env.MOTHERSHIP_REPO
+//            ]
+//        ]
+//        def rootConfigSource = [
+//            project: [
+//                repoParams: [
+//                    dir: 'docroot',
+//                    repoDirName: 'config',
+//                ]
+//            ]
+//        ]
+//
+//        projectConfig.scenarioSources << rootConfigSource
 
         def result = mergeScenariosConfigs(projectConfig, [:], 'project')
 
-        utils.jsonDump(this.scenarioSources.keySet() as List, "Scenarios loaded")
-        utils.dump(result, 'Project config with scenarios loaded')
+        utils.debugLog(result, 'Project config with scenarios loaded')
         result
     }
 

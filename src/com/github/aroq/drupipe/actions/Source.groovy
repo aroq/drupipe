@@ -23,20 +23,22 @@ class Source extends BaseAction {
                 this.script.dir(source.path) {
                     this.script.deleteDir()
                 }
-                this.script.dir(source.path) {
-                    if (source.refType == 'branch') {
+
+                source.mode = source.mode ? source.mode : 'pipeline'
+
+                if (source.refType == 'branch' && source.mode == 'pipeline') {
+                    this.script.dir(source.path) {
                         if (this.action.params.credentialsId) {
                             this.script.echo "With credentials: ${this.action.params.credentialsId}"
                             this.script.git credentialsId: this.action.params.credentialsId, url: source.url, branch: source.branch
-                        }
-                        else {
+                        } else {
                             this.script.echo "Without credentials"
                             this.script.git url: source.url, branch: source.branch
                         }
                     }
                 }
-                if (source.refType == 'tag') {
-                    script.sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
+                else if (source.mode == 'shell') {
+                    this.script.sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
                 }
                 result = source.path
                 break
@@ -45,13 +47,14 @@ class Source extends BaseAction {
                 result = source.path
                 break
         }
-        if (!context.sources) {
-            context.sources = [:]
+        if (!context.loadedSources) {
+            context.loadedSources = [:]
             context.sourcesList = []
         }
         if (result) {
-            context.sources[source.name] = new com.github.aroq.drupipe.DrupipeSource(name: source.name, type: source.type, path: source.path)
-            context.sourcesList << context.sources[source.name]
+            context.loadedSources[source.name] = new com.github.aroq.drupipe.DrupipeSource(name: source.name, type: source.type, path: source.path)
+            context.sourcesList << context.loadedSources[source.name]
+            utils.debugLog(context, context.loadedSources, "Loaded sources (after Source.add)", [debugMode: 'json'])
         }
         [:]
     }

@@ -87,7 +87,7 @@ def envTextToMap(env) {
 @NonCPS
 String configToSlurperFile(config) {
     def co = new ConfigObject()
-    skipConfigKeys = ['action', 'sources', 'sourcesList', 'stage', 'pipeline', 'block', 'utils']
+    skipConfigKeys = ['action', 'sources', 'loadedSources', 'sourcesList', 'stage', 'pipeline', 'block', 'utils']
     config.each { entry ->
         if (!skipConfigKeys.contains(entry.key)) {
             co.put(entry.key, entry.value)
@@ -199,14 +199,14 @@ def pipelineNotify(params, String buildStatus = 'STARTED') {
 
 def sourcePath(params, sourceName, String path) {
     debugLog(params, sourceName, 'Source name')
-    if (sourceName in params.sources) {
-        params.sources[sourceName].path + '/' + path
+    if (sourceName in params.loadedSources) {
+        params.loadedSources[sourceName].path + '/' + path
     }
 }
 
 def sourceDir(params, sourceName) {
-    if (sourceName in params.sources) {
-        params.sources[sourceName].path
+    if (sourceName in params.loadedSources) {
+        params.loadedSources[sourceName].path
     }
 }
 
