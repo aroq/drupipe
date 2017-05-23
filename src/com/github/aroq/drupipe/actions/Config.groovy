@@ -136,7 +136,7 @@ class Config extends BaseAction {
                         scenario.name = values[0]
                     }
                     utils.debugLog(context, tempContext.scenarioSources, 'Scenario sources')
-                    if (tempContext.scenarioSources.containsKey(scenarioSourceName) || context.sources.containsKey(scenarioSourceName)) {
+                    if ((tempContext.scenarioSources && tempContext.scenarioSources.containsKey(scenarioSourceName)) || context.sources.containsKey(scenarioSourceName)) {
                         if (!context.loadedSources[scenarioSourceName]) {
                             script.echo "Adding source: ${scenarioSourceName}"
                             scenario.source = tempContext.scenarioSources[scenarioSourceName]
