@@ -161,12 +161,6 @@ class Config extends BaseAction {
 
                         def fileName = utils.sourcePath(context, scenarioSourceName, "scenarios/${scenario.name}/config.yaml")
 
-//                        this.script.drupipeAction([action: "Source.loadConfig", params: [
-//                            sourceName: scenarioSourceName,
-//                            configType: 'yaml',
-//                            configPath: "scenarios/${scenario.name}/config.yaml",
-//                        ]])
-
                         if (script.fileExists(fileName)) {
                             script.echo "Scenario file name: ${fileName} exists"
                             def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSourceName)
