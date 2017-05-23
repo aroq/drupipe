@@ -138,6 +138,7 @@ class Config extends BaseAction {
                     utils.debugLog(context, tempContext.scenarioSources, 'Scenario sources')
                     if (tempContext.scenarioSources[scenarioSourceName]) {
                         if (!context.sources[scenarioSourceName]) {
+                            script.echo "Adding source: ${scenarioSourceName}"
                             scenario.source = tempContext.scenarioSources[scenarioSourceName]
                             scenario.source.repoParams = [
                                 repoAddress: scenario.source.repo,
@@ -159,6 +160,7 @@ class Config extends BaseAction {
                             }
                         }
                         else {
+                            script.echo "Source: ${scenarioSourceName} already added"
                             scenario.source = context.sources[scenarioSourceName]
                         }
 
