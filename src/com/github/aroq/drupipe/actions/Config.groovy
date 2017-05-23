@@ -136,21 +136,16 @@ class Config extends BaseAction {
                         scenario.name = values[0]
                     }
                     utils.debugLog(context, tempContext.scenarioSources, 'Scenario sources')
-                    if (tempContext.scenarioSources[scenarioSourceName]) {
+                    if (tempContext.scenarioSources.containsKey(scenarioSourceName) || context.sources.containsKey(scenarioSourceName)) {
                         if (!context.loadedSources[scenarioSourceName]) {
                             script.echo "Adding source: ${scenarioSourceName}"
                             scenario.source = tempContext.scenarioSources[scenarioSourceName]
-                            scenario.source.repoParams = [
-                                repoAddress: scenario.source.repo,
-                                reference: scenario.source.ref ? scenario.source.ref : 'master',
-                                dir: 'scenarios',
-                                repoDirName: scenarioSourceName,
-                            ]
+
                             script.sshagent([context.credentialsId]) {
                                 def sourceObject = [
                                     name: scenarioSourceName,
                                     type: 'git',
-                                    path: "${scenario.source.repoParams.dir}/${scenario.source.repoParams.repoDirName}",
+                                    path: "scenarios/${scenarioSourceName}",
                                     url: scenario.source.repo,
                                     branch: scenario.source.ref ? scenario.source.ref : 'master',
                                     mode: 'shell',
@@ -225,24 +220,24 @@ class Config extends BaseAction {
         def projectConfig = context.pipeline.executePipelineActionList(providers, context)
         utils.debugLog(context, projectConfig, 'Project config')
 
-        if (!projectConfig.scenarioSources) {
-            projectConfig.scenarioSources = [:]
-        }
-        projectConfig.scenarioSources << [
-            mothership: [
-                repo: this.script.env.MOTHERSHIP_REPO
-            ]
-        ]
-        def rootConfigSource = [
-            project: [
-                repoParams: [
-                    dir: 'docroot',
-                    repoDirName: 'config',
-                ]
-            ]
-        ]
-
-        projectConfig.scenarioSources << rootConfigSource
+//        if (!projectConfig.scenarioSources) {
+//            projectConfig.scenarioSources = [:]
+//        }
+//        projectConfig.scenarioSources << [
+//            mothership: [
+//                repo: this.script.env.MOTHERSHIP_REPO
+//            ]
+//        ]
+//        def rootConfigSource = [
+//            project: [
+//                repoParams: [
+//                    dir: 'docroot',
+//                    repoDirName: 'config',
+//                ]
+//            ]
+//        ]
+//
+//        projectConfig.scenarioSources << rootConfigSource
 
         def result = mergeScenariosConfigs(projectConfig, [:], 'project')
 
