@@ -23,7 +23,7 @@ class SeleneseTester extends BaseAction {
                 script.drupipeShell("""docker run --rm --user root:root -v "${workspace}:${workspace}" \
 -e "SELENESE_BASE_URL=${action.params.SELENESE_BASE_URL}" \
 -e "SCREEN_WIDTH=1920" -e "SCREEN_HEIGHT=1080" -e "SCREEN_DEPTH=24" \
---workdir "${sourcePath}" \
+--workdir "${workspace}/${sourcePath}" \
 --entrypoint "/opt/bin/entry_point.sh" --shm-size=2g ${action.params.dockerImage} "${suites[i]}"
     """, context)
             }
