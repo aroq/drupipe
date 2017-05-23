@@ -36,8 +36,6 @@ class Docman extends BaseAction {
         prepare()
         script.drupipeShell(
             """
-        cd ${context.docrootDir}/config
-        git reset --hard
         cd ${context.docrootDir}
         docman info full config.json
         """, context << [shellCommandWithBashLogin: true]

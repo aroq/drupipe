@@ -189,8 +189,11 @@ class Config extends BaseAction {
     def projectConfig() {
         def sourceObject = [
             name: 'project',
-            type: 'dir',
-            path: context.projectConfigPath,
+            path: 'sources/project',
+            type: 'git',
+            url: context.configRepo,
+            branch: 'master',
+            mode: 'shell',
         ]
 
         def providers = [
