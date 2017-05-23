@@ -137,7 +137,7 @@ class Config extends BaseAction {
                     }
                     utils.debugLog(context, tempContext.scenarioSources, 'Scenario sources')
                     if (tempContext.scenarioSources[scenarioSourceName]) {
-                        if (!context.sources[scenarioSourceName]) {
+                        if (!context.loadedSources[scenarioSourceName]) {
                             script.echo "Adding source: ${scenarioSourceName}"
                             scenario.source = tempContext.scenarioSources[scenarioSourceName]
                             scenario.source.repoParams = [
@@ -161,7 +161,7 @@ class Config extends BaseAction {
                         }
                         else {
                             script.echo "Source: ${scenarioSourceName} already added"
-                            scenario.source = context.sources[scenarioSourceName]
+                            scenario.source = context.loadedSources[scenarioSourceName]
                         }
 
                         def fileName = utils.sourcePath(context, scenarioSourceName, "scenarios/${scenario.name}/config.yaml")
