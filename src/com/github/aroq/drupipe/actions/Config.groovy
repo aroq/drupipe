@@ -61,6 +61,10 @@ class Config extends BaseAction {
                 utils.jsonDump(context.environmentParams, 'ENVIRONMENT PARAMS')
             }
         }
+
+        def stashes = context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
+
+        script.stash name: 'config', includes: "${stashes}", excludes: ".git, .git/**"
         context
     }
 
