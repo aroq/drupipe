@@ -20,9 +20,9 @@ class DrupipeStage implements Serializable {
                 if (actions) {
                     try {
                         for (a in this.actions) {
-                            utils.jsonDump(a, 'ACTION BEFORE')
+                            utils.debugLog(params, a, 'ACTION BEFORE')
                             def action = new DrupipeAction(a)
-                            utils.jsonDump(action, 'ACTION AFTER')
+                            utils.debugLog(params, action, 'ACTION AFTER')
                             this.params << action.execute(this.params)
                         }
                         this.params
