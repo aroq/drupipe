@@ -64,7 +64,6 @@ def processJob(jobs, currentFolder, config) {
                     logRotator(-1, 30)
                     parameters {
                         config.docmanConfig.projects?.each { project ->
-                            stringParam('force', '0')
                             if (project.value.repo && (project.value.type != 'root')) {
                                 println "Project: ${project.value.name}"
                                 def projectRepo = project.value.repo
@@ -78,9 +77,10 @@ def processJob(jobs, currentFolder, config) {
                                         parameter('tagPattern', "*")
                                     }
                                 }
-//                                stringParam('debugEnabled', '0')
                             }
                         }
+                        stringParam('debugEnabled', '0')
+                        stringParam('force', '0')
                     }
                     definition {
                         cpsScm {
