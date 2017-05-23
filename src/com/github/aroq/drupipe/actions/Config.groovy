@@ -12,8 +12,6 @@ class Config extends BaseAction {
 
     def DrupipeAction action
 
-    LinkedHashMap scenarioSources = [:]
-
     def perform() {
         if (context['Config_perform']) {
             return context
@@ -137,7 +135,7 @@ class Config extends BaseAction {
                         scenarioSourceName = currentScenarioSourceName
                         scenario.name = values[0]
                     }
-                    //utils.dump(tempContext.scenarioSources, 'Scenario sources')
+                    utils.debugLog(context, tempContext.scenarioSources, 'Scenario sources')
                     if (tempContext.scenarioSources[scenarioSourceName]) {
                         if (!context.sources[scenarioSourceName]) {
                             scenario.source = tempContext.scenarioSources[scenarioSourceName]
@@ -148,8 +146,6 @@ class Config extends BaseAction {
                                 repoDirName: scenarioSourceName,
                             ]
                             script.sshagent([context.credentialsId]) {
-//                                this.script.drupipeAction([action: "Git.clone", params: scenario.source.repoParams], context)
-
                                 def sourceObject = [
                                     name: scenarioSourceName,
                                     type: 'git',
@@ -161,15 +157,12 @@ class Config extends BaseAction {
 
                                 this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
                             }
-                            //this.scenarioSources[scenarioSourceName] = scenario.source
                         }
                         else {
                             scenario.source = context.sources[scenarioSourceName]
                         }
 
-//                        def sourcePath = scenario.source.repoParams.dir + '/' + scenario.source.repoParams.repoDirName
                         def fileName = utils.sourcePath(context, scenarioSourceName, "scenarios/${scenario.name}/config.yaml")
-//                        def fileName = "${sourcePath}/scenarios/${scenario.name}/config.yaml"
 
 //                        this.script.drupipeAction([action: "Source.loadConfig", params: [
 //                            sourceName: scenarioSourceName,
@@ -180,9 +173,9 @@ class Config extends BaseAction {
                         if (script.fileExists(fileName)) {
                             script.echo "Scenario file name: ${fileName} exists"
                             def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSourceName)
-                            utils.dump(scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
+                            utils.debugLog(context, scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
-                            utils.dump(scenariosConfig, "Scenarios config")
+                            utils.debugLog(context, scenariosConfig, "Scenarios config")
                         }
                     }
                     else {
