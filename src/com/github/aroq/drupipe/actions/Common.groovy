@@ -13,8 +13,9 @@ class Common extends BaseAction {
     def DrupipeAction action
 
     def confirm() {
+        def message = context.message
         script.timeout(time: action.params.timeToConfirm, unit: 'MINUTES') {
-            input context.message
+            input message
         }
     }
 }
