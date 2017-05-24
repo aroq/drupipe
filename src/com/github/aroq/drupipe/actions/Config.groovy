@@ -116,6 +116,7 @@ class Config extends BaseAction {
             def json = this.script.readFile('mothership/projects.json')
             result = utils.merge(result, this.utils.getMothershipProjectParams(context, json))
             this.configRepo = result.configRepo
+            script.echo "Config repo 1: ${this.configRepo}"
 
         }
         result
@@ -190,6 +191,7 @@ class Config extends BaseAction {
     }
 
     def projectConfig() {
+        script.echo "Config repo 2: ${this.configRepo}"
         def sourceObject = [
             name: 'project',
             path: 'sources/project',
