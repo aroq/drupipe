@@ -12,6 +12,8 @@ class Config extends BaseAction {
 
     def DrupipeAction action
 
+    def configRepo
+
     def perform() {
         if (context['Config_perform']) {
             return context
@@ -113,6 +115,7 @@ class Config extends BaseAction {
             result = context.pipeline.executePipelineActionList(providers, context)
             def json = this.script.readFile('mothership/projects.json')
             result = utils.merge(result, this.utils.getMothershipProjectParams(context, json))
+            this.configRepo = result.configRepo
 
         }
         result
@@ -191,7 +194,7 @@ class Config extends BaseAction {
             name: 'project',
             path: 'sources/project',
             type: 'git',
-            url: context.configRepo,
+            url: this.configRepo,
             branch: 'master',
             mode: 'shell',
         ]
