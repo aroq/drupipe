@@ -15,7 +15,7 @@ class Common extends BaseAction {
     def confirm() {
         def message = context.message
         script.timeout(time: action.params.timeToConfirm, unit: 'MINUTES') {
-            input 'Do you want to proceed?'
+            script.input 'Do you want to proceed?'
         }
     }
 }
