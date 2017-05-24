@@ -5,6 +5,8 @@ println "Subjobs Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 
+println "Config: ${config}"
+
 println "Config tags: ${config.tags}"
 
 if (config.tags.contains('docman')) {
@@ -245,6 +247,7 @@ def processJob(jobs, currentFolder, config) {
                     logRotator(-1, 30)
                     parameters {
                         stringParam('debugEnabled', '0')
+                        stringParam('configRepo', repo)
                         activeChoiceParam('suites') {
                             description('Select one or more suites. If you see the empty list - please re-save the job (related to bug: https://issues.jenkins-ci.org/browse/JENKINS-42655)')
                             filterable()

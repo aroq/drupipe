@@ -12,6 +12,8 @@ class Config extends BaseAction {
 
     def DrupipeAction action
 
+    def configRepo
+
     def perform() {
         if (context['Config_perform']) {
             return context
@@ -113,6 +115,7 @@ class Config extends BaseAction {
             result = context.pipeline.executePipelineActionList(providers, context)
             def json = this.script.readFile('mothership/projects.json')
             result = utils.merge(result, this.utils.getMothershipProjectParams(context, json))
+            this.configRepo = result.configRepo
 
         }
         result
@@ -189,8 +192,11 @@ class Config extends BaseAction {
     def projectConfig() {
         def sourceObject = [
             name: 'project',
-            type: 'dir',
-            path: context.projectConfigPath,
+            path: 'sources/project',
+            type: 'git',
+            url: context.configRepo,
+            branch: 'master',
+            mode: 'shell',
         ]
 
         def providers = [
@@ -215,27 +221,11 @@ class Config extends BaseAction {
                 ]
             ]
         ]
-        def projectConfig = context.pipeline.executePipelineActionList(providers, context)
-        utils.debugLog(context, projectConfig, 'Project config')
-
-//        if (!projectConfig.scenarioSources) {
-//            projectConfig.scenarioSources = [:]
-//        }
-//        projectConfig.scenarioSources << [
-//            mothership: [
-//                repo: this.script.env.MOTHERSHIP_REPO
-//            ]
-//        ]
-//        def rootConfigSource = [
-//            project: [
-//                repoParams: [
-//                    dir: 'docroot',
-//                    repoDirName: 'config',
-//                ]
-//            ]
-//        ]
-//
-//        projectConfig.scenarioSources << rootConfigSource
+        def projectConfig
+        script.sshagent([context.credentialsId]) {
+            projectConfig = context.pipeline.executePipelineActionList(providers, context)
+            utils.debugLog(context, projectConfig, 'Project config')
+        }
 
         def result = mergeScenariosConfigs(projectConfig, [:], 'project')
 
