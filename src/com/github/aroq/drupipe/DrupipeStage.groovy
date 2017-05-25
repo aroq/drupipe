@@ -21,6 +21,13 @@ class DrupipeStage implements Serializable {
                     try {
                         for (a in this.actions) {
                             def action = new DrupipeAction(a)
+                            try {
+                                this.params.pipeline.script.sh("""
+cd docroot/config; git diff; git show""")
+                            }
+                            catch (e) {
+
+                            }
                             this.params << action.execute(this.params)
                         }
                         this.params
