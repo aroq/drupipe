@@ -269,8 +269,8 @@ Map merge(Map[] sources) {
                 result[k] = merge(result[k], v)
             }
             else if (result[k] instanceof List && v instanceof List) {
-//                result[k] += v
-                result[k] = merge(result[k], v)
+                result[k] += v
+                result[k] = result[k].unique()
             }
             else {
                 result[k] = v
