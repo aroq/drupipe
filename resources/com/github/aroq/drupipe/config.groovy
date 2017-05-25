@@ -140,7 +140,7 @@ defaultActionParams = [
         singleBranch: true,
         depth: 1,
     ],
-    YamlFileProcessor: [
+    YamlFileHandler: [
         deployFile: '.drupipe.yml',
     ],
 ]
