@@ -270,6 +270,7 @@ Map merge(Map[] sources) {
             }
             else if (result[k] instanceof List && v instanceof List) {
                 result[k] += v
+                result[k] = result[k].unique()
             }
             else {
                 result[k] = v

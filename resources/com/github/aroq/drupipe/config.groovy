@@ -83,6 +83,10 @@ defaultActionParams = [
         propertiesFile: 'docroot/master/version.properties',
         executeCommand: 'deployFlow',
     ],
+    Druflow_deploy: [
+        propertiesFile: 'docroot/master/version.properties',
+        executeCommand: 'deployTag',
+    ],
     Druflow_deployFlow: [
         propertiesFile: 'docroot/master/version.properties',
         executeCommand: 'deployFlow',
@@ -140,7 +144,7 @@ defaultActionParams = [
         singleBranch: true,
         depth: 1,
     ],
-    YamlFileProcessor: [
+    YamlFileHandler: [
         deployFile: '.drupipe.yml',
     ],
 ]

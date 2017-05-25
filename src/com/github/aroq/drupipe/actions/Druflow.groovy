@@ -21,7 +21,12 @@ class Druflow extends BaseAction {
         executeDruflowCommand([env: executeEnvironment, projectName: context.projectName])
     }
 
-    def prepareDruflowCommandParams(overrides = [:]) {
+    def deploy() {
+        def site = action.params.site ? action.params.site : 'default'
+        executeDruflowCommand([argument: action.params.reference, site: site, env: context.environment, projectName: context.projectName])
+    }
+
+    def executeDruflowCommand(overrides = [:]) {
         def defaultParams = [
             debug: debugFlag(),
             executeCommand: action.params.executeCommand,
@@ -38,23 +43,17 @@ class Druflow extends BaseAction {
         }
         def commandParams = defaultParams
         commandParams << overrides
-    }
-
-    def prepareDruflowCommand(overrides) {
-        def commandParams = prepareDruflowCommandParams(overrides)
 
         def options = ''
         options += getOptions(commandParams)
         if (action.params.propertiesFile && script.fileExists(file: action.params.propertiesFile)) {
-            options += getOptions(script.readProperties(file: action.params.propertiesFile))
+            options += getOptions(getProperties())
         }
 
-        "cd ${action.params.druflowDir} && ./gradlew app ${options}"
-    }
+        def druflowCommand = "cd ${action.params.druflowDir} && ./gradlew app ${options}"
 
-    def executeDruflowCommand(overrides = [:]) {
-        def druflowCommand = prepareDruflowCommand(overrides)
         druflowGet()
+
         script.drupipeShell(druflowCommand, context)
     }
 
@@ -77,11 +76,13 @@ class Druflow extends BaseAction {
         }
     }
 
-
     def getGitRepo() {
-        script.echo "DRUFLOW getGitRepo()"
         def executeEnvironment = action.params.executeEnvironment ? action.params.executeEnvironment : context.environment
         executeDruflowCommand([env: executeEnvironment, projectName: context.projectName])
+    }
+
+    def getProperties() {
+        script.readProperties(file: action.params.propertiesFile)
     }
 
     def getDbs() {
