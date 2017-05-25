@@ -54,7 +54,7 @@ class Config extends BaseAction {
 //        }
 
         context.environmentParams = [:]
-        if (context.environments && context.servers) {
+        if (context.environments) {
             if (context.environment) {
                 def environment = context.environments[context.environment]
                 if (context.servers) {
