@@ -15,7 +15,7 @@ class AcquiaHandler extends BaseAction {
 
 
     def deploy() {
-        script.drupipeAction([action: 'Druflow.deploy', params: this.action.params])
+        script.drupipeAction([action: 'Druflow.deploy', params: this.action.params], context)
     }
 
 }
