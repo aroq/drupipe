@@ -66,6 +66,8 @@ class Config extends BaseAction {
 
         def stashes = context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
 
+        script.echo "Stashes: ${stashes}"
+
         script.stash name: 'config', includes: "${stashes}", excludes: ".git, .git/**"
         context
     }
