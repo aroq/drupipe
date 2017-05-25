@@ -21,6 +21,10 @@ class Druflow extends BaseAction {
         executeDruflowCommand([env: executeEnvironment, projectName: context.projectName])
     }
 
+    def deploy() {
+        executeDruflowCommand([env: context.environment, projectName: context.projectName])
+    }
+
     def prepareDruflowCommandParams(overrides = [:]) {
         def defaultParams = [
             debug: debugFlag(),
