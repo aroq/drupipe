@@ -22,7 +22,8 @@ class Druflow extends BaseAction {
     }
 
     def deploy() {
-        executeDruflowCommand([env: context.environment, projectName: context.projectName])
+        def properties = getProperties()
+        executeDruflowCommand([argument: properties.tag, env: context.environment, projectName: context.projectName])
     }
 
     def prepareDruflowCommandParams(overrides = [:]) {
@@ -50,10 +51,14 @@ class Druflow extends BaseAction {
         def options = ''
         options += getOptions(commandParams)
         if (action.params.propertiesFile && script.fileExists(file: action.params.propertiesFile)) {
-            options += getOptions(script.readProperties(file: action.params.propertiesFile))
+            options += getOptions(getProperties())
         }
 
         "cd ${action.params.druflowDir} && ./gradlew app ${options}"
+    }
+
+    def getProperties() {
+        script.readProperties(file: action.params.propertiesFile)
     }
 
     def executeDruflowCommand(overrides = [:]) {
