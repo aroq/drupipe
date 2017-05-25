@@ -22,8 +22,7 @@ class Druflow extends BaseAction {
     }
 
     def deploy() {
-        def properties = getProperties()
-        executeDruflowCommand([argument: properties.tag, env: context.environment, projectName: context.projectName])
+        executeDruflowCommand([argument: action.params.reference, env: context.environment, projectName: context.projectName])
     }
 
     def prepareDruflowCommandParams(overrides = [:]) {
