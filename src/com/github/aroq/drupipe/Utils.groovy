@@ -266,7 +266,12 @@ Map merge(Map[] sources) {
     sources.inject([:]) { result, source ->
         source.each { k, v ->
             if (result[k] instanceof Map && v instanceof Map ) {
-                result[k] = merge(result[k], v)
+                if (v.containsKey('override') && v['override']) {
+                    result[k] = v
+                }
+                else {
+                    result[k] = merge(result[k], v)
+                }
             }
             else if (result[k] instanceof List && v instanceof List) {
                 result[k] += v
