@@ -186,7 +186,7 @@ def processJob(jobs, currentFolder, config) {
                     logRotator(-1, 30)
                     parameters {
                         config.docmanConfig.projects?.each { project ->
-                            if ((project.value.type == 'root' || project.value.type == 'root_chain') && project.value.repo && config.env.GITLAB_HOST && project.value.repo.contains(config.env.GITLAB_HOST)) {
+                            if ((project.value.type == 'root' || project.value.type == 'root_chain') && project.value.repo) {
                                 println "Project: ${project.value.name}"
                                 def releaseRepo = project.value.type == 'root' ? project.value.repo : project.value.root_repo
                                 activeChoiceParam('release') {
