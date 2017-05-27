@@ -75,7 +75,7 @@ def processJob(jobs, currentFolder, config) {
                                     scriptlerScript('git_tags.groovy') {
                                         parameter('url', projectRepo)
                                         parameter('tagPattern', "*")
-                                        parameter('sort', true)
+                                        parameter('sort', 'x.y.z')
                                     }
                                 }
                             }
@@ -196,7 +196,7 @@ def processJob(jobs, currentFolder, config) {
                                     scriptlerScript("git_${job.value.source.type}.groovy") {
                                         parameter('url', releaseRepo)
                                         parameter('tagPattern', job.value.source.pattern)
-                                        parameter('sort', false)
+                                        parameter('sort', '')
                                     }
                                 }
                                 if (config.operationsModes) {
