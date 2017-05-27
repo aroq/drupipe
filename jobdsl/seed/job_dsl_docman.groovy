@@ -8,7 +8,7 @@ def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dum
 docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : "${config.projectConfigPath}/config.json"
 docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 
-println "Config: ${config}"
+println "Config tags: ${config.tags}"
 
 if (!config.tags || (!config.tags.contains('docman') && !config.tags.contains('drupipe'))) {
     if (config.configSeedType == 'docman') {

@@ -5,8 +5,6 @@ println "Subjobs Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 
-println "Config: ${config}"
-
 println "Config tags: ${config.tags}"
 
 if (config.tags.contains('docman')) {
