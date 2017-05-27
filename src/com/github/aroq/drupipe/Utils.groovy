@@ -264,7 +264,7 @@ Map merge(Map[] sources) {
     if (sources.length == 1) return sources[0]
 
     sources.inject([:]) { result, source ->
-        if (source.containsKey('override') && v['override']) {
+        if (source.containsKey('override') && source['override']) {
             result = source
         }
         source.each { k, v ->
