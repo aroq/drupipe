@@ -197,47 +197,49 @@ class Config extends BaseAction {
     }
 
     def projectConfig() {
-        def sourceObject = [
-            name: 'project',
-            path: 'sources/project',
-            type: 'git',
-            url: context.configRepo,
-            branch: 'master',
-            mode: 'shell',
-        ]
+        if (context.configRepo) {
+            def sourceObject = [
+                name: 'project',
+                path: 'sources/project',
+                type: 'git',
+                url: context.configRepo,
+                branch: 'master',
+                mode: 'shell',
+            ]
 
-        def providers = [
-            [
-                action: 'Source.add',
-                params: [source: sourceObject]
-            ],
-            [
-                action: 'Source.loadConfig',
-                params: [
-                    sourceName: 'project',
-                    configType: 'groovy',
-                    configPath: context.projectConfigFile
-                ]
-            ],
-            [
-                action: 'Source.loadConfig',
-                params: [
-                    sourceName: 'project',
-                    configType: 'yaml',
-                    configPath: 'config.yaml'
+            def providers = [
+                [
+                    action: 'Source.add',
+                    params: [source: sourceObject]
+                ],
+                [
+                    action: 'Source.loadConfig',
+                    params: [
+                        sourceName: 'project',
+                        configType: 'groovy',
+                        configPath: context.projectConfigFile
+                    ]
+                ],
+                [
+                    action: 'Source.loadConfig',
+                    params: [
+                        sourceName: 'project',
+                        configType: 'yaml',
+                        configPath: 'config.yaml'
+                    ]
                 ]
             ]
-        ]
-        def projectConfig
-        script.sshagent([context.credentialsId]) {
-            projectConfig = context.pipeline.executePipelineActionList(providers, context)
-            utils.debugLog(context, projectConfig, 'Project config')
+            def projectConfig
+            script.sshagent([context.credentialsId]) {
+                projectConfig = context.pipeline.executePipelineActionList(providers, context)
+                utils.debugLog(context, projectConfig, 'Project config')
+            }
+
+            def result = mergeScenariosConfigs(projectConfig, [:], 'project')
+
+            utils.debugLog(result, 'Project config with scenarios loaded')
+            result
         }
-
-        def result = mergeScenariosConfigs(projectConfig, [:], 'project')
-
-        utils.debugLog(result, 'Project config with scenarios loaded')
-        result
     }
 
 }
