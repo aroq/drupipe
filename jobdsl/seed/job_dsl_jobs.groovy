@@ -68,6 +68,7 @@ def processJob(jobs, currentFolder, config) {
                                 println "Project: ${project.value.name}"
                                 def projectRepo = project.value.repo
                                 println "Repo: ${projectRepo}"
+                                stringParam("${project.value.name}_version", '0')
                                 activeChoiceParam("${project.value.name}_version") {
                                     description('Allows user choose from multiple choices')
                                     filterable()
