@@ -240,8 +240,8 @@ def processJob(jobs, currentFolder, config) {
                     parameters {
                         stringParam('debugEnabled', '0')
                         stringParam('configRepo', repo)
-                        job.value.params?.each { param ->
-                            stringParam(param.key, param.value)
+                        job.value.params?.each { key, value ->
+                            stringParam(key, value)
                         }
                     }
                     definition {
