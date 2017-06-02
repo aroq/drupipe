@@ -234,15 +234,16 @@ def processJob(jobs, currentFolder, config) {
                 }
             }
             else if (job.value.type == 'common') {
+                println "Processing common type job: ${currentName}"
                 pipelineJob("${currentName}") {
                     concurrentBuild(false)
                     logRotator(-1, 30)
                     parameters {
                         stringParam('debugEnabled', '0')
                         stringParam('configRepo', repo)
-                        job.value.params?.each { key, value ->
-                            stringParam(key, value)
-                        }
+//                        job.value.params?.each { key, value ->
+//                            stringParam(key, value)
+//                        }
                     }
                     definition {
                         cpsScm {
