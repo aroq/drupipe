@@ -37,7 +37,10 @@ class Source extends BaseAction {
                         }
                     }
                 }
-                else if (source.mode == 'shell') {
+//                else if (source.refType == 'branch' && source.mode == 'shell') {
+//                    this.script.sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
+//                }
+                else {
                     this.script.sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
                 }
                 result = source.path

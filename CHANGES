@@ -1,3 +1,448 @@
+Version 0.6.8:
+ - Updated drupipe to v0.6.8
+ - Fixed source add git for tags
+ - set drupipe to 0.6.7 for stage
+ - Master version of drupipe
+
+Version 0.6.7:
+ - updated drupipe to v0.6.7
+ - Updated drupipe version
+
+Version 0.6.6:
+ - Updated drupipe version
+ - Updated drupipe version
+
+Version 0.6.5:
+ - Updated drupipe version
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Merge branch 'develop'
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Merge branch 'develop'
+ - Added acquia handler
+ - Added acquia handler
+ - Added acquia handler
+ - Added acquia handler
+ - Added acquia handler
+ - Added acquia handler
+ - Added acquia handler
+ - Added acquia handler
+ - Added acquia handler
+ - Changed src/com/github/aroq/drupipe/actions/YamlFileProcessor.groovy
+ - Merge branch 'master' into develop
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Merge branch 'master' into develop
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Merge branch 'master' into develop
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Merge branch 'develop'
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Merge branch 'develop'
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Refactoring pipelines
+ - Merge branch 'master' into develop
+ - Fixed conflict
+ - Added druflow flowtype
+ - Added druflow flowtype
+ - Added druflow flowtype
+ - Added druflow flowtype
+ - Added druflow flowtype
+ - Changed druflow version
+ - Changed druflow version
+ - Merge branch 'develop'
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Fixed gitlab hooks
+ - debug
+ - Merge branch 'master' into develop
+ - Fixed dsl job
+ - Fixed dsl job
+ - Fixed dsl job
+ - Fixed dsl job
+ - Fixed dsl job
+ - Merge branch 'develop'
+ - Removed pipeline
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Added block pipeline
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - Pipeline loading changes
+ - job dsl refactoring
+ - job dsl refactoring
+ - job dsl refactoring
+ - job dsl refactoring
+ - job dsl refactoring
+ - job dsl refactoring
+ - job dsl refactoring
+ - job dsl refactoring
+ - job dsl refactoring
+ - job dsl refactoring
+ - job dsl refactoring
+ - job dsl refactoring
+ - job dsl refactoring
+ - job dsl refactoring
+ - job dsl refactoring
+ - job dsl refactoring
+ - job dsl refactoring
+ - Fixed docker image pull for selenese
+ - Merge branch 'master' into develop
+ - Merge branch 'develop'
+ - Refactored JobDSL jobs
+ - Merge branch 'master' into develop
+ - Refactored JobDSL jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - job dsl jobs
+ - fixed scenariosSources merge
+ - fixed scenariosSources merge
+ - fixed scenariosSources merge
+ - fixed scenariosSources merge
+ - fixed scenariosSources merge
+ - fixed docroot/config path
+ - renamed docmanConfigPath & docmanConfigFile
+ - subjobs dsl
+ - subjobs dsl
+ - subjobs dsl
+ - subjobs dsl
+ - subjobs dsl
+ - subjobs dsl
+ - subjobs dsl
+ - subjobs dsl
+ - added job dsl jobs
+ - added job dsl jobs
+ - added job dsl jobs
+ - added job dsl jobs
+ - added job dsl jobs
+ - added job dsl jobs
+ - added job dsl jobs
+ - job dsl jobs
+ - added job dsl jobs
+ - Scenarios log messages
+ - Changed params for selenese
+ - Merge branch 'master' into develop
+ - removed docman config_repo option
+ - removed docker image definition from dsl
+ - Refactored scenarios
+ - added dsl subconfig
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Scenarios refactor
+ - Selenese runner
+ - Selenese runner
+ - Selenese runner
+ - Selenese runner
+ - Selenese runner
+ - Selenese runner
+ - Selenese runner
+ - Selenese runner
+ - Selenese runner
+ - Yaml file processor
+ - Yaml file processor
+ - Yaml file processor
+ - Yaml file processor
+ - Yaml file processor
+ - Yaml file processor
+ - Yaml file processor
+ - Yaml file processor
+ - changed drupipe file
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - debug
+ - Merge branch 'master' into develop
+ - Changed blocks execution
+ - Changed blocks execution
+ - Changed blocks execution
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Changed ansible params
+ - Added inventory file for Ansible
+ - Changed release jobs build
+ - Removed deploy handler
+ - debug
+ - fixed deploys
+
 Version 0.6.4:
  - Changed drupipe version
  - Merge branch 'develop'
