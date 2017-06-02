@@ -233,6 +233,38 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
             }
+            else if (job.value.type == 'common') {
+                pipelineJob("${currentName}") {
+                    concurrentBuild(false)
+                    logRotator(-1, 30)
+                    parameters {
+                        stringParam('debugEnabled', '0')
+                        stringParam('configRepo', repo)
+                        job.value.params?.each { param ->
+                            stringParam(param.key, param.value)
+                        }
+                    }
+                    definition {
+                        cpsScm {
+                            scm {
+                                git() {
+                                    remote {
+                                        name('origin')
+                                        url(repo)
+                                        credentials(config.credentialsId)
+                                    }
+                                    extensions {
+                                        relativeTargetDirectory(config.projectConfigPath)
+                                    }
+                                    branch('master')
+                                }
+                                scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
+                            }
+                        }
+                    }
+                }
+
+            }
             else if (job.value.type == 'selenese') {
 //                def repo = config.defaultActionParams.SeleneseTester.repoAddress
                 def b = config.defaultActionParams.SeleneseTester.reference ? config.defaultActionParams.SeleneseTester.reference : 'master'
