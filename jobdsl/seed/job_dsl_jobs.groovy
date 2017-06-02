@@ -250,7 +250,7 @@ def processJob(jobs, currentFolder, config) {
                                 git() {
                                     remote {
                                         name('origin')
-                                        url(config.configrepo)
+                                        url(config.configRepo)
                                         credentials(config.credentialsId)
                                     }
                                     extensions {
