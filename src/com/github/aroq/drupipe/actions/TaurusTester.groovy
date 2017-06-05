@@ -13,36 +13,14 @@ class TaurusTester extends BaseAction {
     def DrupipeAction action
 
     def test() {
-//        def workspace = script.pwd()
-        def sourcePath = utils.sourcePath(context, action.params.sourceName, '')
-        def bztString = """${this.context.taurus_config} \
+        def bztString = """scenarios/${action.params.sourceName}/${this.context.taurus_config} \
 -frontpage-cached -o \
 execution.hold-for=${this.context.taurus_hold_for} \
 -o execution.ramp-up=${this.context.taurus_ramp_up} -o \
 execution.concurrency=${this.context.taurus_concurrency} \
 ${this.context.taurus_args}"""
 
-        script.echo "Source path: ${sourcePath}"
-//        try {
-            script.dir (sourcePath) {
-                this.script.bzt "${bztString}"
-            }
-//            script.drupipeShell(
-//
-//"""cd ${sourcePath}; \
-//${context.jenkinsParams.taurus_config} \
-//-frontpage-cached -o \
-//execution.hold-for=${context.jenkinsParams.taurus_hold_for} \
-//-o execution.ramp-up=${context.jenkinsParams.taurus_ramp_up} -o \
-//execution.concurrency=${context.jenkinsParams.taurus_concurrency} \
-//${context.jenkinsParams.taurus_args}""",
-//                context
-//            )
-//        }
-//        catch (e) {
-//            script.currentBuild.result = "UNSTABLE"
-//            script.echo "Err: ${e}"
-//        }
+        this.script.bzt "${bztString}"
     }
 }
 
