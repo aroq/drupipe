@@ -15,6 +15,7 @@ class TaurusTester extends BaseAction {
     def test() {
 //        def workspace = script.pwd()
         def sourcePath = utils.sourcePath(context, action.params.sourceName, '')
+        script.echo "Source path: ${sourcePath}"
 //        try {
             script.dir (sourcePath) {
                 script.bzt """${context.jenkinsParams.taurus_config} \
