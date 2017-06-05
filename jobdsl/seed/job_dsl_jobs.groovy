@@ -234,7 +234,7 @@ def processJob(jobs, currentFolder, config) {
                 }
             }
             else if (job.value.type == 'common') {
-                def repo = job.value.params.configRepo ? job.value.params.configRepo : config.configRepo
+                def repo = job.value.configRepo ? job.value.configRepo : config.configRepo
                 pipelineJob("${currentName}") {
                     concurrentBuild(false)
                     logRotator(-1, 30)
@@ -254,7 +254,7 @@ def processJob(jobs, currentFolder, config) {
                                         url(repo)
                                         credentials(config.credentialsId)
                                     }
-                                    if (!job.value.params.configRepo) {
+                                    if (!job.value.configRepo) {
                                         extensions {
                                             relativeTargetDirectory(config.projectConfigPath)
                                         }
