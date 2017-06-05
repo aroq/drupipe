@@ -13,7 +13,7 @@ class TaurusTester extends BaseAction {
     def DrupipeAction action
 
     def test() {
-        def bztString = """scenarios/${action.params.sourceName}/${this.context.taurus_config} \
+        def bztString = """${this.context.taurus_config} \
 -frontpage-cached -o \
 execution.hold-for=${this.context.taurus_hold_for} \
 -o execution.ramp-up=${this.context.taurus_ramp_up} -o \
