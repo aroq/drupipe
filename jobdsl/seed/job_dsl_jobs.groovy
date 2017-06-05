@@ -235,6 +235,8 @@ def processJob(jobs, currentFolder, config) {
             }
             else if (job.value.type == 'common') {
                 def repo = job.value.configRepo ? job.value.configRepo : config.configRepo
+                def pipelineScriptPath = job.value.configRepo ? "${pipelineScript}.groovy" : "${config.projectConfigPath}/${pipelineScript}.groovy"
+
                 pipelineJob("${currentName}") {
                     concurrentBuild(false)
                     logRotator(-1, 30)
@@ -261,7 +263,7 @@ def processJob(jobs, currentFolder, config) {
                                     }
                                     branch('master')
                                 }
-                                scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
+                                scriptPath(pipelineScriptPath)
                             }
                         }
                     }
