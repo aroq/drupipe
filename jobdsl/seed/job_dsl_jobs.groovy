@@ -239,7 +239,7 @@ def processJob(jobs, currentFolder, config) {
                     logRotator(-1, 30)
                     parameters {
                         stringParam('debugEnabled', '0')
-//                        stringParam('configRepo', config.configRepo)
+                        stringParam('configRepo', configRepo)
                         job.value.params?.each { key, value ->
                             stringParam(key, value)
                         }
