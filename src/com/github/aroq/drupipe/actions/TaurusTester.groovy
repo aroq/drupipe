@@ -15,12 +15,12 @@ class TaurusTester extends BaseAction {
     def test() {
 //        def workspace = script.pwd()
         def sourcePath = utils.sourcePath(context, action.params.sourceName, '')
-        def bztString = """${this.context.jenkinsParams.taurus_config} \
+        def bztString = """${this.context.taurus_config} \
 -frontpage-cached -o \
-execution.hold-for=${this.context.jenkinsParams.taurus_hold_for} \
--o execution.ramp-up=${this.context.jenkinsParams.taurus_ramp_up} -o \
-execution.concurrency=${this.context.jenkinsParams.taurus_concurrency} \
-${this.context.jenkinsParams.taurus_args}"""
+execution.hold-for=${this.context.taurus_hold_for} \
+-o execution.ramp-up=${this.context.taurus_ramp_up} -o \
+execution.concurrency=${this.context.taurus_concurrency} \
+${this.context.taurus_args}"""
 
         script.echo "Source path: ${sourcePath}"
 //        try {
