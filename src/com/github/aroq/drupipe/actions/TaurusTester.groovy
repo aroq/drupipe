@@ -38,7 +38,7 @@ ${context.jenkinsParams.taurus_args}"""
         }
         catch (e) {
             script.currentBuild.result = "UNSTABLE"
-            scrip.echo "Err: ${e}"
+            script.echo "Err: ${e}"
         }
     }
 }
