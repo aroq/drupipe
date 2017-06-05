@@ -15,7 +15,7 @@ class TaurusTester extends BaseAction {
     def test() {
 //        def workspace = script.pwd()
         def sourcePath = utils.sourcePath(context, action.params.sourceName, '')
-        try {
+//        try {
             script.dir (sourcePath) {
                 script.bzt """${context.jenkinsParams.taurus_config} \
 -frontpage-cached -o \
@@ -35,11 +35,11 @@ ${context.jenkinsParams.taurus_args}"""
 //${context.jenkinsParams.taurus_args}""",
 //                context
 //            )
-        }
-        catch (e) {
-            script.currentBuild.result = "UNSTABLE"
-            script.echo "Err: ${e}"
-        }
+//        }
+//        catch (e) {
+//            script.currentBuild.result = "UNSTABLE"
+//            script.echo "Err: ${e}"
+//        }
     }
 }
 
