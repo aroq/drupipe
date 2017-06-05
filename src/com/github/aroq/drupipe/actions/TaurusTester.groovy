@@ -25,7 +25,7 @@ ${this.context.taurus_args}"""
         script.echo "Source path: ${sourcePath}"
 //        try {
             script.dir (sourcePath) {
-                this.script.bzt ${bztString}
+                this.script.bzt "${bztString}"
             }
 //            script.drupipeShell(
 //
