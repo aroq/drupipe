@@ -197,7 +197,7 @@ def pipelineNotify(params, String buildStatus = 'STARTED') {
     }
 }
 
-def sourcePath(params, sourceName, String path = "") {
+def sourcePath(params, sourceName, String path) {
     debugLog(params, sourceName, 'Source name')
     if (sourceName in params.loadedSources) {
         params.loadedSources[sourceName].path + '/' + path
