@@ -47,11 +47,7 @@ class DrupipeBlock implements Serializable {
                         }
                     }
                     else if (context.containerMode == 'docker') {
-                        def blockParams = [:]
-                        if (this.sourceName) {
-                             blockParams["workingDir"] = utils.sourcePath(context, this.sourceName)
-                        }
-                        context.pipeline.script.drupipeWithDocker(context, blockParams) {
+                        context.pipeline.script.drupipeWithDocker(context) {
                             result = _execute(body)
                         }
                     }

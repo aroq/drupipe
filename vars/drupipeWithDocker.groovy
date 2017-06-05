@@ -1,4 +1,4 @@
-def call(context = [:], blockParams = [:], body) {
+def call(context = [:], body) {
     context << context.defaultActionParams['drupipeWithDocker'] << context
     if (context.dockerfile) {
         image = docker.build(context.dockerfile, context.projectConfigPath)
@@ -8,9 +8,6 @@ def call(context = [:], blockParams = [:], body) {
         image.pull()
     }
     def drupipeDockerArgs = context.drupipeDockerArgs
-    if (blockParams.workingDir) {
-        drupipeDockerArgs += " --workdir=${blockParams.workingDir}"
-    }
     image.inside(drupipeDockerArgs) {
         context.workspace = pwd()
         sshagent([context.credentialsId]) {
