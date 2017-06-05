@@ -16,8 +16,8 @@ class TaurusTester extends BaseAction {
 //        def workspace = script.pwd()
         def sourcePath = utils.sourcePath(context, action.params.sourceName, '')
         try {
-            dir (sourcePath) {
-                bzt """${context.jenkinsParams.taurus_config} \
+            script.dir (sourcePath) {
+                script.bzt """${context.jenkinsParams.taurus_config} \
 -frontpage-cached -o \
 execution.hold-for=${context.jenkinsParams.taurus_hold_for} \
 -o execution.ramp-up=${context.jenkinsParams.taurus_ramp_up} -o \
