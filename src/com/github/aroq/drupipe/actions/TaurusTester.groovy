@@ -18,12 +18,12 @@ class TaurusTester extends BaseAction {
         script.echo "Source path: ${sourcePath}"
 //        try {
             script.dir (sourcePath) {
-                script.bzt """${context.jenkinsParams.taurus_config} \
+                this.script.bzt """${this.context.jenkinsParams.taurus_config} \
 -frontpage-cached -o \
-execution.hold-for=${context.jenkinsParams.taurus_hold_for} \
--o execution.ramp-up=${context.jenkinsParams.taurus_ramp_up} -o \
-execution.concurrency=${context.jenkinsParams.taurus_concurrency} \
-${context.jenkinsParams.taurus_args}"""
+execution.hold-for=${this.context.jenkinsParams.taurus_hold_for} \
+-o execution.ramp-up=${this.context.jenkinsParams.taurus_ramp_up} -o \
+execution.concurrency=${this.context.jenkinsParams.taurus_concurrency} \
+${this.context.jenkinsParams.taurus_args}"""
             }
 //            script.drupipeShell(
 //
