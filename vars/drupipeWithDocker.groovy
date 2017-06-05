@@ -9,7 +9,7 @@ def call(context = [:], blockParams = [:], body) {
     }
     def drupipeDockerArgs = context.drupipeDockerArgs
     if (blockParams.workingDir) {
-        drupipeDockerArgs += " --working-dir=${blockParams.workingDir}"
+        drupipeDockerArgs += " --workdir=${blockParams.workingDir}"
     }
     image.inside(drupipeDockerArgs) {
         context.workspace = pwd()
