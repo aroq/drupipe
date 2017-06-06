@@ -25,6 +25,7 @@ projects.each { project ->
             println "USERS: ${users}"
         }
 
+        println "FOLDER: ${project.key}"
         folder(project.key) {
             authorization {
                 users.each { user ->
