@@ -31,13 +31,13 @@ projects.each { project ->
                     // TODO: make permissions configurable.
                     if (user.value > 10) {
                         permission('hudson.model.Item.Read', user.key)
-                        println "Added READ permissions for user:${user.key}"
+                        println "Added READ permissions for user:${user.key}, folder: ${project.key}"
                     }
                     if (user.value > 30) {
                         permission('hudson.model.Run.Update', user.key)
                         permission('hudson.model.Item.Build', user.key)
                         permission('hudson.model.Item.Cancel', user.key)
-                        println "Added UPDATE/BUILD/CANCEL permissions for user:${user.key}"
+                        println "Added UPDATE/BUILD/CANCEL permissions for user:${user.key}", folder: ${project.key}
                     }
                 }
             }
