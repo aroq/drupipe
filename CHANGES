@@ -1,3 +1,6 @@
+Version 0.7.0:
+ - Changed drupipe version to 0.7.0
+
 Version 0.6.9:
  - Fixed mothership job
  - Set drupipe version to master
