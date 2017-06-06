@@ -37,7 +37,7 @@ projects.each { project ->
                         permission('hudson.model.Run.Update', user.key)
                         permission('hudson.model.Item.Build', user.key)
                         permission('hudson.model.Item.Cancel', user.key)
-                        println "Added UPDATE/BUILD/CANCEL permissions for user:${user.key}", folder: ${project.key}
+                        println "Added UPDATE/BUILD/CANCEL permissions for user:${user.key}, folder: ${project.key}"
                     }
                 }
             }
