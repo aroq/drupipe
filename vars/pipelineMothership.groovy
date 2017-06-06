@@ -10,7 +10,6 @@ def call() {
                         override: true,
                         removedJobAction: 'DELETE',
                         removedViewAction: 'DELETE',
-                        lookupStrategy: 'SEED_JOB',
                         additionalClasspath: ['library/src'],
                     ],
                     context
