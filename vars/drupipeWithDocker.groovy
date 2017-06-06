@@ -7,7 +7,8 @@ def call(context = [:], body) {
         image = docker.image(context.dockerImage)
         image.pull()
     }
-    image.inside(context.drupipeDockerArgs) {
+    def drupipeDockerArgs = context.drupipeDockerArgs
+    image.inside(drupipeDockerArgs) {
         context.workspace = pwd()
         sshagent([context.credentialsId]) {
             result = body(context)

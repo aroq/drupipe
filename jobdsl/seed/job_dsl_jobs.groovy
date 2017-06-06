@@ -233,6 +233,43 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
             }
+            else if (job.value.type == 'common') {
+                def repo = job.value.configRepo ? job.value.configRepo : config.configRepo
+                def pipelineScriptPath = job.value.configRepo ? "${pipelineScript}.groovy" : "${config.projectConfigPath}/${pipelineScript}.groovy"
+
+                pipelineJob("${currentName}") {
+                    concurrentBuild(false)
+                    logRotator(-1, 30)
+                    parameters {
+                        stringParam('debugEnabled', '0')
+                        stringParam('configRepo', config.configRepo)
+                        job.value.params?.each { key, value ->
+                            stringParam(key, value)
+                        }
+                    }
+                    definition {
+                        cpsScm {
+                            scm {
+                                git() {
+                                    remote {
+                                        name('origin')
+                                        url(repo)
+                                        credentials(config.credentialsId)
+                                    }
+                                    if (!job.value.configRepo) {
+                                        extensions {
+                                            relativeTargetDirectory(config.projectConfigPath)
+                                        }
+                                    }
+                                    branch('master')
+                                }
+                                scriptPath(pipelineScriptPath)
+                            }
+                        }
+                    }
+                }
+
+            }
             else if (job.value.type == 'selenese') {
 //                def repo = config.defaultActionParams.SeleneseTester.repoAddress
                 def b = config.defaultActionParams.SeleneseTester.reference ? config.defaultActionParams.SeleneseTester.reference : 'master'
