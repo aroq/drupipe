@@ -20,6 +20,7 @@ class TaurusTester extends BaseAction {
 -o execution.throughput=${this.context.taurus_throughput} \
 ${this.context.taurus_args}"""
 
+        this.script.echo "Execute BZT: ${bztString}"
         this.script.bzt "${bztString}"
     }
 }
