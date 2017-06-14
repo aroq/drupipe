@@ -261,7 +261,8 @@ def processJob(jobs, currentFolder, config) {
                                             relativeTargetDirectory(config.projectConfigPath)
                                         }
                                     }
-                                    branch('master')
+                                    // TODO: very dirty hack, remove it.
+                                    branch('v0.1')
                                 }
                                 scriptPath(pipelineScriptPath)
                             }
