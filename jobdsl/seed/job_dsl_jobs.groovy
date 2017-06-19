@@ -34,7 +34,7 @@ def processJob(jobs, currentFolder, config) {
         println "Current name: ${currentName}"
         if (job.value.type == 'folder') {
             folder(currentName) {
-                if (config.gitlabHelper) {
+                if (config.gitlabHelper && !job.value.noNooks) {
                     users = config.gitlabHelper.getUsers(config.configRepo)
                     println "USERS: ${users}"
                     authorization {
