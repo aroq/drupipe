@@ -7,7 +7,7 @@ def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dum
 
 println "Config tags: ${config.tags}"
 
-if (config.tags.contains('docman')) {
+if (config.tags && config.tags.contains('docman')) {
     docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : "${config.projectConfigPath}/config.json"
     docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 
