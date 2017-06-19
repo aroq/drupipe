@@ -15,7 +15,7 @@ if (config.tags && config.tags.contains('docman')) {
     config.docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
 }
 
-if (config.env.GITLAB_API_TOKEN_TEXT & !config.noHooks) {
+if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
     config.gitlabHelper = new GitlabHelper(script: this, config: config)
 }
 
