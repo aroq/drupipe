@@ -20,7 +20,7 @@ projects.each { project ->
 
         // TODO: Add condition checking if permissions should be set based on Gitlab permissions.
         // TODO: Add condition checking if repo is in Gitlab.
-        if (config.env.GITLAB_API_TOKEN_TEXT) {
+        if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
             users = gitlabHelper.getUsers(config.configRepo)
             println "USERS: ${users}"
         }
@@ -84,7 +84,7 @@ projects.each { project ->
                 }
             }
         }
-        if (config.env.GITLAB_API_TOKEN_TEXT) {
+        if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
             gitlabHelper.addWebhook(
                 config.configRepo,
                 "${config.env.JENKINS_URL}project/${project.key}/seed"
