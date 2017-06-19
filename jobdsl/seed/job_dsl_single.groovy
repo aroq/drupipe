@@ -4,10 +4,10 @@ println "Docman Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 
-if (!config.tags.contains('drupipe') && config.configSeedType == 'single') {
-    if (config.env.GITLAB_API_TOKEN_TEXT) {
+if (!config.tags || (!config.tags.contains('drupipe') && config.configSeedType == 'single')) {
+    if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
         println "Initialize Gitlab Helper"
-        gitlabHelper = new GitlabHelper(script: this, config: config)
+        config.gitlabHelper = new GitlabHelper(script: this, config: config)
     }
 
     def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipeline'
@@ -98,7 +98,7 @@ if (!config.tags.contains('drupipe') && config.configSeedType == 'single') {
                 }
             }
         }
-        if (config.env.GITLAB_API_TOKEN_TEXT) {
+        if (config.gitlabHelper) {
             config.components.each { project ->
                 if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
                     if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
