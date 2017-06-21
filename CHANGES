@@ -1,3 +1,6 @@
+Version 0.6.8.1:
+ - Fixed druflow deploy
+
 Version 0.6.8:
  - Updated drupipe to v0.6.8
  - Fixed source add git for tags
