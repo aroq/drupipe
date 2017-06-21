@@ -23,7 +23,7 @@ class Druflow extends BaseAction {
 
     def deploy() {
         def site = action.params.site ? action.params.site : 'default'
-        executeDruflowCommand([argument: action.params.reference, site: site, env: context.environment, projectName: context.projectName])
+        executeDruflowCommand([argument: "tags/${action.params.reference}", site: site, env: context.environment, projectName: context.projectName])
     }
 
     def executeDruflowCommand(overrides = [:]) {
