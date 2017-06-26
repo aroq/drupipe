@@ -5,12 +5,11 @@ println "Docman Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 
-docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : "${config.projectConfigPath}/config.json"
-docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
-
 println "Config tags: ${config.tags}"
 
 if (!config.tags || (!config.tags.contains('docman') && !config.tags.contains('drupipe'))) {
+    docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : "${config.projectConfigPath}/config.json"
+    docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
     if (config.configSeedType == 'docman') {
         // Retrieve Docman config from json file (prepared by "docman info" command).
         def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
