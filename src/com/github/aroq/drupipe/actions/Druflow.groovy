@@ -22,8 +22,11 @@ class Druflow extends BaseAction {
     }
 
     def deploy() {
-        def site = action.params.site ? action.params.site : 'default'
-        executeDruflowCommand([argument: "tags/${action.params.reference}", site: site, env: context.environment, projectName: context.projectName])
+        // TODO: set exclusions in params.
+        if (action.params.reference != "staging" && action.params.reference != "develop") {
+            def site = action.params.site ? action.params.site : 'default'
+            executeDruflowCommand([argument: "tags/${action.params.reference}", site: site, env: context.environment, projectName: context.projectName])
+        }
     }
 
     def executeDruflowCommand(overrides = [:]) {
