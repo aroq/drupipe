@@ -1,3 +1,6 @@
+Version 0.6.8.2:
+ - Fixed druflow deploy for develop & staging
+
 Version 0.6.8.1:
  - Fixed druflow deploy
 
