@@ -13,6 +13,10 @@ class TaurusTester extends BaseAction {
     def DrupipeAction action
 
     def test() {
+        this.script.dir("logs") {
+            this.script.deleteDir()
+        }
+
         def bztString = """${this.context.taurus_config} \
 -o execution.hold-for=${this.context.taurus_hold_for} \
 -o execution.ramp-up=${this.context.taurus_ramp_up} \
