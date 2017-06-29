@@ -23,6 +23,9 @@ ${this.context.taurus_args}"""
 
         this.script.echo "Execute BZT: ${bztString}"
         this.script.bzt "${bztString}"
+
+        this.script.archiveArtifacts artifacts: 'logs/*'
+
     }
 }
 
