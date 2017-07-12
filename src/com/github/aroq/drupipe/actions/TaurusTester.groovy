@@ -18,7 +18,7 @@ class TaurusTester extends BaseAction {
         }
 
         def hold_for = (this.context.taurus_hold_for.length() == 0) ? "-o execution.hold-for=${this.context.taurus_hold_for}" : ''
-        def rump_up = (this.context.taurus_ramp_up.length() == 0) ? "-o execution.rump-up=${this.context.taurus_ramp_up}" : ''
+        def ramp_up = (this.context.taurus_ramp_up.length() == 0) ? "-o execution.rump-up=${this.context.taurus_ramp_up}" : ''
         def concurrency = (this.context.taurus_concurrency.length() == 0) ? "-o execution.concurrency=${this.context.taurus_concurrency}" : ''
         def throughput = (this.context.taurus_throughput.length() == 0) ? "-o execution.throughput=${this.context.taurus_throughput}" : ''
         def step = (this.context.taurus_steps.length() == 0) ? "-o execution.step=${this.context.taurus_steps}" : ''
