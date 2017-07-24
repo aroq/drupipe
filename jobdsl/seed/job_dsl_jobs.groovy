@@ -315,6 +315,29 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
             }
+            else if (job.value.type == 'trigger_all') {
+                job(currentName) {
+                    concurrentBuild(false)
+                    logRotator(-1, 30)
+                    publishers {
+                        downstreamParameterized {
+                            for (jobInFolder in jobs)  {
+                                if (!jobInFolder.value.children) {
+                                  def jobInFolderName = currentFolder ? "${currentFolder}/${jobInFolder.key}" : jobInFolder.key
+                                  trigger(jobInFolderName) {
+                                      parameters {
+                                          currentBuild()
+                                          jobInFolder.value.params?.each { key, value ->
+                                              stringParam(key, value)
+                                          }
+                                      }
+                                  }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         if (job.value.children) {
