@@ -316,20 +316,31 @@ def processJob(jobs, currentFolder, config) {
                 }
             }
             else if (job.value.type == 'trigger_all') {
-                println "JOB NAME:${currentName}"
-                job("${currentName}") {
+                println "JOB NAME: ${currentName}"
+                freeStyleJob("${currentName}") {
+                    println "Disable concurrent build"
                     concurrentBuild(false)
+                    println "Configure log rotator"
                     logRotator(-1, 30)
+                    println "Add publishers"
                     publishers {
+                        println "Add downstreamParameterized"
                         downstreamParameterized {
+                            println "Foreach Jobs"
                             for (jobInFolder in jobs)  {
                                 println "JOB IN FOLDER NAME: ${jobInFolder.key}"
                                 println "JOB IN FOLDER: ${jobInFolder}"
                                 if (!jobInFolder.hasProperty("children")) {
+                                  println "JOB IN FOLDER WITHOUT CHILDREN NAME: ${jobInFolder.key}"
+                                  println "JOB IN FOLDER WITHOUT CHILDREN: ${jobInFolder}"
                                   def jobInFolderName = currentFolder ? "${currentFolder}/${jobInFolder.key}" : jobInFolder.key
+                                  println "Add trigger"
                                   trigger(jobInFolderName) {
+                                      println "Add parameters"
                                       parameters {
+                                          println "Add currentBuild parameters"
                                           currentBuild()
+                                          println "Add trigger build default parameters"
                                           jobInFolder.value.params?.each { key, value ->
                                               stringParam(key, value)
                                           }
