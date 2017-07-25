@@ -340,10 +340,6 @@ def processJob(jobs, currentFolder, config) {
                                       parameters {
                                           println "Add currentBuild parameters"
                                           currentBuild()
-                                          println "Add trigger build default parameters"
-                                          jobInFolder.value.params?.each { key, value ->
-                                              stringParam(key, value)
-                                          }
                                       }
                                   }
                                 }
