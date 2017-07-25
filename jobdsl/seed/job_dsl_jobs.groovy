@@ -316,13 +316,19 @@ def processJob(jobs, currentFolder, config) {
                 }
             }
             else if (job.value.type == 'trigger_all') {
-                freeStyleJob("${currentName}") {
+                job("${currentName}") {
                     concurrentBuild(false)
                     logRotator(-1, 30)
                     publishers {
                         downstreamParameterized {
                             for (jobInFolder in jobs)  {
-                                if (!jobInFolder.hasProperty("children")) {
+                                if (job.value.children) {
+                                  println "Skip job with chilldren."
+                                }
+                                else if (job.value.type == 'trigger_all') {
+                                  println "Skip trigger_all job."
+                                }
+                                else {
                                   println "ADD TRIGGER JOB: ${jobInFolder.key}"
                                   def jobInFolderName = currentFolder ? "${currentFolder}/${jobInFolder.key}" : jobInFolder.key
                                   trigger(jobInFolderName) {
