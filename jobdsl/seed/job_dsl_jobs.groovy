@@ -322,10 +322,10 @@ def processJob(jobs, currentFolder, config) {
                     publishers {
                         downstreamParameterized {
                             for (jobInFolder in jobs)  {
-                                if (job.value.children) {
+                                if (jobInFolder.value.children) {
                                   println "Skip job with chilldren."
                                 }
-                                else if (job.value.type == 'trigger_all') {
+                                else if (jobInFolder.value.type == 'trigger_all') {
                                   println "Skip trigger_all job."
                                 }
                                 else {
