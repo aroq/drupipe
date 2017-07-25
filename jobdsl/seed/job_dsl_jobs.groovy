@@ -316,7 +316,7 @@ def processJob(jobs, currentFolder, config) {
                 }
             }
             else if (job.value.type == 'trigger_all') {
-                job("${currentName}") {
+                freeStyleJob("${currentName}") {
                     concurrentBuild(false)
                     logRotator(-1, 30)
                     publishers {
@@ -329,13 +329,14 @@ def processJob(jobs, currentFolder, config) {
                                   println "Skip trigger_all job."
                                 }
                                 else {
-                                  println "ADD TRIGGER JOB: ${jobInFolder.key}"
-                                  def jobInFolderName = currentFolder ? "${currentFolder}/${jobInFolder.key}" : jobInFolder.key
-                                  trigger(jobInFolderName) {
-                                      parameters {
-                                          currentBuild()
-                                      }
-                                  }
+                                    def jobInFolderName = currentFolder ? "${currentFolder}/${jobInFolder.key}" : jobInFolder.key
+                                    println "ADD TRIGGER JOB: ${jobInFolderName}"
+                                    trigger(jobInFolderName) {
+                                        condition("ALWAYS")
+                                        parameters {
+                                            currentBuild()
+                                        }
+                                    }
                                 }
                             }
                         }
