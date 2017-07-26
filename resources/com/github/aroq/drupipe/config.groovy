@@ -3,7 +3,7 @@ docrootDir = 'docroot'
 projectConfigPath = 'docroot/config'
 projectConfigFile = 'docroot.config'
 
-drupipeLibraryUrl = 'https://github.com/michael-molchanov/drupipe.git'
+drupipeLibraryUrl = 'https://github.com/aroq/drupipe.git'
 drupipeLibraryBranch = 'master'
 drupipeLibraryType = 'branch'
 dockerImage = 'aroq/drudock:1.4.0'
