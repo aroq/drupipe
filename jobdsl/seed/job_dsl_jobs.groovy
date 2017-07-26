@@ -319,6 +319,13 @@ def processJob(jobs, currentFolder, config) {
                 freeStyleJob("${currentName}") {
                     concurrentBuild(false)
                     logRotator(-1, 30)
+                    parameters {
+                        stringParam('debugEnabled', '0')
+                        stringParam('configRepo', config.configRepo)
+                        job.value.params?.each { key, value ->
+                            stringParam(key, value)
+                        }
+                    }
                     publishers {
                         downstreamParameterized {
                             for (jobInFolder in jobs)  {
