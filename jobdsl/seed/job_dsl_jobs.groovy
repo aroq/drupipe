@@ -7,7 +7,7 @@ def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dum
 
 println "Config tags: ${config.tags}"
 
-if (config.tags.contains('docman')) {
+if (config.tags && config.tags.contains('docman')) {
     docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : "${config.projectConfigPath}/config.json"
     docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 
@@ -15,7 +15,7 @@ if (config.tags.contains('docman')) {
     config.docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
 }
 
-if (config.env.GITLAB_API_TOKEN_TEXT) {
+if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
     config.gitlabHelper = new GitlabHelper(script: this, config: config)
 }
 
@@ -310,6 +310,41 @@ def processJob(jobs, currentFolder, config) {
                                     branch(b)
                                 }
                                 scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
+                            }
+                        }
+                    }
+                }
+            }
+            else if (job.value.type == 'trigger_all') {
+                freeStyleJob("${currentName}") {
+                    concurrentBuild(false)
+                    logRotator(-1, 30)
+                    parameters {
+                        stringParam('debugEnabled', '0')
+                        stringParam('configRepo', config.configRepo)
+                        job.value.params?.each { key, value ->
+                            stringParam(key, value)
+                        }
+                    }
+                    publishers {
+                        downstreamParameterized {
+                            for (jobInFolder in jobs)  {
+                                if (jobInFolder.value.children) {
+                                  println "Skip job with chilldren."
+                                }
+                                else if (jobInFolder.value.type == 'trigger_all') {
+                                  println "Skip trigger_all job."
+                                }
+                                else {
+                                    def jobInFolderName = currentFolder ? "${config.jenkinsFolderName}/${currentFolder}/${jobInFolder.key}" : jobInFolder.key
+                                    println "ADD TRIGGER JOB: ${jobInFolderName}"
+                                    trigger(jobInFolderName) {
+                                        condition("ALWAYS")
+                                        parameters {
+                                            currentBuild()
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
