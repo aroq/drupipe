@@ -329,7 +329,7 @@ def processJob(jobs, currentFolder, config) {
                                   println "Skip trigger_all job."
                                 }
                                 else {
-                                    def jobInFolderName = currentFolder ? "${currentFolder}/${jobInFolder.key}" : jobInFolder.key
+                                    def jobInFolderName = currentFolder ? "${config.jenkinsFolderName}/${currentFolder}/${jobInFolder.key}" : jobInFolder.key
                                     println "ADD TRIGGER JOB: ${jobInFolderName}"
                                     trigger(jobInFolderName) {
                                         condition("ALWAYS")
