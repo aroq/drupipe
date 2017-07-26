@@ -316,36 +316,34 @@ def processJob(jobs, currentFolder, config) {
                 }
             }
             else if (job.value.type == 'trigger_all') {
-                println "JOB NAME: ${currentName}"
                 freeStyleJob("${currentName}") {
-                    println "Disable concurrent build"
                     concurrentBuild(false)
-                    println "Configure log rotator"
                     logRotator(-1, 30)
-                    println "Add publishers"
+                    parameters {
+                        stringParam('debugEnabled', '0')
+                        stringParam('configRepo', config.configRepo)
+                        job.value.params?.each { key, value ->
+                            stringParam(key, value)
+                        }
+                    }
                     publishers {
-                        println "Add downstreamParameterized"
                         downstreamParameterized {
-                            println "Foreach Jobs"
                             for (jobInFolder in jobs)  {
-                                println "JOB IN FOLDER NAME: ${jobInFolder.key}"
-                                println "JOB IN FOLDER: ${jobInFolder}"
-                                if (!jobInFolder.hasProperty("children")) {
-                                  println "JOB IN FOLDER WITHOUT CHILDREN NAME: ${jobInFolder.key}"
-                                  println "JOB IN FOLDER WITHOUT CHILDREN: ${jobInFolder}"
-                                  def jobInFolderName = currentFolder ? "${currentFolder}/${jobInFolder.key}" : jobInFolder.key
-                                  println "Add trigger"
-                                  trigger(jobInFolderName) {
-                                      println "Add parameters"
-                                      parameters {
-                                          println "Add currentBuild parameters"
-                                          currentBuild()
-                                          println "Add trigger build default parameters"
-                                          jobInFolder.value.params?.each { key, value ->
-                                              stringParam(key, value)
-                                          }
-                                      }
-                                  }
+                                if (jobInFolder.value.children) {
+                                  println "Skip job with chilldren."
+                                }
+                                else if (jobInFolder.value.type == 'trigger_all') {
+                                  println "Skip trigger_all job."
+                                }
+                                else {
+                                    def jobInFolderName = currentFolder ? "${config.jenkinsFolderName}/${currentFolder}/${jobInFolder.key}" : jobInFolder.key
+                                    println "ADD TRIGGER JOB: ${jobInFolderName}"
+                                    trigger(jobInFolderName) {
+                                        condition("ALWAYS")
+                                        parameters {
+                                            currentBuild()
+                                        }
+                                    }
                                 }
                             }
                         }
