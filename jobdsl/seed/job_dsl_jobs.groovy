@@ -351,7 +351,7 @@ def processJob(jobs, currentFolder, config) {
                 }
             }
             else if (job.value.type == 'multistep_all') {
-                multiJob("${currentName}") {
+                freeStyleJob("${currentName}") {
                     println "configRepo -> ${config.configRepo}"
                     println "executionType -> ${config.executionType}"
                     parameters {
@@ -362,11 +362,7 @@ def processJob(jobs, currentFolder, config) {
                         }
                     }
                     steps {
-                        phase("${currentName}") {
-                            continuationCondition("ALWAYS")
-                            if (config.executionType == "PARALLEL" || config.executionType == "SEQUENTIALLY") {
-                              executionType("${config.executionType}")
-                            }
+                        downstreamParameterized {
                             for (jobInFolder in jobs)  {
                                 if (jobInFolder.value.children) {
                                     println "Skip job with chilldren."
@@ -380,7 +376,13 @@ def processJob(jobs, currentFolder, config) {
                                 else {
                                     def jobInFolderName = currentFolder ? "${config.jenkinsFolderName}/${currentFolder}/${jobInFolder.key}" : jobInFolder.key
                                     println "ADD PHASE JOB: ${jobInFolderName}"
-                                    phaseJob(jobInFolderName) {
+                                    trigger(jobInFolderName) {
+                                        block {
+                                            buildStepFailure('FAILURE')
+                                            failure('FAILURE')
+                                            unstable('UNSTABLE')
+                                        }
+                                        condition("ALWAYS")
                                         parameters {
                                             currentBuild()
                                         }
