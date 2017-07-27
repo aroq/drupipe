@@ -364,7 +364,9 @@ def processJob(jobs, currentFolder, config) {
                     steps {
                         phase {
                             continuationCondition("ALWAYS")
-                            executionType("${config.executionType}")
+                            if (config.executionType == "PARALLEL" || config.executionType == "SEQUENTIALLY") {
+                              executionType("${config.executionType}")
+                            }
                             for (jobInFolder in jobs)  {
                                 if (jobInFolder.value.children) {
                                     println "Skip job with chilldren."
