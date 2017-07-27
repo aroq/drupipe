@@ -382,7 +382,6 @@ def processJob(jobs, currentFolder, config) {
                                             failure('FAILURE')
                                             unstable('UNSTABLE')
                                         }
-                                        condition("ALWAYS")
                                         parameters {
                                             currentBuild()
                                         }
