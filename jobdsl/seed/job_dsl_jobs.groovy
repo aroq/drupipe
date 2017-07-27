@@ -352,6 +352,8 @@ def processJob(jobs, currentFolder, config) {
             }
             else if (job.value.type == 'multistep_all') {
                 multiJob("${currentName}") {
+                    println "configRepo -> ${config.configRepo}"
+                    println "executionType -> ${config.executionType}"
                     parameters {
                         stringParam('debugEnabled', '0')
                         stringParam('configRepo', config.configRepo)
