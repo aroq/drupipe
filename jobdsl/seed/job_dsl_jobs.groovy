@@ -330,10 +330,10 @@ def processJob(jobs, currentFolder, config) {
                         downstreamParameterized {
                             for (jobInFolder in jobs)  {
                                 if (jobInFolder.value.children) {
-                                  println "Skip job with chilldren."
+                                    println "Skip job with chilldren."
                                 }
                                 else if (jobInFolder.value.type == 'trigger_all') {
-                                  println "Skip trigger_all job."
+                                    println "Skip trigger_all job."
                                 }
                                 else {
                                     def jobInFolderName = currentFolder ? "${config.jenkinsFolderName}/${currentFolder}/${jobInFolder.key}" : jobInFolder.key
