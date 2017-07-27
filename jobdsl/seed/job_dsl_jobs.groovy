@@ -350,6 +350,43 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
             }
+            else if (job.value.type == 'multistep_all') {
+                multiJob("${currentName}") {
+                    parameters {
+                        stringParam('debugEnabled', '0')
+                        stringParam('configRepo', config.configRepo)
+                        job.value.params?.each { key, value ->
+                            stringParam(key, value)
+                        }
+                    }
+                    steps {
+                        phase {
+                            continuationCondition("ALWAYS")
+                            executionType(config.executionType)
+                            for (jobInFolder in jobs)  {
+                                if (jobInFolder.value.children) {
+                                    println "Skip job with chilldren."
+                                }
+                                else if (jobInFolder.value.type == 'trigger_all') {
+                                    println "Skip trigger_all job."
+                                }
+                                else if (jobInFolder.value.type == 'multistep_all') {
+                                    println "Skip multistep_all job."
+                                }
+                                else {
+                                    def jobInFolderName = currentFolder ? "${config.jenkinsFolderName}/${currentFolder}/${jobInFolder.key}" : jobInFolder.key
+                                    println "ADD PHASE JOB: ${jobInFolderName}"
+                                    phaseJob(jobInFolderName) {
+                                        parameters {
+                                            currentBuild()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         if (job.value.children) {
