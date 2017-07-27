@@ -339,6 +339,10 @@ def processJob(jobs, currentFolder, config) {
                                     def jobInFolderName = currentFolder ? "${config.jenkinsFolderName}/${currentFolder}/${jobInFolder.key}" : jobInFolder.key
                                     println "ADD TRIGGER JOB: ${jobInFolderName}"
                                     trigger(jobInFolderName) {
+                                        block {
+                                            failure("FAILURE")
+                                            unstable("UNSTABLE")
+                                        }
                                         condition("ALWAYS")
                                         parameters {
                                             currentBuild()
