@@ -362,7 +362,7 @@ def processJob(jobs, currentFolder, config) {
                         }
                     }
                     steps {
-                        phase {
+                        phase("${currentName}") {
                             continuationCondition("ALWAYS")
                             if (config.executionType == "PARALLEL" || config.executionType == "SEQUENTIALLY") {
                               executionType("${config.executionType}")
