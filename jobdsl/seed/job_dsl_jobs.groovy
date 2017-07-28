@@ -335,6 +335,9 @@ def processJob(jobs, currentFolder, config) {
                                 else if (jobInFolder.value.type == 'trigger_all') {
                                     println "Skip trigger_all job."
                                 }
+                                else if (jobInFolder.value.type == 'multistep_all') {
+                                    println "Skip multistep_all job."
+                                }
                                 else {
                                     def jobInFolderName = currentFolder ? "${config.jenkinsFolderName}/${currentFolder}/${jobInFolder.key}" : jobInFolder.key
                                     println "ADD TRIGGER JOB: ${jobInFolderName}"
