@@ -352,6 +352,11 @@ def processJob(jobs, currentFolder, config) {
             }
             else if (job.value.type == 'multistep_all') {
                 freeStyleJob("${currentName}") {
+                    concurrentBuild(false)
+                    logRotator(-1, 30)
+                    wrappers {
+                        timestamps()
+                    }
                     parameters {
                         stringParam('debugEnabled', '0')
                         stringParam('configRepo', config.configRepo)
