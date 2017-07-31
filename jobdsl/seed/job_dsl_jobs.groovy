@@ -327,16 +327,59 @@ def processJob(jobs, currentFolder, config) {
                         downstreamParameterized {
                             for (jobInFolder in jobs)  {
                                 if (jobInFolder.value.children) {
-                                  println "Skip job with chilldren."
+                                    println "Skip job with chilldren."
                                 }
                                 else if (jobInFolder.value.type == 'trigger_all') {
-                                  println "Skip trigger_all job."
+                                    println "Skip trigger_all job."
+                                }
+                                else if (jobInFolder.value.type == 'multistep_all') {
+                                    println "Skip multistep_all job."
                                 }
                                 else {
                                     def jobInFolderName = currentFolder ? "${config.jenkinsFolderName}/${currentFolder}/${jobInFolder.key}" : jobInFolder.key
                                     println "ADD TRIGGER JOB: ${jobInFolderName}"
                                     trigger(jobInFolderName) {
                                         condition("ALWAYS")
+                                        parameters {
+                                            currentBuild()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else if (job.value.type == 'multistep_all') {
+                freeStyleJob("${currentName}") {
+                    parameters {
+                        stringParam('debugEnabled', '0')
+                        stringParam('configRepo', config.configRepo)
+                        job.value.params?.each { key, value ->
+                            stringParam(key, value)
+                        }
+                    }
+                    steps {
+                        downstreamParameterized {
+                            for (jobInFolder in jobs)  {
+                                if (jobInFolder.value.children) {
+                                    println "Skip job with chilldren."
+                                }
+                                else if (jobInFolder.value.type == 'trigger_all') {
+                                    println "Skip trigger_all job."
+                                }
+                                else if (jobInFolder.value.type == 'multistep_all') {
+                                    println "Skip multistep_all job."
+                                }
+                                else {
+                                    def jobInFolderName = currentFolder ? "${config.jenkinsFolderName}/${currentFolder}/${jobInFolder.key}" : jobInFolder.key
+                                    println "ADD PHASE JOB: ${jobInFolderName}"
+                                    trigger(jobInFolderName) {
+                                        block {
+                                            buildStepFailure('FAILURE')
+                                            failure('FAILURE')
+                                            unstable('UNSTABLE')
+                                        }
                                         parameters {
                                             currentBuild()
                                         }
@@ -525,5 +568,3 @@ class DocmanConfig {
     }
 
 }
-
-
