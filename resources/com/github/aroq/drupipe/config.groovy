@@ -12,6 +12,8 @@ containerMode = 'docker'
 
 configSeedType = 'docman'
 
+logRotatorNumToKeep = 5
+
 // Environments section.
 environments {
     dev {
