@@ -205,6 +205,7 @@ def sourcePath(params, sourceName, String path) {
 }
 
 def sourceDir(params, sourceName) {
+    debugLog(params, sourceName, 'Source name')
     if (sourceName in params.loadedSources) {
         params.loadedSources[sourceName].path
     }
