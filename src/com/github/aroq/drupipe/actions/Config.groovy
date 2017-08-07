@@ -173,9 +173,20 @@ class Config extends BaseAction {
                             scenario.source = context.loadedSources[scenarioSourceName]
                         }
 
-                        def fileName = utils.sourcePath(context, scenarioSourceName, "scenarios/${scenario.name}/config.yaml")
+                        def fileName = null
 
-                        if (script.fileExists(fileName)) {
+                        def sourceDir = utils.sourceDir(context, scenarioSourceName)
+
+                        // Check config exists in sourceDir.
+                        if (script.fileExists(sourceDir + "/scenarios/${scenario.name}/config.yaml")) {
+                            fileName = sourceDir + "/scenarios/${scenario.name}/config.yaml"
+                        }
+                        else if (script.fileExists(sourceDir + "/scenarios/${scenario.name}/config.yml")) {
+                            fileName = sourceDir + "/scenarios/${scenario.name}/config.yml"
+                        }
+
+                        // Merge scenario if exists.
+                        if (fileName != null) {
                             script.echo "Scenario file name: ${fileName} exists"
                             def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSourceName)
                             utils.debugLog(context, scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")

@@ -17,6 +17,8 @@ class TaurusTester extends BaseAction {
             this.script.deleteDir()
         }
 
+        this.script.checkout this.script.scm
+
         def hold_for = (this.context.taurus_hold_for.length() != 0) ? "-o execution.hold-for=${this.context.taurus_hold_for}" : ''
         def ramp_up = (this.context.taurus_ramp_up.length() != 0) ? "-o execution.rump-up=${this.context.taurus_ramp_up}" : ''
         def concurrency = (this.context.taurus_concurrency.length() != 0) ? "-o execution.concurrency=${this.context.taurus_concurrency}" : ''
@@ -32,6 +34,13 @@ ${step} \
 ${this.context.taurus_args}"""
 
         this.script.echo "Execute BZT: ${bztString}"
+
+        script.drupipeShell("""
+            ls -al
+            pwd
+            """, context << [shellCommandWithBashLogin: true]
+        )
+
         this.script.bzt "${bztString}"
 
         this.script.archiveArtifacts artifacts: 'logs/**'

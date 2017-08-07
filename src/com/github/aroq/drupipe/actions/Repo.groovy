@@ -50,9 +50,19 @@ class Repo extends BaseAction {
             """, context << [shellCommandWithBashLogin: true]
             )
 
-            // Execute commands from .build.yaml.
-            if (script.fileExists("${context.builder['buildDir']}/.build.yml")) {
-                BuildFileInfo getYamlCommands = getBuildFileInfo(readFile("${context.builder['buildDir']}/.build.yml"))
+            def buildScript = null
+
+            // Check build script exists.
+            if (script.fileExists("${context.builder['buildDir']}/.build.yaml")) {
+                buildScript = "${context.builder['buildDir']}/.build.yaml"
+            }
+            else if (script.fileExists("${context.builder['buildDir']}/.build.yml")) {
+                buildScript = "${context.builder['buildDir']}/.build.yml"
+            }
+
+            // Execute commands from .build.yaml or .build.yml.
+            if (buildScript != null) {
+                BuildFileInfo getYamlCommands = getBuildFileInfo(readFile(buildScript))
                 for (cmd in getYamlCommands.build) {
                     drupipeShell(
                         """
@@ -89,4 +99,3 @@ class Repo extends BaseAction {
         return buildFileInfo
     }
 }
-

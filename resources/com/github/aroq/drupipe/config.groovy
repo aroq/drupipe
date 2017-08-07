@@ -12,6 +12,8 @@ containerMode = 'docker'
 
 configSeedType = 'docman'
 
+logRotatorNumToKeep = 5
+
 // Environments section.
 environments {
     dev {
@@ -23,9 +25,8 @@ environments {
         dockerImage = 'aroq/drudock:dev'
     }
     prod {
-        drupipeLibraryBranch = 'v0.7.1'
+        drupipeLibraryBranch = 'v0.7.2'
         drupipeLibraryType = 'tag'
-//        drupipeLibraryBranch = 'master'
         dockerImage = 'aroq/drudock:dev'
     }
 }
