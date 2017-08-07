@@ -58,7 +58,7 @@ if (!config.tags || (!config.tags.contains('docman') && !config.tags.contains('d
                     quietPeriod(params.quietPeriodSeconds)
                 }
                 concurrentBuild(false)
-                logRotator(-1, 30)
+                logRotator(-1, config.logRotatorNumToKeep)
                 parameters {
                     stringParam('projectName', '')
                     stringParam('debugEnabled', '0')
@@ -289,4 +289,3 @@ class DocmanConfig {
     }
 
 }
-

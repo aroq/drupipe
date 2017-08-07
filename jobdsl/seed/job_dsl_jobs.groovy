@@ -58,7 +58,7 @@ def processJob(jobs, currentFolder, config) {
             if (job.value.type == 'release-build') {
                 pipelineJob(currentName) {
                     concurrentBuild(false)
-                    logRotator(-1, 30)
+                    logRotator(-1, config.logRotatorNumToKeep)
                     parameters {
                         config.docmanConfig.projects?.each { project ->
                             if (project.value.repo && (project.value.type != 'root')) {
@@ -116,7 +116,7 @@ def processJob(jobs, currentFolder, config) {
                         quietPeriod(config.quietPeriodSeconds)
                     }
                     concurrentBuild(false)
-                    logRotator(-1, 30)
+                    logRotator(-1, config.logRotatorNumToKeep)
                     parameters {
                         stringParam('projectName', 'master')
                         stringParam('debugEnabled', '0')
@@ -180,7 +180,7 @@ def processJob(jobs, currentFolder, config) {
             else if (job.value.type == 'release-deploy') {
                 pipelineJob(currentName) {
                     concurrentBuild(false)
-                    logRotator(-1, 30)
+                    logRotator(-1, config.logRotatorNumToKeep)
                     parameters {
                         config.docmanConfig.projects?.each { project ->
                             if ((project.value.type == 'root' || project.value.type == 'root_chain') && project.value.repo) {
@@ -236,7 +236,7 @@ def processJob(jobs, currentFolder, config) {
 
                 pipelineJob("${currentName}") {
                     concurrentBuild(false)
-                    logRotator(-1, 30)
+                    logRotator(-1, config.logRotatorNumToKeep)
                     parameters {
                         stringParam('debugEnabled', '0')
                         stringParam('configRepo', config.configRepo)
@@ -278,7 +278,7 @@ def processJob(jobs, currentFolder, config) {
 
                 pipelineJob("${currentName}") {
                     concurrentBuild(false)
-                    logRotator(-1, 30)
+                    logRotator(-1, config.logRotatorNumToKeep)
                     parameters {
                         stringParam('debugEnabled', '0')
                         stringParam('configRepo', repo)
@@ -315,7 +315,7 @@ def processJob(jobs, currentFolder, config) {
             else if (job.value.type == 'trigger_all') {
                 freeStyleJob("${currentName}") {
                     concurrentBuild(false)
-                    logRotator(-1, 30)
+                    logRotator(-1, config.logRotatorNumToKeep)
                     parameters {
                         stringParam('debugEnabled', '0')
                         stringParam('configRepo', config.configRepo)
@@ -327,16 +327,64 @@ def processJob(jobs, currentFolder, config) {
                         downstreamParameterized {
                             for (jobInFolder in jobs)  {
                                 if (jobInFolder.value.children) {
-                                  println "Skip job with chilldren."
+                                    println "Skip job with chilldren."
                                 }
                                 else if (jobInFolder.value.type == 'trigger_all') {
-                                  println "Skip trigger_all job."
+                                    println "Skip trigger_all job."
+                                }
+                                else if (jobInFolder.value.type == 'multistep_all') {
+                                    println "Skip multistep_all job."
                                 }
                                 else {
                                     def jobInFolderName = currentFolder ? "${config.jenkinsFolderName}/${currentFolder}/${jobInFolder.key}" : jobInFolder.key
                                     println "ADD TRIGGER JOB: ${jobInFolderName}"
                                     trigger(jobInFolderName) {
                                         condition("ALWAYS")
+                                        parameters {
+                                            currentBuild()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else if (job.value.type == 'multistep_all') {
+                freeStyleJob("${currentName}") {
+                    concurrentBuild(false)
+                    logRotator(-1, config.logRotatorNumToKeep)
+                    wrappers {
+                        timestamps()
+                    }
+                    parameters {
+                        stringParam('debugEnabled', '0')
+                        stringParam('configRepo', config.configRepo)
+                        job.value.params?.each { key, value ->
+                            stringParam(key, value)
+                        }
+                    }
+                    steps {
+                        downstreamParameterized {
+                            for (jobInFolder in jobs)  {
+                                if (jobInFolder.value.children) {
+                                    println "Skip job with chilldren."
+                                }
+                                else if (jobInFolder.value.type == 'trigger_all') {
+                                    println "Skip trigger_all job."
+                                }
+                                else if (jobInFolder.value.type == 'multistep_all') {
+                                    println "Skip multistep_all job."
+                                }
+                                else {
+                                    def jobInFolderName = currentFolder ? "${config.jenkinsFolderName}/${currentFolder}/${jobInFolder.key}" : jobInFolder.key
+                                    println "ADD PHASE JOB: ${jobInFolderName}"
+                                    trigger(jobInFolderName) {
+                                        block {
+                                            buildStepFailure('FAILURE')
+                                            failure('FAILURE')
+                                            unstable('UNSTABLE')
+                                        }
                                         parameters {
                                             currentBuild()
                                         }
@@ -525,5 +573,3 @@ class DocmanConfig {
     }
 
 }
-
-

@@ -43,7 +43,7 @@ projects.each { project ->
 
         pipelineJob("${project.key}/${jobName}") {
             concurrentBuild(false)
-            logRotator(-1, 30)
+            logRotator(-1, config.logRotatorNumToKeep)
             parameters {
                 stringParam('debugEnabled', '0')
                 stringParam('force', '0')
@@ -254,5 +254,3 @@ class DocmanConfig {
     }
 
 }
-
-

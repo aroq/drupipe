@@ -52,7 +52,7 @@ if (!config.tags || (!config.tags.contains('drupipe') && config.configSeedType =
                 quietPeriod(params.quietPeriodSeconds)
             }
             concurrentBuild(false)
-            logRotator(-1, 30)
+            logRotator(-1, config.logRotatorNumToKeep)
             parameters {
                 stringParam('projectName', '')
                 stringParam('debugEnabled', '0')
@@ -282,4 +282,3 @@ class DocmanConfig {
     }
 
 }
-
