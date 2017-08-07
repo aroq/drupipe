@@ -1,3 +1,38 @@
+Version 0.7.2:
+ - Fixed conflict
+ - Merge branch 'develop' of github.com:aroq/drupipe into develop
+ - Increased ansistrano_keep_releases to 10
+ - Merge pull request #13 from michael-molchanov/develop
+ - Allow to use yaml and yml for config and build script.
+ - Merge pull request #12 from michael-molchanov/develop
+ - Use logs to keep configuration option.
+ - Decrease logs to keep number.
+ - Allow to configure number of saved logs by logRotator.
+ - Merge pull request #11 from michael-molchanov/develop
+ - Avoid concurrent builds, add timestamp to log, configure lor rotator.
+ - Merge pull request #10 from michael-molchanov/develop
+ - Remove debug.
+ - Restore origin repo.
+ - Fix for taurus test config sync
+ - Dirty hack to make test work temporarly
+ - Added debug info for taurus
+ - Fixed drupipeLibraryType for PROD
+ - Merge branch 'develop' of github.com:aroq/drupipe into develop
+ - Changed drupipe version for prod
+ - Removed JobDSL imports
+ - Skip multistep in trigger.
+ - Not available in this context.
+ - Switch to trigger.
+ - No available in this context.
+ - Add block configuration.
+ - Add phase name.
+ - Check input config variable.
+ - Add debug.
+ - Fix type of argument.
+ - Add multistep job.
+ - Fix indents.
+ - Switch to fork.
+
 Version 0.7.1:
  - Changed drupipe version
  - Merge branch 'develop'
