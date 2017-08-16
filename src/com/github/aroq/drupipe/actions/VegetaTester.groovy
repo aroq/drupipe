@@ -35,7 +35,7 @@ class VegetaTester extends BaseAction {
             def keepalive = (this.context.vegeta_keepalive.length() != 0) ? "-keepalive" : ''
             def lazy = (this.context.vegeta_lazy.length() != 0) ? "-lazy" : ''
 
-            def vegetaAttackString = """attack \
+            def vegetaAttackString = """vegeta attack \
 -output vegeta/reports/report.bin \
 -targets vegeta/input.txt \
 ${connections} \
@@ -59,9 +59,9 @@ ${this.context.vegeta_args}"""
 
             this.script.drupipeShell("mkdir -p vegeta/reports", context)
 
-            this.script.vegeta "${vegetaAttackString}"
+            this.script.drupipeShell("${vegetaAttackString}", context)
 
-            this.script.vegeta "report -inputs vegeta/reports/report.bin"
+            this.script.drupipeShell("report -inputs vegeta/reports/report.bin", context)
 
             this.script.archiveArtifacts artifacts: 'vegeta/reports/**'
 
