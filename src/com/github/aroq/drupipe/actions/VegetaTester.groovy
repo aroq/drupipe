@@ -28,6 +28,7 @@ class VegetaTester extends BaseAction {
             def connections = (this.context.vegeta_connections.length() != 0) ? "-connections ${this.context.vegeta_connections}" : ''
             def duration = (this.context.vegeta_duration.length() != 0) ? "-connections ${this.context.vegeta_duration}" : ''
             def redirects = (this.context.vegeta_redirects.length() != 0) ? "-connections ${this.context.vegeta_redirects}" : ''
+            def rate = (this.context.vegeta_rate.length() != 0) ? "-connections ${this.context.vegeta_rate}" : ''
             def timeout = (this.context.vegeta_timeout.length() != 0) ? "-connections ${this.context.vegeta_timeout}" : ''
             def workers = (this.context.vegeta_workers.length() != 0) ? "-connections ${this.context.vegeta_workers}" : ''
             def insecure = (this.context.vegeta_insecure.length() != 0) ? "-insecure" : ''
