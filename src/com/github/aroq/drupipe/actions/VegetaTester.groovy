@@ -55,6 +55,7 @@ ${this.context.vegeta_args}"""
                 ls -lah
                 ls -lah vegeta
                 pwd
+                cat vegeta/input.txt
                 """, context << [shellCommandWithBashLogin: true]
             )
 
