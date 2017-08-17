@@ -16,6 +16,10 @@ class VegetaTester extends BaseAction {
         if (this.context.vegeta_prepare_command.length() != 0) {
             this.script.drupipeShell("mkdir -p vegeta", context)
             this.script.drupipeShell(this.context.vegeta_prepare_command, context)
+            this.script.drupipeShell("""
+                cat vegeta/input.txt
+                """, context << [shellCommandWithBashLogin: true]
+            )
         }
     }
 
@@ -55,6 +59,7 @@ ${this.context.vegeta_args}"""
                 ls -lah
                 ls -lah vegeta
                 pwd
+                echo 'cat vegeta/input.txt'
                 cat vegeta/input.txt
                 """, context << [shellCommandWithBashLogin: true]
             )
