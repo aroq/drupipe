@@ -21,7 +21,7 @@ class VegetaTester extends BaseAction {
 
     def test() {
         if (this.script.fileExists("vegeta/input.txt")) {
-            this.script.fileExists("vegeta/report.bin") {
+            if (this.script.fileExists("vegeta/report.bin")) {
                 this.script.drupipeShell("rm -rf vegeta/report.bin")
             }
 
