@@ -20,10 +20,12 @@ class VegetaTester extends BaseAction {
                 cat vegeta/input.txt
                 """, context << [shellCommandWithBashLogin: true]
             )
+            this.script.stash name: 'vegeta', includes: "vegeta/**"
         }
     }
 
     def test() {
+        this.script.unstash name: 'vegeta'
         if (this.script.fileExists("vegeta/input.txt")) {
             if (this.script.fileExists("vegeta/report.bin")) {
                 this.script.drupipeShell("rm -rf vegeta/report.bin")
