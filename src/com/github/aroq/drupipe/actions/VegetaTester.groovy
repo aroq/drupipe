@@ -21,8 +21,8 @@ class VegetaTester extends BaseAction {
 
     def test() {
         if (this.script.fileExists("vegeta/input.txt")) {
-            this.script.dir("vegeta/reports") {
-                this.script.deleteDir()
+            this.script.fileExists("vegeta/report.bin") {
+                this.script.drupipeShell("rm -rf vegeta/report.bin")
             }
 
             def connections = (this.context.vegeta_connections.length() != 0) ? "-connections ${this.context.vegeta_connections}" : ''
@@ -36,7 +36,7 @@ class VegetaTester extends BaseAction {
             def lazy = (this.context.vegeta_lazy.length() != 0) ? "-lazy" : ''
 
             def vegetaAttackString = """vegeta attack \
--output vegeta/reports/report.bin \
+-output vegeta/report.bin \
 -targets vegeta/input.txt \
 ${connections} \
 ${duration} \
@@ -53,17 +53,16 @@ ${this.context.vegeta_args}"""
 
             this.script.drupipeShell("""
                 ls -lah
+                ls -lah vegeta
                 pwd
                 """, context << [shellCommandWithBashLogin: true]
             )
 
-            this.script.drupipeShell("mkdir -p vegeta/reports", context)
-
             this.script.drupipeShell("${vegetaAttackString}", context)
 
-            this.script.drupipeShell("report -inputs vegeta/reports/report.bin", context)
+            this.script.drupipeShell("report -inputs vegeta/report.bin", context)
 
-            this.script.archiveArtifacts artifacts: 'vegeta/reports/**'
+            this.script.archiveArtifacts artifacts: 'vegeta/**'
 
         }
         else {
