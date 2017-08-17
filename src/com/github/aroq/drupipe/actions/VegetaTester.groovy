@@ -68,7 +68,7 @@ ${this.context.vegeta_args}"""
 
             this.script.drupipeShell("${vegetaAttackString}", context)
 
-            this.script.drupipeShell("report -inputs vegeta/report.bin", context)
+            this.script.drupipeShell("vegeta report -inputs vegeta/report.bin", context)
 
             this.script.archiveArtifacts artifacts: 'vegeta/**'
 
