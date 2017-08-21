@@ -27,9 +27,7 @@ class VegetaTester extends BaseAction {
     def test() {
         this.script.unstash name: 'vegeta'
         if (this.script.fileExists("vegeta/input.txt")) {
-            if (this.script.fileExists("vegeta/report.bin")) {
-                this.script.drupipeShell("rm -rf vegeta/report.bin", context)
-            }
+            this.script.drupipeShell("rm -rf vegeta/report.bin", context << [shellCommandWithBashLogin: true])
 
             def connections = (this.context.vegeta_connections.length() != 0) ? "-connections ${this.context.vegeta_connections}" : ''
             def duration = (this.context.vegeta_duration.length() != 0) ? "-duration ${this.context.vegeta_duration}" : ''
