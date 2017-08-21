@@ -23,7 +23,7 @@ class VegetaTester extends BaseAction {
             port = ''
         }
 
-        def command = (this.context.redis_command.length() != 0) ? "${this.context.redis_command}" : ''
+        def command = (this.context.redis_command.length() != 0) ? "${this.context.redis_command}" : 'INFO'
 
         def redisString = """redis-cli \
 ${socket} \
