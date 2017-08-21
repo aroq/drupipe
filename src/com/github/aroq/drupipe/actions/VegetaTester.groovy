@@ -16,10 +16,16 @@ class VegetaTester extends BaseAction {
         if (this.context.vegeta_prepare_command.length() != 0) {
             this.script.drupipeShell("mkdir -p vegeta", context)
             this.script.drupipeShell(this.context.vegeta_prepare_command, context)
+            this.script.drupipeShell("""
+                cat vegeta/input.txt
+                """, context << [shellCommandWithBashLogin: true]
+            )
+            this.script.stash name: 'vegeta', includes: "vegeta/**"
         }
     }
 
     def test() {
+        this.script.unstash name: 'vegeta'
         if (this.script.fileExists("vegeta/input.txt")) {
             this.script.drupipeShell("rm -rf vegeta/report.bin", context << [shellCommandWithBashLogin: true])
 
@@ -53,6 +59,8 @@ ${this.context.vegeta_args}"""
                 ls -lah
                 ls -lah vegeta
                 pwd
+                echo 'cat vegeta/input.txt'
+                cat vegeta/input.txt
                 """, context << [shellCommandWithBashLogin: true]
             )
 

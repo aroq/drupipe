@@ -1,3 +1,125 @@
+Version 0.7.2:
+ - Fixed conflict
+ - Merge branch 'develop' of github.com:aroq/drupipe into develop
+ - Increased ansistrano_keep_releases to 10
+ - Merge pull request #13 from michael-molchanov/develop
+ - Allow to use yaml and yml for config and build script.
+ - Merge pull request #12 from michael-molchanov/develop
+ - Use logs to keep configuration option.
+ - Decrease logs to keep number.
+ - Allow to configure number of saved logs by logRotator.
+ - Merge pull request #11 from michael-molchanov/develop
+ - Avoid concurrent builds, add timestamp to log, configure lor rotator.
+ - Merge pull request #10 from michael-molchanov/develop
+ - Remove debug.
+ - Restore origin repo.
+ - Fix for taurus test config sync
+ - Dirty hack to make test work temporarly
+ - Added debug info for taurus
+ - Fixed drupipeLibraryType for PROD
+ - Merge branch 'develop' of github.com:aroq/drupipe into develop
+ - Changed drupipe version for prod
+ - Removed JobDSL imports
+ - Skip multistep in trigger.
+ - Not available in this context.
+ - Switch to trigger.
+ - No available in this context.
+ - Add block configuration.
+ - Add phase name.
+ - Check input config variable.
+ - Add debug.
+ - Fix type of argument.
+ - Add multistep job.
+ - Fix indents.
+ - Switch to fork.
+
+Version 0.7.1:
+ - Changed drupipe version
+ - Merge branch 'develop'
+ - Merge pull request #9 from michael-molchanov/develop
+ - Restore aroq repo.
+ - Add params to trigger.
+ - Add project folder.
+ - Fix var name.
+ - Fix indents.
+ - Skip trigger job and jobs with children.
+ - Change repo to fork.
+ - Remove debug.
+ - Remove stringParam. Not available in this context.
+ - Merge pull request #8 from michael-molchanov/feature/trigger_all_job
+ - Add debug, switch to free style job.
+ - Merge pull request #7 from michael-molchanov/feature/trigger_all_job
+ - Add debug, check property.
+ - Merge pull request #6 from michael-molchanov/feature/trigger_all_job
+ - Add trigger all job type.
+ - Merge pull request #5 from michael-molchanov/feature/empty_param_check_taurus_action
+ - Fix wrong condition.
+ - Merge pull request #4 from michael-molchanov/feature/empty_param_check_taurus_action
+ - Fix missprint.
+ - Merge pull request #3 from michael-molchanov/feature/empty_param_check_taurus_action
+ - Add empty parameter check to TaurusTester action.
+ - Added logs dir delete before build for taurus
+ - Added artifact arhive for taurus
+ - Added artifact arhive for taurus
+ - Added drupipeJobDslSeedSimple
+ - Added drupipeJobDslSeedSimple
+ - Fixed druflow deploy
+ - Fixed druflow deploy
+ - Added noHooks flag
+ - Added noHooks flag
+ - Added noHooks flag
+ - Added noHooks flag
+ - Added noHooks flag for projects
+ - changed common jobs version to master
+ - changed common jobs version to v0.1: temp
+ - Add taurus throughput
+ - Add taurus throughput
+ - Add taurus throughput
+ - Add taurus throughput
+ - Add taurus throughput
+ - Fixed conflict
+ - Add taurus throughput
+ - Added debug messages to persistent mothership job
+ - Added debug messages to persistent mothership job
+ - Added debug messages to persistent mothership job
+ - Added debug messages to persistent mothership job
+ - Added debug messages to persistent mothership job
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added taurus command
+ - Added common job type
+ - Added common job type
+ - Added common job type
+ - Added common job type
+ - Added common job type
+ - Added common job type
+ - Added common job type
+ - Merge branch 'master' into develop
+
 Version 0.7.0:
  - Changed drupipe version to 0.7.0
 

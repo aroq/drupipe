@@ -25,9 +25,8 @@ environments {
         dockerImage = 'aroq/drudock:dev'
     }
     prod {
-        drupipeLibraryBranch = 'develop'
-//        drupipeLibraryType = 'tag'
-//        drupipeLibraryBranch = 'master'
+        drupipeLibraryBranch = 'v0.7.2'
+        drupipeLibraryType = 'tag'
         dockerImage = 'aroq/drudock:dev'
     }
 }
