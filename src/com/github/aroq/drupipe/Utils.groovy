@@ -171,7 +171,7 @@ def pipelineNotify(params, String buildStatus = 'STARTED') {
 
     if (params.notificationsMattermost) {
         try {
-            mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel)
+            mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel, icon: params.mattermostIcon, endpoint: params.mattermostEndpoint)
         }
         catch (e) {
             echo 'Unable to sent Mattermost notification'
