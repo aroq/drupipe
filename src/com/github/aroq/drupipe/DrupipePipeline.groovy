@@ -19,7 +19,6 @@ class DrupipePipeline implements Serializable {
         utils = new com.github.aroq.drupipe.Utils()
 
         try {
-            utils.pipelineNotify(context)
             script.timestamps {
                 script.node('master') {
                     utils.dump(config, 'PIPELINE-CONFIG')
@@ -35,6 +34,9 @@ class DrupipePipeline implements Serializable {
                         script.deleteDir()
                     }
                 }
+
+                def event = [name: 'Build', status: 'STARTED', notify: 'build']
+                utils.pipelineNotify(context, event)
 
                 if (!blocks) {
                     if (context.jobs) {
@@ -84,8 +86,16 @@ class DrupipePipeline implements Serializable {
                     for (def i = 0; i < blocks.size(); i++) {
                         def block = new DrupipeBlock(blocks[i])
                         script.echo 'BLOCK EXECUTE START'
+
+
+                        def event = [name: 'Block', status: 'START', notify: 'block']
+                        utils.pipelineNotify(context, event)
+
                         context << block.execute(context)
                         script.echo 'BLOCK EXECUTE END'
+
+                        def event = [name: 'Block', status: 'END', notify: 'block']
+                        utils.pipelineNotify(context, event)
                     }
                 }
                 else {
@@ -105,7 +115,9 @@ class DrupipePipeline implements Serializable {
             throw e
         }
         finally {
-            utils.pipelineNotify(context, script.currentBuild.result)
+            def event = [name: 'Build', status: script.currentBuild.result, notify: 'build']
+            utils.pipelineNotify(context, event)
+
             context
         }
     }

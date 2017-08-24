@@ -135,23 +135,46 @@ boolean isCollectionOrList(object) {
     object instanceof java.util.Collection || object instanceof java.util.List || object instanceof java.util.LinkedHashMap || object instanceof java.util.HashMap
 }
 
-def pipelineNotify(params, String buildStatus = 'STARTED') {
-    // build status of null means successful
-    buildStatus =  buildStatus ?: 'SUCCESSFUL'
+def getJobConfigByName(String name, context) {
+    def parts = name.split('/').drop(1)
+    getJobConfig(context.jobs, parts, 0, [:])
+}
 
+def getJobConfig(jobs, parts, counter = 0, r = [:]) {
+    script.echo "Counter: ${counter}"
+    def part = parts[counter]
+    script.echo "Part: ${part}"
+    def j = jobs[part] ? jobs[part] : [:]
+    if (j) {
+        def children = j.containsKey('children') ? j['children'] : [:]
+        j.remove('children')
+        r = merge(r, j)
+        if (children) {
+            getJobConfig(children, parts, counter + 1, r)
+        }
+        else {
+            r
+        }
+    }
+    else {
+        [:]
+    }
+}
+
+def pipelineNotify(context, event) {
     // Default values
     def colorName = 'RED'
     def colorCode = '#FF0000'
-    def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+    def subject = "${event.name} ${event.status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
     def summary = "${subject} (${env.BUILD_URL})"
     def details = """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
     <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>"""
 
     // Override default values based on build status
-    if (buildStatus == 'STARTED') {
+    if (event.status == 'STARTED' || event.status == 'START' || event.status == 'END') {
         color = 'YELLOW'
         colorCode = '#FFFF00'
-    } else if (buildStatus == 'SUCCESSFUL') {
+    } else if (event.status == 'SUCCESSFUL') {
         color = 'GREEN'
         colorCode = '#00FF00'
     } else {
@@ -159,19 +182,21 @@ def pipelineNotify(params, String buildStatus = 'STARTED') {
         colorCode = '#FF0000'
     }
 
+    dump(getJobConfigByName(env.JOB_NAME, context), 'JOB-CONFIG')
+
     // Send notifications
-    if (params.notificationsSlack) {
+    if (context.notificationsSlack) {
         try {
-            slackSend (color: colorCode, message: summary, channel: params.slackChannel)
+            slackSend (color: colorCode, message: summary, channel: context.slackChannel)
         }
         catch (e) {
             echo 'Unable to sent Slack notification'
         }
     }
 
-    if (params.notificationsMattermost) {
+    if (context.notificationsMattermost) {
         try {
-            mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel, icon: params.mattermostIcon, endpoint: params.mattermostEndpoint)
+            mattermostSend (color: colorCode, message: summary, channel: context.mattermostChannel, icon: context.mattermostIcon, endpoint: context.mattermostEndpoint)
         }
         catch (e) {
             echo 'Unable to sent Mattermost notification'
@@ -180,7 +205,7 @@ def pipelineNotify(params, String buildStatus = 'STARTED') {
 
     // hipchatSend (color: color, notify: true, message: summary)
 
-    if (params.notificationsEmailExt) {
+    if (context.notificationsEmailExt) {
         def to = emailextrecipients([
             [$class: 'CulpritsRecipientProvider'],
             [$class: 'DevelopersRecipientProvider'],
