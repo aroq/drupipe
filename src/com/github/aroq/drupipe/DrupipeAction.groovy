@@ -21,8 +21,10 @@ class DrupipeAction implements Serializable {
             this.context << c
         }
 
+        def utils = new com.github.aroq.drupipe.Utils()
+
         try {
-            def utils = new com.github.aroq.drupipe.Utils()
+            utils.pipelineNotify(context, [name: "Action ${name}", status: 'START', level: 'action'])
 
             // Stage name & echo.
             String drupipeStageName
@@ -91,6 +93,9 @@ class DrupipeAction implements Serializable {
         catch (err) {
             this.context.pipeline.script.echo err.toString()
             throw err
+        }
+        finally {
+            utils.pipelineNotify(context, [name: "Action ${name}", status: 'END', level: 'action'])
         }
     }
 

@@ -35,13 +35,13 @@ class DrupipePipeline implements Serializable {
                     }
                 }
 
-                def event = [name: 'Build', status: 'STARTED', notify: 'build']
-                utils.pipelineNotify(context, event)
+                utils.pipelineNotify(context, [name: 'Build', status: 'STARTED', level: 'build'])
 
                 if (!blocks) {
                     if (context.jobs) {
                         def job = getJobConfigByName(context.env.JOB_NAME)
                         if (job) {
+                            context.job = job
                             utils.jsonDump(job, 'JOB')
                             def pipelineBlocks = job.pipeline && job.pipeline.blocks ? job.pipeline.blocks : []
                             if (pipelineBlocks) {
@@ -86,16 +86,8 @@ class DrupipePipeline implements Serializable {
                     for (def i = 0; i < blocks.size(); i++) {
                         def block = new DrupipeBlock(blocks[i])
                         script.echo 'BLOCK EXECUTE START'
-
-
-                        def event = [name: 'Block', status: 'START', notify: 'block']
-                        utils.pipelineNotify(context, event)
-
                         context << block.execute(context)
                         script.echo 'BLOCK EXECUTE END'
-
-                        def event = [name: 'Block', status: 'END', notify: 'block']
-                        utils.pipelineNotify(context, event)
                     }
                 }
                 else {
@@ -115,8 +107,7 @@ class DrupipePipeline implements Serializable {
             throw e
         }
         finally {
-            def event = [name: 'Build', status: script.currentBuild.result, notify: 'build']
-            utils.pipelineNotify(context, event)
+            utils.pipelineNotify(context, [name: 'Build', status: script.currentBuild.result, level: 'build'])
 
             context
         }
