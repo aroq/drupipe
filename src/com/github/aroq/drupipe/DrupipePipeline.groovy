@@ -35,12 +35,11 @@ class DrupipePipeline implements Serializable {
                     }
                 }
 
-                utils.pipelineNotify(context, [name: 'Build', status: 'STARTED', level: 'build'])
-
                 if (!blocks) {
                     if (context.jobs) {
                         def job = getJobConfigByName(context.env.JOB_NAME)
                         if (job) {
+                            utils.pipelineNotify(context, [name: 'Build', status: 'STARTED', level: 'build'])
                             context.job = job
                             utils.jsonDump(job, 'JOB')
                             def pipelineBlocks = job.pipeline && job.pipeline.blocks ? job.pipeline.blocks : []
