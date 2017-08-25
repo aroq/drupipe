@@ -180,6 +180,9 @@ def pipelineNotify(context, event) {
 
                 if (params.mattermost && params.mattermostChannel && params.mattermostIcon && params.mattermostEndpoint) {
                     try {
+                        if (env.BUILD_USER_ID) {
+                            summary = "@${env.BUILD_USER_ID} ${summary}"
+                        }
                         echo 'Send message to Mattermost'
                         mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel, icon: params.mattermostIcon, endpoint: params.mattermostEndpoint)
                     }
