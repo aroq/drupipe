@@ -135,23 +135,20 @@ boolean isCollectionOrList(object) {
     object instanceof java.util.Collection || object instanceof java.util.List || object instanceof java.util.LinkedHashMap || object instanceof java.util.HashMap
 }
 
-def pipelineNotify(params, String buildStatus = 'STARTED') {
-    // build status of null means successful
-    buildStatus =  buildStatus ?: 'SUCCESSFUL'
-
+def pipelineNotify(context, event) {
     // Default values
     def colorName = 'RED'
     def colorCode = '#FF0000'
-    def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+    def subject = "${event.name} ${event.status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
     def summary = "${subject} (${env.BUILD_URL})"
     def details = """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
     <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>"""
 
     // Override default values based on build status
-    if (buildStatus == 'STARTED') {
+    if (event.status == 'STARTED' || event.status == 'START' || event.status == 'END') {
         color = 'YELLOW'
         colorCode = '#FFFF00'
-    } else if (buildStatus == 'SUCCESSFUL') {
+    } else if (event.status == 'SUCCESSFUL' || event.status == 'SUCCESS') {
         color = 'GREEN'
         colorCode = '#00FF00'
     } else {
@@ -159,41 +156,61 @@ def pipelineNotify(params, String buildStatus = 'STARTED') {
         colorCode = '#FF0000'
     }
 
-    // Send notifications
-    if (params.notificationsSlack) {
-        try {
-            slackSend (color: colorCode, message: summary, channel: params.slackChannel)
-        }
-        catch (e) {
-            echo 'Unable to sent Slack notification'
-        }
-    }
+    if (context.job && context.job.notify) {
+        for (config in context.job.notify) {
+            echo "CONFIG: ${config}"
 
-    if (params.notificationsMattermost) {
-        try {
-            mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel, icon: params.mattermostIcon, endpoint: params.mattermostEndpoint)
+            def params = []
+            if (context.notification && context.notification[config]) {
+                params = context.notification[config]
+            }
+
+            if (params.levels && event.level && event.level in params.levels) {
+
+                // Send notifications
+                if (params.slack && params.slackChannel) {
+                    try {
+                        echo 'Send message to Slack'
+                        slackSend (color: colorCode, message: summary, channel: params.slackChannel)
+                    }
+                    catch (e) {
+                        echo 'Unable to sent Slack notification'
+                    }
+                }
+
+                if (params.mattermost && params.mattermostChannel && params.mattermostIcon && params.mattermostEndpoint) {
+                    try {
+                        if (env.BUILD_USER_ID) {
+                            summary = "@${env.BUILD_USER_ID} ${summary}"
+                        }
+                        echo 'Send message to Mattermost'
+                        mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel, icon: params.mattermostIcon, endpoint: params.mattermostEndpoint)
+                    }
+                    catch (e) {
+                        echo 'Unable to sent Mattermost notification'
+                    }
+                }
+
+                // hipchatSend (color: color, notify: true, message: summary)
+
+                if (params.emailExt) {
+                    echo 'Send email'
+                    def to = emailextrecipients([
+                        [$class: 'CulpritsRecipientProvider'],
+                        [$class: 'DevelopersRecipientProvider'],
+                        [$class: 'RequesterRecipientProvider']
+                    ])
+
+                    emailext (
+                        subject: subject,
+                        body: details,
+                        to: to,
+                        mimeType: 'text/html',
+                        attachLog: true,
+                    )
+                }
+            }
         }
-        catch (e) {
-            echo 'Unable to sent Mattermost notification'
-        }
-    }
-
-    // hipchatSend (color: color, notify: true, message: summary)
-
-    if (params.notificationsEmailExt) {
-        def to = emailextrecipients([
-            [$class: 'CulpritsRecipientProvider'],
-            [$class: 'DevelopersRecipientProvider'],
-            [$class: 'RequesterRecipientProvider']
-        ])
-
-        emailext (
-            subject: subject,
-            body: details,
-            to: to,
-            mimeType: 'text/html',
-            attachLog: true,
-        )
     }
 }
 
