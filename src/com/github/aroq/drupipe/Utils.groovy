@@ -135,6 +135,23 @@ boolean isCollectionOrList(object) {
     object instanceof java.util.Collection || object instanceof java.util.List || object instanceof java.util.LinkedHashMap || object instanceof java.util.HashMap
 }
 
+def isEventInNotificationLevels(eventLevel, levels) {
+    for (level in levels) {
+        level = level.replace('*', '.*')
+        def pattern = ~"^${level}\$"
+        if (eventLevel ==~ pattern) {
+            echo "Notifications: Matched ${eventLevel} with ${level}"
+            return true
+        }
+        else if (level == 'action' && eventLevel.startsWith(level)) {
+            echo "Notifications: Matched ${eventLevel} with ${level}"
+            return true
+        }
+    }
+    echo "Notifications: Not matched"
+    return false
+}
+
 def pipelineNotify(context, event) {
 
     // Event status of null means successful
@@ -169,7 +186,7 @@ def pipelineNotify(context, event) {
                 params = context.notification[config]
             }
 
-            if (params.levels && event.level && event.level in params.levels) {
+            if (params.levels && event.level && isEventInNotificationLevels(event.level, params.levels)) {
 
                 // Send notifications
                 if (params.slack && params.slackChannel) {
