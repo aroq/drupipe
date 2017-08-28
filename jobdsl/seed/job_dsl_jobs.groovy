@@ -144,13 +144,18 @@ def processJob(jobs, currentFolder, config) {
                             }
                         }
                     }
-                    triggers {
-                        gitlabPush {
-                            buildOnPushEvents()
-                            buildOnMergeRequestEvents(false)
-                            enableCiSkip()
-                            useCiFeatures()
-                            includeBranches(branch)
+                    if (job.value.containsKey('webhook_trigger') && (job.value.webhook_trigger == 0 || job.value.webhook_trigger == '0' || job.value.webhook_trigger == false || job.value.webhook_trigger == 'false')) {
+                        println "Triggers disabled by webhook_trigger configuration option"
+                    }
+                    else {
+                        triggers {
+                            gitlabPush {
+                                buildOnPushEvents()
+                                buildOnMergeRequestEvents(false)
+                                enableCiSkip()
+                                useCiFeatures()
+                                includeBranches(branch)
+                            }
                         }
                     }
                     properties {
@@ -161,16 +166,21 @@ def processJob(jobs, currentFolder, config) {
                 }
                 if (config.docmanConfig) {
                     if (config.env.GITLAB_API_TOKEN_TEXT) {
-                        println "Processing Gitlab webhooks"
-                        config.docmanConfig.projects?.each { project ->
-                            println "Project: ${project}"
-                            if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
-                                if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
-                                    config.gitlabHelper.addWebhook(
-                                        project.value.repo,
-                                        "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}"
-                                    )
-                                    println "Webhook added for project ${project}"
+                        if (job.value.containsKey('webhook_trigger') && (job.value.webhook_trigger == 0 || job.value.webhook_trigger == '0' || job.value.webhook_trigger == false || job.value.webhook_trigger == 'false')) {
+                            println "Webhooks creation disabled by webhook_trigger configuration option"
+                        }
+                        else {
+                            println "Processing Gitlab webhooks"
+                            config.docmanConfig.projects?.each { project ->
+                                println "Project: ${project}"
+                                if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
+                                    if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                                        config.gitlabHelper.addWebhook(
+                                            project.value.repo,
+                                            "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}"
+                                        )
+                                        println "Webhook added for project ${project}"
+                                    }
                                 }
                             }
                         }
