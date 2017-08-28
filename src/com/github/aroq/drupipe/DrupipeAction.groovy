@@ -88,14 +88,13 @@ class DrupipeAction implements Serializable {
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} end <-"
 
+            utils.pipelineNotify(context, [name: "Action ${name}", status: 'END', level: 'action'])
+
             actionResult ? actionResult : [:]
         }
         catch (err) {
             this.context.pipeline.script.echo err.toString()
             throw err
-        }
-        finally {
-            utils.pipelineNotify(context, [name: "Action ${name}", status: 'END', level: 'action'])
         }
     }
 
