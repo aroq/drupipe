@@ -21,6 +21,7 @@ class DrupipePipeline implements Serializable {
         try {
             script.timestamps {
                 script.node('master') {
+                    utils.dump(params, 'PIPELINE-PARAMS')
                     utils.dump(config, 'PIPELINE-CONFIG')
                     context.utils = utils
                     params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
