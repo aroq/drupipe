@@ -88,7 +88,7 @@ class DrupipeAction implements Serializable {
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} end <-"
 
-            actionResult = actionResult ? actionResult : [:]
+            actionResult ? actionResult : [:]
         }
         catch (err) {
             this.context.pipeline.script.echo err.toString()
@@ -96,8 +96,6 @@ class DrupipeAction implements Serializable {
         }
         finally {
             utils.pipelineNotify(context, [name: "Action ${name}", status: 'END', level: 'action'])
-
-            actionResult
         }
     }
 
