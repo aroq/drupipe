@@ -179,7 +179,7 @@ def pipelineNotify(context, event) {
 
     if (context.job && context.job.notify) {
         for (config in context.job.notify) {
-            echo "CONFIG: ${config}"
+            echo "Notifications: Config ${config}"
 
             def params = []
             if (context.notification && context.notification[config]) {
@@ -191,11 +191,11 @@ def pipelineNotify(context, event) {
                 // Send notifications
                 if (params.slack && params.slackChannel) {
                     try {
-                        echo 'Send message to Slack'
+                        echo 'Notifications: Send message to Slack'
                         slackSend (color: colorCode, message: summary, channel: params.slackChannel)
                     }
                     catch (e) {
-                        echo 'Unable to sent Slack notification'
+                        echo 'Notifications: Unable to sent Slack notification'
                     }
                 }
 
@@ -204,18 +204,18 @@ def pipelineNotify(context, event) {
                         if (env.BUILD_USER_ID) {
                             summary = "@${env.BUILD_USER_ID} ${summary}"
                         }
-                        echo 'Send message to Mattermost'
+                        echo 'Notifications: Send message to Mattermost'
                         mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel, icon: params.mattermostIcon, endpoint: params.mattermostEndpoint)
                     }
                     catch (e) {
-                        echo 'Unable to sent Mattermost notification'
+                        echo 'Notifications: Unable to sent Mattermost notification'
                     }
                 }
 
                 // hipchatSend (color: color, notify: true, message: summary)
 
                 if (params.emailExt) {
-                    echo 'Send email'
+                    echo 'Notifications: Send email'
                     def to = emailextrecipients([
                         [$class: 'CulpritsRecipientProvider'],
                         [$class: 'DevelopersRecipientProvider'],
