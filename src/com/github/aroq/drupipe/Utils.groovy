@@ -135,6 +135,23 @@ boolean isCollectionOrList(object) {
     object instanceof java.util.Collection || object instanceof java.util.List || object instanceof java.util.LinkedHashMap || object instanceof java.util.HashMap
 }
 
+def isEventInNotificationLevels(eventLevel, levels) {
+    for (level in levels) {
+        level = level.replace('*', '.*')
+        def pattern = ~"^${level}\$"
+        if (eventLevel ==~ pattern) {
+            echo "Notifications: Matched ${eventLevel} with ${level}"
+            return true
+        }
+        else if (level == 'action' && eventLevel.startsWith(level)) {
+            echo "Notifications: Matched ${eventLevel} with ${level}"
+            return true
+        }
+    }
+    echo "Notifications: Not matched"
+    return false
+}
+
 def pipelineNotify(context, event) {
 
     // Event status of null means successful
@@ -162,23 +179,23 @@ def pipelineNotify(context, event) {
 
     if (context.job && context.job.notify) {
         for (config in context.job.notify) {
-            echo "CONFIG: ${config}"
+            echo "Notifications: Config ${config}"
 
             def params = []
             if (context.notification && context.notification[config]) {
                 params = context.notification[config]
             }
 
-            if (params.levels && event.level && event.level in params.levels) {
+            if (params.levels && event.level && isEventInNotificationLevels(event.level, params.levels)) {
 
                 // Send notifications
                 if (params.slack && params.slackChannel) {
                     try {
-                        echo 'Send message to Slack'
+                        echo 'Notifications: Send message to Slack'
                         slackSend (color: colorCode, message: summary, channel: params.slackChannel)
                     }
                     catch (e) {
-                        echo 'Unable to sent Slack notification'
+                        echo 'Notifications: Unable to sent Slack notification'
                     }
                 }
 
@@ -187,18 +204,18 @@ def pipelineNotify(context, event) {
                         if (env.BUILD_USER_ID) {
                             summary = "@${env.BUILD_USER_ID} ${summary}"
                         }
-                        echo 'Send message to Mattermost'
+                        echo 'Notifications: Send message to Mattermost'
                         mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel, icon: params.mattermostIcon, endpoint: params.mattermostEndpoint)
                     }
                     catch (e) {
-                        echo 'Unable to sent Mattermost notification'
+                        echo 'Notifications: Unable to sent Mattermost notification'
                     }
                 }
 
                 // hipchatSend (color: color, notify: true, message: summary)
 
                 if (params.emailExt) {
-                    echo 'Send email'
+                    echo 'Notifications: Send email'
                     def to = emailextrecipients([
                         [$class: 'CulpritsRecipientProvider'],
                         [$class: 'DevelopersRecipientProvider'],
