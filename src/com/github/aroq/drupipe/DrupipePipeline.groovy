@@ -16,15 +16,13 @@ class DrupipePipeline implements Serializable {
 
     def execute(body = null) {
         context.pipeline = this
-        context.jenkinsParams = new LinkedHashMap()
-        context.jenkinsParams.putAll(params)
+        context.jenkinsParams = params
         utils = new com.github.aroq.drupipe.Utils()
 
         try {
             script.timestamps {
                 script.node('master') {
                     utils.dump(params, 'PIPELINE-PARAMS')
-                    utils.dump(context.jenkinsParams, 'JENKINS-PARAMS')
                     utils.dump(config, 'PIPELINE-CONFIG')
                     context.utils = utils
                     params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
