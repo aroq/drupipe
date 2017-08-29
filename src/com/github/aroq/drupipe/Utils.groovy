@@ -162,6 +162,14 @@ def pipelineNotify(context, event) {
     def colorCode = '#FF0000'
     def subject = "${event.name} ${event.status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
     def summary = "${subject} (${env.BUILD_URL})"
+    if (context.jenkinsParams && event.level == 'build') {
+        summary = summary + "\n\n"
+        summary = summary + "|Parameter|Value|\n"
+        summary = summary + "|:---|:---|\n"
+        context.jenkinsParams.each {param, value ->
+            summary = summary + "|${param}|${value}|\n"
+        }
+    }
     def details = """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
     <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>"""
 
