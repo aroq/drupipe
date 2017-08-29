@@ -152,6 +152,23 @@ def isEventInNotificationLevels(eventLevel, levels) {
     return false
 }
 
+@NonCPS
+def paramsMarkdownTable(jenkinsParams) {
+  def String table = ""
+
+  if (jenkinsParams) {
+
+      table = table + "|Parameter|Value|\n"
+      table = table + "|:---|:---|\n"
+
+      jenkinsParams.each {param, value ->
+          table = table + "|${param}|${value}|\n"
+      }
+  }
+
+  return table
+}
+
 def pipelineNotify(context, event) {
 
     // Event status of null means successful
@@ -163,12 +180,8 @@ def pipelineNotify(context, event) {
     def subject = "${event.name} ${event.status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
     def summary = "${subject} (${env.BUILD_URL})"
     if (context.jenkinsParams && event.level == 'build') {
-        summary = summary + "\n\n"
-        summary = summary + "|Parameter|Value|\n"
-        summary = summary + "|:---|:---|\n"
-        context.jenkinsParams.each {param, value ->
-            summary = summary + "|${param}|${value}|\n"
-        }
+        def table = paramsMarkdownTable(context.jenkinsParams)
+        summary = summary + "\n\n" + table
     }
     def details = """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
     <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>"""
