@@ -21,8 +21,9 @@ class DrupipeAction implements Serializable {
             this.context << c
         }
 
+        def utils = new com.github.aroq.drupipe.Utils()
+
         try {
-            def utils = new com.github.aroq.drupipe.Utils()
 
             // Stage name & echo.
             String drupipeStageName
@@ -32,6 +33,7 @@ class DrupipeAction implements Serializable {
             else {
                 drupipeStageName = 'config'
             }
+            utils.pipelineNotify(context, [name: "Action ${name}", status: 'START', level: "action:${drupipeStageName}"])
             utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} start <-")
 
             // Define action params.
@@ -85,6 +87,8 @@ class DrupipeAction implements Serializable {
             }
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} end <-"
+
+            utils.pipelineNotify(context, [name: "Action ${name}", status: 'END', level: "action:${drupipeStageName}"])
 
             actionResult ? actionResult : [:]
         }
