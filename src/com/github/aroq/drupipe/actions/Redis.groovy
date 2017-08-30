@@ -21,7 +21,9 @@ class RedisTester extends BaseAction {
 
         // Do not use socket/host/port if dsn available
         if (dsns != '') {
-            for (dsn in dsns.split("\\|")) {
+            def dsn_array = dsns.split("\\|")
+            for (def i = 0; i < dsn_array.length; i++) {
+                def dsn = dsn_array[i]
                 if (dsn ==~ /^.*:[0-9]+$/) {
                     def host_port = dsn.split(":")
                     def redisString = """redis-cli \
