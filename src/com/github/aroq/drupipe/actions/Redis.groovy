@@ -19,7 +19,7 @@ class RedisTester extends BaseAction {
         def port = (this.context.redis_port.length() != 0) ? "-s ${this.context.redis_port}" : ''
         def command = (this.context.redis_command.length() != 0) ? "${this.context.redis_command}" : 'INFO'
 
-        # Do not use socket/host/port if dsn available
+        // Do not use socket/host/port if dsn available
         if (dsns != '') {
             for (dsn in dsns.split("\\|")) {
                 if (dsn ==~ /^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:[0-9]+$/) {
@@ -40,7 +40,7 @@ ${command}"""
                 }
             }
         }
-        # Do not use host/port if socket available
+        // Do not use host/port if socket available
         else if (socket != '') {
             host = ''
             port = ''
