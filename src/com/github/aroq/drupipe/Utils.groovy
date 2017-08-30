@@ -198,8 +198,10 @@ def pipelineNotify(context, event) {
         colorCode = '#FF0000'
     }
 
-    if (context.job && context.job.notify) {
-        for (config in context.job.notify) {
+    if (context.job && context.jenkinsParams.notify) {
+        def notify = context.jenkinsParams.notify.split(",")
+        for (def i = 0; i < notify.length; i++) {
+            def config = notify[i]
             echo "Notifications: Config ${config}"
 
             def params = []
