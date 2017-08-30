@@ -2,7 +2,7 @@ package com.github.aroq.drupipe.actions
 
 import com.github.aroq.drupipe.DrupipeAction
 
-class VegetaTester extends BaseAction {
+class RedisTester extends BaseAction {
 
     def context
 
@@ -13,27 +13,52 @@ class VegetaTester extends BaseAction {
     def DrupipeAction action
 
     def runCommand() {
+        def dsns = (this.context.redis_dsn.length() != 0) ? "${this.context.redis_dsn}" : ''
         def socket = (this.context.redis_socket.length() != 0) ? "-s ${this.context.redis_socket}" : ''
         def host = (this.context.redis_host.length() != 0) ? "-h ${this.context.redis_host}" : ''
         def port = (this.context.redis_port.length() != 0) ? "-s ${this.context.redis_port}" : ''
-
-        # Don't use host/port if socket available
-        if (socket.length() != 0) {
-            host = ''
-            port = ''
-        }
-
         def command = (this.context.redis_command.length() != 0) ? "${this.context.redis_command}" : 'INFO'
 
-        def redisString = """redis-cli \
+        # Do not use socket/host/port if dsn available
+        if (dsns != '') {
+            for (dsn in dsns.split("\\|")) {
+                if (dsn ==~ /^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:[0-9]+$/) {
+                    def host_port = dsn.split(":")
+                    def redisString = """redis-cli \
+-h ${host_port[0]} \
+-p ${host_port[1]} \
+${command}"""
+                    this.script.echo "Execute Redis command: ${redisString}"
+                    this.script.drupipeShell("${redisString}", context)
+                }
+                else {
+                    def redisString = """redis-cli \
+-s ${dsn} \
+${command}"""
+                    this.script.echo "Execute Redis command: ${redisString}"
+                    this.script.drupipeShell("${redisString}", context)
+                }
+            }
+        }
+        # Do not use host/port if socket available
+        else if (socket != '') {
+            host = ''
+            port = ''
+
+            def redisString = """redis-cli \
 ${socket} \
+${command}"""
+            this.script.echo "Execute Redis command: ${redisString}"
+            this.script.drupipeShell("${redisString}", context)
+        }
+        else {
+            def redisString = """redis-cli \
 ${host} \
 ${port} \
 ${command}"""
-
-        this.script.echo "Execute Redis command: ${redisString}"
-
-        this.script.drupipeShell("${rsedisString}", context)
+            this.script.echo "Execute Redis command: ${redisString}"
+            this.script.drupipeShell("${redisString}", context)
+        }
 
     }
 }
