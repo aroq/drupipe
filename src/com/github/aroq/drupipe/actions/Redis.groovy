@@ -2,7 +2,7 @@ package com.github.aroq.drupipe.actions
 
 import com.github.aroq.drupipe.DrupipeAction
 
-class RedisTester extends BaseAction {
+class Redis extends BaseAction {
 
     def context
 
