@@ -162,7 +162,7 @@ def paramsMarkdownTable(jenkinsParams) {
       table = table + "|:---|:---|\n"
 
       jenkinsParams.each {param, value ->
-          table = table + "|${param}|${value}|\n"
+          table = table + "|${param}|`${value}`|\n"
       }
   }
 
