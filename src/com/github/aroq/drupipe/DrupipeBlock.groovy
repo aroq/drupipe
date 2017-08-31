@@ -35,6 +35,7 @@ class DrupipeBlock implements Serializable {
         context.block = this
 
         if (nodeName) {
+            utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'START', level: 'block'])
             context.pipeline.script.echo "NODE NAME: ${nodeName}"
             context.pipeline.script.node(nodeName) {
                 context.pipeline.script.unstash('config')
@@ -56,6 +57,7 @@ class DrupipeBlock implements Serializable {
                     }
                 }
             }
+            utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'END', level: 'block'])
         }
         else {
             result = _execute(body)

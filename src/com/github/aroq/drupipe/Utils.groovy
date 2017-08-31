@@ -135,23 +135,62 @@ boolean isCollectionOrList(object) {
     object instanceof java.util.Collection || object instanceof java.util.List || object instanceof java.util.LinkedHashMap || object instanceof java.util.HashMap
 }
 
-def pipelineNotify(params, String buildStatus = 'STARTED') {
-    // build status of null means successful
-    buildStatus =  buildStatus ?: 'SUCCESSFUL'
+def isEventInNotificationLevels(eventLevel, levels) {
+    for (level in levels) {
+        level = level.replace('*', '.*')
+        def pattern = ~"^${level}\$"
+        if (eventLevel ==~ pattern) {
+            echo "Notifications: Matched ${eventLevel} with ${level}"
+            return true
+        }
+        else if (level == 'action' && eventLevel.startsWith(level)) {
+            echo "Notifications: Matched ${eventLevel} with ${level}"
+            return true
+        }
+    }
+    echo "Notifications: Not matched"
+    return false
+}
+
+@NonCPS
+def paramsMarkdownTable(jenkinsParams) {
+  def String table = ""
+
+  if (jenkinsParams) {
+
+      table = table + "|Parameter|Value|\n"
+      table = table + "|:---|:---|\n"
+
+      jenkinsParams.each {param, value ->
+          table = table + "|${param}|`${value}`|\n"
+      }
+  }
+
+  return table
+}
+
+def pipelineNotify(context, event) {
+
+    // Event status of null means successful
+    event.status =  event.status ?: 'SUCCESSFUL'
 
     // Default values
     def colorName = 'RED'
     def colorCode = '#FF0000'
-    def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+    def subject = "${event.name} ${event.status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
     def summary = "${subject} (${env.BUILD_URL})"
+    if (context.jenkinsParams && event.level == 'build') {
+        def table = paramsMarkdownTable(context.jenkinsParams)
+        summary = summary + "\n\n" + table
+    }
     def details = """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
     <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>"""
 
     // Override default values based on build status
-    if (buildStatus == 'STARTED') {
+    if (event.status == 'STARTED' || event.status == 'START' || event.status == 'END') {
         color = 'YELLOW'
         colorCode = '#FFFF00'
-    } else if (buildStatus == 'SUCCESSFUL') {
+    } else if (event.status == 'SUCCESSFUL' || event.status == 'SUCCESS') {
         color = 'GREEN'
         colorCode = '#00FF00'
     } else {
@@ -159,41 +198,63 @@ def pipelineNotify(params, String buildStatus = 'STARTED') {
         colorCode = '#FF0000'
     }
 
-    // Send notifications
-    if (params.notificationsSlack) {
-        try {
-            slackSend (color: colorCode, message: summary, channel: params.slackChannel)
-        }
-        catch (e) {
-            echo 'Unable to sent Slack notification'
-        }
-    }
+    if (context.job && context.jenkinsParams.notify) {
+        def notify = context.jenkinsParams.notify.split(",")
+        for (def i = 0; i < notify.length; i++) {
+            def config = notify[i]
+            echo "Notifications: Config ${config}"
 
-    if (params.notificationsMattermost) {
-        try {
-            mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel)
+            def params = []
+            if (context.notification && context.notification[config]) {
+                params = context.notification[config]
+            }
+
+            if (params.levels && event.level && isEventInNotificationLevels(event.level, params.levels)) {
+
+                // Send notifications
+                if (params.slack && params.slackChannel) {
+                    try {
+                        echo 'Notifications: Send message to Slack'
+                        slackSend (color: colorCode, message: summary, channel: params.slackChannel)
+                    }
+                    catch (e) {
+                        echo 'Notifications: Unable to sent Slack notification'
+                    }
+                }
+
+                if (params.mattermost && params.mattermostChannel && params.mattermostIcon && params.mattermostEndpoint) {
+                    try {
+                        if (env.BUILD_USER_ID) {
+                            summary = "@${env.BUILD_USER_ID} ${summary}"
+                        }
+                        echo 'Notifications: Send message to Mattermost'
+                        mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel, icon: params.mattermostIcon, endpoint: params.mattermostEndpoint)
+                    }
+                    catch (e) {
+                        echo 'Notifications: Unable to sent Mattermost notification'
+                    }
+                }
+
+                // hipchatSend (color: color, notify: true, message: summary)
+
+                if (params.emailExt) {
+                    echo 'Notifications: Send email'
+                    def to = emailextrecipients([
+                        [$class: 'CulpritsRecipientProvider'],
+                        [$class: 'DevelopersRecipientProvider'],
+                        [$class: 'RequesterRecipientProvider']
+                    ])
+
+                    emailext (
+                        subject: subject,
+                        body: details,
+                        to: to,
+                        mimeType: 'text/html',
+                        attachLog: true,
+                    )
+                }
+            }
         }
-        catch (e) {
-            echo 'Unable to sent Mattermost notification'
-        }
-    }
-
-    // hipchatSend (color: color, notify: true, message: summary)
-
-    if (params.notificationsEmailExt) {
-        def to = emailextrecipients([
-            [$class: 'CulpritsRecipientProvider'],
-            [$class: 'DevelopersRecipientProvider'],
-            [$class: 'RequesterRecipientProvider']
-        ])
-
-        emailext (
-            subject: subject,
-            body: details,
-            to: to,
-            mimeType: 'text/html',
-            attachLog: true,
-        )
     }
 }
 

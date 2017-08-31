@@ -16,12 +16,13 @@ class DrupipePipeline implements Serializable {
 
     def execute(body = null) {
         context.pipeline = this
+        context.jenkinsParams = params
         utils = new com.github.aroq.drupipe.Utils()
 
         try {
-            utils.pipelineNotify(context)
             script.timestamps {
                 script.node('master') {
+                    utils.dump(params, 'PIPELINE-PARAMS')
                     utils.dump(config, 'PIPELINE-CONFIG')
                     context.utils = utils
                     params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
@@ -40,6 +41,8 @@ class DrupipePipeline implements Serializable {
                     if (context.jobs) {
                         def job = getJobConfigByName(context.env.JOB_NAME)
                         if (job) {
+                            utils.pipelineNotify(context, [name: 'Build', status: 'STARTED', level: 'build'])
+                            context.job = job
                             utils.jsonDump(job, 'JOB')
                             def pipelineBlocks = job.pipeline && job.pipeline.blocks ? job.pipeline.blocks : []
                             if (pipelineBlocks) {
@@ -105,7 +108,8 @@ class DrupipePipeline implements Serializable {
             throw e
         }
         finally {
-            utils.pipelineNotify(context, script.currentBuild.result)
+            utils.pipelineNotify(context, [name: 'Build', status: script.currentBuild.result, level: 'build'])
+
             context
         }
     }
