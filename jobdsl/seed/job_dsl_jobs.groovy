@@ -79,6 +79,21 @@ def processJob(jobs, currentFolder, config) {
                         }
                         stringParam('debugEnabled', '0')
                         stringParam('force', '0')
+                        if (job.value.containsKey('notify')) {
+                            activeChoiceParam('notify') {
+                                description('Allows user choose from multiple choices')
+                                choiceType('CHECKBOX')
+                                groovyScript {
+                                    def choices_script = '['
+                                    for (channel in job.value.notify) {
+                                        choices_script = choices_script + '"' + channel + '", '
+                                    }
+                                    choices_script = choices_script + ']'
+                                    println "NOTIFY CHOICES: ${choices_script}"
+                                    script(choices_script)
+                                }
+                            }
+                        }
                     }
                     definition {
                         cpsScm {
@@ -126,6 +141,21 @@ def processJob(jobs, currentFolder, config) {
                         stringParam('type', 'branch')
                         stringParam('environment', buildEnvironment)
                         stringParam('version', branch)
+                        if (job.value.containsKey('notify')) {
+                            activeChoiceParam('notify') {
+                                description('Allows user choose from multiple choices')
+                                choiceType('CHECKBOX')
+                                groovyScript {
+                                    def choices_script = '['
+                                    for (channel in job.value.notify) {
+                                        choices_script = choices_script + '"' + channel + '", '
+                                    }
+                                    choices_script = choices_script + ']'
+                                    println "NOTIFY CHOICES: ${choices_script}"
+                                    script(choices_script)
+                                }
+                            }
+                        }
                     }
                     definition {
                         cpsScm {
@@ -220,6 +250,21 @@ def processJob(jobs, currentFolder, config) {
                                 stringParam('force', '0')
                             }
                         }
+                        if (job.value.containsKey('notify')) {
+                            activeChoiceParam('notify') {
+                                description('Allows user choose from multiple choices')
+                                choiceType('CHECKBOX')
+                                groovyScript {
+                                    def choices_script = '['
+                                    for (channel in job.value.notify) {
+                                        choices_script = choices_script + '"' + channel + '", '
+                                    }
+                                    choices_script = choices_script + ']'
+                                    println "NOTIFY CHOICES: ${choices_script}"
+                                    script(choices_script)
+                                }
+                            }
+                        }
                     }
                     definition {
                         cpsScm {
@@ -252,6 +297,21 @@ def processJob(jobs, currentFolder, config) {
                         stringParam('configRepo', config.configRepo)
                         job.value.params?.each { key, value ->
                             stringParam(key, value)
+                        }
+                        if (job.value.containsKey('notify')) {
+                            activeChoiceParam('notify') {
+                                description('Allows user choose from multiple choices')
+                                choiceType('CHECKBOX')
+                                groovyScript {
+                                    def choices_script = '['
+                                    for (channel in job.value.notify) {
+                                        choices_script = choices_script + '"' + channel + '", '
+                                    }
+                                    choices_script = choices_script + ']'
+                                    println "NOTIFY CHOICES: ${choices_script}"
+                                    script(choices_script)
+                                }
+                            }
                         }
                     }
                     definition {
@@ -299,6 +359,21 @@ def processJob(jobs, currentFolder, config) {
                             groovyScript {
                                 // NOTE: https://issues.jenkins-ci.org/browse/JENKINS-42655?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
                                 script('["' + job.value.suites.collect{ it += ':selected' }.join('", "') + '"]')
+                            }
+                        }
+                        if (job.value.containsKey('notify')) {
+                            activeChoiceParam('notify') {
+                                description('Allows user choose from multiple choices')
+                                choiceType('CHECKBOX')
+                                groovyScript {
+                                    def choices_script = '['
+                                    for (channel in job.value.notify) {
+                                        choices_script = choices_script + '"' + channel + '", '
+                                    }
+                                    choices_script = choices_script + ']'
+                                    println "NOTIFY CHOICES: ${choices_script}"
+                                    script(choices_script)
+                                }
                             }
                         }
                     }
