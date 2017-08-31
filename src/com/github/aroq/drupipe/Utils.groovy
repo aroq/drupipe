@@ -99,7 +99,14 @@ String configToSlurperFile(config) {
 }
 
 String getJenkinsFolderName(String buildUrl) {
-    (buildUrl =~ $/job/(.+)/job/(.+)/.*/$)[ 0 ] [ 1 ]
+    def result = (buildUrl =~ $/job/(.+)/job/(.+)/.*/$)
+    if (result && result[0] && result[0][1]) {
+        return result[0][1]
+    }
+    else {
+        echo "Job not in folder."
+        return ""
+    }
 }
 
 String getJenkinsJobName(String buildUrl) {
