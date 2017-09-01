@@ -1,4 +1,14 @@
 def call(context = [:], body) {
+    podTemplate(label: 'mypod', containers: [
+        containerTemplate(name: 'docman', image: 'michaeltigr/zebra-build-php-drush-docman', ttyEnabled: true, command: 'cat'),
+    ]) {
+        node('mypod') {
+            container('docman') {
+                sh('drush --version')
+            }
+        }
+    }
+
 
     nodeName = 'drupipe'
     podTemplate(label: 'mypod', containers: [
