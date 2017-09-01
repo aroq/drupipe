@@ -122,6 +122,7 @@ class Config extends BaseAction {
             result = context.pipeline.executePipelineActionList(providers, context)
             def json = this.script.readFile('mothership/projects.json')
             result = utils.merge(result, this.utils.getMothershipProjectParams(context, json))
+            utils.debugLog(context, result, 'getMothershipProjectParams result')
             this.configRepo = result.configRepo
 
         }
