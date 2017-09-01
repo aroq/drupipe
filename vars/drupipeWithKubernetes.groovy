@@ -4,8 +4,8 @@ def call(context = [:], body) {
     podTemplate(label: 'mypod', containers: [
         containerTemplate(name: context.containerName, image: context.dockerImage, ttyEnabled: true, command: 'cat'),
     ]) {
-        echo "NODE NAME: ${nodeName}"
         node('mypod') {
+            echo "NODE NAME: ${nodeName}"
             unstash('config')
             context << context.defaultActionParams['drupipeWithKubernetes'] << context
             container(context.containerName) {
