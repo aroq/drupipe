@@ -36,9 +36,6 @@ class DrupipeBlock implements Serializable {
 
         if (nodeName) {
             utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'START', level: 'block'])
-            context.pipeline.script.echo "NODE NAME: ${nodeName}"
-            context.pipeline.script.node(nodeName) {
-                context.pipeline.script.unstash('config')
                 if (withDocker) {
                     if (context.containerMode == 'kubernetes') {
                         context.pipeline.script.drupipeWithKubernetes(context) {
@@ -46,17 +43,24 @@ class DrupipeBlock implements Serializable {
                         }
                     }
                     else if (context.containerMode == 'docker') {
-                        context.pipeline.script.drupipeWithDocker(context) {
-                            result = _execute(body)
+                        context.pipeline.script.echo "NODE NAME: ${nodeName}"
+                        context.pipeline.script.node(nodeName) {
+                            context.pipeline.script.unstash('config')
+                            context.pipeline.script.drupipeWithDocker(context) {
+                                result = _execute(body)
+                            }
                         }
                     }
                 }
                 else {
-                    context.pipeline.script.sshagent([context.credentialsId]) {
-                        result = _execute(body)
+                    context.pipeline.script.echo "NODE NAME: ${nodeName}"
+                    context.pipeline.script.node(nodeName) {
+                        context.pipeline.script.unstash('config')
+                        context.pipeline.script.sshagent([context.credentialsId]) {
+                            result = _execute(body)
+                        }
                     }
                 }
-            }
             utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'END', level: 'block'])
         }
         else {
