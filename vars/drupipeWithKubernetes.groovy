@@ -1,6 +1,6 @@
 def call(context = [:], body) {
     podTemplate(label: 'mypod', containers: [
-        containerTemplate(name: 'docman', image: 'michaeltigr/zebra-build-php-drush-docman', ttyEnabled: true, command: 'cat'),
+        containerTemplate(name: 'docman', image: context.dockerImage, ttyEnabled: true, command: 'cat'),
     ]) {
         node('mypod') {
             container('docman') {
