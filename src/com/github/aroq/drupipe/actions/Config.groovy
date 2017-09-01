@@ -241,12 +241,10 @@ class Config extends BaseAction {
                 ]
             ]
             def projectConfig
-            script.echo "Project config ssh agent BEFORE"
             script.sshagent([context.credentialsId]) {
                 projectConfig = context.pipeline.executePipelineActionList(providers, context)
                 utils.debugLog(context, projectConfig, 'Project config')
             }
-            script.echo "Project config ssh agent AFTER"
 
             def result = mergeScenariosConfigs(projectConfig, [:], 'project')
 
