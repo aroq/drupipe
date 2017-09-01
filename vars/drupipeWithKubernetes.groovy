@@ -3,7 +3,7 @@ def call(context = [:], body) {
     containerTemplate = 'block'
 
     podTemplate(label: nodeName, containers: [
-        containerTemplate(name: containerTemplate, image: context.dockerImage, ttyEnabled: true, command: 'cat'),
+        containerTemplate(name: 'block', image: context.dockerImage, ttyEnabled: true, command: 'cat'),
     ]) {
         node(nodeName) {
             container(containerTemplate) {
