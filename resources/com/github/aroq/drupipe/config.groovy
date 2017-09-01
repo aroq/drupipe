@@ -50,7 +50,7 @@ defaultActionParams = [
         drupipeDockerArgs: '--user root:root --net=host',
     ],
     drupipeWithKubernetes: [
-        containerName: 'drudock',
+        containerName: 'drupipeContainer',
     ],
     Docman: [
         docmanJsonConfigFile: 'config.json',
