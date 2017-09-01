@@ -1,12 +1,11 @@
 def call(context = [:], body) {
 
     nodeName = 'drupipe'
-
-    podTemplate(label: nodeName, inheritFrom: 'default',  containers: [
-        containerTemplate(name: context.containerName, image: context.dockerImage)
+    podTemplate(label: 'mypod', containers: [
+        containerTemplate(name: context.containerName, image: context.dockerImage, ttyEnabled: true, command: 'cat'),
     ]) {
         context.pipeline.script.echo "NODE NAME: ${nodeName}"
-        context.pipeline.script.node(nodeName) {
+        context.pipeline.script.node('mypod') {
             context.pipeline.script.unstash('config')
             context << context.defaultActionParams['drupipeWithKubernetes'] << context
             container(context.containerName) {
