@@ -3,7 +3,7 @@ def call(context = [:], body) {
     containerTemplate = 'block'
 
     podTemplate(label: nodeName, containers: [
-        containerTemplate(name: 'block', image: context.dockerImage, ttyEnabled: true, command: 'cat'),
+        containerTemplate(name: 'block', image: "michaeltigr/zebra-build-php-drush-docman", ttyEnabled: true, command: 'cat'),
     ]) {
         node(nodeName) {
             container(containerTemplate) {
