@@ -1,10 +1,12 @@
 def call(context = [:], body) {
     nodeName = 'drupipe'
+    containerName = 'drupipe-container'
+
     podTemplate(label: nodeName, containers: [
-        containerTemplate(name: context.containerName, image: context.dockerImage, ttyEnabled: true, command: 'cat'),
+        containerTemplate(name: containerName, image: context.dockerImage, ttyEnabled: true, command: 'cat'),
     ]) {
         node(nodeName) {
-            container(context.containerName) {
+            container(containerName) {
                 unstash('config')
                 context << context.defaultActionParams['drupipeWithKubernetes'] << context
                 context.workspace = pwd()
