@@ -4,9 +4,9 @@ def call(context = [:], body) {
     podTemplate(label: 'mypod', containers: [
         containerTemplate(name: context.containerName, image: context.dockerImage, ttyEnabled: true, command: 'cat'),
     ]) {
-        context.pipeline.script.echo "NODE NAME: ${nodeName}"
-        context.pipeline.script.node('mypod') {
-            context.pipeline.script.unstash('config')
+        echo "NODE NAME: ${nodeName}"
+        node('mypod') {
+            unstash('config')
             context << context.defaultActionParams['drupipeWithKubernetes'] << context
             container(context.containerName) {
                 context.workspace = pwd()
