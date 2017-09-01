@@ -2,17 +2,16 @@
 
 // Pipeline used to create project specific pipelines.
 def call(LinkedHashMap p = [:]) {
-    podTemplate(label: 'mypod', containers: [
-        containerTemplate(name: 'docman', image: 'michaeltigr/zebra-build-php-drush-docman', ttyEnabled: true, command: 'cat'),
-    ]) {
-        node('mypod') {
-            container('docman') {
-                sh('drush --version')
+    drupipe { context ->
+        podTemplate(label: 'mypod', containers: [
+            containerTemplate(name: 'docman', image: 'michaeltigr/zebra-build-php-drush-docman', ttyEnabled: true, command: 'cat'),
+        ]) {
+            node('mypod') {
+                container('docman') {
+                    sh('drush --version')
+                }
             }
         }
-    }
-
-    drupipe { context ->
 
         drupipeBlock(withDocker: true, nodeName: 'default', dockerImage: 'michaeltigr/zebra-build-php-drush-docman', context) {
             checkout scm
