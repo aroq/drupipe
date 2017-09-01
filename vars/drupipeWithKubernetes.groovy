@@ -1,12 +1,9 @@
 def call(context = [:], body) {
-    nodeName = 'drupipe'
-    containerTemplate = 'block'
-
-    podTemplate(label: 'drupipe', containers: [
-        containerTemplate(name: 'blockTemplate', image: "michaeltigr/zebra-build-php-drush-docman", ttyEnabled: true, command: 'cat'),
+    podTemplate(label: 'mypod', containers: [
+        containerTemplate(name: 'docman', image: 'michaeltigr/zebra-build-php-drush-docman', ttyEnabled: true, command: 'cat'),
     ]) {
-        node('drupipe') {
-            container('blockTemplate') {
+        node('mypod') {
+            container('docman') {
                 unstash('config')
                 context << context.defaultActionParams['drupipeWithKubernetes'] << context
                 context.workspace = pwd()
