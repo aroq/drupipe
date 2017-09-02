@@ -87,14 +87,10 @@ class Config extends BaseAction {
         result.env = this.utils.envToMap()
         result << result.env
 
-        if (this.script.env.BUILD_URL) {
-            result.jenkinsFolderName = this.utils.getJenkinsFolderName(this.script.env.BUILD_URL)
-            result.jenkinsJobName = this.utils.getJenkinsJobName(this.script.env.BUILD_URL)
-        }
-        else {
-            result.jenkinsFolderName = this.utils.getJenkinsFolderName(this.script.env.JOB_DISPLAY_URL)
-            result.jenkinsJobName = this.utils.getJenkinsJobName(this.script.env.JOB_DISPLAY_URL)
-        }
+        String jobPath = this.script.env.BUILD_URL ? this.script.env.BUILD_URL : this.script.env.JOB_DISPLAY_URL
+
+        result.jenkinsFolderName = this.utils.getJenkinsFolderName(jobPath)
+        result.jenkinsJobName = this.utils.getJenkinsJobName(jobPath)
 
         result
     }
