@@ -88,9 +88,9 @@ class DrupipePipeline implements Serializable {
                         def nodeName = 'drupipe'
                         def containers
                         for (def i = 0; i < blocks.size(); i++) {
-                            containers << containerTemplate(name: "block-${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true)
+                            containers << script.containerTemplate(name: "block-${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true)
                         }
-                        podTemplate(label: nodeName, containers: containers) {
+                        script.podTemplate(label: nodeName, containers: containers) {
                             node(nodeName) {
                                 executeBlocks()
                             }
