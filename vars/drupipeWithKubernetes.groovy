@@ -9,8 +9,8 @@ def call(context = [:], body) {
 //        }
 //    }
 
-    container(context.block.name) {
-        unstash('config')
+//    container(context.block.name) {
+//        unstash('config')
         context << context.defaultActionParams['drupipeWithKubernetes'] << context
         context.workspace = pwd()
         sshagent([context.credentialsId]) {
@@ -19,7 +19,7 @@ def call(context = [:], body) {
                 context << result
             }
         }
-    }
+//    }
 
     context
 }
