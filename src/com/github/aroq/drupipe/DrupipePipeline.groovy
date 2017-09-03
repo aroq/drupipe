@@ -90,7 +90,7 @@ class DrupipePipeline implements Serializable {
 //                        for (def i = 0; i < blocks.size(); i++) {
 //                            containers << script.containerTemplate(name: "block${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true)
 //                        }
-                        containerName = 'drupipe-container'
+                        def containerName = 'drupipe-container'
 
                         script.podTemplate(label: nodeName, containers: [
                             script.containerTemplate(name: containerName, image: 'golang', ttyEnabled: true, command: 'cat', alwaysPullImage: true),
