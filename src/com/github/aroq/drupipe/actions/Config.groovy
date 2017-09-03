@@ -92,7 +92,7 @@ class Config extends BaseAction {
         result.jenkinsFolderName = this.utils.getJenkinsFolderName(jobPath)
         result.jenkinsJobName = this.utils.getJenkinsJobName(jobPath)
 
-        if (this.script.envKUBERNETES_PORT) {
+        if (this.script.env.KUBERNETES_PORT) {
             result.containerMode = 'kubernetes'
         }
 
