@@ -96,12 +96,19 @@ class PipelineController extends BaseAction {
         //info()
         def repo
         def masterInfoFile = "${context.projectConfigPath}/${configPath}/info.yaml"
+        drupipeShell("""
+            ls -al ${context.projectConfigPath}
+            ls -al ${context.projectConfigPath}/${configPath}
+            """, context
+        )
         if (script.fileExists(masterInfoFile)) {
+            script.echo "File exists: ${masterInfoFile}"
             def masterConfig = script.readYaml(file: masterInfoFile)
             script.echo "MASTER CONFIG: ${masterConfig}"
             repo = masterConfig.type == 'root' ? masterConfig.repo : masterConfig.root_repo
         }
         else {
+            script.echo "File NOT exists: ${masterInfoFile}"
             repo = context.components.master.root_repo ? context.components.master.root_repo : context.components.master.repo
         }
         script.echo "REPO: ${repo}"
