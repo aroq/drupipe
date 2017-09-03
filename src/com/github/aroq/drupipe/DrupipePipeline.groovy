@@ -88,13 +88,13 @@ class DrupipePipeline implements Serializable {
                         def nodeName = 'drupipe'
                         def containers = []
                         for (def i = 0; i < blocks.size(); i++) {
-                            containers << script.containerTemplate(name: "block-${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true)
+                            containers << script.containerTemplate(name: "block${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true)
                         }
                         script.podTemplate(label: nodeName, containers: containers) {
                             script.node(nodeName) {
                                 for (def i = 0; i < blocks.size(); i++) {
-                                    blocks[i].name = "blocks-${i}"
-                                    container("blocks-${i}") {
+                                    blocks[i].name = "block${i}"
+                                    script.container("block${i}") {
                                         unstash('config')
                                         def block = new DrupipeBlock(blocks[i])
                                         script.echo 'BLOCK EXECUTE START'
