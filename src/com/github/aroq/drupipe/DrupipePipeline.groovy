@@ -98,7 +98,7 @@ class DrupipePipeline implements Serializable {
                             script.node(nodeName) {
                                 script.container(containerName) {
                                     script.unstash('config')
-                                    context.workspace = pwd()
+                                    context.workspace = script.pwd()
                                     script.sshagent([context.credentialsId]) {
                                         script.echo "test"
                                     }
