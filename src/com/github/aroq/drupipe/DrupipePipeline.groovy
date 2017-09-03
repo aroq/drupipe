@@ -93,7 +93,7 @@ class DrupipePipeline implements Serializable {
                         script.podTemplate(label: nodeName, containers: containers) {
                             script.node(nodeName) {
                                 script.container("block0") {
-                                    sshagent([context.credentialsId]) {
+                                    script.sshagent([context.credentialsId]) {
                                         script.unstash('config')
                                         script.echo "test"
                                     }
