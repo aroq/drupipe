@@ -92,16 +92,19 @@ class DrupipePipeline implements Serializable {
                         }
                         script.podTemplate(label: nodeName, containers: containers) {
                             script.node(nodeName) {
-                                for (def i = 0; i < blocks.size(); i++) {
-                                    blocks[i].name = "block${i}"
-                                    script.container("block${i}") {
-                                        script.unstash('config')
-                                        def block = new DrupipeBlock(blocks[i])
-                                        script.echo 'BLOCK EXECUTE START'
-                                        context << block.execute(context)
-                                        script.echo 'BLOCK EXECUTE END'
-                                    }
+                                script.container("block0") {
+                                    echo "test"
                                 }
+//                                for (def i = 0; i < blocks.size(); i++) {
+//                                    blocks[i].name = "block${i}"
+//                                    script.container("block${i}") {
+//                                        script.unstash('config')
+//                                        def block = new DrupipeBlock(blocks[i])
+//                                        script.echo 'BLOCK EXECUTE START'
+//                                        context << block.execute(context)
+//                                        script.echo 'BLOCK EXECUTE END'
+//                                    }
+//                                }
                             }
                         }
 
