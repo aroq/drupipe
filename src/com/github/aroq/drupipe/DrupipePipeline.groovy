@@ -127,9 +127,9 @@ class DrupipePipeline implements Serializable {
         for (def i = 0; i < blocks.size(); i++) {
             blocks[i].name = "blocks-${i}"
             def block = new DrupipeBlock(blocks[i])
-            script.echo 'BLOCK EXECUTE START'
+//            script.echo 'BLOCK EXECUTE START'
             context << block.execute(context)
-            script.echo 'BLOCK EXECUTE END'
+//            script.echo 'BLOCK EXECUTE END'
         }
     }
 
