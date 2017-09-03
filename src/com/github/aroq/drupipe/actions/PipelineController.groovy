@@ -94,6 +94,7 @@ class PipelineController extends BaseAction {
 
     def repoParams(String configPath) {
         //info()
+        script.checkout this.script.scm
         def repo
         def masterInfoFile = "${context.projectConfigPath}/${configPath}/info.yaml"
         script.drupipeShell("""
