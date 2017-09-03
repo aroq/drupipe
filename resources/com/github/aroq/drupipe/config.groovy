@@ -8,7 +8,7 @@ drupipeLibraryBranch = 'master'
 drupipeLibraryType = 'branch'
 dockerImage = 'aroq/drudock:1.4.0'
 nodeName = 'default'
-containerMode = 'kubernetes'
+containerMode = 'docker'
 
 configSeedType = 'docman'
 

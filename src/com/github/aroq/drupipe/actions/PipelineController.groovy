@@ -93,15 +93,9 @@ class PipelineController extends BaseAction {
     }
 
     def repoParams(String configPath) {
-        //info()
         script.checkout this.script.scm
         def repo
         def masterInfoFile = "${context.projectConfigPath}/${configPath}/info.yaml"
-        script.drupipeShell("""
-            ls -al ${context.projectConfigPath}
-            ls -al ${context.projectConfigPath}/${configPath}
-            """, context
-        )
         if (script.fileExists(masterInfoFile)) {
             script.echo "File exists: ${masterInfoFile}"
             def masterConfig = script.readYaml(file: masterInfoFile)
