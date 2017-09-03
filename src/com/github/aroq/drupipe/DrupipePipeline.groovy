@@ -86,7 +86,7 @@ class DrupipePipeline implements Serializable {
                 if (blocks) {
                     if (context.containerMode == 'kubernetes') {
                         def nodeName = 'drupipe'
-                        def containers
+                        def containers = []
                         for (def i = 0; i < blocks.size(); i++) {
                             containers << script.containerTemplate(name: "block-${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true)
                         }
