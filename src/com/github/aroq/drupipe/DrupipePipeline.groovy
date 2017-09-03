@@ -86,20 +86,35 @@ class DrupipePipeline implements Serializable {
                 if (blocks) {
                     if (context.containerMode == 'kubernetes') {
                         def nodeName = 'drupipe'
-                        def containers = []
-                        for (def i = 0; i < blocks.size(); i++) {
-                            containers << script.containerTemplate(name: "block${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true)
-                        }
+//                        def containers = []
+//                        for (def i = 0; i < blocks.size(); i++) {
+//                            containers << script.containerTemplate(name: "block${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true)
+//                        }
+                        containerName = 'drupipe-container'
+
                         script.podTemplate(label: nodeName, containers: [
-                            script.containerTemplate(name: "block0", image: blocks[0].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true),
+                            script.containerTemplate(name: containerName, image: 'golang', ttyEnabled: true, command: 'cat', alwaysPullImage: true),
                         ]) {
                             script.node(nodeName) {
-                                script.container("block0") {
+                                script.container(containerName) {
                                     script.unstash('config')
+                                    context.workspace = pwd()
                                     script.sshagent([context.credentialsId]) {
-                                        script.echo "test"
+//                                        script.echo "test"
                                     }
                                 }
+                            }
+                        }
+//                        script.podTemplate(label: nodeName, containers: [
+//                            script.containerTemplate(name: "block0", image: 'golang', ttyEnabled: true, command: 'cat', alwaysPullImage: true),
+//                        ]) {
+//                            script.node(nodeName) {
+//                                script.container("block0") {
+//                                    script.unstash('config')
+//                                    script.sshagent([context.credentialsId]) {
+//                                        script.echo "test"
+//                                    }
+//                                }
 //                                for (def i = 0; i < blocks.size(); i++) {
 //                                    blocks[i].name = "block${i}"
 //                                    script.container("block${i}") {
@@ -110,8 +125,8 @@ class DrupipePipeline implements Serializable {
 //                                        script.echo 'BLOCK EXECUTE END'
 //                                    }
 //                                }
-                            }
-                        }
+//                            }
+//                        }
 
                     } else {
                         executeBlocks()
