@@ -3,7 +3,7 @@ def call(context = [:], body) {
     containerName = 'drupipe-container'
 
     podTemplate(label: nodeName, containers: [
-        containerTemplate(name: containerName, image: context.dockerImage, ttyEnabled: true, command: 'cat'),
+        containerTemplate(name: containerName, image: context.dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true),
     ]) {
         node(nodeName) {
             container(containerName) {
