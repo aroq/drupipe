@@ -14,6 +14,8 @@ class DrupipeBlock implements Serializable {
 
     LinkedHashMap config = [:]
 
+    String name
+
     def execute(c, body = null) {
         def utils = new com.github.aroq.drupipe.Utils()
         if (c) {
@@ -36,31 +38,31 @@ class DrupipeBlock implements Serializable {
 
         if (nodeName) {
             utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'START', level: 'block'])
-                if (withDocker) {
-                    if (context.containerMode == 'kubernetes') {
-                        context.pipeline.script.drupipeWithKubernetes(context) {
-                            result = _execute(body)
-                        }
-                    }
-                    else if (context.containerMode == 'docker') {
-                        context.pipeline.script.echo "NODE NAME: ${nodeName}"
-                        context.pipeline.script.node(nodeName) {
-                            context.pipeline.script.unstash('config')
-                            context.pipeline.script.drupipeWithDocker(context) {
-                                result = _execute(body)
-                            }
-                        }
+            if (withDocker) {
+                if (context.containerMode == 'kubernetes') {
+                    context.pipeline.script.drupipeWithKubernetes(context) {
+                        result = _execute(body)
                     }
                 }
-                else {
+                else if (context.containerMode == 'docker') {
                     context.pipeline.script.echo "NODE NAME: ${nodeName}"
                     context.pipeline.script.node(nodeName) {
                         context.pipeline.script.unstash('config')
-                        context.pipeline.script.sshagent([context.credentialsId]) {
+                        context.pipeline.script.drupipeWithDocker(context) {
                             result = _execute(body)
                         }
                     }
                 }
+            }
+            else {
+                context.pipeline.script.echo "NODE NAME: ${nodeName}"
+                context.pipeline.script.node(nodeName) {
+                    context.pipeline.script.unstash('config')
+                    context.pipeline.script.sshagent([context.credentialsId]) {
+                        result = _execute(body)
+                    }
+                }
+            }
             utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'END', level: 'block'])
         }
         else {

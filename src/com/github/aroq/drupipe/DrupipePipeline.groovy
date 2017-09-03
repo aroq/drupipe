@@ -84,11 +84,20 @@ class DrupipePipeline implements Serializable {
                 }
 
                 if (blocks) {
-                    for (def i = 0; i < blocks.size(); i++) {
-                        def block = new DrupipeBlock(blocks[i])
-                        script.echo 'BLOCK EXECUTE START'
-                        context << block.execute(context)
-                        script.echo 'BLOCK EXECUTE END'
+                    if (context.containerMode == 'kubernetes') {
+                        def nodeName = 'drupipe'
+                        def containers
+                        for (def i = 0; i < blocks.size(); i++) {
+                            containers << containerTemplate(name: "block-${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true)
+                        }
+                        podTemplate(label: nodeName, containers: containers) {
+                            node(nodeName) {
+                                executeBlocks()
+                            }
+                        }
+
+                    } else {
+                        executeBlocks()
                     }
                 }
                 else {
@@ -111,6 +120,16 @@ class DrupipePipeline implements Serializable {
             utils.pipelineNotify(context, [name: 'Build', status: script.currentBuild.result, level: 'build'])
 
             context
+        }
+    }
+
+    def executeBlocks() {
+        for (def i = 0; i < blocks.size(); i++) {
+            blocks[i].name = "blocks-${i}"
+            def block = new DrupipeBlock(blocks[i])
+            script.echo 'BLOCK EXECUTE START'
+            context << block.execute(context)
+            script.echo 'BLOCK EXECUTE END'
         }
     }
 
