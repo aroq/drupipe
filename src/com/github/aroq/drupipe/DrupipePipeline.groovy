@@ -95,7 +95,7 @@ class DrupipePipeline implements Serializable {
                                 for (def i = 0; i < blocks.size(); i++) {
                                     blocks[i].name = "block${i}"
                                     script.container("block${i}") {
-                                        unstash('config')
+                                        script.unstash('config')
                                         def block = new DrupipeBlock(blocks[i])
                                         script.echo 'BLOCK EXECUTE START'
                                         context << block.execute(context)
