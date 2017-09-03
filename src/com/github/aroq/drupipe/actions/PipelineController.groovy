@@ -96,7 +96,7 @@ class PipelineController extends BaseAction {
         //info()
         def repo
         def masterInfoFile = "${context.projectConfigPath}/${configPath}/info.yaml"
-        drupipeShell("""
+        script.drupipeShell("""
             ls -al ${context.projectConfigPath}
             ls -al ${context.projectConfigPath}/${configPath}
             """, context
