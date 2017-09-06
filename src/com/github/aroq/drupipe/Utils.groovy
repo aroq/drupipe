@@ -176,8 +176,10 @@ def pipelineNotify(context, event) {
     // Default values
     def colorName = 'RED'
     def colorCode = '#FF0000'
-    def subject = "${event.name} ${event.status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
-    def summary = "${subject} (${env.BUILD_URL})"
+    def subject = "${event.name}\n\nJob '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+    def summary = "##### ${event.name}\n---\n\nJob: [${env.JOB_NAME} (${env.BUILD_NUMBER})](${env.BUILD_URL})"
+
+    // Add job params to build message.
     if (context.jenkinsParams && event.level == 'build') {
         def table = paramsMarkdownTable(context.jenkinsParams)
         summary = summary + "\n\n" + table
