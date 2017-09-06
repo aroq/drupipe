@@ -187,9 +187,6 @@ def paramsMarkdownTable(jenkinsParams) {
 
 def pipelineNotify(context, event) {
 
-    // Event status of null means successful
-    event.status =  event.status ?: 'SUCCESSFUL'
-
     // Default values
     def colorName = 'RED'
     def colorCode = '#FF0000'
