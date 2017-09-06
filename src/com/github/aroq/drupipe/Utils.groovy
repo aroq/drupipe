@@ -185,6 +185,17 @@ def pipelineNotify(context, event) {
         def table = paramsMarkdownTable(context.jenkinsParams)
         summary = summary + "\n\n" + table
     }
+
+    // Add event message.
+    if (event.message) {
+        summary = summary + "\n\n" + event.message
+    }
+
+    // Limit message length to 3500 symbols.
+    if (summary.length() > 3500) {
+        summary = summary.substring(0, 3500).replaceAll(/\n.*$/, '')
+    }
+
     def details = """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
     <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>"""
 
