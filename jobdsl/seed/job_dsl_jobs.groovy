@@ -416,7 +416,7 @@ def processJob(jobs, currentFolder, config) {
                             }
                             else {
                                 jobInFolder.value.params?.each { key, value ->
-                                    def job_prefix = jobInFolder.key.replace("-", "_")
+                                    def job_prefix = jobInFolder.key.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
                                     def prefixed_key = job_prefix + '_' + key
                                     stringParam(prefixed_key, value)
                                 }
@@ -441,9 +441,10 @@ def processJob(jobs, currentFolder, config) {
                                     trigger(jobInFolderName) {
                                         condition("ALWAYS")
                                         parameters {
-                                            currentBuild()
+                                            predefinedProp('debugEnabled', '${debugEnabled}')
+                                            predefinedProp('configRepo', '${configRepo}')
                                             jobInFolder.value.params?.each { key, value ->
-                                                def job_prefix = jobInFolder.key.replace("-", "_")
+                                                def job_prefix = jobInFolder.key.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
                                                 def prefixed_key = job_prefix + '_' + key
                                                 predefinedProp(key, '${' + prefixed_key + '}')
                                             }
