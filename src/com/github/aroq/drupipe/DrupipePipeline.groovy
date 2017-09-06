@@ -8,6 +8,8 @@ class DrupipePipeline implements Serializable {
 
     LinkedHashMap params = [:]
 
+    HashMap notification = [:]
+
     LinkedHashMap config = [:]
 
     def script
@@ -18,6 +20,9 @@ class DrupipePipeline implements Serializable {
         context.pipeline = this
         context.jenkinsParams = params
         utils = new com.github.aroq.drupipe.Utils()
+
+        notification.name = 'Build'
+        notification.level = 'build'
 
         try {
             script.timestamps {
@@ -41,9 +46,9 @@ class DrupipePipeline implements Serializable {
                     if (context.jobs) {
                         def job = getJobConfigByName(context.env.JOB_NAME)
                         if (job) {
-                            utils.pipelineNotify(context, [name: 'Build', status: 'STARTED', level: 'build'])
-                            context.job = job
                             utils.jsonDump(job, 'JOB')
+                            context.job = job
+                            utils.pipelineNotify(context, notification << [status: 'START'])
                             def pipelineBlocks = job.pipeline && job.pipeline.blocks ? job.pipeline.blocks : []
                             if (pipelineBlocks) {
                                 for (def i = 0; i < pipelineBlocks.size(); i++) {
@@ -104,12 +109,14 @@ class DrupipePipeline implements Serializable {
             }
         }
         catch (e) {
-            script.currentBuild.result = "FAILED"
+            notification.status = 'FAILED'
             throw e
         }
         finally {
-            utils.pipelineNotify(context, [name: 'Build', status: script.currentBuild.result, level: 'build'])
-
+            if (notification.status != 'FAILED') {
+                notification.status = 'SUCCESSFUL'
+            }
+            utils.pipelineNotify(context, notification)
             context
         }
     }
