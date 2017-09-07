@@ -64,5 +64,6 @@ class Drush extends BaseAction {
 
         this.script.echo "Execute Drush command: ${drushString}"
         this.script.drupipeShell("${drushString}", context)
+        this.context.lastActionOutput = this.context.drupipeShellResult
     }
 }
