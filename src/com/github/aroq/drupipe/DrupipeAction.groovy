@@ -25,6 +25,7 @@ class DrupipeAction implements Serializable {
 
         def utils = new com.github.aroq.drupipe.Utils()
         def actionResult = null
+        context.lastActionOutput = null
 
         try {
 
@@ -107,6 +108,10 @@ class DrupipeAction implements Serializable {
         finally {
             if (notification.status != 'FAILED') {
                 notification.status = 'SUCCESSFUL'
+            }
+            if (context.lastActionOutput) {
+                notification.message = notification.message ? notification.message : ''
+                notification.message = notification.message + "\n\n" + context.lastActionOutput
             }
             utils.pipelineNotify(context, notification)
             actionResult ? actionResult : [:]
