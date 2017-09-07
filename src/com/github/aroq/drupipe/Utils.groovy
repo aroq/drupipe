@@ -224,11 +224,16 @@ def pipelineNotify(context, event) {
         colorCode = '#FFFF00'
     }
 
-    if (context.job && context.jenkinsParams.notify) {
-        def notify = context.jenkinsParams.notify.split(",")
-        for (def i = 0; i < notify.length; i++) {
-            def config = notify[i]
+    if (context.job && context.job.notify && context.jenkinsParams.containsKey('mute_notification')) {
+        def mute_notification = context.jenkinsParams.mute_notification.split(",")
+        for (def i = 0; i < context.job.notify.size(); i++) {
+            def config = context.job.notify[i]
             echo "Notifications: Config ${config}"
+
+            if (config in mute_notification) {
+                echo "Notifications: Notification to ${config} channel was muted"
+                return
+            }
 
             def params = []
             if (context.notification && context.notification[config]) {
