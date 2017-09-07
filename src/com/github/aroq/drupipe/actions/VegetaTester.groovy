@@ -13,7 +13,7 @@ class VegetaTester extends BaseAction {
     def DrupipeAction action
 
     def prepare() {
-        if (this.context.vegeta_prepare_command.length() != 0) {
+        if (this.context.vegeta_prepare_command && this.context.vegeta_prepare_command.length() != 0) {
             this.script.drupipeShell("mkdir -p vegeta", context)
             this.script.drupipeShell(this.context.vegeta_prepare_command, context)
             this.script.drupipeShell("""
@@ -29,15 +29,15 @@ class VegetaTester extends BaseAction {
         if (this.script.fileExists("vegeta/input.txt")) {
             this.script.drupipeShell("rm -rf vegeta/report.bin", context << [shellCommandWithBashLogin: true])
 
-            def connections = (this.context.vegeta_connections.length() != 0) ? "-connections ${this.context.vegeta_connections}" : ''
-            def duration = (this.context.vegeta_duration.length() != 0) ? "-duration ${this.context.vegeta_duration}" : ''
-            def redirects = (this.context.vegeta_redirects.length() != 0) ? "-redirects ${this.context.vegeta_redirects}" : ''
-            def rate = (this.context.vegeta_rate.length() != 0) ? "-rate ${this.context.vegeta_rate}" : ''
-            def timeout = (this.context.vegeta_timeout.length() != 0) ? "-timeout ${this.context.vegeta_timeout}" : ''
-            def workers = (this.context.vegeta_workers.length() != 0) ? "-workers ${this.context.vegeta_workers}" : ''
-            def insecure = (this.context.vegeta_insecure.length() != 0) ? "-insecure" : ''
-            def keepalive = (this.context.vegeta_keepalive.length() != 0) ? "-keepalive" : ''
-            def lazy = (this.context.vegeta_lazy.length() != 0) ? "-lazy" : ''
+            def connections = (this.context.vegeta_connections && this.context.vegeta_connections.length() != 0) ? "-connections ${this.context.vegeta_connections}" : ''
+            def duration = (this.context.vegeta_duration && this.context.vegeta_duration.length() != 0) ? "-duration ${this.context.vegeta_duration}" : ''
+            def redirects = (this.context.vegeta_redirects && this.context.vegeta_redirects.length() != 0) ? "-redirects ${this.context.vegeta_redirects}" : ''
+            def rate = (this.context.vegeta_rate && this.context.vegeta_rate.length() != 0) ? "-rate ${this.context.vegeta_rate}" : ''
+            def timeout = (this.context.vegeta_timeout && this.context.vegeta_timeout.length() != 0) ? "-timeout ${this.context.vegeta_timeout}" : ''
+            def workers = (this.context.vegeta_workers && this.context.vegeta_workers.length() != 0) ? "-workers ${this.context.vegeta_workers}" : ''
+            def insecure = (this.context.vegeta_insecure && this.context.vegeta_insecure.length() != 0) ? "-insecure" : ''
+            def keepalive = (this.context.vegeta_keepalive && this.context.vegeta_keepalive.length() != 0) ? "-keepalive" : ''
+            def lazy = (this.context.vegeta_lazy && this.context.vegeta_lazy.length() != 0) ? "-lazy" : ''
 
             def vegetaAttackString = """vegeta attack \
 -output vegeta/report.bin \
