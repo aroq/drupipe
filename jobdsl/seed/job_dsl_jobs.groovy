@@ -80,8 +80,8 @@ def processJob(jobs, currentFolder, config) {
                         stringParam('debugEnabled', '0')
                         stringParam('force', '0')
                         if (job.value.containsKey('notify')) {
-                            activeChoiceParam('notify') {
-                                description('Allows user choose from multiple choices')
+                            activeChoiceParam('mute_notification') {
+                                description('Allows to mute notifications in selected channels')
                                 choiceType('CHECKBOX')
                                 groovyScript {
                                     def choices_script = '['
@@ -89,7 +89,7 @@ def processJob(jobs, currentFolder, config) {
                                         choices_script = choices_script + '"' + channel + '", '
                                     }
                                     choices_script = choices_script + ']'
-                                    println "NOTIFY CHOICES: ${choices_script}"
+                                    println "MUTE NOTIFICATION CHOICES: ${choices_script}"
                                     script(choices_script)
                                 }
                             }
@@ -142,8 +142,8 @@ def processJob(jobs, currentFolder, config) {
                         stringParam('environment', buildEnvironment)
                         stringParam('version', branch)
                         if (job.value.containsKey('notify')) {
-                            activeChoiceParam('notify') {
-                                description('Allows user choose from multiple choices')
+                            activeChoiceParam('mute_notification') {
+                                description('Allows to mute notifications in selected channels')
                                 choiceType('CHECKBOX')
                                 groovyScript {
                                     def choices_script = '['
@@ -151,7 +151,7 @@ def processJob(jobs, currentFolder, config) {
                                         choices_script = choices_script + '"' + channel + '", '
                                     }
                                     choices_script = choices_script + ']'
-                                    println "NOTIFY CHOICES: ${choices_script}"
+                                    println "MUTE NOTIFICATION CHOICES: ${choices_script}"
                                     script(choices_script)
                                 }
                             }
@@ -251,8 +251,8 @@ def processJob(jobs, currentFolder, config) {
                             }
                         }
                         if (job.value.containsKey('notify')) {
-                            activeChoiceParam('notify') {
-                                description('Allows user choose from multiple choices')
+                            activeChoiceParam('mute_notification') {
+                                description('Allows to mute notifications in selected channels')
                                 choiceType('CHECKBOX')
                                 groovyScript {
                                     def choices_script = '['
@@ -260,7 +260,7 @@ def processJob(jobs, currentFolder, config) {
                                         choices_script = choices_script + '"' + channel + '", '
                                     }
                                     choices_script = choices_script + ']'
-                                    println "NOTIFY CHOICES: ${choices_script}"
+                                    println "MUTE NOTIFICATION CHOICES: ${choices_script}"
                                     script(choices_script)
                                 }
                             }
@@ -299,8 +299,8 @@ def processJob(jobs, currentFolder, config) {
                             stringParam(key, value)
                         }
                         if (job.value.containsKey('notify')) {
-                            activeChoiceParam('notify') {
-                                description('Allows user choose from multiple choices')
+                            activeChoiceParam('mute_notification') {
+                                description('Allows to mute notifications in selected channels')
                                 choiceType('CHECKBOX')
                                 groovyScript {
                                     def choices_script = '['
@@ -308,7 +308,7 @@ def processJob(jobs, currentFolder, config) {
                                         choices_script = choices_script + '"' + channel + '", '
                                     }
                                     choices_script = choices_script + ']'
-                                    println "NOTIFY CHOICES: ${choices_script}"
+                                    println "MUTE NOTIFICATION CHOICES: ${choices_script}"
                                     script(choices_script)
                                 }
                             }
@@ -362,8 +362,8 @@ def processJob(jobs, currentFolder, config) {
                             }
                         }
                         if (job.value.containsKey('notify')) {
-                            activeChoiceParam('notify') {
-                                description('Allows user choose from multiple choices')
+                            activeChoiceParam('mute_notification') {
+                                description('Allows to mute notifications in selected channels')
                                 choiceType('CHECKBOX')
                                 groovyScript {
                                     def choices_script = '['
@@ -371,7 +371,7 @@ def processJob(jobs, currentFolder, config) {
                                         choices_script = choices_script + '"' + channel + '", '
                                     }
                                     choices_script = choices_script + ']'
-                                    println "NOTIFY CHOICES: ${choices_script}"
+                                    println "MUTE NOTIFICATION CHOICES: ${choices_script}"
                                     script(choices_script)
                                 }
                             }
