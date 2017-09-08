@@ -80,6 +80,35 @@ def processJob(jobs, currentFolder, config) {
                         stringParam('debugEnabled', '0')
                         stringParam('force', '0')
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                            def labels = jenkins.model.Jenkins.instance.getLabels()
+                            for (pipeline_block in job.value.pipeline.blocks) {
+                                if (config.blocks.containsKey(pipeline_block)) {
+                                    def block_config = config.blocks[pipeline_block]
+                                    if (block_config.containsKey('nodeName')) {
+                                        def node_name = block_config['nodeName']
+                                        println "Default nodeName for ${pipeline_block}: ${node_name}"
+                                        activeChoiceParam(pipeline_block + '_' + 'node_name') {
+                                            description('Allows to select node to run pipeline block')
+                                            choiceType('SINGLE_SELECT')
+                                            groovyScript {
+                                                def choices_script = '['
+                                                for (label in labels) {
+                                                    def select_item = label.toString()
+                                                    if (select_item == node_name) {
+                                                        select_item = select_item + ':selected'
+                                                    }
+                                                    choices_script = choices_script + '"' + select_item + '", '
+                                                }
+                                                choices_script = choices_script + ']'
+                                                println "SELECT NODE FOR PIPELINE BLOCK ${pipeline_block} CHOICES: ${choices_script}"
+                                                script(choices_script)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
                           activeChoiceParam('disable_block') {
                               description('Allows to disable pipeline blocks')
                               choiceType('CHECKBOX')
@@ -179,6 +208,35 @@ def processJob(jobs, currentFolder, config) {
                         stringParam('type', 'branch')
                         stringParam('environment', buildEnvironment)
                         stringParam('version', branch)
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                            def labels = jenkins.model.Jenkins.instance.getLabels()
+                            for (pipeline_block in job.value.pipeline.blocks) {
+                                if (config.blocks.containsKey(pipeline_block)) {
+                                    def block_config = config.blocks[pipeline_block]
+                                    if (block_config.containsKey('nodeName')) {
+                                        def node_name = block_config['nodeName']
+                                        println "Default nodeName for ${pipeline_block}: ${node_name}"
+                                        activeChoiceParam(pipeline_block + '_' + 'node_name') {
+                                            description('Allows to select node to run pipeline block')
+                                            choiceType('SINGLE_SELECT')
+                                            groovyScript {
+                                                def choices_script = '['
+                                                for (label in labels) {
+                                                    def select_item = label.toString()
+                                                    if (select_item == node_name) {
+                                                        select_item = select_item + ':selected'
+                                                    }
+                                                    choices_script = choices_script + '"' + select_item + '", '
+                                                }
+                                                choices_script = choices_script + ']'
+                                                println "SELECT NODE FOR PIPELINE BLOCK ${pipeline_block} CHOICES: ${choices_script}"
+                                                script(choices_script)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
                           activeChoiceParam('disable_block') {
                               description('Allows to disable pipeline blocks')
@@ -327,6 +385,35 @@ def processJob(jobs, currentFolder, config) {
                             }
                         }
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                            def labels = jenkins.model.Jenkins.instance.getLabels()
+                            for (pipeline_block in job.value.pipeline.blocks) {
+                                if (config.blocks.containsKey(pipeline_block)) {
+                                    def block_config = config.blocks[pipeline_block]
+                                    if (block_config.containsKey('nodeName')) {
+                                        def node_name = block_config['nodeName']
+                                        println "Default nodeName for ${pipeline_block}: ${node_name}"
+                                        activeChoiceParam(pipeline_block + '_' + 'node_name') {
+                                            description('Allows to select node to run pipeline block')
+                                            choiceType('SINGLE_SELECT')
+                                            groovyScript {
+                                                def choices_script = '['
+                                                for (label in labels) {
+                                                    def select_item = label.toString()
+                                                    if (select_item == node_name) {
+                                                        select_item = select_item + ':selected'
+                                                    }
+                                                    choices_script = choices_script + '"' + select_item + '", '
+                                                }
+                                                choices_script = choices_script + ']'
+                                                println "SELECT NODE FOR PIPELINE BLOCK ${pipeline_block} CHOICES: ${choices_script}"
+                                                script(choices_script)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
                           activeChoiceParam('disable_block') {
                               description('Allows to disable pipeline blocks')
                               choiceType('CHECKBOX')
@@ -411,6 +498,35 @@ def processJob(jobs, currentFolder, config) {
                         stringParam('configRepo', config.configRepo)
                         job.value.params?.each { key, value ->
                             stringParam(key, value)
+                        }
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                            def labels = jenkins.model.Jenkins.instance.getLabels()
+                            for (pipeline_block in job.value.pipeline.blocks) {
+                                if (config.blocks.containsKey(pipeline_block)) {
+                                    def block_config = config.blocks[pipeline_block]
+                                    if (block_config.containsKey('nodeName')) {
+                                        def node_name = block_config['nodeName']
+                                        println "Default nodeName for ${pipeline_block}: ${node_name}"
+                                        activeChoiceParam(pipeline_block + '_' + 'node_name') {
+                                            description('Allows to select node to run pipeline block')
+                                            choiceType('SINGLE_SELECT')
+                                            groovyScript {
+                                                def choices_script = '['
+                                                for (label in labels) {
+                                                    def select_item = label.toString()
+                                                    if (select_item == node_name) {
+                                                        select_item = select_item + ':selected'
+                                                    }
+                                                    choices_script = choices_script + '"' + select_item + '", '
+                                                }
+                                                choices_script = choices_script + ']'
+                                                println "SELECT NODE FOR PIPELINE BLOCK ${pipeline_block} CHOICES: ${choices_script}"
+                                                script(choices_script)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
                           activeChoiceParam('disable_block') {
@@ -511,6 +627,35 @@ def processJob(jobs, currentFolder, config) {
                             groovyScript {
                                 // NOTE: https://issues.jenkins-ci.org/browse/JENKINS-42655?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
                                 script('["' + job.value.suites.collect{ it += ':selected' }.join('", "') + '"]')
+                            }
+                        }
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                            def labels = jenkins.model.Jenkins.instance.getLabels()
+                            for (pipeline_block in job.value.pipeline.blocks) {
+                                if (config.blocks.containsKey(pipeline_block)) {
+                                    def block_config = config.blocks[pipeline_block]
+                                    if (block_config.containsKey('nodeName')) {
+                                        def node_name = block_config['nodeName']
+                                        println "Default nodeName for ${pipeline_block}: ${node_name}"
+                                        activeChoiceParam(pipeline_block + '_' + 'node_name') {
+                                            description('Allows to select node to run pipeline block')
+                                            choiceType('SINGLE_SELECT')
+                                            groovyScript {
+                                                def choices_script = '['
+                                                for (label in labels) {
+                                                    def select_item = label.toString()
+                                                    if (select_item == node_name) {
+                                                        select_item = select_item + ':selected'
+                                                    }
+                                                    choices_script = choices_script + '"' + select_item + '", '
+                                                }
+                                                choices_script = choices_script + ']'
+                                                println "SELECT NODE FOR PIPELINE BLOCK ${pipeline_block} CHOICES: ${choices_script}"
+                                                script(choices_script)
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {

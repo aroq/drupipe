@@ -60,7 +60,9 @@ class DrupipePipeline implements Serializable {
                                             script.echo "Block ${pipelineBlocks[i]} were disabled"
                                         }
                                         else {
-                                            blocks << context.blocks[pipelineBlocks[i]]
+                                            def block = context.blocks[pipelineBlocks[i]]
+                                            block.name = pipelineBlocks[i]
+                                            blocks << block
                                         }
                                     }
                                     else {
