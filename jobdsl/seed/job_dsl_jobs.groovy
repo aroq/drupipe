@@ -94,6 +94,29 @@ def processJob(jobs, currentFolder, config) {
                                 }
                             }
                         }
+                        if (job.value.containsKey('trigger')) {
+                            activeChoiceParam('disable_trigger') {
+                                description('Allows to disable post build job trigger')
+                                choiceType('CHECKBOX')
+                                groovyScript {
+                                    def choices_script = '['
+                                    for (trigger_job in job.value.trigger) {
+                                        choices_script = choices_script + '"' + trigger_job.name + '", '
+                                    }
+                                    choices_script = choices_script + ']'
+                                    println "DISABLE TRIGGER CHOICES: ${choices_script}"
+                                    script(choices_script)
+                                }
+                            }
+                            for (trigger_job in job.value.trigger) {
+                                if (trigger_job.containsKey('params')) {
+                                    for (param in trigger_job.params) {
+                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
+                                        stringParam(trigger_job_name_safe + '_' + param.key, param.value)
+                                    }
+                                }
+                            }
+                        }
                     }
                     definition {
                         cpsScm {
@@ -153,6 +176,29 @@ def processJob(jobs, currentFolder, config) {
                                     choices_script = choices_script + ']'
                                     println "MUTE NOTIFICATION CHOICES: ${choices_script}"
                                     script(choices_script)
+                                }
+                            }
+                        }
+                        if (job.value.containsKey('trigger')) {
+                            activeChoiceParam('disable_trigger') {
+                                description('Allows to disable post build job trigger')
+                                choiceType('CHECKBOX')
+                                groovyScript {
+                                    def choices_script = '['
+                                    for (trigger_job in job.value.trigger) {
+                                        choices_script = choices_script + '"' + trigger_job.name + '", '
+                                    }
+                                    choices_script = choices_script + ']'
+                                    println "DISABLE TRIGGER CHOICES: ${choices_script}"
+                                    script(choices_script)
+                                }
+                            }
+                            for (trigger_job in job.value.trigger) {
+                                if (trigger_job.containsKey('params')) {
+                                    for (param in trigger_job.params) {
+                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
+                                        stringParam(trigger_job_name_safe + '_' + param.key, param.value)
+                                    }
                                 }
                             }
                         }
@@ -265,6 +311,29 @@ def processJob(jobs, currentFolder, config) {
                                 }
                             }
                         }
+                        if (job.value.containsKey('trigger')) {
+                            activeChoiceParam('disable_trigger') {
+                                description('Allows to disable post build job trigger')
+                                choiceType('CHECKBOX')
+                                groovyScript {
+                                    def choices_script = '['
+                                    for (trigger_job in job.value.trigger) {
+                                        choices_script = choices_script + '"' + trigger_job.name + '", '
+                                    }
+                                    choices_script = choices_script + ']'
+                                    println "DISABLE TRIGGER CHOICES: ${choices_script}"
+                                    script(choices_script)
+                                }
+                            }
+                            for (trigger_job in job.value.trigger) {
+                                if (trigger_job.containsKey('params')) {
+                                    for (param in trigger_job.params) {
+                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
+                                        stringParam(trigger_job_name_safe + '_' + param.key, param.value)
+                                    }
+                                }
+                            }
+                        }
                     }
                     definition {
                         cpsScm {
@@ -310,6 +379,29 @@ def processJob(jobs, currentFolder, config) {
                                     choices_script = choices_script + ']'
                                     println "MUTE NOTIFICATION CHOICES: ${choices_script}"
                                     script(choices_script)
+                                }
+                            }
+                        }
+                        if (job.value.containsKey('trigger')) {
+                            activeChoiceParam('disable_trigger') {
+                                description('Allows to disable post build job trigger')
+                                choiceType('CHECKBOX')
+                                groovyScript {
+                                    def choices_script = '['
+                                    for (trigger_job in job.value.trigger) {
+                                        choices_script = choices_script + '"' + trigger_job.name + '", '
+                                    }
+                                    choices_script = choices_script + ']'
+                                    println "DISABLE TRIGGER CHOICES: ${choices_script}"
+                                    script(choices_script)
+                                }
+                            }
+                            for (trigger_job in job.value.trigger) {
+                                if (trigger_job.containsKey('params')) {
+                                    for (param in trigger_job.params) {
+                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
+                                        stringParam(trigger_job_name_safe + '_' + param.key, param.value)
+                                    }
                                 }
                             }
                         }
@@ -373,6 +465,29 @@ def processJob(jobs, currentFolder, config) {
                                     choices_script = choices_script + ']'
                                     println "MUTE NOTIFICATION CHOICES: ${choices_script}"
                                     script(choices_script)
+                                }
+                            }
+                        }
+                        if (job.value.containsKey('trigger')) {
+                            activeChoiceParam('disable_trigger') {
+                                description('Allows to disable post build job trigger')
+                                choiceType('CHECKBOX')
+                                groovyScript {
+                                    def choices_script = '['
+                                    for (trigger_job in job.value.trigger) {
+                                        choices_script = choices_script + '"' + trigger_job.name + '", '
+                                    }
+                                    choices_script = choices_script + ']'
+                                    println "DISABLE TRIGGER CHOICES: ${choices_script}"
+                                    script(choices_script)
+                                }
+                            }
+                            for (trigger_job in job.value.trigger) {
+                                if (trigger_job.containsKey('params')) {
+                                    for (param in trigger_job.params) {
+                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
+                                        stringParam(trigger_job_name_safe + '_' + param.key, param.value)
+                                    }
                                 }
                             }
                         }
