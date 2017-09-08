@@ -404,8 +404,23 @@ def processJob(jobs, currentFolder, config) {
                     parameters {
                         stringParam('debugEnabled', '0')
                         stringParam('configRepo', config.configRepo)
-                        job.value.params?.each { key, value ->
-                            stringParam(key, value)
+                        for (jobInFolder in jobs)  {
+                            if (jobInFolder.value.children) {
+                                println "Skip job with chilldren."
+                            }
+                            else if (jobInFolder.value.type == 'trigger_all') {
+                                println "Skip trigger_all job."
+                            }
+                            else if (jobInFolder.value.type == 'multistep_all') {
+                                println "Skip multistep_all job."
+                            }
+                            else {
+                                jobInFolder.value.params?.each { key, value ->
+                                    def job_prefix = jobInFolder.key.replace("-", "_")
+                                    def prefixed_key = job_prefix + '_' + key
+                                    stringParam(prefixed_key, value)
+                                }
+                            }
                         }
                     }
                     publishers {
@@ -427,6 +442,11 @@ def processJob(jobs, currentFolder, config) {
                                         condition("ALWAYS")
                                         parameters {
                                             currentBuild()
+                                            jobInFolder.value.params?.each { key, value ->
+                                                def job_prefix = jobInFolder.key.replace("-", "_")
+                                                def prefixed_key = job_prefix + '_' + key
+                                                predefinedProp(key, '${' + prefixed_key + '}')
+                                            }
                                         }
                                     }
                                 }
