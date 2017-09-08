@@ -15,9 +15,7 @@ class Terraform extends BaseAction {
     String terraformExecutable = 'terraform'
 
     def init() {
-        def sourceDir = utils.sourceDir(context, action.params.infraSourceName)
         script.drupipeShell("""
-            cd ${sourceDir}
             ${terraformExecutable} init -input=false
             """, context)
     }
