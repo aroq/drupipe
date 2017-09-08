@@ -42,10 +42,17 @@ class Terraform extends BaseAction {
             ${this.terraformExecutable} apply -auto-approve=true -input=false -state=terraform/dev/terraform.tfstate -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
             """, this.context)
         }
-
     }
 
     def destroy() {
+        def sourceDir = utils.sourceDir(context, action.params.infraSourceName)
+        def creds = script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')
+        script.withCredentials([creds]) {
+            this.script.drupipeShell("""
+            cd ${sourceDir}
+            ${this.terraformExecutable} destroy -force=true -approve=true -input=false -state=terraform/dev/terraform.tfstate -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
+            """, this.context)
+        }
 
     }
 }
