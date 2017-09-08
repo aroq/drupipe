@@ -55,7 +55,13 @@ class DrupipePipeline implements Serializable {
                             if (pipelineBlocks) {
                                 for (def i = 0; i < pipelineBlocks.size(); i++) {
                                     if (context.blocks && context.blocks[pipelineBlocks[i]]) {
-                                        blocks << context.blocks[pipelineBlocks[i]]
+                                        def disable_block = context.jenkinsParams.disable_block.split(",")
+                                        if (pipelineBlocks[i] in disable_block) {
+                                            script.echo "Block ${pipelineBlocks[i]} were disabled"
+                                        }
+                                        else {
+                                            blocks << context.blocks[pipelineBlocks[i]]
+                                        }
                                     }
                                     else {
                                         script.echo "No pipeline block: ${pipelineBlocks[i]} is defined."
