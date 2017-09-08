@@ -28,12 +28,20 @@ class Terraform extends BaseAction {
         script.withCredentials([creds]) {
             this.script.drupipeShell("""
             cd ${sourceDir}
-            ${this.terraformExecutable} plan -auto-approve=true -input=false -state=terraform/dev/terraform.tfstate -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
+            ${this.terraformExecutable} plan -state=terraform/dev/terraform.tfstate -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
             """, this.context)
         }
     }
 
     def apply() {
+        def sourceDir = utils.sourceDir(context, action.params.infraSourceName)
+        def creds = script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')
+        script.withCredentials([creds]) {
+            this.script.drupipeShell("""
+            cd ${sourceDir}
+            ${this.terraformExecutable} apply -auto-approve=true -input=false -state=terraform/dev/terraform.tfstate -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
+            """, this.context)
+        }
 
     }
 
