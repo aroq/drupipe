@@ -53,6 +53,6 @@ class Terraform extends BaseAction {
             ${this.terraformExecutable} destroy -force=true -approve=true -input=false -state=terraform/dev/terraform.tfstate -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
             """, this.context)
         }
-
     }
+
 }
