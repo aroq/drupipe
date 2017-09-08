@@ -4,6 +4,8 @@ class DrupipeBlock implements Serializable {
 
     ArrayList<DrupipeStage> stages = []
 
+    String name
+
     String nodeName = 'use_default'
 
     Boolean withDocker = false
@@ -22,6 +24,12 @@ class DrupipeBlock implements Serializable {
 
         this.context = utils.merge(this.context, this.config)
 
+        context.pipeline.script.echo "BLOCK NAME: ${name}"
+
+        if (context.jenkinsParams[name + '_node_name']) {
+            nodeName = context.jenkinsParams[name + '_node_name']
+        }
+
         if (nodeName == 'use_default') {
             nodeName = context.nodeName
         }
@@ -38,6 +46,8 @@ class DrupipeBlock implements Serializable {
             //utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'START', level: 'block'])
             context.pipeline.script.echo "NODE NAME: ${nodeName}"
             context.pipeline.script.node(nodeName) {
+                utils.dump(this.config, 'BLOCK-CONFIG')
+                utils.dump(this.context, 'BLOCK-CONTEXT')
                 context.pipeline.script.unstash('config')
                 if (withDocker) {
                     if (context.containerMode == 'kubernetes') {
