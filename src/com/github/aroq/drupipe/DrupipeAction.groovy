@@ -53,11 +53,12 @@ class DrupipeAction implements Serializable {
             actionParams << this.params
             utils.debugLog(context, actionParams, "${this.fullName} action params")
 
+            def actionFile = null
+            def actionResult = null
+
             def envParams = actionParams.env ? actionParams.env.collect{ k, v -> "$k=$v"} : []
             this.context.pipeline.script.withEnv(envParams) {
                 // Execute action from file if exist in sources...
-                def actionFile = null
-                def actionResult = null
                 if (context.sourcesList) {
                     for (def i = 0; i < context.sourcesList.size(); i++) {
                         def source = context.sourcesList[i]
