@@ -42,6 +42,8 @@ class DrupipePipeline implements Serializable {
                     }
                 }
 
+
+
                 if (!blocks) {
                     if (context.jobs) {
                         def job = getJobConfigByName(context.env.JOB_NAME)
@@ -106,7 +108,49 @@ class DrupipePipeline implements Serializable {
                         context << result
                     }
                 }
+
+                script.node('master') {
+                    if (context.job && context.job.trigger) {
+                        for (def i = 0; i < context.job.trigger.size(); i++) {
+                            def trigger_job = context.job.trigger[i]
+
+                            // Check disabled triggers.
+                            def disable_trigger = context.jenkinsParams.disable_trigger.split(",")
+                            if (trigger_job.name in disable_trigger) {
+                                script.echo "Trigger job ${trigger_job.name} were disabled"
+                            }
+                            else {
+                              script.echo "Triggering trigger name ${trigger_job.name} and job name ${trigger_job.job}"
+                              this.utils.dump(trigger_job, "TRIGGER JOB ${i}")
+
+                              def params = []
+                              def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
+
+                              // Add default job params.
+                              if (context.jenkinsParams) {
+                                  context.jenkinsParams.each { name, value ->
+                                      params << script.string(name: name, value: String.valueOf(value))
+                                  }
+                              }
+
+                              // Add trigger job params.
+                              if (trigger_job.params) {
+                                  trigger_job.params.each { name, value ->
+                                      // Check trigger job param exists in job params, use config param otherwise.
+                                      def trigger_param_value = context.jenkinsParams[trigger_job_name_safe + '_' + name] ? context.jenkinsParams[trigger_job_name_safe + '_' + name] : value
+                                      params << script.string(name: name, value: String.valueOf(trigger_param_value))
+                                  }
+                              }
+
+                              script.build(job: trigger_job.job, wait: false, propagate: false, parameters: params)
+                            }
+
+                        }
+                    }
+                }
             }
+
+            context
         }
         catch (e) {
             notification.status = 'FAILED'
@@ -117,8 +161,11 @@ class DrupipePipeline implements Serializable {
                 notification.status = 'SUCCESSFUL'
             }
             utils.pipelineNotify(context, notification)
+
             context
         }
+
+        context
     }
 
     def getJobConfigByName(String name) {
