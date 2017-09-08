@@ -79,6 +79,21 @@ def processJob(jobs, currentFolder, config) {
                         }
                         stringParam('debugEnabled', '0')
                         stringParam('force', '0')
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                          activeChoiceParam('disable_block') {
+                              description('Allows to disable pipeline blocks')
+                              choiceType('CHECKBOX')
+                              groovyScript {
+                                  def choices_script = '['
+                                  for (pipeline_block in job.value.pipeline.blocks) {
+                                      choices_script = choices_script + '"' + pipeline_block + '", '
+                                  }
+                                  choices_script = choices_script + ']'
+                                  println "DISABLE PIPELINE BLOCK CHOICES: ${choices_script}"
+                                  script(choices_script)
+                              }
+                          }
+                        }
                         if (job.value.containsKey('notify')) {
                             activeChoiceParam('mute_notification') {
                                 description('Allows to mute notifications in selected channels')
@@ -164,6 +179,21 @@ def processJob(jobs, currentFolder, config) {
                         stringParam('type', 'branch')
                         stringParam('environment', buildEnvironment)
                         stringParam('version', branch)
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                          activeChoiceParam('disable_block') {
+                              description('Allows to disable pipeline blocks')
+                              choiceType('CHECKBOX')
+                              groovyScript {
+                                  def choices_script = '['
+                                  for (pipeline_block in job.value.pipeline.blocks) {
+                                      choices_script = choices_script + '"' + pipeline_block + '", '
+                                  }
+                                  choices_script = choices_script + ']'
+                                  println "DISABLE PIPELINE BLOCK CHOICES: ${choices_script}"
+                                  script(choices_script)
+                              }
+                          }
+                        }
                         if (job.value.containsKey('notify')) {
                             activeChoiceParam('mute_notification') {
                                 description('Allows to mute notifications in selected channels')
@@ -296,6 +326,21 @@ def processJob(jobs, currentFolder, config) {
                                 stringParam('force', '0')
                             }
                         }
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                          activeChoiceParam('disable_block') {
+                              description('Allows to disable pipeline blocks')
+                              choiceType('CHECKBOX')
+                              groovyScript {
+                                  def choices_script = '['
+                                  for (pipeline_block in job.value.pipeline.blocks) {
+                                      choices_script = choices_script + '"' + pipeline_block + '", '
+                                  }
+                                  choices_script = choices_script + ']'
+                                  println "DISABLE PIPELINE BLOCK CHOICES: ${choices_script}"
+                                  script(choices_script)
+                              }
+                          }
+                        }
                         if (job.value.containsKey('notify')) {
                             activeChoiceParam('mute_notification') {
                                 description('Allows to mute notifications in selected channels')
@@ -366,6 +411,21 @@ def processJob(jobs, currentFolder, config) {
                         stringParam('configRepo', config.configRepo)
                         job.value.params?.each { key, value ->
                             stringParam(key, value)
+                        }
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                          activeChoiceParam('disable_block') {
+                              description('Allows to disable pipeline blocks')
+                              choiceType('CHECKBOX')
+                              groovyScript {
+                                  def choices_script = '['
+                                  for (pipeline_block in job.value.pipeline.blocks) {
+                                      choices_script = choices_script + '"' + pipeline_block + '", '
+                                  }
+                                  choices_script = choices_script + ']'
+                                  println "DISABLE PIPELINE BLOCK CHOICES: ${choices_script}"
+                                  script(choices_script)
+                              }
+                          }
                         }
                         if (job.value.containsKey('notify')) {
                             activeChoiceParam('mute_notification') {
@@ -452,6 +512,21 @@ def processJob(jobs, currentFolder, config) {
                                 // NOTE: https://issues.jenkins-ci.org/browse/JENKINS-42655?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
                                 script('["' + job.value.suites.collect{ it += ':selected' }.join('", "') + '"]')
                             }
+                        }
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                          activeChoiceParam('disable_block') {
+                              description('Allows to disable pipeline blocks')
+                              choiceType('CHECKBOX')
+                              groovyScript {
+                                  def choices_script = '['
+                                  for (pipeline_block in job.value.pipeline.blocks) {
+                                      choices_script = choices_script + '"' + pipeline_block + '", '
+                                  }
+                                  choices_script = choices_script + ']'
+                                  println "DISABLE PIPELINE BLOCK CHOICES: ${choices_script}"
+                                  script(choices_script)
+                              }
+                          }
                         }
                         if (job.value.containsKey('notify')) {
                             activeChoiceParam('mute_notification') {
