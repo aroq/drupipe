@@ -22,6 +22,14 @@ class Terraform extends BaseAction {
             """, context)
     }
 
+    def state() {
+        def sourceDir = utils.sourceDir(context, action.params.infraSourceName)
+        script.drupipeShell("""
+            cd ${sourceDir}
+            /usr/bin/terraform-inventory --list > terraform.inventory.json
+            """, context)
+    }
+
     def plan() {
         def sourceDir = utils.sourceDir(context, action.params.infraSourceName)
         def creds = script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')
