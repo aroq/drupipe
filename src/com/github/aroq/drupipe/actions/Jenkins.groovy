@@ -14,7 +14,7 @@ class Jenkins extends BaseAction {
 
     def cli() {
         def inventory = script.readJSON file: 'terraform.inventory.json'
-        this.script.withEnv(["JENKINS_URL=${inventory['zebra-jenkins-master'][0]}"]) {
+        this.script.withEnv(["JENKINS_URL=${inventory['zebra-jenkins-master'][0]}:${action.params.port}"]) {
             this.script.drupipeShell("""
             /jenkins-cli/jenkins-cli-wrapper.sh help
             """, this.context)
