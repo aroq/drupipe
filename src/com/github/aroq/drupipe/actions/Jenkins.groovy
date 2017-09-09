@@ -19,9 +19,9 @@ class Jenkins extends BaseAction {
             def envvars = ["JENKINS_URL=http://${inventory['zebra-jenkins-master'][0]}:${this.action.params.port}"]
             this.script.withEnv(envvars) {
                 this.script.drupipeShell('chmod 400 ${PRIVATE_KEY}', this.context)
-                this.script.drupipeShell("""
-                /jenkins-cli/jenkins-cli-wrapper.sh help
-                """, this.context)
+                this.script.drupipeShell('''
+                /jenkins-cli/jenkins-cli-wrapper.sh -i ${PRIVATE_KEY} help
+                ''', this.context)
             }
         }
     }
