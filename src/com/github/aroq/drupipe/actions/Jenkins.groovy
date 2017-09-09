@@ -16,7 +16,8 @@ class Jenkins extends BaseAction {
         def inventory = script.readJSON file: 'terraform.inventory.json'
         def creds = [this.script.file(credentialsId: 'id_rsa', variable: 'ZEBRA_ID_RSA')]
         this.script.withCredentials(creds) {
-            this.script.withEnv(["JENKINS_URL=http://${inventory['zebra-jenkins-master'][0]}:${this.action.params.port}", "PRIVATE_KEY=${ZEBRA_ID_RSA}"]) {
+            def envvars = ["JENKINS_URL=http://${inventory['zebra-jenkins-master'][0]}:${this.action.params.port}", 'PRIVATE_KEY=${ZEBRA_ID_RSA}']
+            this.script.withEnv(envvars) {
                 this.script.drupipeShell("""
                 chmod 400 ${ZEBRA_ID_RSA}
                 /jenkins-cli/jenkins-cli-wrapper.sh help
