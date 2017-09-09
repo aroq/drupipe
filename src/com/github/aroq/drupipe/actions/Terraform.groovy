@@ -26,7 +26,7 @@ class Terraform extends BaseAction {
         def sourceDir = utils.sourceDir(context, action.params.infraSourceName)
         script.drupipeShell("""
             cd ${sourceDir}
-            /usr/bin/terraform-inventory --list > terraform.inventory.json
+            /usr/bin/terraform-inventory --list > ${action.params.stateFile}
             """, context)
     }
 
