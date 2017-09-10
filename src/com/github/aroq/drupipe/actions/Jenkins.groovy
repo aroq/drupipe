@@ -41,6 +41,7 @@ class Jenkins extends BaseAction {
     @NonCPS
     def getTestSeedProjects() {
         def result = []
+        def sourceDir = utils.sourceDir(context, 'mothership')
         def projects = JsonSlurperClassic.newInstance().parseText(this.script.readFile("${sourceDir}/projects.json")).projects.find {k, v -> v.containsKey('tests') && v['tests'].contains('seed') }
         for (project in projects) {
             result << project.key
