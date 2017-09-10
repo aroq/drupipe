@@ -32,7 +32,7 @@ class Jenkins extends BaseAction {
     }
 
     def seedTest() {
-        def projects = jsonParse(this.script.readFile("mothership/projects.json"))
+        def projects = jsonParseProjects(this.script.readFile("mothership/projects.json"))
         for (project in projects) {
             if (project.value.containsKey('tests') && project.value['tests'].contains('seed')) {
                 script.echo "PROJECT: ${project.key}"
