@@ -35,7 +35,7 @@ class Jenkins extends BaseAction {
         def projects = jsonParseProjects(this.script.readFile("mothership/projects.json"))
         for (def i = 0; i < projects.size(); i++) {
             this.script.echo projects[i]
-            this.action.params.jobName = "${project[i]}/seed"
+            this.action.params.jobName = "${projects[i]}/seed"
             build()
         }
     }
