@@ -33,15 +33,12 @@ class Jenkins extends BaseAction {
 
     def seedTest() {
         def projects = jsonParseProjects(this.script.readFile("mothership/projects.json"))
-        for (project in projects) {
-            if (project.value.containsKey('tests') && project.value['tests'].contains('seed')) {
+        for (def i = 0; i < projects.size(); i++) {
+            if (projects[i].value.containsKey('tests') && projects[i].value['tests'].contains('seed')) {
                 script.echo "PROJECT: ${project.key}"
                 this.action.params.jobName = "${project}/seed"
                 build()
             }
-        }
-        script.echo "PROJECTS: ${projectsString}"
-        for (project in projectsString.tokenize(',')) {
         }
     }
 
