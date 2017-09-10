@@ -32,7 +32,7 @@ class Jenkins extends BaseAction {
     }
 
     def seedTest() {
-        for (project in getTestSeedProjects()) {
+        for (project in getTestSeedProjects().tokenize(',')) {
             this.action.params.jobName = "${project}/seed"
             build()
         }
@@ -46,7 +46,7 @@ class Jenkins extends BaseAction {
         for (project in projects) {
             result << project.key
         }
-        result
+        result.join(',')
     }
 
 }
