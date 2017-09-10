@@ -19,10 +19,15 @@ class Jenkins extends BaseAction {
             def envvars = ["JENKINS_URL=http://${inventory['zebra-jenkins-master'][0]}:${this.action.params.port}"]
             this.script.withEnv(envvars) {
                 this.script.drupipeShell("""
-                /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} help
+                /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${this.action.params.command}
                 """, this.context)
             }
         }
+    }
+
+    def build() {
+        this.action.params.command = "build -s -v ${this.actions.params.jobName}"
+        cli()
     }
 
 }
