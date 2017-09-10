@@ -33,7 +33,7 @@ class Jenkins extends BaseAction {
     def seedTest() {
         def sourceDir = utils.sourceDir(context, 'mothership')
         def json = this.script.readFile("${sourceDir}/projects.json")
-        def projects = json.find {k, v -> v.containsKey('tests') && v['tests'].contains('seed') }
+        def projects = json.projects.find {k, v -> v.containsKey('tests') && v['tests'].contains('seed') }
         projects.each {k, v ->
             this.action.params.jobName = "${k}/seed"
             build()
