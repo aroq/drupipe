@@ -32,12 +32,20 @@ class Jenkins extends BaseAction {
     }
 
     def seedTest() {
-        def sourceDir = utils.sourceDir(context, 'mothership')
-        def projects = JsonSlurperClassic.newInstance().parseText(this.script.readFile('mothership/projects.json')).projects.find {k, v -> v.containsKey('tests') && v['tests'].contains('seed') }
-        for (project in projects) {
-            this.action.params.jobName = "${project.key}/seed"
+        for (getTestSeedProjects in projects) {
+            this.action.params.jobName = "${project}/seed"
             build()
         }
+    }
+
+    @NonCPS
+    def getTestSeedProjects() {
+        def result = []
+        def projects = JsonSlurperClassic.newInstance().parseText(this.script.readFile("${sourceDir}/projects.json")).projects.find {k, v -> v.containsKey('tests') && v['tests'].contains('seed') }
+        for (project in projects) {
+            result << project.key
+        }
+        result
     }
 
 }
