@@ -36,7 +36,13 @@ class Jenkins extends BaseAction {
         for (def i = 0; i < projects.size(); i++) {
             this.script.echo projects[i]
             this.action.params.jobName = "${projects[i]}/seed"
-            build()
+            try {
+                build()
+            }
+            catch (e) {
+                // TODO: Detect the reason of fail.
+                script.echo "Build was UNSTABLE or FAILED"
+            }
         }
     }
 
