@@ -32,7 +32,7 @@ class Jenkins extends BaseAction {
     }
 
     def seedTest() {
-        def projects = JsonSlurperClassic.newInstance().parseText(this.script.readFile("mothership/projects.json")).projects
+        def projects = jsonParse(this.script.readFile("mothership/projects.json"))
         for (project in projects) {
             if (project.value.containsKey('tests') && project.value['tests'].contains('seed')) {
                 script.echo "PROJECT: ${project.key}"
@@ -43,6 +43,11 @@ class Jenkins extends BaseAction {
         script.echo "PROJECTS: ${projectsString}"
         for (project in projectsString.tokenize(',')) {
         }
+    }
+
+    @NonCPS
+    def jsonParseProjects(def json) {
+        new groovy.json.JsonSlurperClassic().parseText(json).projects
     }
 
 }
