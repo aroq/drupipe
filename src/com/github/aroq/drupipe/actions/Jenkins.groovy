@@ -32,7 +32,7 @@ class Jenkins extends BaseAction {
     }
 
     def seedTest() {
-        for (getTestSeedProjects in projects) {
+        for (getTestSeedProjects in getTestSeedProjects()) {
             this.action.params.jobName = "${project}/seed"
             build()
         }
