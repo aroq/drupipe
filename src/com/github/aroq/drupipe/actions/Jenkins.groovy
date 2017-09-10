@@ -35,7 +35,7 @@ class Jenkins extends BaseAction {
         def projectsString = getTestSeedProjects()
         script.echo "PROJECTS: ${projectsString}"
         for (project in projectsString.tokenize(',')) {
-            script.echo "PROJECT: ${project}"
+            script.echo "PROJECT: ${project.key}"
             this.action.params.jobName = "${project}/seed"
             build()
         }
@@ -43,8 +43,14 @@ class Jenkins extends BaseAction {
 
     @NonCPS
     def getTestSeedProjects() {
-        def projects = JsonSlurperClassic.newInstance().parseText(this.script.readFile("mothership/projects.json")).projects.findAll {k, v -> v.containsKey('tests') && v['tests'].contains('seed') }
-        projects.keySet().join(',')
+        def result = []
+        def projects = JsonSlurperClassic.newInstance().parseText(this.script.readFile("mothership/projects.json")).projects.join(',')
+        for (project in projects) {
+            if (project.value.containsKey('tests') && project.value['tests'].contains('seed')) {
+                result << project.key
+            }
+        }
+        result.join(',')
     }
 
 }
