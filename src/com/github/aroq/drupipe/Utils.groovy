@@ -225,7 +225,10 @@ def pipelineNotify(context, event) {
     }
 
     if (context.job && context.job.notify && context.jenkinsParams.containsKey('mute_notification')) {
-        def mute_notification = context.jenkinsParams.mute_notification.split(",")
+        def mute_notification = []
+        if (context.jenkinsParams && context.jenkinsParams.mute_notification && context.jenkinsParams.mute_notification instanceof CharSequence) {
+            mute_notification = context.jenkinsParams.mute_notification.split(",")
+        }
         for (def i = 0; i < context.job.notify.size(); i++) {
             def config = context.job.notify[i]
             echo "Notifications: Config ${config}"

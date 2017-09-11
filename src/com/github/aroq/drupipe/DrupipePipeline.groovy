@@ -126,7 +126,10 @@ class DrupipePipeline implements Serializable {
                             def trigger_job = context.job.trigger[i]
 
                             // Check disabled triggers.
-                            def disable_trigger = context.jenkinsParams.disable_trigger.split(",")
+                            def disable_block = []
+                            if (context.jenkinsParams && context.jenkinsParams.disable_block && context.jenkinsParams.disable_block instanceof CharSequence) {
+                                disable_block = context.jenkinsParams.disable_block.split(",")
+                            }
                             if (trigger_job.name in disable_trigger) {
                                 script.echo "Trigger job ${trigger_job.name} were disabled"
                             }
