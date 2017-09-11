@@ -21,13 +21,15 @@ class Ansible extends BaseAction {
             user: context.environmentParams.user,
             drupipe_environment: context.environment,
         ]
-        if (action.params.inventory && context.environmentParams.default_group) {
-            action.params.inventoryArgument = action.params.inventory.path
-            action.params.playbookParams.target = "${context.environmentParams.default_group}"
-        }
-        else {
-            action.params.inventoryArgument = "${context.environmentParams.host},"
-            action.params.playbookParams.target = "${context.environmentParams.host}"
+        if (!action.params.inventoryArgument) {
+            if (action.params.inventory && context.environmentParams.default_group) {
+                action.params.inventoryArgument = action.params.inventory.path
+                action.params.playbookParams.target = "${context.environmentParams.default_group}"
+            }
+            else {
+                action.params.inventoryArgument = "${context.environmentParams.host},"
+                action.params.playbookParams.target = "${context.environmentParams.host}"
+            }
         }
     }
 
