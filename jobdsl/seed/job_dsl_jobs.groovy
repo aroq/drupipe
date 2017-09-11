@@ -79,9 +79,53 @@ def processJob(jobs, currentFolder, config) {
                         }
                         stringParam('debugEnabled', '0')
                         stringParam('force', '0')
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                            def labels = jenkins.model.Jenkins.instance.getLabels()
+                            for (pipeline_block in job.value.pipeline.blocks) {
+                                if (config.blocks.containsKey(pipeline_block)) {
+                                    def block_config = config.blocks[pipeline_block]
+                                    if (block_config.containsKey('nodeName')) {
+                                        def node_name = block_config['nodeName']
+                                        println "Default nodeName for ${pipeline_block}: ${node_name}"
+                                        activeChoiceParam(pipeline_block + '_' + 'node_name') {
+                                            description('Allows to select node to run pipeline block')
+                                            choiceType('SINGLE_SELECT')
+                                            groovyScript {
+                                                def choices_script = '['
+                                                for (label in labels) {
+                                                    def select_item = label.toString()
+                                                    if (select_item == node_name) {
+                                                        select_item = select_item + ':selected'
+                                                    }
+                                                    choices_script = choices_script + '"' + select_item + '", '
+                                                }
+                                                choices_script = choices_script + ']'
+                                                println "SELECT NODE FOR PIPELINE BLOCK ${pipeline_block} CHOICES: ${choices_script}"
+                                                script(choices_script)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                          activeChoiceParam('disable_block') {
+                              description('Allows to disable pipeline blocks')
+                              choiceType('CHECKBOX')
+                              groovyScript {
+                                  def choices_script = '['
+                                  for (pipeline_block in job.value.pipeline.blocks) {
+                                      choices_script = choices_script + '"' + pipeline_block + '", '
+                                  }
+                                  choices_script = choices_script + ']'
+                                  println "DISABLE PIPELINE BLOCK CHOICES: ${choices_script}"
+                                  script(choices_script)
+                              }
+                          }
+                        }
                         if (job.value.containsKey('notify')) {
-                            activeChoiceParam('notify') {
-                                description('Allows user choose from multiple choices')
+                            activeChoiceParam('mute_notification') {
+                                description('Allows to mute notifications in selected channels')
                                 choiceType('CHECKBOX')
                                 groovyScript {
                                     def choices_script = '['
@@ -89,8 +133,31 @@ def processJob(jobs, currentFolder, config) {
                                         choices_script = choices_script + '"' + channel + '", '
                                     }
                                     choices_script = choices_script + ']'
-                                    println "NOTIFY CHOICES: ${choices_script}"
+                                    println "MUTE NOTIFICATION CHOICES: ${choices_script}"
                                     script(choices_script)
+                                }
+                            }
+                        }
+                        if (job.value.containsKey('trigger')) {
+                            activeChoiceParam('disable_trigger') {
+                                description('Allows to disable post build job trigger')
+                                choiceType('CHECKBOX')
+                                groovyScript {
+                                    def choices_script = '['
+                                    for (trigger_job in job.value.trigger) {
+                                        choices_script = choices_script + '"' + trigger_job.name + '", '
+                                    }
+                                    choices_script = choices_script + ']'
+                                    println "DISABLE TRIGGER CHOICES: ${choices_script}"
+                                    script(choices_script)
+                                }
+                            }
+                            for (trigger_job in job.value.trigger) {
+                                if (trigger_job.containsKey('params')) {
+                                    for (param in trigger_job.params) {
+                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
+                                        stringParam(trigger_job_name_safe + '_' + param.key, param.value)
+                                    }
                                 }
                             }
                         }
@@ -141,9 +208,53 @@ def processJob(jobs, currentFolder, config) {
                         stringParam('type', 'branch')
                         stringParam('environment', buildEnvironment)
                         stringParam('version', branch)
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                            def labels = jenkins.model.Jenkins.instance.getLabels()
+                            for (pipeline_block in job.value.pipeline.blocks) {
+                                if (config.blocks.containsKey(pipeline_block)) {
+                                    def block_config = config.blocks[pipeline_block]
+                                    if (block_config.containsKey('nodeName')) {
+                                        def node_name = block_config['nodeName']
+                                        println "Default nodeName for ${pipeline_block}: ${node_name}"
+                                        activeChoiceParam(pipeline_block + '_' + 'node_name') {
+                                            description('Allows to select node to run pipeline block')
+                                            choiceType('SINGLE_SELECT')
+                                            groovyScript {
+                                                def choices_script = '['
+                                                for (label in labels) {
+                                                    def select_item = label.toString()
+                                                    if (select_item == node_name) {
+                                                        select_item = select_item + ':selected'
+                                                    }
+                                                    choices_script = choices_script + '"' + select_item + '", '
+                                                }
+                                                choices_script = choices_script + ']'
+                                                println "SELECT NODE FOR PIPELINE BLOCK ${pipeline_block} CHOICES: ${choices_script}"
+                                                script(choices_script)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                          activeChoiceParam('disable_block') {
+                              description('Allows to disable pipeline blocks')
+                              choiceType('CHECKBOX')
+                              groovyScript {
+                                  def choices_script = '['
+                                  for (pipeline_block in job.value.pipeline.blocks) {
+                                      choices_script = choices_script + '"' + pipeline_block + '", '
+                                  }
+                                  choices_script = choices_script + ']'
+                                  println "DISABLE PIPELINE BLOCK CHOICES: ${choices_script}"
+                                  script(choices_script)
+                              }
+                          }
+                        }
                         if (job.value.containsKey('notify')) {
-                            activeChoiceParam('notify') {
-                                description('Allows user choose from multiple choices')
+                            activeChoiceParam('mute_notification') {
+                                description('Allows to mute notifications in selected channels')
                                 choiceType('CHECKBOX')
                                 groovyScript {
                                     def choices_script = '['
@@ -151,8 +262,31 @@ def processJob(jobs, currentFolder, config) {
                                         choices_script = choices_script + '"' + channel + '", '
                                     }
                                     choices_script = choices_script + ']'
-                                    println "NOTIFY CHOICES: ${choices_script}"
+                                    println "MUTE NOTIFICATION CHOICES: ${choices_script}"
                                     script(choices_script)
+                                }
+                            }
+                        }
+                        if (job.value.containsKey('trigger')) {
+                            activeChoiceParam('disable_trigger') {
+                                description('Allows to disable post build job trigger')
+                                choiceType('CHECKBOX')
+                                groovyScript {
+                                    def choices_script = '['
+                                    for (trigger_job in job.value.trigger) {
+                                        choices_script = choices_script + '"' + trigger_job.name + '", '
+                                    }
+                                    choices_script = choices_script + ']'
+                                    println "DISABLE TRIGGER CHOICES: ${choices_script}"
+                                    script(choices_script)
+                                }
+                            }
+                            for (trigger_job in job.value.trigger) {
+                                if (trigger_job.containsKey('params')) {
+                                    for (param in trigger_job.params) {
+                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
+                                        stringParam(trigger_job_name_safe + '_' + param.key, param.value)
+                                    }
                                 }
                             }
                         }
@@ -250,9 +384,53 @@ def processJob(jobs, currentFolder, config) {
                                 stringParam('force', '0')
                             }
                         }
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                            def labels = jenkins.model.Jenkins.instance.getLabels()
+                            for (pipeline_block in job.value.pipeline.blocks) {
+                                if (config.blocks.containsKey(pipeline_block)) {
+                                    def block_config = config.blocks[pipeline_block]
+                                    if (block_config.containsKey('nodeName')) {
+                                        def node_name = block_config['nodeName']
+                                        println "Default nodeName for ${pipeline_block}: ${node_name}"
+                                        activeChoiceParam(pipeline_block + '_' + 'node_name') {
+                                            description('Allows to select node to run pipeline block')
+                                            choiceType('SINGLE_SELECT')
+                                            groovyScript {
+                                                def choices_script = '['
+                                                for (label in labels) {
+                                                    def select_item = label.toString()
+                                                    if (select_item == node_name) {
+                                                        select_item = select_item + ':selected'
+                                                    }
+                                                    choices_script = choices_script + '"' + select_item + '", '
+                                                }
+                                                choices_script = choices_script + ']'
+                                                println "SELECT NODE FOR PIPELINE BLOCK ${pipeline_block} CHOICES: ${choices_script}"
+                                                script(choices_script)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                          activeChoiceParam('disable_block') {
+                              description('Allows to disable pipeline blocks')
+                              choiceType('CHECKBOX')
+                              groovyScript {
+                                  def choices_script = '['
+                                  for (pipeline_block in job.value.pipeline.blocks) {
+                                      choices_script = choices_script + '"' + pipeline_block + '", '
+                                  }
+                                  choices_script = choices_script + ']'
+                                  println "DISABLE PIPELINE BLOCK CHOICES: ${choices_script}"
+                                  script(choices_script)
+                              }
+                          }
+                        }
                         if (job.value.containsKey('notify')) {
-                            activeChoiceParam('notify') {
-                                description('Allows user choose from multiple choices')
+                            activeChoiceParam('mute_notification') {
+                                description('Allows to mute notifications in selected channels')
                                 choiceType('CHECKBOX')
                                 groovyScript {
                                     def choices_script = '['
@@ -260,8 +438,31 @@ def processJob(jobs, currentFolder, config) {
                                         choices_script = choices_script + '"' + channel + '", '
                                     }
                                     choices_script = choices_script + ']'
-                                    println "NOTIFY CHOICES: ${choices_script}"
+                                    println "MUTE NOTIFICATION CHOICES: ${choices_script}"
                                     script(choices_script)
+                                }
+                            }
+                        }
+                        if (job.value.containsKey('trigger')) {
+                            activeChoiceParam('disable_trigger') {
+                                description('Allows to disable post build job trigger')
+                                choiceType('CHECKBOX')
+                                groovyScript {
+                                    def choices_script = '['
+                                    for (trigger_job in job.value.trigger) {
+                                        choices_script = choices_script + '"' + trigger_job.name + '", '
+                                    }
+                                    choices_script = choices_script + ']'
+                                    println "DISABLE TRIGGER CHOICES: ${choices_script}"
+                                    script(choices_script)
+                                }
+                            }
+                            for (trigger_job in job.value.trigger) {
+                                if (trigger_job.containsKey('params')) {
+                                    for (param in trigger_job.params) {
+                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
+                                        stringParam(trigger_job_name_safe + '_' + param.key, param.value)
+                                    }
                                 }
                             }
                         }
@@ -298,9 +499,53 @@ def processJob(jobs, currentFolder, config) {
                         job.value.params?.each { key, value ->
                             stringParam(key, value)
                         }
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                            def labels = jenkins.model.Jenkins.instance.getLabels()
+                            for (pipeline_block in job.value.pipeline.blocks) {
+                                if (config.blocks.containsKey(pipeline_block)) {
+                                    def block_config = config.blocks[pipeline_block]
+                                    if (block_config.containsKey('nodeName')) {
+                                        def node_name = block_config['nodeName']
+                                        println "Default nodeName for ${pipeline_block}: ${node_name}"
+                                        activeChoiceParam(pipeline_block + '_' + 'node_name') {
+                                            description('Allows to select node to run pipeline block')
+                                            choiceType('SINGLE_SELECT')
+                                            groovyScript {
+                                                def choices_script = '['
+                                                for (label in labels) {
+                                                    def select_item = label.toString()
+                                                    if (select_item == node_name) {
+                                                        select_item = select_item + ':selected'
+                                                    }
+                                                    choices_script = choices_script + '"' + select_item + '", '
+                                                }
+                                                choices_script = choices_script + ']'
+                                                println "SELECT NODE FOR PIPELINE BLOCK ${pipeline_block} CHOICES: ${choices_script}"
+                                                script(choices_script)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                          activeChoiceParam('disable_block') {
+                              description('Allows to disable pipeline blocks')
+                              choiceType('CHECKBOX')
+                              groovyScript {
+                                  def choices_script = '['
+                                  for (pipeline_block in job.value.pipeline.blocks) {
+                                      choices_script = choices_script + '"' + pipeline_block + '", '
+                                  }
+                                  choices_script = choices_script + ']'
+                                  println "DISABLE PIPELINE BLOCK CHOICES: ${choices_script}"
+                                  script(choices_script)
+                              }
+                          }
+                        }
                         if (job.value.containsKey('notify')) {
-                            activeChoiceParam('notify') {
-                                description('Allows user choose from multiple choices')
+                            activeChoiceParam('mute_notification') {
+                                description('Allows to mute notifications in selected channels')
                                 choiceType('CHECKBOX')
                                 groovyScript {
                                     def choices_script = '['
@@ -308,8 +553,31 @@ def processJob(jobs, currentFolder, config) {
                                         choices_script = choices_script + '"' + channel + '", '
                                     }
                                     choices_script = choices_script + ']'
-                                    println "NOTIFY CHOICES: ${choices_script}"
+                                    println "MUTE NOTIFICATION CHOICES: ${choices_script}"
                                     script(choices_script)
+                                }
+                            }
+                        }
+                        if (job.value.containsKey('trigger')) {
+                            activeChoiceParam('disable_trigger') {
+                                description('Allows to disable post build job trigger')
+                                choiceType('CHECKBOX')
+                                groovyScript {
+                                    def choices_script = '['
+                                    for (trigger_job in job.value.trigger) {
+                                        choices_script = choices_script + '"' + trigger_job.name + '", '
+                                    }
+                                    choices_script = choices_script + ']'
+                                    println "DISABLE TRIGGER CHOICES: ${choices_script}"
+                                    script(choices_script)
+                                }
+                            }
+                            for (trigger_job in job.value.trigger) {
+                                if (trigger_job.containsKey('params')) {
+                                    for (param in trigger_job.params) {
+                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
+                                        stringParam(trigger_job_name_safe + '_' + param.key, param.value)
+                                    }
                                 }
                             }
                         }
@@ -361,9 +629,53 @@ def processJob(jobs, currentFolder, config) {
                                 script('["' + job.value.suites.collect{ it += ':selected' }.join('", "') + '"]')
                             }
                         }
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                            def labels = jenkins.model.Jenkins.instance.getLabels()
+                            for (pipeline_block in job.value.pipeline.blocks) {
+                                if (config.blocks.containsKey(pipeline_block)) {
+                                    def block_config = config.blocks[pipeline_block]
+                                    if (block_config.containsKey('nodeName')) {
+                                        def node_name = block_config['nodeName']
+                                        println "Default nodeName for ${pipeline_block}: ${node_name}"
+                                        activeChoiceParam(pipeline_block + '_' + 'node_name') {
+                                            description('Allows to select node to run pipeline block')
+                                            choiceType('SINGLE_SELECT')
+                                            groovyScript {
+                                                def choices_script = '['
+                                                for (label in labels) {
+                                                    def select_item = label.toString()
+                                                    if (select_item == node_name) {
+                                                        select_item = select_item + ':selected'
+                                                    }
+                                                    choices_script = choices_script + '"' + select_item + '", '
+                                                }
+                                                choices_script = choices_script + ']'
+                                                println "SELECT NODE FOR PIPELINE BLOCK ${pipeline_block} CHOICES: ${choices_script}"
+                                                script(choices_script)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                          activeChoiceParam('disable_block') {
+                              description('Allows to disable pipeline blocks')
+                              choiceType('CHECKBOX')
+                              groovyScript {
+                                  def choices_script = '['
+                                  for (pipeline_block in job.value.pipeline.blocks) {
+                                      choices_script = choices_script + '"' + pipeline_block + '", '
+                                  }
+                                  choices_script = choices_script + ']'
+                                  println "DISABLE PIPELINE BLOCK CHOICES: ${choices_script}"
+                                  script(choices_script)
+                              }
+                          }
+                        }
                         if (job.value.containsKey('notify')) {
-                            activeChoiceParam('notify') {
-                                description('Allows user choose from multiple choices')
+                            activeChoiceParam('mute_notification') {
+                                description('Allows to mute notifications in selected channels')
                                 choiceType('CHECKBOX')
                                 groovyScript {
                                     def choices_script = '['
@@ -371,8 +683,31 @@ def processJob(jobs, currentFolder, config) {
                                         choices_script = choices_script + '"' + channel + '", '
                                     }
                                     choices_script = choices_script + ']'
-                                    println "NOTIFY CHOICES: ${choices_script}"
+                                    println "MUTE NOTIFICATION CHOICES: ${choices_script}"
                                     script(choices_script)
+                                }
+                            }
+                        }
+                        if (job.value.containsKey('trigger')) {
+                            activeChoiceParam('disable_trigger') {
+                                description('Allows to disable post build job trigger')
+                                choiceType('CHECKBOX')
+                                groovyScript {
+                                    def choices_script = '['
+                                    for (trigger_job in job.value.trigger) {
+                                        choices_script = choices_script + '"' + trigger_job.name + '", '
+                                    }
+                                    choices_script = choices_script + ']'
+                                    println "DISABLE TRIGGER CHOICES: ${choices_script}"
+                                    script(choices_script)
+                                }
+                            }
+                            for (trigger_job in job.value.trigger) {
+                                if (trigger_job.containsKey('params')) {
+                                    for (param in trigger_job.params) {
+                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
+                                        stringParam(trigger_job_name_safe + '_' + param.key, param.value)
+                                    }
                                 }
                             }
                         }
@@ -416,7 +751,7 @@ def processJob(jobs, currentFolder, config) {
                             }
                             else {
                                 jobInFolder.value.params?.each { key, value ->
-                                    def job_prefix = jobInFolder.key.replace("-", "_")
+                                    def job_prefix = jobInFolder.key.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
                                     def prefixed_key = job_prefix + '_' + key
                                     stringParam(prefixed_key, value)
                                 }
@@ -441,9 +776,10 @@ def processJob(jobs, currentFolder, config) {
                                     trigger(jobInFolderName) {
                                         condition("ALWAYS")
                                         parameters {
-                                            currentBuild()
+                                            predefinedProp('debugEnabled', '${debugEnabled}')
+                                            predefinedProp('configRepo', '${configRepo}')
                                             jobInFolder.value.params?.each { key, value ->
-                                                def job_prefix = jobInFolder.key.replace("-", "_")
+                                                def job_prefix = jobInFolder.key.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
                                                 def prefixed_key = job_prefix + '_' + key
                                                 predefinedProp(key, '${' + prefixed_key + '}')
                                             }

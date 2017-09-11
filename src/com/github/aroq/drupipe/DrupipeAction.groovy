@@ -10,6 +10,8 @@ class DrupipeAction implements Serializable {
 
     HashMap params = [:]
 
+    HashMap notification = [:]
+
     LinkedHashMap context = [:]
 
     String getFullName() {
@@ -22,6 +24,8 @@ class DrupipeAction implements Serializable {
         }
 
         def utils = new com.github.aroq.drupipe.Utils()
+        def actionResult = null
+        context.lastActionOutput = null
 
         try {
 
@@ -33,7 +37,13 @@ class DrupipeAction implements Serializable {
             else {
                 drupipeStageName = 'config'
             }
-            utils.pipelineNotify(context, [name: "Action ${name}", status: 'START', level: "action:${drupipeStageName}"])
+
+            this.context.drupipeStageName = drupipeStageName
+
+            notification.name = "Action ${name}"
+            notification.level = "action:${drupipeStageName}"
+
+            utils.pipelineNotify(context, notification << [status: 'START'])
             utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} start <-")
 
             // Define action params.
@@ -53,48 +63,62 @@ class DrupipeAction implements Serializable {
             actionParams << this.params
             utils.debugLog(context, actionParams, "${this.fullName} action params")
 
-            // Execute action from file if exist in sources...
             def actionFile = null
-            def actionResult = null
-            if (context.sourcesList) {
-                for (def i = 0; i < context.sourcesList.size(); i++) {
-                    def source = context.sourcesList[i]
-                    def fileName = utils.sourcePath(context, source.name, 'pipelines/actions/' + this.name + '.groovy')
-                    utils.debugLog(actionParams, fileName, "DrupipeAction file name to check")
-                    // To make sure we only check fileExists in Heavyweight executor mode.
-                    if (context.block?.nodeName && this.context.pipeline.script.fileExists(fileName)) {
-                        actionFile = this.context.pipeline.script.load(fileName)
-                        actionResult = actionFile."${this.methodName}"(actionParams)
+
+            def envParams = actionParams.env ? actionParams.env.collect{ k, v -> "$k=$v"} : []
+            this.context.pipeline.script.withEnv(envParams) {
+                // Execute action from file if exist in sources...
+                if (context.sourcesList) {
+                    for (def i = 0; i < context.sourcesList.size(); i++) {
+                        def source = context.sourcesList[i]
+                        def fileName = utils.sourcePath(context, source.name, 'pipelines/actions/' + this.name + '.groovy')
+                        utils.debugLog(actionParams, fileName, "DrupipeAction file name to check")
+                        // To make sure we only check fileExists in Heavyweight executor mode.
+                        if (context.block?.nodeName && this.context.pipeline.script.fileExists(fileName)) {
+                            actionFile = this.context.pipeline.script.load(fileName)
+                            actionResult = actionFile."${this.methodName}"(actionParams)
+                        }
                     }
                 }
-            }
-            // ...Otherwise execute from class.
-            if (!actionFile) {
-                try {
-                    def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance(
-                        context: context,
-                        action: this,
-                        script: context.pipeline.script,
-                        utils: utils,
-                    )
+                // ...Otherwise execute from class.
+                if (!actionFile) {
+                    try {
+                        def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance(
+                            context: context,
+                            action: this,
+                            script: context.pipeline.script,
+                            utils: utils,
+                        )
 
-                    actionResult = actionInstance."${this.methodName}"()
-                }
-                catch (err) {
-                    this.context.pipeline.script.echo err.toString()
-                    throw err
+                        actionResult = actionInstance."${this.methodName}"()
+                    }
+                    catch (err) {
+                        this.context.pipeline.script.echo err.toString()
+                        throw err
+                    }
                 }
             }
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} end <-"
 
-            utils.pipelineNotify(context, [name: "Action ${name}", status: 'END', level: "action:${drupipeStageName}"])
-
             actionResult ? actionResult : [:]
         }
         catch (err) {
-            this.context.pipeline.script.echo err.toString()
+            notification.status = 'FAILED'
+            notification.message = err.getMessage()
+            this.context.pipeline.script.echo notification.message
             throw err
+        }
+        finally {
+            if (notification.status != 'FAILED') {
+                notification.status = 'SUCCESSFUL'
+            }
+            if (context.lastActionOutput) {
+                notification.message = notification.message ? notification.message : ''
+                notification.message = notification.message + "\n\n" + context.lastActionOutput
+            }
+            utils.pipelineNotify(context, notification)
+            actionResult ? actionResult : [:]
         }
     }
 

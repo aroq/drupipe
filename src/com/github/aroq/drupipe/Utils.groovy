@@ -149,17 +149,19 @@ boolean isCollectionOrList(object) {
     object instanceof java.util.Collection || object instanceof java.util.List || object instanceof java.util.LinkedHashMap || object instanceof java.util.HashMap
 }
 
-def isEventInNotificationLevels(eventLevel, levels) {
+def isEventInNotificationLevels(event, levels) {
     for (level in levels) {
-        level = level.replace('*', '.*')
-        def pattern = ~"^${level}\$"
-        if (eventLevel ==~ pattern) {
-            echo "Notifications: Matched ${eventLevel} with ${level}"
-            return true
-        }
-        else if (level == 'action' && eventLevel.startsWith(level)) {
-            echo "Notifications: Matched ${eventLevel} with ${level}"
-            return true
+        if (level.name) {
+            def level_name = level.name.replace('*', '.*')
+            def pattern = ~"^${level_name}\$"
+            if (event.level ==~ pattern && event.status in level.status) {
+                echo "Notifications: Matched ${event.level} with ${level}"
+                return true
+            }
+            else if (level.name == 'action' && event.level.startsWith(level.name) && event.status in level.status) {
+                echo "Notifications: Matched ${event.level} with ${level}"
+                return true
+            }
         }
     }
     echo "Notifications: Not matched"
@@ -185,45 +187,60 @@ def paramsMarkdownTable(jenkinsParams) {
 
 def pipelineNotify(context, event) {
 
-    // Event status of null means successful
-    event.status =  event.status ?: 'SUCCESSFUL'
-
     // Default values
     def colorName = 'RED'
     def colorCode = '#FF0000'
-    def subject = "${event.name} ${event.status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
-    def summary = "${subject} (${env.BUILD_URL})"
+    def subject = "${event.name}\n\nJob '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+    def summary = "##### ${event.name}\n---\n\nJob: [${env.JOB_NAME} (${env.BUILD_NUMBER})](${env.BUILD_URL})"
+
+    // Add job params to build message.
     if (context.jenkinsParams && event.level == 'build') {
         def table = paramsMarkdownTable(context.jenkinsParams)
         summary = summary + "\n\n" + table
     }
+
+    // Add event message.
+    if (event.message) {
+        summary = summary + "\n\n" + event.message
+    }
+
+    // Limit message length to 3500 symbols.
+    if (summary.length() > 3500) {
+        summary = summary.substring(0, 3500).replaceAll(/\n.*$/, '')
+    }
+
     def details = """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
     <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>"""
 
     // Override default values based on build status
-    if (event.status == 'STARTED' || event.status == 'START' || event.status == 'END') {
-        color = 'YELLOW'
-        colorCode = '#FFFF00'
-    } else if (event.status == 'SUCCESSFUL' || event.status == 'SUCCESS') {
+    if (event.status == 'FAILED') {
+        color = 'RED'
+        colorCode = '#FF0000'
+    } else if (event.status == 'SUCCESSFUL') {
         color = 'GREEN'
         colorCode = '#00FF00'
     } else {
-        color = 'RED'
-        colorCode = '#FF0000'
+        color = 'YELLOW'
+        colorCode = '#FFFF00'
     }
 
-    if (context.job && context.jenkinsParams.notify) {
-        def notify = context.jenkinsParams.notify.split(",")
-        for (def i = 0; i < notify.length; i++) {
-            def config = notify[i]
+    if (context.job && context.job.notify && context.jenkinsParams.containsKey('mute_notification')) {
+        def mute_notification = context.jenkinsParams.mute_notification.split(",")
+        for (def i = 0; i < context.job.notify.size(); i++) {
+            def config = context.job.notify[i]
             echo "Notifications: Config ${config}"
+
+            if (config in mute_notification) {
+                echo "Notifications: Notification to ${config} channel was muted"
+                return
+            }
 
             def params = []
             if (context.notification && context.notification[config]) {
                 params = context.notification[config]
             }
 
-            if (params.levels && event.level && isEventInNotificationLevels(event.level, params.levels)) {
+            if (params.levels && event.level && isEventInNotificationLevels(event, params.levels)) {
 
                 // Send notifications
                 if (params.slack && params.slackChannel) {
@@ -238,8 +255,11 @@ def pipelineNotify(context, event) {
 
                 if (params.mattermost && params.mattermostChannel && params.mattermostIcon && params.mattermostEndpoint) {
                     try {
-                        if (env.BUILD_USER_ID) {
-                            summary = "@${env.BUILD_USER_ID} ${summary}"
+                        def job = Jenkins.getInstance().getItemByFullName(env.JOB_NAME, Job.class)
+                        def build = job.getBuildByNumber(env.BUILD_ID as int)
+                        def userId = build.getCause(Cause.UserIdCause).getUserId()
+                        if (userId && event.level == 'build') {
+                            summary = "Started by @${userId}\n\n${summary}"
                         }
                         echo 'Notifications: Send message to Mattermost'
                         mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel, icon: params.mattermostIcon, endpoint: params.mattermostEndpoint)
