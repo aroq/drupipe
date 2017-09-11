@@ -119,6 +119,18 @@ String getJenkinsJobName(String buildUrl) {
         return ""
     }
 }
+                  
+def isTriggeredByUser() {
+    def job = Jenkins.getInstance().getItemByFullName(env.JOB_NAME, Job.class)
+    def build = job.getBuildByNumber(env.BUILD_ID as int)
+    def user = build.getCause(hudson.model.Cause.UserIdCause)
+    if (user) {
+        return true
+    }
+    else {
+        return false
+    }
+}
 
 @NonCPS
 def getMothershipProjectParams(config, json) {
