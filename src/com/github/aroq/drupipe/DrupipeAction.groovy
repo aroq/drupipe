@@ -64,7 +64,6 @@ class DrupipeAction implements Serializable {
             utils.debugLog(context, actionParams, "${this.fullName} action params")
 
             def actionFile = null
-            def actionResult = null
 
             def envParams = actionParams.env ? actionParams.env.collect{ k, v -> "$k=$v"} : []
             this.context.pipeline.script.withEnv(envParams) {
