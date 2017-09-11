@@ -32,6 +32,7 @@ class Docman extends BaseAction {
     }
 
     def info() {
+        script.drupipeShell("git config --global user.email 'drupipe@github.com'; git config --global user.name 'Drupipe'", context)
         script.echo "Config repo: ${context.configRepo}"
         prepare()
         script.drupipeShell(
