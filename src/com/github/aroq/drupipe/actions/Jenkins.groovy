@@ -1,6 +1,7 @@
 package com.github.aroq.drupipe.actions
 
 import com.github.aroq.drupipe.DrupipeAction
+import groovy.json.JsonSlurperClassic
 
 class Jenkins extends BaseAction {
 
@@ -28,6 +29,33 @@ class Jenkins extends BaseAction {
     def build() {
         this.action.params.command = "build -s -v ${this.action.params.jobName}"
         cli()
+    }
+
+    def seedTest() {
+        def projects = jsonParseProjects(this.script.readFile("mothership/projects.json")).tokenize(',')
+        for (def i = 0; i < projects.size(); i++) {
+            this.script.echo projects[i]
+            this.action.params.jobName = "${projects[i]}/seed"
+            try {
+                build()
+            }
+            catch (e) {
+                // TODO: Detect the reason of fail.
+                script.echo "Build was UNSTABLE or FAILED"
+            }
+        }
+    }
+
+    @NonCPS
+    def jsonParseProjects(def json) {
+        def result = []
+        def projects = (new groovy.json.JsonSlurperClassic().parseText(json)).projects
+        for (project in projects) {
+            if (project.value.containsKey('tests') && project.value['tests'].contains('seed')) {
+                result << project.key
+            }
+        }
+        result.join(',')
     }
 
 }
