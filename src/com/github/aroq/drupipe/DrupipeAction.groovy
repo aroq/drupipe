@@ -10,6 +10,8 @@ class DrupipeAction implements Serializable {
 
     HashMap params = [:]
 
+    HashMap notification = [:]
+
     LinkedHashMap context = [:]
 
     String getFullName() {
@@ -22,6 +24,8 @@ class DrupipeAction implements Serializable {
         }
 
         def utils = new com.github.aroq.drupipe.Utils()
+        def actionResult = null
+        context.lastActionOutput = null
 
         try {
 
@@ -33,7 +37,13 @@ class DrupipeAction implements Serializable {
             else {
                 drupipeStageName = 'config'
             }
-            utils.pipelineNotify(context, [name: "Action ${name}", status: 'START', level: "action:${drupipeStageName}"])
+
+            this.context.drupipeStageName = drupipeStageName
+
+            notification.name = "Action ${name}"
+            notification.level = "action:${drupipeStageName}"
+
+            utils.pipelineNotify(context, notification << [status: 'START'])
             utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} start <-")
 
             // Define action params.
@@ -54,7 +64,6 @@ class DrupipeAction implements Serializable {
             utils.debugLog(context, actionParams, "${this.fullName} action params")
 
             def actionFile = null
-            def actionResult = null
 
             def envParams = actionParams.env ? actionParams.env.collect{ k, v -> "$k=$v"} : []
             this.context.pipeline.script.withEnv(envParams) {
@@ -92,13 +101,24 @@ class DrupipeAction implements Serializable {
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} end <-"
 
-            utils.pipelineNotify(context, [name: "Action ${name}", status: 'END', level: "action:${drupipeStageName}"])
-
             actionResult ? actionResult : [:]
         }
         catch (err) {
-            this.context.pipeline.script.echo err.toString()
+            notification.status = 'FAILED'
+            notification.message = err.getMessage()
+            this.context.pipeline.script.echo notification.message
             throw err
+        }
+        finally {
+            if (notification.status != 'FAILED') {
+                notification.status = 'SUCCESSFUL'
+            }
+            if (context.lastActionOutput) {
+                notification.message = notification.message ? notification.message : ''
+                notification.message = notification.message + "\n\n" + context.lastActionOutput
+            }
+            utils.pipelineNotify(context, notification)
+            actionResult ? actionResult : [:]
         }
     }
 
