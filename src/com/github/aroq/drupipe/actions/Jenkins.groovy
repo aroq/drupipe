@@ -26,7 +26,6 @@ class Jenkins extends BaseAction {
     }
 
     def cli() {
-        this.script.unstash name: 'terraform-state'
         def inventory = script.readJSON file: 'terraform.inventory.json'
         def creds = [this.script.string(credentialsId: 'JENKINS_API_TOKEN', variable: 'JENKINS_API_TOKEN')]
         this.script.withCredentials(creds) {
