@@ -119,6 +119,18 @@ String getJenkinsJobName(String buildUrl) {
         return ""
     }
 }
+                  
+def isTriggeredByUser() {
+    def job = Jenkins.getInstance().getItemByFullName(env.JOB_NAME, Job.class)
+    def build = job.getBuildByNumber(env.BUILD_ID as int)
+    def user = build.getCause(hudson.model.Cause.UserIdCause)
+    if (user) {
+        return true
+    }
+    else {
+        return false
+    }
+}
 
 @NonCPS
 def getMothershipProjectParams(config, json) {
@@ -225,7 +237,10 @@ def pipelineNotify(context, event) {
     }
 
     if (context.job && context.job.notify && context.jenkinsParams.containsKey('mute_notification')) {
-        def mute_notification = context.jenkinsParams.mute_notification.split(",")
+        def mute_notification = []
+        if (isTriggeredByUser() && context.jenkinsParams && context.jenkinsParams.mute_notification && context.jenkinsParams.mute_notification instanceof CharSequence) {
+            mute_notification = context.jenkinsParams.mute_notification.split(",")
+        }
         for (def i = 0; i < context.job.notify.size(); i++) {
             def config = context.job.notify[i]
             echo "Notifications: Config ${config}"
@@ -257,9 +272,9 @@ def pipelineNotify(context, event) {
                     try {
                         def job = Jenkins.getInstance().getItemByFullName(env.JOB_NAME, Job.class)
                         def build = job.getBuildByNumber(env.BUILD_ID as int)
-                        def userId = build.getCause(Cause.UserIdCause).getUserId()
-                        if (userId && event.level == 'build') {
-                            summary = "Started by @${userId}\n\n${summary}"
+                        def user = build.getCause(Cause.UserIdCause)
+                        if (user && user.getUserId() && event.level == 'build') {
+                            summary = "Started by @${user.getUserId()}\n\n${summary}"
                         }
                         echo 'Notifications: Send message to Mattermost'
                         mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel, icon: params.mattermostIcon, endpoint: params.mattermostEndpoint)
