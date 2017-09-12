@@ -602,6 +602,11 @@ def processJob(jobs, currentFolder, config) {
                             }
                         }
                     }
+                    if (job.value.containsKey('cron') && job.value.cron instanceof CharSequence) {
+                        triggers {
+                            cron(job.value.cron)
+                        }
+                    }
                 }
 
             }

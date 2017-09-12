@@ -56,7 +56,7 @@ class DrupipePipeline implements Serializable {
                                 for (def i = 0; i < pipelineBlocks.size(); i++) {
                                     if (context.blocks && context.blocks[pipelineBlocks[i]]) {
                                         def disable_block = []
-                                        if (context.jenkinsParams && context.jenkinsParams.disable_block && context.jenkinsParams.disable_block instanceof CharSequence) {
+                                        if (utils.isTriggeredByUser() && context.jenkinsParams && context.jenkinsParams.disable_block && context.jenkinsParams.disable_block instanceof CharSequence) {
                                             disable_block = context.jenkinsParams.disable_block.split(",")
                                         }
                                         if (pipelineBlocks[i] in disable_block) {
@@ -126,7 +126,10 @@ class DrupipePipeline implements Serializable {
                             def trigger_job = context.job.trigger[i]
 
                             // Check disabled triggers.
-                            def disable_trigger = context.jenkinsParams.disable_trigger.split(",")
+                            def disable_trigger = []
+                            if (utils.isTriggeredByUser() && context.jenkinsParams && context.jenkinsParams.disable_trigger && context.jenkinsParams.disable_trigger instanceof CharSequence) {
+                                disable_trigger = context.jenkinsParams.disable_trigger.split(",")
+                            }
                             if (trigger_job.name in disable_trigger) {
                                 script.echo "Trigger job ${trigger_job.name} were disabled"
                             }
