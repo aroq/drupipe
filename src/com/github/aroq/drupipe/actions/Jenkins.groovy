@@ -21,7 +21,7 @@ class Jenkins extends BaseAction {
             """, this.context)
         }
 
-        action.params.inventoryArgument = context.drupipeShellResult
+        action.params.inventoryArgument = context.drupipeShellResult + ','
         script.drupipeAction([action: 'Ansible.executeAnsiblePlaybook', params: [action.params]], context)
     }
 

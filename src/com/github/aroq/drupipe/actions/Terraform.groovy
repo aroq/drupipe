@@ -40,7 +40,7 @@ class Terraform extends BaseAction {
         script.withCredentials(creds) {
             this.script.drupipeShell("""
             cd ${sourceDir}
-            ${this.terraformExecutable} plan -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
+            TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} plan -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
             """, this.context)
         }
     }
@@ -62,7 +62,7 @@ class Terraform extends BaseAction {
         script.withCredentials(creds) {
             this.script.drupipeShell("""
             cd ${sourceDir}
-            ${this.terraformExecutable} destroy -force=true -approve=true -input=false -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
+            $TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN {this.terraformExecutable} destroy -force=true -approve=true -input=false -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
             """, this.context)
         }
     }
