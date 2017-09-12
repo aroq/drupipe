@@ -23,6 +23,7 @@ def call(shellCommand, context) {
         }
     }
     echo "Executing shell command: ${shellCommand}"
-    echo context.drupipeShellResult
     context.drupipeShellResult = sh(returnStdout: true, script: shellCommand)
+    echo context.drupipeShellResult
+    context.drupipeShellResult
 }
