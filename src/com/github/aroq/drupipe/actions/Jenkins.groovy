@@ -14,8 +14,14 @@ class Jenkins extends BaseAction {
     def DrupipeAction action
 
     def initWithAnsible() {
+        def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN')]
+        script.withCredentials(creds) {
+            this.script.drupipeShell("""
+             curl http://\${TF_VAR_consul_address}/v1/kv/zebra/jenkins/dev/address?raw&token=\${CONSUL_ACCESS_TOKEN}
+            """, this.context)
+        }
 
-        action.params.inventoryArgument = context.results.jenkins_address
+        action.params.inventoryArgument = context.drupipeShellResult
         script.drupipeAction([action: 'Ansible.executeAnsiblePlaybook', params: [action.params]], context)
     }
 
