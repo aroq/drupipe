@@ -18,7 +18,7 @@ class Jenkins extends BaseAction {
         script.withCredentials(creds) {
             this.script.drupipeShell("""
              curl http://\${TF_VAR_consul_address}/v1/kv/zebra/jenkins/dev/address?raw&token=\${CONSUL_ACCESS_TOKEN}
-            """, this.context)
+            """, this.context << [drupipeShellReturnStdout: true])
         }
 
         action.params.inventoryArgument = context.drupipeShellResult + ','

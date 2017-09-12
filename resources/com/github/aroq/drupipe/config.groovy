@@ -37,6 +37,7 @@ defaultActionParams = [
         //projectConfigPath: 'docroot/config',
         //projectConfigFile: 'docroot.config',
         mothershipConfigFile: 'mothership.config',
+        drupipeShellReturnStdout: false,
     ],
     Behat: [
         masterPath: 'docroot/master',
