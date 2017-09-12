@@ -119,7 +119,8 @@ String getJenkinsJobName(String buildUrl) {
         return ""
     }
 }
-                  
+
+@NonCPS
 def isTriggeredByUser() {
     def job = Jenkins.getInstance().getItemByFullName(env.JOB_NAME, Job.class)
     def build = job.getBuildByNumber(env.BUILD_ID as int)
@@ -129,6 +130,19 @@ def isTriggeredByUser() {
     }
     else {
         return false
+    }
+}
+
+@NonCPS
+def getTriggeredByUserId() {
+    def job = Jenkins.getInstance().getItemByFullName(env.JOB_NAME, Job.class)
+    def build = job.getBuildByNumber(env.BUILD_ID as int)
+    def user = build.getCause(hudson.model.Cause.UserIdCause)
+    if (user) {
+        return user.getUserId()
+    }
+    else {
+        return null
     }
 }
 
@@ -247,60 +261,60 @@ def pipelineNotify(context, event) {
 
             if (config in mute_notification) {
                 echo "Notifications: Notification to ${config} channel was muted"
-                return
             }
+            else {
 
-            def params = []
-            if (context.notification && context.notification[config]) {
-                params = context.notification[config]
-            }
-
-            if (params.levels && event.level && isEventInNotificationLevels(event, params.levels)) {
-
-                // Send notifications
-                if (params.slack && params.slackChannel) {
-                    try {
-                        echo 'Notifications: Send message to Slack'
-                        slackSend (color: colorCode, message: summary, channel: params.slackChannel)
-                    }
-                    catch (e) {
-                        echo 'Notifications: Unable to sent Slack notification'
-                    }
+                def params = []
+                if (context.notification && context.notification[config]) {
+                    params = context.notification[config]
                 }
 
-                if (params.mattermost && params.mattermostChannel && params.mattermostIcon && params.mattermostEndpoint) {
-                    try {
-                        def job = Jenkins.getInstance().getItemByFullName(env.JOB_NAME, Job.class)
-                        def build = job.getBuildByNumber(env.BUILD_ID as int)
-                        def user = build.getCause(Cause.UserIdCause)
-                        if (user && user.getUserId() && event.level == 'build') {
-                            summary = "Started by @${user.getUserId()}\n\n${summary}"
+                if (params.levels && event.level && isEventInNotificationLevels(event, params.levels)) {
+
+                    // Send notifications
+                    if (params.slack && params.slackChannel) {
+                        try {
+                            echo 'Notifications: Send message to Slack'
+                            slackSend (color: colorCode, message: summary, channel: params.slackChannel)
                         }
-                        echo 'Notifications: Send message to Mattermost'
-                        mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel, icon: params.mattermostIcon, endpoint: params.mattermostEndpoint)
+                        catch (e) {
+                            echo 'Notifications: Unable to sent Slack notification'
+                        }
                     }
-                    catch (e) {
-                        echo 'Notifications: Unable to sent Mattermost notification'
+
+                    if (params.mattermost && params.mattermostChannel && params.mattermostIcon && params.mattermostEndpoint) {
+                        try {
+                            def userId = getTriggeredByUserId()
+                            if (userId && event.level == 'build') {
+                                summary = 'Started by @' + userId + '\n\n' + summary
+                            }
+                            echo 'Notifications: Send message to Mattermost'
+                            mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel, icon: params.mattermostIcon, endpoint: params.mattermostEndpoint)
+                        }
+                        catch (e) {
+                            echo 'Notifications: Unable to sent Mattermost notification'
+                            echo e.toString()
+                        }
                     }
-                }
 
-                // hipchatSend (color: color, notify: true, message: summary)
+                    // hipchatSend (color: color, notify: true, message: summary)
 
-                if (params.emailExt) {
-                    echo 'Notifications: Send email'
-                    def to = emailextrecipients([
-                        [$class: 'CulpritsRecipientProvider'],
-                        [$class: 'DevelopersRecipientProvider'],
-                        [$class: 'RequesterRecipientProvider']
-                    ])
+                    if (params.emailExt) {
+                        echo 'Notifications: Send email'
+                        def to = emailextrecipients([
+                            [$class: 'CulpritsRecipientProvider'],
+                            [$class: 'DevelopersRecipientProvider'],
+                            [$class: 'RequesterRecipientProvider']
+                        ])
 
-                    emailext (
-                        subject: subject,
-                        body: details,
-                        to: to,
-                        mimeType: 'text/html',
-                        attachLog: true,
-                    )
+                        emailext (
+                            subject: subject,
+                            body: details,
+                            to: to,
+                            mimeType: 'text/html',
+                            attachLog: true,
+                        )
+                    }
                 }
             }
         }
