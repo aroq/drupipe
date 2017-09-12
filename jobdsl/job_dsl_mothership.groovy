@@ -1,5 +1,15 @@
 def configMain = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
-def projects = JsonSlurper.newInstance().parseText(readFileFromWorkspace('projects.json')).projects
+
+def projects = []
+if (fileExists('projects.yaml')) {
+    projects = readYaml(file: 'projects.yaml').projects
+}
+else if (fileExists('projects.yml')) {
+    projects = readYaml(file: 'projects.yml').projects
+}
+else if (fileExists('projects.json')) {
+    projects = JsonSlurper.newInstance().parseText(readFileFromWorkspace('projects.json')).projects
+}
 
 def gitlabHelper = new GitlabHelper(script: this, config: configMain)
 
