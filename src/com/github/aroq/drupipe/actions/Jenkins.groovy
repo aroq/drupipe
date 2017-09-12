@@ -17,7 +17,7 @@ class Jenkins extends BaseAction {
         def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN')]
         def result = script.withCredentials(creds) {
             this.script.drupipeShell("""
-             curl http://\${TF_VAR_consul_address}/v1/kv/zebra/jenkins/dev/address?raw&token=\${CONSUL_ACCESS_TOKEN}
+                curl http://\${TF_VAR_consul_address}/v1/kv/zebra/jenkins/dev/address?raw&token=\${CONSUL_ACCESS_TOKEN}
             """, this.context.clone() << [drupipeShellReturnStdout: true])
         }
         result.drupipeShellResult
@@ -50,13 +50,7 @@ class Jenkins extends BaseAction {
         for (def i = 0; i < projects.size(); i++) {
             this.script.echo projects[i]
             this.action.params.jobName = "${projects[i]}/seed"
-            try {
-                build()
-            }
-            catch (e) {
-                // TODO: Detect the reason of fail.
-                script.echo "Build was UNSTABLE or FAILED"
-            }
+            build()
         }
     }
 
