@@ -16,10 +16,15 @@ class Terraform extends BaseAction {
 
     def init() {
         def sourceDir = utils.sourceDir(context, action.params.infraSourceName)
-        script.drupipeShell("""
+
+        def creds = script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN')
+        script.withCredentials([creds]) {
+            script.drupipeShell("""
             cd ${sourceDir}
-            ${terraformExecutable} init -input=false
+            ${terraformExecutable} init -input=false -backend-config="address=${context.env.TF_VAR_consul_address}" -backend-config="access_token=\${CONSUL_ACCESS_TOKEN}"
+
             """, context)
+        }
     }
 
     def state() {
