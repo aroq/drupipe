@@ -24,5 +24,10 @@ def call(shellCommand, context) {
     }
     echo "Executing shell command: ${shellCommand} with returnStdout=${context.drupipeShellReturnStdout}"
     context.drupipeShellResult = sh(returnStdout: context.drupipeShellReturnStdout, script: shellCommand)
-    echo context.drupipeShellResult
+    if (context.drupipeShellReturnStdout) {
+        echo "Command output: ${context.drupipeShellResult}"
+    }
+    else {
+        null
+    }
 }
