@@ -375,4 +375,17 @@ def removeDir(dir, context) {
     }
 }
 
+@NonCPS
+def interpolateCommand(String command, context, action) {
+    def binding = [context: context, action: action]
+    def engine = new groovy.text.SimpleTemplateEngine()
+    def template = engine.createTemplate(command).make(binding)
+    template.toString()
+}
+
+@NonCPS
+def interpolateParams(params, context, action) {
+    return params
+}
+
 return this
