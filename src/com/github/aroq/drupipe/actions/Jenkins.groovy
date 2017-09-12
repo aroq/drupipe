@@ -13,6 +13,12 @@ class Jenkins extends BaseAction {
 
     def DrupipeAction action
 
+    def initWithAnsible() {
+
+        action.params.inventoryArgument = context.results.jenkins_address
+        script.drupipeAction([action: 'Ansible.executeAnsiblePlaybook', params: [action.params]], context)
+    }
+
     def cli() {
         def inventory = script.readJSON file: 'terraform.inventory.json'
         def creds = [this.script.string(credentialsId: 'JENKINS_API_TOKEN', variable: 'JENKINS_API_TOKEN')]
