@@ -434,6 +434,14 @@ def interpolateCommand(String command, context, action) {
 
 @NonCPS
 def interpolateParams(params, context, action) {
+    if (params instanceof CharSequence) {
+        params = interpolateCommand(params, context, action)
+    }
+    else if (params instanceof Map) {
+        for (param in params) {
+            params[param.key] = interpolateParams(param.value, context, action)
+        }
+    }
     return params
 }
 
