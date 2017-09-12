@@ -424,4 +424,25 @@ def removeDir(dir, context) {
     }
 }
 
+@NonCPS
+def interpolateCommand(String command, context, action) {
+    def binding = [context: context, action: action]
+    def engine = new groovy.text.SimpleTemplateEngine()
+    def template = engine.createTemplate(command).make(binding)
+    template.toString()
+}
+
+@NonCPS
+def interpolateParams(params, context, action) {
+    if (params instanceof CharSequence) {
+        params = interpolateCommand(params, context, action)
+    }
+    else if (params instanceof Map) {
+        for (param in params) {
+            params[param.key] = interpolateParams(param.value, context, action)
+        }
+    }
+    return params
+}
+
 return this
