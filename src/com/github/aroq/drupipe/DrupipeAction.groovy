@@ -60,6 +60,7 @@ class DrupipeAction implements Serializable {
                 this.params = [:]
             }
             this.params = utils.merge(defaultActionParams, this.params)
+
             actionParams << this.params
             utils.debugLog(context, actionParams, "${this.fullName} action params")
 
