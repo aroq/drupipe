@@ -26,8 +26,9 @@ def call(shellCommand, context) {
     context.drupipeShellResult = sh(returnStdout: context.drupipeShellReturnStdout, script: shellCommand)
     if (context.drupipeShellReturnStdout) {
         echo "Command output: ${context.drupipeShellResult}"
+        [drupipeShellResult: context.drupipeShellResult]
     }
     else {
-        null
+        []
     }
 }
