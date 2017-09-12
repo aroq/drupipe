@@ -31,6 +31,7 @@ class Terraform extends BaseAction {
         script.drupipeShell("""
             /usr/bin/terraform-inventory --list > ${action.params.stateFile}
             """, context)
+        this.script.stash name: 'terraform-state}', includes: "${action.params.stateFile}"
     }
 
     def plan() {
