@@ -40,7 +40,7 @@ class Terraform extends BaseAction {
         script.withCredentials(creds) {
             this.script.drupipeShell("""
             cd ${sourceDir}
-            ${this.terraformExecutable} plan -state=terraform/dev/terraform.tfstate -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
+            ${this.terraformExecutable} plan -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
             """, this.context)
         }
     }
@@ -51,7 +51,7 @@ class Terraform extends BaseAction {
         script.withCredentials(creds) {
             this.script.drupipeShell("""
             cd ${sourceDir}
-            ${this.terraformExecutable} apply -auto-approve=true -input=false -state=terraform/dev/terraform.tfstate -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
+            ${this.terraformExecutable} apply -auto-approve=true -input=false -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
             """, this.context)
         }
     }
@@ -62,7 +62,7 @@ class Terraform extends BaseAction {
         script.withCredentials(creds) {
             this.script.drupipeShell("""
             cd ${sourceDir}
-            ${this.terraformExecutable} destroy -force=true -approve=true -input=false -state=terraform/dev/terraform.tfstate -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
+            ${this.terraformExecutable} destroy -force=true -approve=true -input=false -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
             """, this.context)
         }
     }
