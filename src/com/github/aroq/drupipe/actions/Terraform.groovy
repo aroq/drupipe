@@ -35,8 +35,8 @@ class Terraform extends BaseAction {
 
     def plan() {
         def sourceDir = utils.sourceDir(context, action.params.infraSourceName)
-        def creds = script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')
-        script.withCredentials([creds]) {
+        def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN'), script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
+        script.withCredentials(creds) {
             this.script.drupipeShell("""
             cd ${sourceDir}
             ${this.terraformExecutable} plan -state=terraform/dev/terraform.tfstate -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
@@ -46,8 +46,8 @@ class Terraform extends BaseAction {
 
     def apply() {
         def sourceDir = utils.sourceDir(context, action.params.infraSourceName)
-        def creds = script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')
-        script.withCredentials([creds]) {
+        def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN'), script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
+        script.withCredentials(creds) {
             this.script.drupipeShell("""
             cd ${sourceDir}
             ${this.terraformExecutable} apply -auto-approve=true -input=false -state=terraform/dev/terraform.tfstate -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
@@ -57,8 +57,8 @@ class Terraform extends BaseAction {
 
     def destroy() {
         def sourceDir = utils.sourceDir(context, action.params.infraSourceName)
-        def creds = script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')
-        script.withCredentials([creds]) {
+        def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN'), script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
+        script.withCredentials(creds) {
             this.script.drupipeShell("""
             cd ${sourceDir}
             ${this.terraformExecutable} destroy -force=true -approve=true -input=false -state=terraform/dev/terraform.tfstate -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
