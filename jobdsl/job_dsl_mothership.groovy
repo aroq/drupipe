@@ -1,5 +1,40 @@
+@Grab(group='org.yaml', module='snakeyaml', version='1.18')
+
 def configMain = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
-def projects = JsonSlurper.newInstance().parseText(readFileFromWorkspace('projects.json')).projects
+import org.yaml.snakeyaml.Yaml
+
+def projectsFileRead(filePath) {
+  try {
+      return readFileFromWorkspace(filePath)
+  }
+  catch(e) {
+      return null
+  }
+}
+
+def projects = [:]
+yaml_file = projectsFileRead('projects.yaml')
+yml_file = projectsFileRead('projects.yml')
+json_file = projectsFileRead('projects.json')
+if (yaml_file) {
+    println "Using projects.yaml"
+    Yaml yaml = new Yaml()
+    def config = yaml.load(yaml_file)
+    projects = config.projects
+}
+else if (yml_file) {
+    println "Using projects.yml"
+    Yaml yaml = Yaml()
+    def config = yaml.load(yml_file)
+    projects = config.projects
+}
+else if (json_file) {
+    println "Using projects.json"
+    projects = JsonSlurper.newInstance().parseText(json_file).projects
+}
+else {
+    println "Projects file not found."
+}
 
 def gitlabHelper = new GitlabHelper(script: this, config: configMain)
 
