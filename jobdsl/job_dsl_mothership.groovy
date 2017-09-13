@@ -13,28 +13,33 @@ def projectsFileRead(filePath) {
 }
 
 def projects = [:]
-yaml_file = projectsFileRead('projects.yaml')
-yml_file = projectsFileRead('projects.yml')
-json_file = projectsFileRead('projects.json')
-if (yaml_file) {
-    println "Using projects.yaml"
-    Yaml yaml = new Yaml()
-    def config = yaml.load(yaml_file)
-    projects = config.projects
+def projectsFileName = 'projects'
+def fileExtensions = ['yaml', 'yml', 'json']
+
+for (extension in fileExtensions) {
+    def projectsFile = projectsFileName + '.' + extension
+    def file = projectsFileRead(projectsFile)
+    if (file) {
+        println "Using ${projectsFile}"
+        println file
+        if (extension in ['yaml', 'yml']) {
+            Yaml yaml = new Yaml()
+            def config = yaml.load(file)
+            projects = config.projects
+            break
+        }
+        else if (extension == 'json') {
+            projects = JsonSlurper.newInstance().parseText(json_file).projects
+            break
+        }
+    }
 }
-else if (yml_file) {
-    println "Using projects.yml"
-    Yaml yaml = Yaml()
-    def config = yaml.load(yml_file)
-    projects = config.projects
+
+if (projects.size() == 0) {
+    println "Projects empty. Check configuration file projects.(yaml|yml|json)."
 }
-else if (json_file) {
-    println "Using projects.json"
-    projects = JsonSlurper.newInstance().parseText(json_file).projects
-}
-else {
-    println "Projects file not found."
-}
+
+println 'Projects: ' + projects.keySet().join(', ')
 
 def gitlabHelper = new GitlabHelper(script: this, config: configMain)
 

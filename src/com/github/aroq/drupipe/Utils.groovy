@@ -321,6 +321,27 @@ def pipelineNotify(context, event) {
     }
 }
 
+def getMothershipConfigFile(params) {
+    def projectsFileName = 'projects'
+    def extensions = ['yaml', 'yml', 'json']
+    def dir = sourceDir(params, 'mothership')
+    for (extension in extensions) {
+        def projectsFile = "${dir}/${projectsFileName}.${extension}"
+        if (fileExists(projectsFile)) {
+            def file = readFile(projectsFile)
+            if (file) {
+                if (extension in ['yaml', 'yml']) {
+                    return readYaml(text: file).projects
+                }
+                else if (extension == 'json') {
+                    return readJSON(text: file).projects
+                }
+            }
+        }
+    }
+    return null
+}
+
 def sourcePath(params, sourceName, String path) {
     debugLog(params, sourceName, 'Source name')
     if (sourceName in params.loadedSources) {
