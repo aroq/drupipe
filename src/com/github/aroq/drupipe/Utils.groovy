@@ -1,5 +1,8 @@
 package com.github.aroq.drupipe
 
+@Grab(group='org.yaml', module='snakeyaml', version='1.18')
+
+import org.yaml.snakeyaml.Yaml
 import groovy.json.JsonSlurperClassic
 import groovy.json.JsonOutput
 
@@ -319,6 +322,29 @@ def pipelineNotify(context, event) {
             }
         }
     }
+}
+
+def getMothershipConfigFile(params) {
+    def projectsFileName = 'projects'
+    def extensions = ['yaml', 'yml', 'json']
+    def dir = sourceDir(params, 'mothership')
+    for (extension in extensions) {
+        def projectsFile = "${dir}/${projectsFileName}.${extension}"
+        if (fileExists(projectsFile)) {
+            def file = readFile(projectsFile)
+            if (file) {
+                if (extension in ['yaml', 'yml']) {
+                    Yaml yaml = new Yaml()
+                    def config = yaml.load(file)
+                    return config.projects
+                }
+                else if (extension == 'json') {
+                    return JsonSlurperClassic.newInstance().parseText(json).projects
+                }
+            }
+        }
+    }
+    return null
 }
 
 def sourcePath(params, sourceName, String path) {
