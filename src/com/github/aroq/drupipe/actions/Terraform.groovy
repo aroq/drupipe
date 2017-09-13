@@ -34,26 +34,23 @@ class Terraform extends BaseAction {
         this.script.stash name: 'terraform-state}', includes: "${action.params.stateFile}"
     }
 
-    def plan() {
+    def executeTerraformCommand(String terraformCommand) {
         def sourceDir = utils.sourceDir(context, action.params.infraSourceName)
         def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN'), script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
         script.withCredentials(creds) {
             this.script.drupipeShell("""
             cd ${sourceDir}
-            TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} plan -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
+            TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} ${terraformCommand}-var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
             """, this.context)
         }
     }
 
+    def plan() {
+        executeTerraformCommand('plan')
+    }
+
     def apply() {
-        def sourceDir = utils.sourceDir(context, action.params.infraSourceName)
-        def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN'), script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
-        script.withCredentials(creds) {
-            this.script.drupipeShell("""
-            cd ${sourceDir}
-            TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} apply -auto-approve=true -input=false -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
-            """, this.context)
-        }
+        executeTerraformCommand('apply')
     }
 
     def destroy() {
@@ -62,7 +59,7 @@ class Terraform extends BaseAction {
         script.withCredentials(creds) {
             this.script.drupipeShell("""
             cd ${sourceDir}
-            TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} destroy -force=true -approve=true -input=false -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
+            TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} destroy -force=true -input=false -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
             """, this.context)
         }
     }
