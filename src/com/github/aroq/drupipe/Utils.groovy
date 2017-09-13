@@ -1,8 +1,5 @@
 package com.github.aroq.drupipe
 
-@Grab(group='org.yaml', module='snakeyaml', version='1.18')
-
-import org.yaml.snakeyaml.Yaml
 import groovy.json.JsonSlurperClassic
 import groovy.json.JsonOutput
 
@@ -334,12 +331,10 @@ def getMothershipConfigFile(params) {
             def file = readFile(projectsFile)
             if (file) {
                 if (extension in ['yaml', 'yml']) {
-                    Yaml yaml = new Yaml()
-                    def config = yaml.load(file)
-                    return config.projects
+                    return readYaml(text: file).projects
                 }
                 else if (extension == 'json') {
-                    return JsonSlurperClassic.newInstance().parseText(json).projects
+                    return readJSON(text: file).projects
                 }
             }
         }
