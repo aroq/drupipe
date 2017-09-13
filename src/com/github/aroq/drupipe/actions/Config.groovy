@@ -122,8 +122,8 @@ class Config extends BaseAction {
                 ]
             ]
             result = context.pipeline.executePipelineActionList(providers, context)
-            def json = this.script.readFile('mothership/projects.json')
-            result = utils.merge(result, this.utils.getMothershipProjectParams(context, json))
+            def mothershipConfig = this.utils.getMothershipConfigFile(context)
+            result = utils.merge(result, mothershipConfig[context.jenkinsFolderName])
             this.configRepo = result.configRepo
 
         }

@@ -6,8 +6,16 @@ println "Config tags: ${config.tags}"
 
 if (!config.tags || (!config.tags.contains('docman') && !config.tags.contains('drupipe'))) {
     docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : "${config.projectConfigPath}/config.json"
-    docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
-    if (config.configSeedType == 'docman') {
+
+    def docrootConfigJson
+    try {
+      docrootConfigJson = readFileFromWorkspace(filePath)
+    }
+    catch(e) {
+        docrootConfigJson = null
+    }
+
+    if (config.configSeedType == 'docman' && docrootConfigJson) {
         // Retrieve Docman config from json file (prepared by "docman info" command).
         def docmanConfig = new DocmanConfig(script: this, docrootConfigJson: docrootConfigJson)
         println "Docman config: ${docmanConfig.init()}"

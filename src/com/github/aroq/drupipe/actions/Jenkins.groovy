@@ -46,7 +46,8 @@ class Jenkins extends BaseAction {
     }
 
     def seedTest() {
-        def projects = jsonParseProjects(this.script.readFile("mothership/projects.json")).tokenize(',')
+        def mothershipConfig = utils.getMothershipConfigFile(context)
+        def projects = parseProjects(mothershipConfig).tokenize(',')
         for (def i = 0; i < projects.size(); i++) {
             this.script.echo projects[i]
             this.action.params.jobName = "${projects[i]}/seed"
@@ -55,9 +56,8 @@ class Jenkins extends BaseAction {
     }
 
     @NonCPS
-    def jsonParseProjects(def json) {
+    def parseProjects(def projects) {
         def result = []
-        def projects = (new groovy.json.JsonSlurperClassic().parseText(json)).projects
         for (project in projects) {
             if (project.value.containsKey('tests') && project.value['tests'].contains('seed')) {
                 result << project.key
