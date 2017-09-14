@@ -603,23 +603,36 @@ def processJob(jobs, currentFolder, config) {
                             }
                         }
                     }
-                    if (job.value.webhook && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+
+                    // Configure triggers.
+                    if (job.value.triggers) {
                         triggers {
-                            gitlabPush {
-                                buildOnPushEvents()
-                                buildOnMergeRequestEvents(false)
-                                enableCiSkip()
-                                // TODO: configure it.
-                                includeBranches('master')
+                            if (job.value.triggers.gitlabPush) {
+                                gitlabPush {
+                                    if (job.value.triggers.gitlabPush.buildOnPushEvents) {
+                                        buildOnPushEvents()
+                                    }
+                                    if (job.value.triggers.gitlabPush.buildOnMergeRequestEvents) {
+                                        buildOnMergeRequestEvents()
+                                    }
+                                    if (job.value.triggers.gitlabPush.enableCiSkip) {
+                                        enableCiSkip()
+                                    }
+                                    if (job.value.triggers.gitlabPush.includeBranches) {
+                                        includeBranches(job.value.triggers.gitlabPush.includeBranches.join(', '))
+                                    }
+                                }
                             }
                         }
                     }
+
+                    // TODO: use "triggers" config parent.
                     if (job.value.containsKey('cron') && job.value.cron instanceof CharSequence) {
                         triggers {
                             cron(job.value.cron)
                         }
                     }
-                    if (job.value.webhook && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                    if (job.value.webhooks && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
                         properties {
                             gitLabConnectionProperty {
                                 gitLabConnection('Gitlab')
@@ -628,12 +641,15 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
 
-                if (job.value.webhook && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
-                    config.gitlabHelper.addWebhook(
-                        job.value.configRepo,
-                        "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}"
-                    )
-                    println "Webhook added for project ${config.jenkinsFolderName}/${currentName}"
+                if (job.value.webhooks && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                    job.value.webhooks.each { hook ->
+                        config.gitlabHelper.addWebhook(
+                            job.value.configRepo,
+                            "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}",
+                            hook
+                        )
+                        println "Webhook added for project ${config.jenkinsFolderName}/${currentName}"
+                    }
                 }
 
             }
@@ -911,7 +927,7 @@ class GitlabHelper {
         config.repoParams.projectID     = "${config.repoParams.groupName}%2F${config.repoParams.projectName}"
     }
 
-    def addWebhook(String repo, url) {
+    def addWebhook(String repo, url, hookData = [:]) {
         setRepoProperties(repo)
         def hook_id = null
         getWebhooks(repo).each { hook ->
@@ -925,6 +941,7 @@ class GitlabHelper {
             'PRIVATE-TOKEN': config.env.GITLAB_API_TOKEN_TEXT,
         ])
         def data = [id: "${config.repoParams.groupName}/${config.repoParams.projectName}", url: url, push_events: true]
+        data << hookData
         try {
             if (hook_id) {
                 data << [hook_id: hook_id]
