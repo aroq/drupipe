@@ -602,6 +602,16 @@ def processJob(jobs, currentFolder, config) {
                             }
                         }
                     }
+                    if (job.value.webhook && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                        triggers {
+                            gitlabPush {
+                                buildOnPushEvents()
+                                buildOnMergeRequestEvents(false)
+                                enableCiSkip()
+                                includeBranches(branch)
+                            }
+                        }
+                    }
                     if (job.value.containsKey('cron') && job.value.cron instanceof CharSequence) {
                         triggers {
                             cron(job.value.cron)
