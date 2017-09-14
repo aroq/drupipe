@@ -30,10 +30,10 @@ def processJob(jobs, currentFolder, config, parentConfigParams = [:]) {
         println "Type: ${job.value.type}"
         println "Current name: ${currentName}"
 
+        println "Job params: ${job.value.params}"
         job.value.params = job.value.params ? job.value.params : [:]
         job.value.params << (parentConfigParams << job.value.params)
-
-        println "Job params: ${job.value.params}"
+        println "Job params after parent params merge: ${job.value.params}"
 
         if (job.value.type == 'folder') {
             parentConfigParams << job.value.params
