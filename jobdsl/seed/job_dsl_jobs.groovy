@@ -619,6 +619,13 @@ def processJob(jobs, currentFolder, config) {
                             cron(job.value.cron)
                         }
                     }
+                    if (job.value.webhook && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                        properties {
+                            gitLabConnectionProperty {
+                                gitLabConnection('Gitlab')
+                            }
+                        }
+                    }
                 }
 
                 if (job.value.webhook && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
