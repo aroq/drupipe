@@ -596,6 +596,7 @@ def processJob(jobs, currentFolder, config) {
                                             relativeTargetDirectory(config.projectConfigPath)
                                         }
                                     }
+                                    // TODO: configure it.
                                     branch('master')
                                 }
                                 scriptPath(pipelineScriptPath)
@@ -608,7 +609,8 @@ def processJob(jobs, currentFolder, config) {
                                 buildOnPushEvents()
                                 buildOnMergeRequestEvents(false)
                                 enableCiSkip()
-                                includeBranches(branch)
+                                // TODO: configure it.
+                                includeBranches('master')
                             }
                         }
                     }
