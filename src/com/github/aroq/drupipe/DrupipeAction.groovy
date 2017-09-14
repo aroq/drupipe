@@ -62,7 +62,9 @@ class DrupipeAction implements Serializable {
             this.params = utils.merge(defaultActionParams, this.params)
 
             // Interpolate action params with context variables.
-            this.params = utils.interpolateParams(this.params, context, this)
+            if (this.params.interpolate && (this.params.interpolate == 1 || this.params.interpolate == '1')) {
+              this.params = utils.interpolateParams(this.params, context, this)
+            }
 
             actionParams << this.params
             utils.debugLog(context, actionParams, "${this.fullName} action params")
