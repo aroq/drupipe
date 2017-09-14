@@ -30,10 +30,11 @@ def processJob(jobs, currentFolder, config, parentConfigParams = [:]) {
         println "Type: ${job.value.type}"
         println "Current name: ${currentName}"
 
-        job.value.params << (parentConfigParams << job.value.params ? job.value.params : [:])
+        job.value.params = job.value.params ? job.value.params : [:]
+        job.value.params << (parentConfigParams << job.value.params)
 
         if (job.value.type == 'folder') {
-            parentConfigParams << job.value.params ? job.value.params : [:]
+            parentConfigParams << job.value.params
             folder(currentName) {
                 if (config.gitlabHelper) {
                     users = config.gitlabHelper.getUsers(config.configRepo)
