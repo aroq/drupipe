@@ -26,7 +26,7 @@ class DrushFeaturesList extends BaseAction {
         this.context.drush_command = 'fl --format=json'
         this.script.drupipeAction("Drush.runCommand", this.context)
 
-        def output = this.context.drupipeShellResult
+        def output = this.context.lastActionOutput
         def jsonOutput = new JsonSlurperClassic().parseText(output)
         jsonOutput.each { key, feature->
             if (feature.containsKey('state') && feature['state'] == this.state) {
@@ -42,7 +42,7 @@ class DrushFeaturesList extends BaseAction {
                 this.context.drush_command = 'fd ' + feature['feature']
                 this.script.drupipeAction("Drush.runCommand", this.context)
 
-                def diff = this.context.drupipeShellResult
+                def diff = this.context.lastActionOutput
                 diff = diff.substring(diff.indexOf('Legend:'))
 
                 this.notification.message = '```' + diff + '```'
@@ -52,10 +52,13 @@ class DrushFeaturesList extends BaseAction {
                 this.utils.pipelineNotify(this.context, this.notification)
             }
 
+            this.context.lastActionOutput
+
             throw new Exception("OVERRIDEN FEATURES:\n\n${exception_table}")
         }
         else {
             this.script.echo "DRUSH FEATURES LIST: No overridden features."
+            this.context.lastActionOutput "No overridden features."
         }
 
         features

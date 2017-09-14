@@ -63,7 +63,9 @@ class Drush extends BaseAction {
         def drushString = "drush \"${drush_dsn}\" ${command} --ssh-options=\"-o StrictHostKeyChecking=no\""
 
         this.script.echo "Execute Drush command: ${drushString}"
-        this.script.drupipeShell("${drushString}", context)
-        this.context.lastActionOutput = this.context.drupipeShellResult
+
+        def result = this.script.drupipeShell("${drushString}", this.context.clone() << [drupipeShellReturnStdout: true])
+
+        this.context.lastActionOutput = result
     }
 }
