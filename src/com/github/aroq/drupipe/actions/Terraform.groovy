@@ -32,10 +32,11 @@ class Terraform extends BaseAction {
     }
 
     def executeTerraformCommand(String terraformCommand) {
+        String terraformEnv = this.context.jenkinsParams.terraformEnv
         def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN'), script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
         script.withCredentials(creds) {
             this.script.drupipeShell("""
-            TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} ${terraformCommand} -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
+            TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} ${terraformCommand} -var-file=terraform/${terraformEnv}/terraform.tfvars -var-file=terraform/${terraformEnv}/secrets.tfvars
             """, this.context)
         }
     }
@@ -52,7 +53,7 @@ class Terraform extends BaseAction {
         def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN'), script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
         script.withCredentials(creds) {
             this.script.drupipeShell("""
-            TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} destroy -force=true -input=false -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
+            TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} destroy -force=true -input=false -var-file=terraform/${terraformEnv}/terraform.tfvars -var-file=terraform/${terraformEnv}/secrets.tfvars
             """, this.context)
         }
     }

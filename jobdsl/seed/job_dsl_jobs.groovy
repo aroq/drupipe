@@ -21,7 +21,7 @@ if (config.jobs) {
     processJob(config.jobs, '', config)
 }
 
-def processJob(jobs, currentFolder, config) {
+def processJob(jobs, currentFolder, config, parentConfigParams = [:]) {
     def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipelines/pipeline'
     for (job in jobs) {
         println job
@@ -29,7 +29,11 @@ def processJob(jobs, currentFolder, config) {
         def currentName = currentFolder ? "${currentFolder}/${job.key}" : job.key
         println "Type: ${job.value.type}"
         println "Current name: ${currentName}"
+
+        job.value.params << (parentConfigParams << job.value.params)
+
         if (job.value.type == 'folder') {
+            parentConfigParams << job.value.params
             folder(currentName) {
                 if (config.gitlabHelper) {
                     users = config.gitlabHelper.getUsers(config.configRepo)
@@ -887,7 +891,7 @@ def processJob(jobs, currentFolder, config) {
         }
 
         if (job.value.children) {
-            processJob(job.value.children, currentName, config)
+            processJob(job.value.children, currentName, config, parentConfigParams)
         }
     }
 }
