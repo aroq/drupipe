@@ -33,6 +33,8 @@ def processJob(jobs, currentFolder, config, parentConfigParams = [:]) {
         job.value.params = job.value.params ? job.value.params : [:]
         job.value.params << (parentConfigParams << job.value.params)
 
+        println "Job params: ${job.value.params}"
+
         if (job.value.type == 'folder') {
             parentConfigParams << job.value.params
             folder(currentName) {
@@ -892,6 +894,7 @@ def processJob(jobs, currentFolder, config, parentConfigParams = [:]) {
         }
 
         if (job.value.children) {
+            prinln "Parent config params: ${parentConfigParams}"
             processJob(job.value.children, currentName, config, parentConfigParams)
         }
     }
