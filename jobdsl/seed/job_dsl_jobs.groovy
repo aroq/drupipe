@@ -614,7 +614,7 @@ def processJob(jobs, currentFolder, config) {
                         job.value.configRepo,
                         "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}"
                     )
-                    println "Webhook added for project ${project}"
+                    println "Webhook added for project ${config.jenkinsFolderName}/${currentName}"
                 }
 
             }
