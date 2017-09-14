@@ -609,6 +609,14 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
 
+                if (job.value.webhook && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                    config.gitlabHelper.addWebhook(
+                        job.value.configRepo,
+                        "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}"
+                    )
+                    println "Webhook added for project ${project}"
+                }
+
             }
             else if (job.value.type == 'selenese') {
 //                def repo = config.defaultActionParams.SeleneseTester.repoAddress
