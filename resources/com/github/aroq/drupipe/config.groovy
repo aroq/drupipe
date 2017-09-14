@@ -148,4 +148,7 @@ defaultActionParams = [
     YamlFileHandler: [
         deployFile: '.drupipe.yml',
     ],
+    Shell: [
+        interpolate: 1,
+    ],
 ]
