@@ -894,7 +894,7 @@ def processJob(jobs, currentFolder, config, parentConfigParams = [:]) {
         }
 
         if (job.value.children) {
-            prinln "Parent config params: ${parentConfigParams}"
+            println "Parent config params: ${parentConfigParams}"
             processJob(job.value.children, currentName, config, parentConfigParams)
         }
     }
