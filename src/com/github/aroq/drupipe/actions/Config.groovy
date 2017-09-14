@@ -69,6 +69,8 @@ class Config extends BaseAction {
             }
         }
 
+        context.drupipeShellReturnStdout = false
+
         def stashes = context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
 
         script.echo "Stashes: ${stashes}"

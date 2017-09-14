@@ -10,6 +10,7 @@ def call(LinkedHashMap p = [:]) {
         }
 
         drupipeBlock(nodeName: 'master', context) {
+            checkout scm
             if (fileExists(context.projectConfigPath)) {
                 dir(context.projectConfigPath) {
                     deleteDir()

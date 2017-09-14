@@ -15,15 +15,12 @@ class Terraform extends BaseAction {
     String terraformExecutable = 'terraform'
 
     def init() {
-        def sourceDir = utils.sourceDir(context, action.params.infraSourceName)
-
         def creds = script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN')
-        script.withCredentials([creds]) {
-            script.drupipeShell("""
-            cd ${sourceDir}
-            ${terraformExecutable} init -input=false -backend-config="address=${context.env.TF_VAR_consul_address}" -backend-config="access_token=\${CONSUL_ACCESS_TOKEN}"
+        this.script.withCredentials([creds]) {
+            this.script.drupipeShell("""
+            ${terraformExecutable} init -input=false -backend-config="address=${this.context.env.TF_VAR_consul_address}" -backend-config="access_token=\${CONSUL_ACCESS_TOKEN}"
 
-            """, context)
+            """, this.context)
         }
     }
 
@@ -34,35 +31,28 @@ class Terraform extends BaseAction {
         this.script.stash name: 'terraform-state}', includes: "${action.params.stateFile}"
     }
 
-    def plan() {
-        def sourceDir = utils.sourceDir(context, action.params.infraSourceName)
+    def executeTerraformCommand(String terraformCommand) {
         def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN'), script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
         script.withCredentials(creds) {
             this.script.drupipeShell("""
-            cd ${sourceDir}
-            ${this.terraformExecutable} plan -state=terraform/dev/terraform.tfstate -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
+            TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} ${terraformCommand} -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
             """, this.context)
         }
+    }
+
+    def plan() {
+        executeTerraformCommand('plan')
     }
 
     def apply() {
-        def sourceDir = utils.sourceDir(context, action.params.infraSourceName)
-        def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN'), script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
-        script.withCredentials(creds) {
-            this.script.drupipeShell("""
-            cd ${sourceDir}
-            ${this.terraformExecutable} apply -auto-approve=true -input=false -state=terraform/dev/terraform.tfstate -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
-            """, this.context)
-        }
+        executeTerraformCommand('apply')
     }
 
     def destroy() {
-        def sourceDir = utils.sourceDir(context, action.params.infraSourceName)
         def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN'), script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
         script.withCredentials(creds) {
             this.script.drupipeShell("""
-            cd ${sourceDir}
-            ${this.terraformExecutable} destroy -force=true -approve=true -input=false -state=terraform/dev/terraform.tfstate -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
+            TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} destroy -force=true -input=false -var-file=terraform/dev/terraform.tfvars -var-file=terraform/dev/secrets.tfvars
             """, this.context)
         }
     }

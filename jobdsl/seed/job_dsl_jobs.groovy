@@ -598,9 +598,21 @@ def processJob(jobs, currentFolder, config) {
                                             relativeTargetDirectory(config.projectConfigPath)
                                         }
                                     }
+                                    // TODO: configure it.
                                     branch('master')
                                 }
                                 scriptPath(pipelineScriptPath)
+                            }
+                        }
+                    }
+                    if (job.value.webhook && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                        triggers {
+                            gitlabPush {
+                                buildOnPushEvents()
+                                buildOnMergeRequestEvents(false)
+                                enableCiSkip()
+                                // TODO: configure it.
+                                includeBranches('master')
                             }
                         }
                     }
@@ -609,6 +621,21 @@ def processJob(jobs, currentFolder, config) {
                             cron(job.value.cron)
                         }
                     }
+                    if (job.value.webhook && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                        properties {
+                            gitLabConnectionProperty {
+                                gitLabConnection('Gitlab')
+                            }
+                        }
+                    }
+                }
+
+                if (job.value.webhook && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                    config.gitlabHelper.addWebhook(
+                        job.value.configRepo,
+                        "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}"
+                    )
+                    println "Webhook added for project ${config.jenkinsFolderName}/${currentName}"
                 }
 
             }

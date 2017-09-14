@@ -13,12 +13,25 @@ class Jenkins extends BaseAction {
 
     def DrupipeAction action
 
+    def getJenkinsAddress() {
+        def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN')]
+        def result = script.withCredentials(creds) {
+            this.script.drupipeShell("""
+                curl http://\${TF_VAR_consul_address}/v1/kv/zebra/jenkins/dev/address?raw&token=\${CONSUL_ACCESS_TOKEN}
+            """, this.context.clone() << [drupipeShellReturnStdout: true])
+        }
+        result.drupipeShellResult
+    }
+
+    def initWithAnsible() {
+        action.params.inventoryArgument = getJenkinsAddress() + ','
+        script.drupipeAction([action: 'Ansible.executeAnsiblePlaybook', params: [action.params]], context)
+    }
+
     def cli() {
-        this.script.unstash name: 'terraform-state'
-        def inventory = script.readJSON file: 'terraform.inventory.json'
         def creds = [this.script.string(credentialsId: 'JENKINS_API_TOKEN', variable: 'JENKINS_API_TOKEN')]
         this.script.withCredentials(creds) {
-            def envvars = ["JENKINS_URL=http://${inventory['zebra-jenkins-master'][0]}:${this.action.params.port}"]
+            def envvars = ["JENKINS_URL=http://${getJenkinsAddress()}:${this.action.params.port}"]
             this.script.withEnv(envvars) {
                 this.script.drupipeShell("""
                 /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${this.action.params.command}
@@ -38,13 +51,7 @@ class Jenkins extends BaseAction {
         for (def i = 0; i < projects.size(); i++) {
             this.script.echo projects[i]
             this.action.params.jobName = "${projects[i]}/seed"
-            try {
-                build()
-            }
-            catch (e) {
-                // TODO: Detect the reason of fail.
-                script.echo "Build was UNSTABLE or FAILED"
-            }
+            build()
         }
     }
 

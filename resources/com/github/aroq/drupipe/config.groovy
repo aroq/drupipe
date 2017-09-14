@@ -37,6 +37,7 @@ defaultActionParams = [
         //projectConfigPath: 'docroot/config',
         //projectConfigFile: 'docroot.config',
         mothershipConfigFile: 'mothership.config',
+        drupipeShellReturnStdout: false,
     ],
     Behat: [
         masterPath: 'docroot/master',
@@ -51,6 +52,9 @@ defaultActionParams = [
     ],
     drupipeWithKubernetes: [
         containerName: 'drudock',
+    ],
+    Terraform: [
+        infraSourceName: 'infra-config',
     ],
     Docman: [
         docmanJsonConfigFile: 'config.json',
