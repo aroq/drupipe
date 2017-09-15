@@ -33,10 +33,12 @@ class Terraform extends BaseAction {
 
     def executeTerraformCommand(String terraformCommand) {
         String terraformEnv = this.context.jenkinsParams.terraformEnv
+        String terraformWorkspace = this.context.jenkinsParams.terraformEnv ? this.context.jenkinsParams.terraformEnv : 'default'
+
         def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN'), script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
         script.withCredentials(creds) {
             this.script.drupipeShell("""
-            TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} ${terraformCommand} -var-file=terraform/${terraformEnv}/terraform.tfvars -var-file=terraform/${terraformEnv}/secrets.tfvars
+            TF_WORKSPACE=${terraformWorkspace} TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} ${terraformCommand} -var-file=terraform/${terraformEnv}/terraform.tfvars -var-file=terraform/${terraformEnv}/secrets.tfvars
             """, this.context)
         }
     }
@@ -49,12 +51,15 @@ class Terraform extends BaseAction {
         executeTerraformCommand('apply')
     }
 
+    // TODO: refactor it to use executeTerraformCommand().
     def destroy() {
         String terraformEnv = this.context.jenkinsParams.terraformEnv
+        String terraformWorkspace = this.context.jenkinsParams.terraformEnv ? this.context.jenkinsParams.terraformEnv : 'default'
+
         def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN'), script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
         script.withCredentials(creds) {
             this.script.drupipeShell("""
-            TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} destroy -force=true -input=false -var-file=terraform/${terraformEnv}/terraform.tfvars -var-file=terraform/${terraformEnv}/secrets.tfvars
+            TF_WORKSPACE=${terraformWorkspace} TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} destroy -force=true -input=false -var-file=terraform/${terraformEnv}/terraform.tfvars -var-file=terraform/${terraformEnv}/secrets.tfvars
             """, this.context)
         }
     }
