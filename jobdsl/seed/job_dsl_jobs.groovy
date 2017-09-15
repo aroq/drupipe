@@ -497,6 +497,8 @@ def processJob(jobs, currentFolder, config, parentConfigParams = [:]) {
                 def repo = job.value.configRepo ? job.value.configRepo : config.configRepo
                 def pipelineScriptPath = job.value.configRepo ? "${pipelineScript}.groovy" : "${config.projectConfigPath}/${pipelineScript}.groovy"
 
+                def br = job.value.branch ? job.value.branch : 'master'
+
                 pipelineJob("${currentName}") {
                     concurrentBuild(false)
                     logRotator(-1, config.logRotatorNumToKeep)
@@ -604,7 +606,7 @@ def processJob(jobs, currentFolder, config, parentConfigParams = [:]) {
                                         }
                                     }
                                     // TODO: configure it.
-                                    branch('master')
+                                    branch(br)
                                 }
                                 scriptPath(pipelineScriptPath)
                             }
