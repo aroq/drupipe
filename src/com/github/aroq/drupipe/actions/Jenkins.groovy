@@ -24,7 +24,7 @@ class Jenkins extends BaseAction {
         result.drupipeShellResult
     }
 
-    def initWithAnsible() {
+    def executeAnsiblePlaybook() {
         action.params.inventoryArgument = getJenkinsAddress() + ','
         script.drupipeAction([action: 'Ansible.executeAnsiblePlaybook', params: [action.params]], context)
     }
