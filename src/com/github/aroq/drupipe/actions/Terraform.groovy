@@ -50,6 +50,7 @@ class Terraform extends BaseAction {
     }
 
     def destroy() {
+        String terraformEnv = this.context.jenkinsParams.terraformEnv
         def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN'), script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
         script.withCredentials(creds) {
             this.script.drupipeShell("""
