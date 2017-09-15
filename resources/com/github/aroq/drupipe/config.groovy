@@ -37,6 +37,10 @@ defaultActionParams = [
         //projectConfigPath: 'docroot/config',
         //projectConfigFile: 'docroot.config',
         mothershipConfigFile: 'mothership.config',
+        interpolate: 0,
+    ],
+    Source: [
+        interpolate: 0,
     ],
     Behat: [
         masterPath: 'docroot/master',
@@ -150,8 +154,5 @@ defaultActionParams = [
     ],
     YamlFileHandler: [
         deployFile: '.drupipe.yml',
-    ],
-    Shell: [
-        interpolate: 1,
     ],
 ]
