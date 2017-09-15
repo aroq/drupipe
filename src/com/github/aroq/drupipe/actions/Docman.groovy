@@ -161,6 +161,7 @@ class Docman extends BaseAction {
     }
 
     def getStable() {
+        script.checkout scm
         def info = script.readYaml(file: "info.yaml")
         script.checkout(
             [
