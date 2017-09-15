@@ -166,7 +166,7 @@ class Docman extends BaseAction {
         script.checkout(
             [
                 $class: 'GitSCM',
-                branches: [[name: 'refs/tags/0.1.1']],
+                branches: [[name: "refs/tags/${info.version}"]],
                 doGenerateSubmoduleConfigurations: false,
                 extensions: [],
                 submoduleCfg: [],
