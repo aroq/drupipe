@@ -12,9 +12,8 @@ class Gitlab extends BaseAction {
 
     def DrupipeAction action
 
-    String terraformExecutable = 'terraform'
-
     def acceptMR() {
-        this.script.acceptGitLabMR mergeCommitMessage: 'Pipeline executed successfully.'
+        script.addGitLabMRComment comment: action.params.message
+        script.acceptGitLabMR mergeCommitMessage: action.params.message
     }
 }
