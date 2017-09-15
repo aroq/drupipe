@@ -159,5 +159,20 @@ class Docman extends BaseAction {
             """docman bump stable -n""", context << [shellCommandWithBashLogin: true]
         )
     }
+
+    def getStable() {
+        def info = script.readYaml("info.yaml")
+        script.checkout(
+            [
+                $class: 'GitSCM',
+                branches: [[name: 'refs/tags/0.1.1']],
+                doGenerateSubmoduleConfigurations: false,
+                extensions: [],
+                submoduleCfg: [],
+                userRemoteConfigs: [[credentialsId: 'zebra', url: 'git@code.adyax.com:CIFlowPrototype/infrastructure.git']]
+            ]
+        )
+
+    }
 }
 
