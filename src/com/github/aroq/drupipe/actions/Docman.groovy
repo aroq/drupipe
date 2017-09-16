@@ -164,7 +164,7 @@ class Docman extends BaseAction {
         def info = script.readYaml(file: "info.yaml")
         script.echo "STABLE VERSION: ${info.version}"
 
-        context.pipeline.scmCheckout([
+        script.checkout([
             $class: 'GitSCM',
             branches: [[name: "refs/tags/${info.version}"]],
             doGenerateSubmoduleConfigurations: false,
