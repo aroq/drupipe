@@ -165,11 +165,11 @@ class Docman extends BaseAction {
         context.pipeline.scmCheckout(
             [
                 $class: 'GitSCM',
-                branches: [[name: "refs/tags/${info.version}"]],
+                branches: [name: "refs/tags/${info.version}"],
                 doGenerateSubmoduleConfigurations: false,
                 extensions: [],
                 submoduleCfg: [],
-                userRemoteConfigs: [[credentialsId: 'zebra', url: 'git@code.adyax.com:CIFlowPrototype/infrastructure.git']]
+                userRemoteConfigs: [credentialsId: 'zebra', url: 'git@code.adyax.com:CIFlowPrototype/infrastructure.git']
             ]
         )
 

@@ -305,11 +305,18 @@ class DrupipePipeline implements Serializable {
     def scmCheckout(scm = null) {
         this.script.echo "Pipeline scm checkout: start"
         if (scm) {
-            this.script.echo "Pipeline scm checkout: set"
+            this.script.echo "Pipeline scm checkout: set SCM"
             this.scm = scm
         }
         else {
-            this.scm = this.scm ? this.scm : script.scm
+            this.script.echo "Pipeline scm checkout: is not set"
+            if (this.scm) {
+                this.script.echo "Pipeline scm checkout: use stored SCM from pipeline"
+            }
+            else {
+                this.script.echo "Pipeline scm checkout: use job's SCM"
+                this.scm = script.scm
+            }
         }
         this.script.checkout this.scm
     }
