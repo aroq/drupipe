@@ -15,7 +15,10 @@ class Terraform extends BaseAction {
     String terraformExecutable = 'terraform'
 
     def initializeAction() {
-        if (!action.params.containsKey('workingDir')) {
+        if (context.jenkinsParams.containsKey('workingDir')) {
+            action.params.workingDir = context.jenkinsParams.workingDir
+        }
+        else {
             action.params.workingDir = '.'
         }
     }
