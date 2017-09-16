@@ -303,7 +303,9 @@ class DrupipePipeline implements Serializable {
     }
 
     def scmCheckout(scm = null) {
+        this.script.echo "Pipeline scm checkout: start"
         if (scm) {
+            this.script.echo "Pipeline scm checkout: set"
             this.scm = scm
         }
         else {
