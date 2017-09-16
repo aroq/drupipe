@@ -16,8 +16,6 @@ class DrupipeBlock implements Serializable {
 
     LinkedHashMap config = [:]
 
-    Boolean scmCheckoutPerformed = false
-
     def execute(c, body = null) {
         def utils = new com.github.aroq.drupipe.Utils()
         if (c) {
@@ -54,19 +52,13 @@ class DrupipeBlock implements Serializable {
                 if (withDocker) {
                     if (context.containerMode == 'kubernetes') {
                         context.pipeline.script.drupipeWithKubernetes(context) {
-                            if (!scmCheckoutPerformed) {
-                                context.pipeline.script.checkout context.pipeline.script.scm
-                                scmCheckoutPerformed = true
-                            }
+                            context.pipeline.scmCheckout()
                             result = _execute(body)
                         }
                     }
                     else if (context.containerMode == 'docker') {
                         context.pipeline.script.drupipeWithDocker(context) {
-                            if (!scmCheckoutPerformed) {
-                                context.pipeline.script.checkout context.pipeline.script.scm
-                                scmCheckoutPerformed = true
-                            }
+                            context.pipeline.scmCheckout()
                             result = _execute(body)
                         }
                     }
