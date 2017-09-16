@@ -164,7 +164,7 @@ class Docman extends BaseAction {
         def info = script.readYaml(file: "info.yaml")
         script.echo "STABLE VERSION: ${info.version}"
 
-        String repo = scm.getUserRemoteConfigs()[0].getUrl()
+        String repo = script.scm.getUserRemoteConfigs()[0].getUrl()
 
         def sourceObject = [
             name: 'stable_version',
