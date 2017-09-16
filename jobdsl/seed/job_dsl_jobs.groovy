@@ -605,7 +605,11 @@ def processJob(jobs, currentFolder, config, parentConfigParams = [:]) {
                                             relativeTargetDirectory(config.projectConfigPath)
                                         }
                                     }
-                                    // TODO: configure it.
+                                    if (job.value.repoDir) {
+                                        extensions {
+                                            relativeTargetDirectory(job.value.repoDir)
+                                        }
+                                    }
                                     branch(br)
                                 }
                                 scriptPath(pipelineScriptPath)
