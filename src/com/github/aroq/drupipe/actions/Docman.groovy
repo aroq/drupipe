@@ -178,7 +178,8 @@ class Docman extends BaseAction {
             submoduleCfg: [],
             userRemoteConfigs: [[
                 credentialsId: 'zebra',
-                url: this.script.scm.getUserRemoteConfigs()[0].getUrl()
+                url: 'just a test'
+//                url: this.script.scm.getUserRemoteConfigs()[0].getUrl()
             ]]
         ])
 
