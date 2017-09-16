@@ -16,6 +16,8 @@ class DrupipePipeline implements Serializable {
 
     def utils
 
+    def scm
+
     def execute(body = null) {
         context.pipeline = this
         context.jenkinsParams = params
@@ -298,6 +300,16 @@ class DrupipePipeline implements Serializable {
             script.echo err.toString()
             throw err
         }
+    }
+
+    def scmCheckout(scm = null) {
+        if (scm) {
+            this.scm = scm
+        }
+        else {
+            this.scm = script.scm
+        }
+        this.script.checkout this.scm
     }
 
 }
