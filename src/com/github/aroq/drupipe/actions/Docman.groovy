@@ -163,17 +163,19 @@ class Docman extends BaseAction {
     def getStable() {
         def info = script.readYaml(file: "info.yaml")
         script.echo "STABLE VERSION: ${info.version}"
-        context.pipeline.scmCheckout(
-            [
-                $class: 'GitSCM',
-                branches: [[name: "refs/tags/${info.version}"]],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [],
-                submoduleCfg: [],
-                userRemoteConfigs: [[credentialsId: 'zebra', url: 'git@code.adyax.com:CIFlowPrototype/infrastructure.git']]
-            ]
-        )
 
+        String repo = scm.getUserRemoteConfigs()[0].getUrl()
+
+        def sourceObject = [
+            name: 'stable_version',
+            type: 'git',
+            path: action.params.dir,
+            url: repo,
+            branch: info.version,
+            mode: 'shell',
+        ]
+
+        this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
     }
 }
 
