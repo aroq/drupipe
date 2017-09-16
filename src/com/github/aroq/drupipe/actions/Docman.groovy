@@ -168,10 +168,13 @@ class Docman extends BaseAction {
             $class: 'GitSCM',
             branches: [[name: "refs/tags/${info.version}"]],
             doGenerateSubmoduleConfigurations: false,
-            extensions: [[
-                 $class: 'RelativeTargetDirectory',
-                 relativeTargetDir: action.params.dir,
-            ]],
+            extensions: [
+                [
+                     $class: 'RelativeTargetDirectory',
+                     relativeTargetDir: action.params.dir,
+                ],
+                [$class: 'WipeWorkspace'],
+            ],
             submoduleCfg: [],
             userRemoteConfigs: [[
                 credentialsId: 'zebra',
