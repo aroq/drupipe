@@ -618,16 +618,19 @@ def processJob(jobs, currentFolder, config, parentConfigParams = [:]) {
                         triggers {
                             if (job.value.triggers.gitlabPush) {
                                 gitlabPush {
-                                    if (job.value.triggers.gitlabPush.buildOnPushEvents) {
-                                        buildOnPushEvents()
+                                    if (job.value.triggers.gitlabPush.containsKey('buildOnPushEvents')) {
+                                        buildOnPushEvents(job.value.triggers.gitlabPush.buildOnPushEvents)
                                     }
-                                    if (job.value.triggers.gitlabPush.buildOnMergeRequestEvents) {
-                                        buildOnMergeRequestEvents()
+                                    if (job.value.triggers.gitlabPush.containsKey('buildOnMergeRequestEvents')) {
+                                        buildOnMergeRequestEvents(job.value.triggers.gitlabPush.buildOnMergeRequestEvents)
                                     }
-                                    if (job.value.triggers.gitlabPush.enableCiSkip) {
-                                        enableCiSkip()
+                                    if (job.value.triggers.gitlabPush.containsKey('enableCiSkip')) {
+                                        enableCiSkip(job.value.triggers.gitlabPush.enableCiSkip)
                                     }
-                                    if (job.value.triggers.gitlabPush.includeBranches) {
+                                    if (job.value.triggers.gitlabPush.containsKey('rebuildOpenMergeRequest')) {
+                                        rebuildOpenMergeRequest(job.value.triggers.gitlabPush.rebuildOpenMergeRequest)
+                                    }
+                                    if (job.value.triggers.gitlabPush.containsKey('includeBranches')) {
                                         includeBranches(job.value.triggers.gitlabPush.includeBranches.join(', '))
                                     }
                                 }
