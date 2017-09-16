@@ -166,7 +166,7 @@ class Docman extends BaseAction {
 
         script.checkout([
             $class: 'GitSCM',
-            branches: [[name: "refs/tags/${info.version}"]],
+            branches: [[name: "develop"]],
             doGenerateSubmoduleConfigurations: false,
             extensions: [
                 [
@@ -178,8 +178,7 @@ class Docman extends BaseAction {
             submoduleCfg: [],
             userRemoteConfigs: [[
                 credentialsId: 'zebra',
-                url: 'just a test'
-//                url: this.script.scm.getUserRemoteConfigs()[0].getUrl()
+                url: this.script.scm.getUserRemoteConfigs()[0].getUrl()
             ]]
         ])
 
