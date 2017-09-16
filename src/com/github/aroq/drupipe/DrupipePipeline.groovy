@@ -307,7 +307,7 @@ class DrupipePipeline implements Serializable {
             this.scm = scm
         }
         else {
-            this.scm = script.scm
+            this.scm = this.scm ? this.scm : script.scm
         }
         this.script.checkout this.scm
     }
