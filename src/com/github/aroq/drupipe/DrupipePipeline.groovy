@@ -16,6 +16,8 @@ class DrupipePipeline implements Serializable {
 
     def utils
 
+    def scm
+
     def execute(body = null) {
         context.pipeline = this
         context.jenkinsParams = params
@@ -42,8 +44,6 @@ class DrupipePipeline implements Serializable {
                     }
                 }
 
-
-
                 if (!blocks) {
                     if (context.jobs) {
                         def job = getJobConfigByName(context.env.JOB_NAME)
@@ -51,6 +51,7 @@ class DrupipePipeline implements Serializable {
                             utils.jsonDump(job, 'JOB')
                             context.job = job
                             utils.pipelineNotify(context, notification << [status: 'START'])
+
                             def pipelineBlocks = job.pipeline && job.pipeline.blocks ? job.pipeline.blocks : []
                             if (pipelineBlocks) {
                                 for (def i = 0; i < pipelineBlocks.size(); i++) {
@@ -298,6 +299,25 @@ class DrupipePipeline implements Serializable {
             script.echo err.toString()
             throw err
         }
+    }
+
+    def scmCheckout(scm = null) {
+        this.script.echo "Pipeline scm checkout: start"
+        if (scm) {
+            this.script.echo "Pipeline scm checkout: set SCM"
+            this.scm = scm
+        }
+        else {
+            this.script.echo "Pipeline scm checkout: is not set"
+            if (this.scm) {
+                this.script.echo "Pipeline scm checkout: use stored SCM from pipeline"
+            }
+            else {
+                this.script.echo "Pipeline scm checkout: use job's SCM"
+                this.scm = script.scm
+            }
+        }
+        this.script.checkout this.scm
     }
 
 }

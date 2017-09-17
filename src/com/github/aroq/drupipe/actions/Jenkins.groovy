@@ -14,16 +14,19 @@ class Jenkins extends BaseAction {
     def DrupipeAction action
 
     def getJenkinsAddress() {
+        String terraformEnv = this.context.jenkinsParams.terraformEnv
         def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN')]
         def result = script.withCredentials(creds) {
             this.script.drupipeShell("""
-                curl http://\${TF_VAR_consul_address}/v1/kv/zebra/jenkins/dev/address?raw&token=\${CONSUL_ACCESS_TOKEN}
+                curl http://\${TF_VAR_consul_address}/v1/kv/zebra/jenkins/${terraformEnv}/address?raw&token=\${CONSUL_ACCESS_TOKEN}
             """, this.context.clone() << [drupipeShellReturnStdout: true])
         }
         result.drupipeShellResult
     }
 
-    def initWithAnsible() {
+    def executeAnsiblePlaybook() {
+        // TODO: refactor terraformEnv params into common env param.
+        action.params.playbookParams << [env: context.jenkinsParams.terraformEnv]
         action.params.inventoryArgument = getJenkinsAddress() + ','
         script.drupipeAction([action: 'Ansible.executeAnsiblePlaybook', params: [action.params]], context)
     }
@@ -41,7 +44,7 @@ class Jenkins extends BaseAction {
     }
 
     def build() {
-        this.action.params.command = "build -s -v ${this.action.params.jobName}"
+        this.action.params.command = "build -s ${this.action.params.jobName}"
         cli()
     }
 

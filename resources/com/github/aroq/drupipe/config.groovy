@@ -70,6 +70,9 @@ defaultActionParams = [
     Docman_releaseBuild: [
         state: 'stable',
     ],
+    Gitlab_acceptMR: [
+        message: 'MR merged as pipeline was executed successfully.',
+    ],
     // TODO: add private (that will not go into common config) params section.
     Publish_junit: [
         reportsPath: 'reports/*.xml'
