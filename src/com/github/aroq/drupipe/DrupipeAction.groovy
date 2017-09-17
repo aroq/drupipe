@@ -64,12 +64,10 @@ class DrupipeAction implements Serializable {
             this.params = utils.merge(defaultActionParams, this.params)
 
             // Interpolate action params with context variables.
-            context.pipeline.script.echo("Action ${this.fullName} Interpolate = ${this.params.interpolate}")
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
-                context.pipeline.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
+                this.context.pipeline.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
             }
             else {
-                utils.dump(context, 'Interpolate Context')
                 this.params = utils.interpolateParams(this.params, context, this)
             }
 
