@@ -24,7 +24,8 @@ if (config.jobs) {
 def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
     def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipelines/pipeline'
     for (job in jobs) {
-        def parentConfigParams = parentConfigParamsPassed
+        def parentConfigParams
+        parentConfigParams << parentConfigParamsPassed
         println job
         println "Processing job: ${job.key}"
         def currentName = currentFolder ? "${currentFolder}/${job.key}" : job.key
