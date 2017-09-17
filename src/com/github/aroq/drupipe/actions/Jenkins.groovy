@@ -42,7 +42,7 @@ class Jenkins extends BaseAction {
     }
 
     def build() {
-        this.action.params.command = "build -s -v ${this.action.params.jobName}"
+        this.action.params.command = "build -s ${this.action.params.jobName}"
         cli()
     }
 
