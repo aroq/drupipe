@@ -31,13 +31,6 @@ class Ansible extends BaseAction {
                 action.params.playbookParams.target = "${context.environmentParams.host}"
             }
         }
-
-        if (context.jenkinsParams.containsKey('workingDir')) {
-            action.params.workingDir = context.jenkinsParams.workingDir
-        }
-        else {
-            action.params.workingDir = '.'
-        }
     }
 
     def deploy() {
@@ -85,6 +78,13 @@ class Ansible extends BaseAction {
 
     // TODO: Provide Ansible parameters from settings container.
     def executeAnsiblePlaybook() {
+        // TODO: move workingDir logic into Config action and use it globally in sh scripts.
+        if (context.jenkinsParams.containsKey('workingDir')) {
+            action.params.workingDir = context.jenkinsParams.workingDir
+        }
+        else {
+            action.params.workingDir = '.'
+        }
         utils.loadLibrary(script, context)
         def command =
             "ansible-playbook ${action.params.playbook} \
