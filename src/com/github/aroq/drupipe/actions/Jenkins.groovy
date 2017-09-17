@@ -25,6 +25,8 @@ class Jenkins extends BaseAction {
     }
 
     def executeAnsiblePlaybook() {
+        // TODO: refactor terraformEnv params into common env param.
+        action.params.playbookParams << [env: context.jenkinsParams.terraformEnv]
         action.params.inventoryArgument = getJenkinsAddress() + ','
         script.drupipeAction([action: 'Ansible.executeAnsiblePlaybook', params: [action.params]], context)
     }
