@@ -44,8 +44,6 @@ class DrupipePipeline implements Serializable {
                     }
                 }
 
-
-
                 if (!blocks) {
                     if (context.jobs) {
                         def job = getJobConfigByName(context.env.JOB_NAME)
@@ -53,6 +51,7 @@ class DrupipePipeline implements Serializable {
                             utils.jsonDump(job, 'JOB')
                             context.job = job
                             utils.pipelineNotify(context, notification << [status: 'START'])
+
                             def pipelineBlocks = job.pipeline && job.pipeline.blocks ? job.pipeline.blocks : []
                             if (pipelineBlocks) {
                                 for (def i = 0; i < pipelineBlocks.size(); i++) {

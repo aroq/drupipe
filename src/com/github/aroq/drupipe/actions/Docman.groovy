@@ -164,24 +164,18 @@ class Docman extends BaseAction {
         def info = script.readYaml(file: "info.yaml")
         script.echo "STABLE VERSION: ${info.version}"
 
-        script.checkout([
-            $class: 'GitSCM',
-            branches: [[name: "develop"]],
-            doGenerateSubmoduleConfigurations: false,
-            extensions: [
-                [
-                     $class: 'RelativeTargetDirectory',
-                     relativeTargetDir: action.params.dir,
-                ],
-                [$class: 'WipeWorkspace'],
-            ],
-            submoduleCfg: [],
-            userRemoteConfigs: [[
-                credentialsId: 'zebra',
-                url: this.script.scm.getUserRemoteConfigs()[0].getUrl()
-            ]]
-        ])
+        String repo = script.scm.getUserRemoteConfigs()[0].getUrl()
 
+        def sourceObject = [
+            name: 'stable_version',
+            type: 'git',
+            path: context.jenkinsParams.workingDir,
+            url: repo,
+            branch: info.version,
+            mode: 'shell',
+        ]
+
+        this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
     }
 }
 
