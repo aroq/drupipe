@@ -31,6 +31,13 @@ class Ansible extends BaseAction {
                 action.params.playbookParams.target = "${context.environmentParams.host}"
             }
         }
+
+        if (context.jenkinsParams.containsKey('workingDir')) {
+            action.params.workingDir = context.jenkinsParams.workingDir
+        }
+        else {
+            action.params.workingDir = '.'
+        }
     }
 
     def deploy() {
@@ -87,6 +94,7 @@ class Ansible extends BaseAction {
         script.echo "Ansible command: ${command}"
 
         script.drupipeShell("""
+            cd ${this.action.params.workingDir}
             ${command}
             """, context << [shellCommandWithBashLogin: true]
         )
