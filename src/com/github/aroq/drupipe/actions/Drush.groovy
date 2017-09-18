@@ -65,8 +65,11 @@ class Drush extends BaseAction {
         this.script.echo "Execute Drush command: ${drushString}"
 
         if (context.drushOutputReturn) {
-          def result = this.script.drupipeShell("${drushString}", this.context.clone() << [drupipeShellReturnStdout: true])
-          this.context.lastActionOutput = result.drupipeShellResult
+            this.script.echo "Return Drush output."
+            def result = this.script.drupipeShell("${drushString}", this.context.clone() << [drupipeShellReturnStdout: true])
+            result.drupipeShellResult = result.drupipeShellResult.replaceAll(/(?m)^(PHP )?Deprecated.*$/, '').trim()
+            this.context.lastActionOutput = result.drupipeShellResult
+            return result
         }
         else {
             this.script.drupipeShell("${drushString}", this.context.clone())
