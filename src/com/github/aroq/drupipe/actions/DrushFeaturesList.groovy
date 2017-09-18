@@ -43,7 +43,7 @@ class DrushFeaturesList extends BaseAction {
 
                 fd_result = fd_result.drupipeShellResult.substring(fd_result.drupipeShellResult.indexOf('Legend:'))
 
-                this.notification.message = '```' + fd_result + '```'
+                this.notification.message = fd_result
 
                 this.notification.name = "**${feature['name']}** (${feature['feature']})"
 
