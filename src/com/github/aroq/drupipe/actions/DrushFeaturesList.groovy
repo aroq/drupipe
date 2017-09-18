@@ -26,7 +26,7 @@ class DrushFeaturesList extends BaseAction {
         this.context.drush_command = 'fl --format=json'
         def fl_result = this.script.drupipeAction("Drush.runCommand", this.context.clone() << [drushOutputReturn: 1])
 
-        def jsonOutput = new JsonSlurperClassic().parseText(fl_result.drupipeShellResult)
+        def jsonOutput = this.script.readJSON(text: fl_result.drupipeShellResult)
         jsonOutput.each { key, feature->
             if (feature.containsKey('state') && feature['state'] == this.state) {
                 features << feature
