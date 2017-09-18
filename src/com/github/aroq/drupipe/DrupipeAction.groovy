@@ -138,7 +138,7 @@ class DrupipeAction implements Serializable {
             }
             if (context.lastActionOutput) {
                 notification.message = notification.message ? notification.message : ''
-                notification.message = notification.message + "\n\n" + context.lastActionOutput
+                notification.message = notification.message + "\n\n```" + context.lastActionOutput + "```"
             }
             utils.pipelineNotify(context, notification)
 

@@ -14,8 +14,10 @@ class Shell extends BaseAction {
 
     def execute() {
         if (context.drushOutputReturn) {
+            this.script.echo "Return Shell output."
             def result = script.drupipeShell(action.params.shellCommand, this.context.clone() << [drupipeShellReturnStdout: true])
-            this.context.lastActionOutput = result
+            this.context.lastActionOutput = result.drupipeShellResult
+            return result
         }
         else {
             script.drupipeShell(action.params.shellCommand, this.context.clone())
