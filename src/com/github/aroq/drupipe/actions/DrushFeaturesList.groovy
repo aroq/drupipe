@@ -24,7 +24,7 @@ class DrushFeaturesList extends BaseAction {
         this.notification.status = 'INFO'
 
         this.context.drush_command = 'fl --format=json'
-        this.script.drupipeAction("Drush.runCommand", this.context)
+        this.script.drupipeAction("Drush.runCommand", this.context.clone() << [drushOutputReturn: 1])
 
         def output = this.context.lastActionOutput
         def jsonOutput = new JsonSlurperClassic().parseText(output)
@@ -40,7 +40,7 @@ class DrushFeaturesList extends BaseAction {
                 exception_table = exception_table + "|${feature['name']}|${feature['feature']}|"
 
                 this.context.drush_command = 'fd ' + feature['feature']
-                this.script.drupipeAction("Drush.runCommand", this.context)
+                this.script.drupipeAction("Drush.runCommand", this.context.clone() << [drushOutputReturn: 1])
 
                 def diff = this.context.lastActionOutput
                 diff = diff.substring(diff.indexOf('Legend:'))
