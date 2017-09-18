@@ -30,7 +30,7 @@ class Drush extends BaseAction {
                     root = env.root
                 }
                 else {
-                    throw "DRUSH ACTION: Project root not found."
+                    throw new Exception("DRUSH ACTION: Project root not found.")
                 }
 
                 if (env.server && context.servers[env.server]) {
@@ -40,22 +40,22 @@ class Drush extends BaseAction {
                         user = server.user
                     }
                     else {
-                        throw "DRUSH ACTION: Server SSH user not found."
+                        throw new Exception("DRUSH ACTION: Server SSH user not found.")
                     }
 
                     if (server.host) {
                         host = server.host
                     }
                     else {
-                        throw "DRUSH ACTION: Server host not found."
+                        throw new Exception("DRUSH ACTION: Server host not found.")
                     }
                 }
                 else {
-                    throw "DRUSH ACTION: Server configuration not found."
+                    throw new Exception("DRUSH ACTION: Server configuration not found.")
                 }
             }
             else {
-                throw "DRUSH ACTION: Environment configuration not found."
+                throw new Exception("DRUSH ACTION: Environment configuration not found.")
             }
             drush_dsn = "${user}@${host}${root}${docroot}#${site}"
         }
@@ -66,6 +66,8 @@ class Drush extends BaseAction {
 
         def result = this.script.drupipeShell("${drushString}", this.context.clone() << [drupipeShellReturnStdout: true])
 
-        this.context.lastActionOutput = result
+        this.script.echo result.drupipeShellResult
+
+        this.context.lastActionOutput = result.drupipeShellResult
     }
 }
