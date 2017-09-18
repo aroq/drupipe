@@ -13,7 +13,14 @@ class Shell extends BaseAction {
     def DrupipeAction action
 
     def execute() {
-        script.drupipeShell(action.params.shellCommand, context)
+        if (context.shellOutputReturn) {
+            this.script.echo "Return Shell output."
+            def result = script.drupipeShell(action.params.shellCommand, this.context.clone() << [drupipeShellReturnStdout: true])
+            this.context.lastActionOutput = result.drupipeShellResult
+            return result
+        }
+        else {
+            script.drupipeShell(action.params.shellCommand, this.context.clone())
+        }
     }
 }
-

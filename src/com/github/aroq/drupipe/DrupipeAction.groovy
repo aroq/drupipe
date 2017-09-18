@@ -6,6 +6,8 @@ class DrupipeAction implements Serializable {
 
     String name
 
+    String storeResult
+
     String methodName
 
     HashMap params = [:]
@@ -110,7 +112,19 @@ class DrupipeAction implements Serializable {
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} end <-"
 
+            actionResult = actionResult ? actionResult : [:]
+
+            if (this.storeResult && this.storeResult != '' && context.lastActionOutput) {
+                def result = context.lastActionOutput.drupipeShellResult
+                def path = storeResult.tokenize('.')
+                def stored = [:]
+                contextStoreResult(path, stored, result)
+
+                actionResult << stored
+            }
+
             actionResult ? actionResult : [:]
+
         }
         catch (err) {
             notification.status = 'FAILED'
@@ -127,7 +141,21 @@ class DrupipeAction implements Serializable {
                 notification.message = notification.message + "\n\n" + context.lastActionOutput
             }
             utils.pipelineNotify(context, notification)
+
             actionResult ? actionResult : [:]
+        }
+    }
+
+    def contextStoreResult(path, stored, result) {
+        def path_element = path.get(0)
+        def subpath = path.subList(1, path.size())
+        if (!stored.containsKey(path_element)) {
+          stored[path_element] = [:]
+        }
+        if (subpath.size() > 0) {
+          contextStoreResult(subpath, stored[path_element], result)
+        } else {
+          stored[path_element]= result
         }
     }
 
