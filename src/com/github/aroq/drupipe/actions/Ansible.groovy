@@ -89,15 +89,21 @@ class Ansible extends BaseAction {
         def command =
             "ansible-playbook ${action.params.playbook} \
             -i ${action.params.inventoryArgument} \
+            --vault-password-file \${ANSIBLE_VAULT_PASS_FILE} \
             -e '${joinParams(action.params.playbookParams, 'json')}'"
 
         script.echo "Ansible command: ${command}"
 
-        script.drupipeShell("""
-            cd ${this.action.params.workingDir}
-            ${command}
-            """, context << [shellCommandWithBashLogin: true]
-        )
+        def creds = [script.file(credentialsId: 'ANSIBLE_VAULT_PASS_FILE', variable: 'ANSIBLE_VAULT_PASS_FILE')]
+
+        script.withCredentials(creds) {
+            this.script.drupipeShell("""
+                cd ${this.action.params.workingDir}
+                ${command}
+            """, this.context << [shellCommandWithBashLogin: true]
+            )
+        }
+
     }
 
     @NonCPS
