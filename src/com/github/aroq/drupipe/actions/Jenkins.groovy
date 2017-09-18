@@ -24,9 +24,21 @@ class Jenkins extends BaseAction {
         result.drupipeShellResult
     }
 
+    def getJenkinsSlaveAddress() {
+        String terraformEnv = this.context.jenkinsParams.terraformEnv
+        def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN')]
+        def result = script.withCredentials(creds) {
+            this.script.drupipeShell("""
+                curl http://\${TF_VAR_consul_address}/v1/kv/zebra/jenkins/${terraformEnv}/slave/address?raw&token=\${CONSUL_ACCESS_TOKEN}
+            """, this.context.clone() << [drupipeShellReturnStdout: true])
+        }
+        result.drupipeShellResult
+    }
+
+
     def executeAnsiblePlaybook() {
         // TODO: refactor terraformEnv params into common env param.
-        action.params.playbookParams << [env: context.jenkinsParams.terraformEnv]
+        action.params.playbookParams << [env: context.jenkinsParams.terraformEnv, jenkins_default_slave_address: getJenkinsSlaveAddress()]
         action.params.inventoryArgument = getJenkinsAddress() + ','
         script.drupipeAction([action: 'Ansible.executeAnsiblePlaybook', params: [action.params]], context)
     }
