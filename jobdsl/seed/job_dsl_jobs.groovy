@@ -21,15 +21,24 @@ if (config.jobs) {
     processJob(config.jobs, '', config)
 }
 
-def processJob(jobs, currentFolder, config) {
+def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
     def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipelines/pipeline'
     for (job in jobs) {
+        def parentConfigParams = [:]
+        parentConfigParams << parentConfigParamsPassed
         println job
         println "Processing job: ${job.key}"
         def currentName = currentFolder ? "${currentFolder}/${job.key}" : job.key
         println "Type: ${job.value.type}"
         println "Current name: ${currentName}"
+
+        println "Job: ${job.value}"
+        job.value.params = job.value.params ? job.value.params : [:]
+        job.value.params << (parentConfigParams << job.value.params)
+        println "Job params after parent params merge: ${job.value.params}"
+
         if (job.value.type == 'folder') {
+            parentConfigParams << job.value.params
             folder(currentName) {
                 if (config.gitlabHelper) {
                     users = config.gitlabHelper.getUsers(config.configRepo)
@@ -490,6 +499,8 @@ def processJob(jobs, currentFolder, config) {
                 def repo = job.value.configRepo ? job.value.configRepo : config.configRepo
                 def pipelineScriptPath = job.value.configRepo ? "${pipelineScript}.groovy" : "${config.projectConfigPath}/${pipelineScript}.groovy"
 
+                def br = job.value.branch ? job.value.branch : 'master'
+
                 pipelineJob("${currentName}") {
                     concurrentBuild(false)
                     logRotator(-1, config.logRotatorNumToKeep)
@@ -596,16 +607,66 @@ def processJob(jobs, currentFolder, config) {
                                             relativeTargetDirectory(config.projectConfigPath)
                                         }
                                     }
-                                    branch('master')
+                                    if (job.value.repoDir) {
+                                        extensions {
+                                            relativeTargetDirectory(job.value.repoDir)
+                                        }
+                                    }
+                                    branch(br)
                                 }
                                 scriptPath(pipelineScriptPath)
                             }
                         }
                     }
+
+                    // Configure triggers.
+                    if (job.value.triggers) {
+                        triggers {
+                            if (job.value.triggers.gitlabPush) {
+                                gitlabPush {
+                                    if (job.value.triggers.gitlabPush.containsKey('buildOnPushEvents')) {
+                                        buildOnPushEvents(job.value.triggers.gitlabPush.buildOnPushEvents)
+                                    }
+                                    if (job.value.triggers.gitlabPush.containsKey('buildOnMergeRequestEvents')) {
+                                        buildOnMergeRequestEvents(job.value.triggers.gitlabPush.buildOnMergeRequestEvents)
+                                    }
+                                    if (job.value.triggers.gitlabPush.containsKey('enableCiSkip')) {
+                                        enableCiSkip(job.value.triggers.gitlabPush.enableCiSkip)
+                                    }
+                                    if (job.value.triggers.gitlabPush.containsKey('rebuildOpenMergeRequest')) {
+                                        rebuildOpenMergeRequest(job.value.triggers.gitlabPush.rebuildOpenMergeRequest)
+                                    }
+                                    if (job.value.triggers.gitlabPush.containsKey('includeBranches')) {
+                                        includeBranches(job.value.triggers.gitlabPush.includeBranches.join(', '))
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // TODO: use "triggers" config parent.
                     if (job.value.containsKey('cron') && job.value.cron instanceof CharSequence) {
                         triggers {
                             cron(job.value.cron)
                         }
+                    }
+                    if (job.value.webhooks && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                        properties {
+                            gitLabConnectionProperty {
+                                gitLabConnection('Gitlab')
+                            }
+                        }
+                    }
+                }
+
+                if (job.value.webhooks && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                    job.value.webhooks.each { hook ->
+                        config.gitlabHelper.addWebhook(
+                            job.value.configRepo,
+                            "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}",
+                            hook
+                        )
+                        println "Webhook added for project ${config.jenkinsFolderName}/${currentName}"
                     }
                 }
 
@@ -844,7 +905,8 @@ def processJob(jobs, currentFolder, config) {
         }
 
         if (job.value.children) {
-            processJob(job.value.children, currentName, config)
+            println "Parent config params: ${parentConfigParams}"
+            processJob(job.value.children, currentName, config, parentConfigParams)
         }
     }
 }
@@ -884,7 +946,7 @@ class GitlabHelper {
         config.repoParams.projectID     = "${config.repoParams.groupName}%2F${config.repoParams.projectName}"
     }
 
-    def addWebhook(String repo, url) {
+    def addWebhook(String repo, url, hookData = [:]) {
         setRepoProperties(repo)
         def hook_id = null
         getWebhooks(repo).each { hook ->
@@ -898,6 +960,7 @@ class GitlabHelper {
             'PRIVATE-TOKEN': config.env.GITLAB_API_TOKEN_TEXT,
         ])
         def data = [id: "${config.repoParams.groupName}/${config.repoParams.projectName}", url: url, push_events: true]
+        data << hookData
         try {
             if (hook_id) {
                 data << [hook_id: hook_id]

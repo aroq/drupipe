@@ -153,5 +153,29 @@ class Docman extends BaseAction {
         }
         result
     }
+
+    def bumpStable() {
+        script.drupipeShell(
+            """docman bump stable -n""", context << [shellCommandWithBashLogin: true]
+        )
+    }
+
+    def getStable() {
+        def info = script.readYaml(file: "info.yaml")
+        script.echo "STABLE VERSION: ${info.version}"
+
+        String repo = script.scm.getUserRemoteConfigs()[0].getUrl()
+
+        def sourceObject = [
+            name: 'stable_version',
+            type: 'git',
+            path: context.jenkinsParams.workingDir,
+            url: repo,
+            branch: info.version,
+            mode: 'shell',
+        ]
+
+        this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
+    }
 }
 

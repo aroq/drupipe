@@ -78,18 +78,32 @@ class Ansible extends BaseAction {
 
     // TODO: Provide Ansible parameters from settings container.
     def executeAnsiblePlaybook() {
+        // TODO: move workingDir logic into Config action and use it globally in sh scripts.
+        if (context.jenkinsParams.containsKey('workingDir')) {
+            action.params.workingDir = context.jenkinsParams.workingDir
+        }
+        else {
+            action.params.workingDir = '.'
+        }
         utils.loadLibrary(script, context)
         def command =
             "ansible-playbook ${action.params.playbook} \
             -i ${action.params.inventoryArgument} \
+            --vault-password-file \${ANSIBLE_VAULT_PASS_FILE} \
             -e '${joinParams(action.params.playbookParams, 'json')}'"
 
         script.echo "Ansible command: ${command}"
 
-        script.drupipeShell("""
-            ${command}
-            """, context << [shellCommandWithBashLogin: true]
-        )
+        def creds = [script.file(credentialsId: 'ANSIBLE_VAULT_PASS_FILE', variable: 'ANSIBLE_VAULT_PASS_FILE')]
+
+        script.withCredentials(creds) {
+            this.script.drupipeShell("""
+                cd ${this.action.params.workingDir}
+                ${command}
+            """, this.context << [shellCommandWithBashLogin: true]
+            )
+        }
+
     }
 
     @NonCPS

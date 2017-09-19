@@ -22,7 +22,13 @@ def call(shellCommand, context) {
                 """
         }
     }
-    echo "Executing shell command: ${shellCommand}"
-    context.drupipeShellResult = sh(returnStdout: true, script: shellCommand)
-    echo context.drupipeShellResult
+    echo "Executing shell command: ${shellCommand} with returnStdout=${context.drupipeShellReturnStdout}"
+    context.drupipeShellResult = sh(returnStdout: context.drupipeShellReturnStdout, script: shellCommand)
+    if (context.drupipeShellReturnStdout) {
+        echo "Command output: ${context.drupipeShellResult}"
+        [drupipeShellResult: context.drupipeShellResult]
+    }
+    else {
+        []
+    }
 }
