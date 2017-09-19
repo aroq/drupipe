@@ -30,7 +30,7 @@ class Drush extends BaseAction {
                     root = env.root
                 }
                 else {
-                    throw "DRUSH ACTION: Project root not found."
+                    throw new Exception("DRUSH ACTION: Project root not found.")
                 }
 
                 if (env.server && context.servers[env.server]) {
@@ -40,22 +40,22 @@ class Drush extends BaseAction {
                         user = server.user
                     }
                     else {
-                        throw "DRUSH ACTION: Server SSH user not found."
+                        throw new Exception("DRUSH ACTION: Server SSH user not found.")
                     }
 
                     if (server.host) {
                         host = server.host
                     }
                     else {
-                        throw "DRUSH ACTION: Server host not found."
+                        throw new Exception("DRUSH ACTION: Server host not found.")
                     }
                 }
                 else {
-                    throw "DRUSH ACTION: Server configuration not found."
+                    throw new Exception("DRUSH ACTION: Server configuration not found.")
                 }
             }
             else {
-                throw "DRUSH ACTION: Environment configuration not found."
+                throw new Exception("DRUSH ACTION: Environment configuration not found.")
             }
             drush_dsn = "${user}@${host}${root}${docroot}#${site}"
         }
@@ -63,7 +63,16 @@ class Drush extends BaseAction {
         def drushString = "drush \"${drush_dsn}\" ${command} --ssh-options=\"-o StrictHostKeyChecking=no\""
 
         this.script.echo "Execute Drush command: ${drushString}"
-        this.script.drupipeShell("${drushString}", context)
-        this.context.lastActionOutput = this.context.drupipeShellResult
+
+        if (context.drushOutputReturn || this.context.job.notify) {
+            this.script.echo "Return Drush output."
+            def result = this.script.drupipeShell("${drushString}", this.context.clone() << [drupipeShellReturnStdout: true])
+            result.drupipeShellResult = result.drupipeShellResult.replaceAll(/(?m)^(PHP )?Deprecated.*$/, '').trim()
+            this.context.lastActionOutput = result.drupipeShellResult
+            return result
+        }
+        else {
+            this.script.drupipeShell("${drushString}", this.context.clone())
+        }
     }
 }

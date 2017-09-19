@@ -6,6 +6,8 @@ class DrupipeAction implements Serializable {
 
     String name
 
+    String storeResult
+
     String methodName
 
     HashMap params = [:]
@@ -62,7 +64,12 @@ class DrupipeAction implements Serializable {
             this.params = utils.merge(defaultActionParams, this.params)
 
             // Interpolate action params with context variables.
-            this.params = utils.interpolateParams(this.params, context, this)
+            if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
+                this.context.pipeline.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
+            }
+            else {
+                this.params = utils.interpolateParams(this.params, context, this)
+            }
 
             actionParams << this.params
             utils.debugLog(context, actionParams, "${this.fullName} action params")
@@ -105,7 +112,19 @@ class DrupipeAction implements Serializable {
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} end <-"
 
+            actionResult = actionResult ? actionResult : [:]
+
+            if (this.storeResult && this.storeResult != '' && context.lastActionOutput) {
+                def result = context.lastActionOutput.drupipeShellResult
+                def path = storeResult.tokenize('.')
+                def stored = [:]
+                contextStoreResult(path, stored, result)
+
+                actionResult << stored
+            }
+
             actionResult ? actionResult : [:]
+
         }
         catch (err) {
             notification.status = 'FAILED'
@@ -122,7 +141,21 @@ class DrupipeAction implements Serializable {
                 notification.message = notification.message + "\n\n" + context.lastActionOutput
             }
             utils.pipelineNotify(context, notification)
+
             actionResult ? actionResult : [:]
+        }
+    }
+
+    def contextStoreResult(path, stored, result) {
+        def path_element = path.get(0)
+        def subpath = path.subList(1, path.size())
+        if (!stored.containsKey(path_element)) {
+          stored[path_element] = [:]
+        }
+        if (subpath.size() > 0) {
+          contextStoreResult(subpath, stored[path_element], result)
+        } else {
+          stored[path_element]= result
         }
     }
 
