@@ -50,7 +50,7 @@ class Jenkins extends BaseAction {
     def cli() {
         action.params.jenkinsUserToken = script.readFile(file: "user_token")
         if (action.params.jenkinsUserToken) {
-            def envvars = ["JENKINS_URL=http://${getJenkinsAddress()}:${this.action.params.port}", "JENKINS_API_TOKEN=${this.context.jenkinsUserToken}"]
+            def envvars = ["JENKINS_URL=http://${getJenkinsAddress()}:${this.action.params.port}", "JENKINS_API_TOKEN=${action.params.jenkinsUserToken}"]
             executeCli(envvars)
         }
         else {
