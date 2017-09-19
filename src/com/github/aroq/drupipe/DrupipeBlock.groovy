@@ -52,13 +52,13 @@ class DrupipeBlock implements Serializable {
                 if (withDocker) {
                     if (context.containerMode == 'kubernetes') {
                         context.pipeline.script.drupipeWithKubernetes(context) {
-//                            context.pipeline.scmCheckout()
+                            context.pipeline.scmCheckout()
                             result = _execute(body)
                         }
                     }
                     else if (context.containerMode == 'docker') {
                         context.pipeline.script.drupipeWithDocker(context) {
-//                            context.pipeline.scmCheckout()
+                            context.pipeline.scmCheckout()
                             result = _execute(body)
                         }
                     }
