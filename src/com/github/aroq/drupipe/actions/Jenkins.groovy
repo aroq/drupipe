@@ -38,20 +38,35 @@ class Jenkins extends BaseAction {
 
     def executeAnsiblePlaybook() {
         // TODO: refactor terraformEnv params into common env param.
-        action.params.playbookParams << [env: context.jenkinsParams.terraformEnv, jenkins_default_slave_address: getJenkinsSlaveAddress()]
+        action.params.playbookParams << [
+            env: context.jenkinsParams.terraformEnv,
+            jenkins_default_slave_address: getJenkinsSlaveAddress(),
+            user_token_temp_file_dest: context.workspace,
+        ]
         action.params.inventoryArgument = getJenkinsAddress() + ','
         script.drupipeAction([action: 'Ansible.executeAnsiblePlaybook', params: [action.params]], context)
+        context.jenkinsUserToken = script.readFile(file: 'user_token')
     }
 
     def cli() {
-        def creds = [this.script.string(credentialsId: 'JENKINS_API_TOKEN', variable: 'JENKINS_API_TOKEN')]
-        this.script.withCredentials(creds) {
-            def envvars = ["JENKINS_URL=http://${getJenkinsAddress()}:${this.action.params.port}"]
-            this.script.withEnv(envvars) {
-                this.script.drupipeShell("""
+        if (this.context.jenkinsUserToken) {
+            def envvars = ["JENKINS_URL=http://${getJenkinsAddress()}:${this.action.params.port}", "JENKINS_API_TOKEN=${this.context.jenkinsUserToken}"]
+            executeCli(envvars)
+        }
+        else {
+            def creds = [this.script.string(credentialsId: 'JENKINS_API_TOKEN', variable: 'JENKINS_API_TOKEN')]
+            this.script.withCredentials(creds) {
+                def envvars = ["JENKINS_URL=http://${getJenkinsAddress()}:${this.action.params.port}"]
+                executeCli(envvars)
+            }
+        }
+    }
+
+    def executeCli(envvars) {
+        this.script.withEnv(envvars) {
+            this.script.drupipeShell("""
                 /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${this.action.params.command}
                 """, this.context)
-            }
         }
     }
 
