@@ -56,8 +56,9 @@ class Jenkins extends BaseAction {
 //            executeCli(envvars)
             this.script.withEnv(envvars) {
                 this.script.drupipeShell("""
-                /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:${this.action.params.jenkinsUserToken} ${this.action.params.command}
-                """, this.context)
+                java -version
+                /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${this.action.params.command}
+                """, this.context << [shellCommandWithBashLogin: false])
             }
         }
         else {
@@ -67,14 +68,28 @@ class Jenkins extends BaseAction {
 //                executeCli(envvars)
                 this.script.withEnv(envvars) {
                     this.script.drupipeShell("""
+                java -version
                 /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${this.action.params.command}
-                """, this.context)
+                """, this.context << [shellCommandWithBashLogin: false])
                 }
             }
         }
     }
 
     def executeCli(envvars) {
+    }
+
+    def crumb() {
+        action.params.jenkinsUserToken = context.jenkinsUserToken
+        if (action.params.jenkinsUserToken) {
+            def envvars = ["JENKINS_URL=http://${getJenkinsAddress()}:${this.action.params.port}", "JENKINS_API_TOKEN=${action.params.jenkinsUserToken}"]
+            this.script.withEnv(envvars) {
+                def result = this.script.drupipeShell("""
+         """, this.context.clone() << [drupipeShellReturnStdout: true])
+            }
+        }
+
+       result.drupipeShellResult
     }
 
     def build() {
