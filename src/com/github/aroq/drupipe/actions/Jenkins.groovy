@@ -56,7 +56,7 @@ class Jenkins extends BaseAction {
 //            executeCli(envvars)
             this.script.withEnv(envvars) {
                 this.script.drupipeShell("""
-                /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:${action.params.jenkinsUserToken} ${this.action.params.command}
+                /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:${this.action.params.jenkinsUserToken} ${this.action.params.command}
                 """, this.context)
             }
         }
