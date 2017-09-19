@@ -56,7 +56,7 @@ class DrushFeaturesList extends BaseAction {
         }
         else {
             this.script.echo "DRUSH FEATURES LIST: No overridden features."
-            this.context.lastActionOutput "No overridden features."
+            this.context.lastActionOutput = "No overridden features."
         }
 
         features
