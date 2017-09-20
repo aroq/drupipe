@@ -13,15 +13,10 @@ class DrushFeaturesList extends BaseAction {
 
     String state = 'Overridden'
 
-    HashMap notification = [:]
-
     def DrupipeAction action
 
     def runCommand() {
         def features = []
-
-        this.notification.level = "action:${this.context.drupipeStageName}"
-        this.notification.status = 'INFO'
 
         this.context.drush_command = 'fl --format=json'
         def fl_result = this.script.drupipeAction("Drush.runCommand", this.context.clone() << [drushOutputReturn: 1])
@@ -39,26 +34,15 @@ class DrushFeaturesList extends BaseAction {
                 exception_table = exception_table + "|${feature['name']}|${feature['feature']}|\n"
 
                 this.context.drush_command = 'fd ' + feature['feature']
-                def fd_result = this.script.drupipeAction("Drush.runCommand", this.context.clone() << [drushOutputReturn: 1])
-
-                fd_result = fd_result.drupipeShellResult.substring(fd_result.drupipeShellResult.indexOf('Legend:'))
-
-                this.notification.message = fd_result
-
-                this.notification.name = "**${feature['name']}** (${feature['feature']})"
-
-                this.utils.pipelineNotify(this.context, this.notification)
+                this.script.drupipeAction("Drush.runCommand", this.context.clone())
             }
-
-            this.context.lastActionOutput
 
             throw new Exception("OVERRIDEN FEATURES:\n\n${exception_table}")
         }
         else {
-            this.script.echo "DRUSH FEATURES LIST: No overridden features."
-            this.context.lastActionOutput = "No overridden features."
+            def message = "DRUSH FEATURES LIST: No overridden features."
+            this.script.echo(message)
+            return [result: message]
         }
-
-        features
     }
 }

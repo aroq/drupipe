@@ -26,8 +26,7 @@ class DrupipeAction implements Serializable {
         }
 
         def utils = new com.github.aroq.drupipe.Utils()
-        def actionResult = null
-        context.lastActionOutput = null
+        def actionResult = [:]
 
         try {
 
@@ -114,16 +113,16 @@ class DrupipeAction implements Serializable {
 
             actionResult = actionResult ? actionResult : [:]
 
-            if (this.storeResult && this.storeResult != '' && context.lastActionOutput) {
-                def result = context.lastActionOutput.drupipeShellResult
+            if (this.storeResult && this.storeResult != '' && actionResult.drupipeShellResult) {
                 def path = storeResult.tokenize('.')
                 def stored = [:]
-                contextStoreResult(path, stored, result)
+                contextStoreResult(path, stored, actionResult.drupipeShellResult)
+                this.context.pipeline.script.echo("STORED-RESULT: ${stored}")
 
                 actionResult << stored
             }
 
-            actionResult ? actionResult : [:]
+            return actionResult
 
         }
         catch (err) {
@@ -136,13 +135,15 @@ class DrupipeAction implements Serializable {
             if (notification.status != 'FAILED') {
                 notification.status = 'SUCCESSFUL'
             }
-            if (context.lastActionOutput) {
+            if (actionResult.result) {
                 notification.message = notification.message ? notification.message : ''
-                notification.message = notification.message + "\n\n" + context.lastActionOutput
+                notification.message = notification.message + "\n\n" + actionResult.result
+            }
+            if (actionResult.drupipeShellResult) {
+                notification.message = notification.message ? notification.message : ''
+                notification.message = notification.message + "\n\n" + actionResult.drupipeShellResult
             }
             utils.pipelineNotify(context, notification)
-
-            actionResult ? actionResult : [:]
         }
     }
 
