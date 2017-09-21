@@ -99,6 +99,7 @@ String configToSlurperFile(config) {
 }
 
 String getJenkinsFolderName(String buildUrl) {
+    println "Get folder name: ${buildUrl}"
     def result = (buildUrl =~ $/(job/(.+)/)?job/(.+)/.*/$)
     if (result && result[0] && result[0][2]) {
         return result[0][2]
@@ -110,6 +111,7 @@ String getJenkinsFolderName(String buildUrl) {
 }
 
 String getJenkinsJobName(String buildUrl) {
+    println "Get job name: ${buildUrl}"
     def result = (buildUrl =~ $/(job/(.+)/)?job/(.+)/.*/$)
     if (result && result[0] && result[0][3]) {
         return result[0][3]
