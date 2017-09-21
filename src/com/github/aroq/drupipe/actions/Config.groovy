@@ -210,6 +210,7 @@ class Config extends BaseAction {
     }
 
     def projectConfig() {
+        this.script.echo("projectConfig repo: ${context.configRepo}")
         if (context.configRepo) {
             def sourceObject = [
                 name: 'project',
