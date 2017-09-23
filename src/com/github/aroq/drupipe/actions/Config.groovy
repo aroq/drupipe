@@ -88,8 +88,16 @@ class Config extends BaseAction {
         result.workspace = this.script.pwd()
         result.env = this.utils.envToMap()
         result << result.env
-        result.jenkinsFolderName = this.utils.getJenkinsFolderName(this.script.env.BUILD_URL)
-        result.jenkinsJobName = this.utils.getJenkinsJobName(this.script.env.BUILD_URL)
+
+        String jobPath = this.script.env.BUILD_URL ? this.script.env.BUILD_URL : this.script.env.JOB_DISPLAY_URL
+
+        result.jenkinsFolderName = this.utils.getJenkinsFolderName(jobPath)
+        result.jenkinsJobName = this.utils.getJenkinsJobName(jobPath)
+
+        if (this.script.env.KUBERNETES_PORT) {
+            result.containerMode = 'kubernetes'
+        }
+
         result
     }
 
