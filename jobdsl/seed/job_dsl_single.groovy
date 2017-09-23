@@ -99,7 +99,7 @@ if (!config.tags || (!config.tags.contains('drupipe') && config.configSeedType =
         if (config.gitlabHelper) {
             config.components.each { project ->
                 if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
-                    if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                    if (config.params.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
                         gitlabHelper.addWebhook(
                             project.value.repo,
                             "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${state.key}"
