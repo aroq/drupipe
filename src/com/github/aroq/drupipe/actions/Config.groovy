@@ -69,6 +69,8 @@ class Config extends BaseAction {
             }
         }
 
+        utils.jsonDump(context, 'CONFIG CONTEXT')
+
         context.drupipeShellReturnStdout = false
 
         def stashes = context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
