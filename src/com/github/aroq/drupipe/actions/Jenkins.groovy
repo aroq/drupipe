@@ -111,7 +111,7 @@ class Jenkins extends BaseAction {
     def parseProjects(def projects) {
         def result = []
         for (project in projects) {
-            if (project.value.params.containsKey('tests') && project.value.params['tests'].contains('seed')) {
+            if (project.value?.params?.containsKey('tests') && project.value.params['tests'].contains('seed')) {
                 result << project.key
             }
         }
