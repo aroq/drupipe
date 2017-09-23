@@ -69,7 +69,7 @@ class Config extends BaseAction {
             }
         }
 
-        utils.jsonDump(context, 'CONFIG CONTEXT')
+        utils.debugLog(context, context, 'CONFIG CONTEXT')
 
         context.drupipeShellReturnStdout = false
 
