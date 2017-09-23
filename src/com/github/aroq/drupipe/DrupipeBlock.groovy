@@ -4,6 +4,8 @@ class DrupipeBlock implements Serializable {
 
     ArrayList<DrupipeStage> stages = []
 
+    String name
+
     String nodeName = 'use_default'
 
     Boolean withDocker = false
@@ -14,8 +16,6 @@ class DrupipeBlock implements Serializable {
 
     LinkedHashMap config = [:]
 
-    String name
-
     def execute(c, body = null) {
         def utils = new com.github.aroq.drupipe.Utils()
         if (c) {
@@ -23,6 +23,12 @@ class DrupipeBlock implements Serializable {
         }
 
         this.context = utils.merge(this.context, this.config)
+
+        context.pipeline.script.echo "BLOCK NAME: ${name}"
+
+        if (utils.isTriggeredByUser() && context.jenkinsParams[name + '_node_name']) {
+            nodeName = context.jenkinsParams[name + '_node_name']
+        }
 
         if (nodeName == 'use_default') {
             nodeName = context.nodeName
@@ -37,33 +43,33 @@ class DrupipeBlock implements Serializable {
         context.block = this
 
         if (nodeName) {
-            utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'START', level: 'block'])
-            if (withDocker) {
-                if (context.containerMode == 'kubernetes') {
-                    context.pipeline.script.drupipeWithKubernetes(context) {
-                        result = _execute(body)
+            //utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'START', level: 'block'])
+            context.pipeline.script.echo "NODE NAME: ${nodeName}"
+            context.pipeline.script.node(nodeName) {
+                utils.dump(this.config, 'BLOCK-CONFIG')
+                utils.dump(this.context, 'BLOCK-CONTEXT')
+                context.pipeline.script.unstash('config')
+                if (withDocker) {
+                    if (context.containerMode == 'kubernetes') {
+                        context.pipeline.script.drupipeWithKubernetes(context) {
+                            context.pipeline.scmCheckout()
+                            result = _execute(body)
+                        }
                     }
-                }
-                else if (context.containerMode == 'docker') {
-                    context.pipeline.script.echo "NODE NAME: ${nodeName}"
-                    context.pipeline.script.node(nodeName) {
-                        context.pipeline.script.unstash('config')
+                    else if (context.containerMode == 'docker') {
                         context.pipeline.script.drupipeWithDocker(context) {
+                            context.pipeline.scmCheckout()
                             result = _execute(body)
                         }
                     }
                 }
-            }
-            else {
-                context.pipeline.script.echo "NODE NAME: ${nodeName}"
-                context.pipeline.script.node(nodeName) {
-                    context.pipeline.script.unstash('config')
+                else {
                     context.pipeline.script.sshagent([context.credentialsId]) {
                         result = _execute(body)
                     }
                 }
             }
-            utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'END', level: 'block'])
+            //utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'END', level: 'block'])
         }
         else {
             result = _execute(body)

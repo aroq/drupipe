@@ -32,6 +32,7 @@ class Docman extends BaseAction {
     }
 
     def info() {
+        script.drupipeShell("git config --global user.email 'drupipe@github.com'; git config --global user.name 'Drupipe'", context)
         script.echo "Config repo: ${context.configRepo}"
         prepare()
         script.drupipeShell(
@@ -152,6 +153,30 @@ class Docman extends BaseAction {
             }
         }
         result
+    }
+
+    def bumpStable() {
+        script.drupipeShell(
+            """docman bump stable -n""", context << [shellCommandWithBashLogin: true]
+        )
+    }
+
+    def getStable() {
+        def info = script.readYaml(file: "info.yaml")
+        script.echo "STABLE VERSION: ${info.version}"
+
+        String repo = script.scm.getUserRemoteConfigs()[0].getUrl()
+
+        def sourceObject = [
+            name: 'stable_version',
+            type: 'git',
+            path: context.jenkinsParams.workingDir,
+            url: repo,
+            branch: info.version,
+            mode: 'shell',
+        ]
+
+        this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
     }
 }
 

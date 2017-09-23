@@ -69,6 +69,8 @@ class Config extends BaseAction {
             }
         }
 
+        context.drupipeShellReturnStdout = false
+
         def stashes = context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
 
         script.echo "Stashes: ${stashes}"
@@ -128,9 +130,15 @@ class Config extends BaseAction {
                 ]
             ]
             result = context.pipeline.executePipelineActionList(providers, context)
-            def json = this.script.readFile('mothership/projects.json')
-            result = utils.merge(result, this.utils.getMothershipProjectParams(context, json))
-            utils.debugLog(context, result, 'getMothershipProjectParams result')
+            def mothershipConfig = this.utils.getMothershipConfigFile(context)
+
+            if (mothershipConfig[context.jenkinsFolderName]) {
+                result = utils.merge(result, mothershipConfig[context.jenkinsFolderName] << [override: true])
+            }
+            else {
+                result = utils.merge(result, mothershipConfig[context.jenkinsFolderName])
+            }
+
             this.configRepo = result.configRepo
 
         }
@@ -259,9 +267,6 @@ class Config extends BaseAction {
 
             utils.debugLog(result, 'Project config with scenarios loaded')
             result
-        }
-        else {
-            script.echo "No context.configRepo defined"
         }
     }
 

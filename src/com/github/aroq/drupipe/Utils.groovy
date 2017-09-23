@@ -121,6 +121,32 @@ String getJenkinsJobName(String buildUrl) {
 }
 
 @NonCPS
+def isTriggeredByUser() {
+    def job = Jenkins.getInstance().getItemByFullName(env.JOB_NAME, Job.class)
+    def build = job.getBuildByNumber(env.BUILD_ID as int)
+    def user = build.getCause(hudson.model.Cause.UserIdCause)
+    if (user) {
+        return true
+    }
+    else {
+        return false
+    }
+}
+
+@NonCPS
+def getTriggeredByUserId() {
+    def job = Jenkins.getInstance().getItemByFullName(env.JOB_NAME, Job.class)
+    def build = job.getBuildByNumber(env.BUILD_ID as int)
+    def user = build.getCause(hudson.model.Cause.UserIdCause)
+    if (user) {
+        return user.getUserId()
+    }
+    else {
+        return null
+    }
+}
+
+@NonCPS
 def getMothershipProjectParams(config, json) {
     def projects = JsonSlurperClassic.newInstance().parseText(json).projects
     projects[config.jenkinsFolderName] ? projects[config.jenkinsFolderName] : [:]
@@ -149,17 +175,19 @@ boolean isCollectionOrList(object) {
     object instanceof java.util.Collection || object instanceof java.util.List || object instanceof java.util.LinkedHashMap || object instanceof java.util.HashMap
 }
 
-def isEventInNotificationLevels(eventLevel, levels) {
+def isEventInNotificationLevels(event, levels) {
     for (level in levels) {
-        level = level.replace('*', '.*')
-        def pattern = ~"^${level}\$"
-        if (eventLevel ==~ pattern) {
-            echo "Notifications: Matched ${eventLevel} with ${level}"
-            return true
-        }
-        else if (level == 'action' && eventLevel.startsWith(level)) {
-            echo "Notifications: Matched ${eventLevel} with ${level}"
-            return true
+        if (level.name) {
+            def level_name = level.name.replace('*', '.*')
+            def pattern = ~"^${level_name}\$"
+            if (event.level ==~ pattern && event.status in level.status) {
+                echo "Notifications: Matched ${event.level} with ${level}"
+                return true
+            }
+            else if (level.name == 'action' && event.level.startsWith(level.name) && event.status in level.status) {
+                echo "Notifications: Matched ${event.level} with ${level}"
+                return true
+            }
         }
     }
     echo "Notifications: Not matched"
@@ -185,91 +213,133 @@ def paramsMarkdownTable(jenkinsParams) {
 
 def pipelineNotify(context, event) {
 
-    // Event status of null means successful
-    event.status =  event.status ?: 'SUCCESSFUL'
-
     // Default values
     def colorName = 'RED'
     def colorCode = '#FF0000'
-    def subject = "${event.name} ${event.status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
-    def summary = "${subject} (${env.BUILD_URL})"
+    def subject = "${event.name}\n\nJob '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
+    def summary = "##### ${event.name}\n---\n\nJob: [${env.JOB_NAME} (${env.BUILD_NUMBER})](${env.BUILD_URL})"
+
+    // Add job params to build message.
     if (context.jenkinsParams && event.level == 'build') {
         def table = paramsMarkdownTable(context.jenkinsParams)
         summary = summary + "\n\n" + table
     }
+
+    // Add event message.
+    if (event.message) {
+        summary = summary + "\n\n" + event.message
+    }
+
+    // Limit message length to 3500 symbols.
+    if (summary.length() > 3500) {
+        summary = summary.substring(0, 3500).replaceAll(/\n.*$/, '')
+    }
+
     def details = """<p>Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
     <p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>"""
 
     // Override default values based on build status
-    if (event.status == 'STARTED' || event.status == 'START' || event.status == 'END') {
-        color = 'YELLOW'
-        colorCode = '#FFFF00'
-    } else if (event.status == 'SUCCESSFUL' || event.status == 'SUCCESS') {
+    if (event.status == 'FAILED') {
+        color = 'RED'
+        colorCode = '#FF0000'
+    } else if (event.status == 'SUCCESSFUL') {
         color = 'GREEN'
         colorCode = '#00FF00'
     } else {
-        color = 'RED'
-        colorCode = '#FF0000'
+        color = 'YELLOW'
+        colorCode = '#FFFF00'
     }
 
-    if (context.job && context.jenkinsParams.notify) {
-        def notify = context.jenkinsParams.notify.split(",")
-        for (def i = 0; i < notify.length; i++) {
-            def config = notify[i]
+    if (context.job && context.job.notify && context.jenkinsParams.containsKey('mute_notification')) {
+        def mute_notification = []
+        if (isTriggeredByUser() && context.jenkinsParams && context.jenkinsParams.mute_notification && context.jenkinsParams.mute_notification instanceof CharSequence) {
+            mute_notification = context.jenkinsParams.mute_notification.split(",")
+        }
+        for (def i = 0; i < context.job.notify.size(); i++) {
+            def config = context.job.notify[i]
             echo "Notifications: Config ${config}"
 
-            def params = []
-            if (context.notification && context.notification[config]) {
-                params = context.notification[config]
+            if (config in mute_notification) {
+                echo "Notifications: Notification to ${config} channel was muted"
             }
+            else {
 
-            if (params.levels && event.level && isEventInNotificationLevels(event.level, params.levels)) {
-
-                // Send notifications
-                if (params.slack && params.slackChannel) {
-                    try {
-                        echo 'Notifications: Send message to Slack'
-                        slackSend (color: colorCode, message: summary, channel: params.slackChannel)
-                    }
-                    catch (e) {
-                        echo 'Notifications: Unable to sent Slack notification'
-                    }
+                def params = []
+                if (context.notification && context.notification[config]) {
+                    params = context.notification[config]
                 }
 
-                if (params.mattermost && params.mattermostChannel && params.mattermostIcon && params.mattermostEndpoint) {
-                    try {
-                        if (env.BUILD_USER_ID) {
-                            summary = "@${env.BUILD_USER_ID} ${summary}"
+                if (params.levels && event.level && isEventInNotificationLevels(event, params.levels)) {
+
+                    // Send notifications
+                    if (params.slack && params.slackChannel) {
+                        try {
+                            echo 'Notifications: Send message to Slack'
+                            slackSend (color: colorCode, message: summary, channel: params.slackChannel)
                         }
-                        echo 'Notifications: Send message to Mattermost'
-                        mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel, icon: params.mattermostIcon, endpoint: params.mattermostEndpoint)
+                        catch (e) {
+                            echo 'Notifications: Unable to sent Slack notification'
+                        }
                     }
-                    catch (e) {
-                        echo 'Notifications: Unable to sent Mattermost notification'
+
+                    if (params.mattermost && params.mattermostChannel && params.mattermostIcon && params.mattermostEndpoint) {
+                        try {
+                            def userId = getTriggeredByUserId()
+                            if (userId && event.level == 'build') {
+                                summary = 'Started by @' + userId + '\n\n' + summary
+                            }
+                            echo 'Notifications: Send message to Mattermost'
+                            mattermostSend (color: colorCode, message: summary, channel: params.mattermostChannel, icon: params.mattermostIcon, endpoint: params.mattermostEndpoint)
+                        }
+                        catch (e) {
+                            echo 'Notifications: Unable to sent Mattermost notification'
+                            echo e.toString()
+                        }
                     }
-                }
 
-                // hipchatSend (color: color, notify: true, message: summary)
+                    // hipchatSend (color: color, notify: true, message: summary)
 
-                if (params.emailExt) {
-                    echo 'Notifications: Send email'
-                    def to = emailextrecipients([
-                        [$class: 'CulpritsRecipientProvider'],
-                        [$class: 'DevelopersRecipientProvider'],
-                        [$class: 'RequesterRecipientProvider']
-                    ])
+                    if (params.emailExt) {
+                        echo 'Notifications: Send email'
+                        def to = emailextrecipients([
+                            [$class: 'CulpritsRecipientProvider'],
+                            [$class: 'DevelopersRecipientProvider'],
+                            [$class: 'RequesterRecipientProvider']
+                        ])
 
-                    emailext (
-                        subject: subject,
-                        body: details,
-                        to: to,
-                        mimeType: 'text/html',
-                        attachLog: true,
-                    )
+                        emailext (
+                            subject: subject,
+                            body: details,
+                            to: to,
+                            mimeType: 'text/html',
+                            attachLog: true,
+                        )
+                    }
                 }
             }
         }
     }
+}
+
+def getMothershipConfigFile(params) {
+    def projectsFileName = 'projects'
+    def extensions = ['yaml', 'yml', 'json']
+    def dir = sourceDir(params, 'mothership')
+    for (extension in extensions) {
+        def projectsFile = "${dir}/${projectsFileName}.${extension}"
+        if (fileExists(projectsFile)) {
+            def file = readFile(projectsFile)
+            if (file) {
+                if (extension in ['yaml', 'yml']) {
+                    return readYaml(text: file).projects
+                }
+                else if (extension == 'json') {
+                    return readJSON(text: file).projects
+                }
+            }
+        }
+    }
+    return null
 }
 
 def sourcePath(params, sourceName, String path) {
@@ -373,6 +443,27 @@ def removeDir(dir, context) {
             """, context
         )
     }
+}
+
+@NonCPS
+def interpolateCommand(String command, context, action) {
+    def binding = [context: context, action: action]
+    def engine = new groovy.text.SimpleTemplateEngine()
+    def template = engine.createTemplate(command).make(binding)
+    template.toString()
+}
+
+@NonCPS
+def interpolateParams(params, context, action) {
+    if (params instanceof CharSequence) {
+        params = interpolateCommand(params, context, action)
+    }
+    else if (params instanceof Map) {
+        for (param in params) {
+            params[param.key] = interpolateParams(param.value, context, action)
+        }
+    }
+    return params
 }
 
 return this

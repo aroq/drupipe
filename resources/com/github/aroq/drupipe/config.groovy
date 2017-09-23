@@ -37,6 +37,10 @@ defaultActionParams = [
         //projectConfigPath: 'docroot/config',
         //projectConfigFile: 'docroot.config',
         mothershipConfigFile: 'mothership.config',
+        interpolate: 0,
+    ],
+    Source: [
+        interpolate: 0,
     ],
     Behat: [
         masterPath: 'docroot/master',
@@ -52,6 +56,9 @@ defaultActionParams = [
     drupipeWithKubernetes: [
         containerName: 'drupipe-container',
     ],
+    Terraform: [
+        infraSourceName: 'infra-config',
+    ],
     Docman: [
         docmanJsonConfigFile: 'config.json',
         build_type: 'git_target',
@@ -62,6 +69,9 @@ defaultActionParams = [
     ],
     Docman_releaseBuild: [
         state: 'stable',
+    ],
+    Gitlab_acceptMR: [
+        message: 'MR merged as pipeline was executed successfully.',
     ],
     // TODO: add private (that will not go into common config) params section.
     Publish_junit: [

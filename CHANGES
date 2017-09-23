@@ -1,3 +1,94 @@
+Version 0.7.3:
+ - Removed empty line
+ - Fixed terraform action script
+ - Fixed terraform action script
+ - Fixed terraform action script
+ - Fixed terraform action script
+ - Fixed terraform action script
+ - Fixed terraform action script
+ - Fixed terraform action script
+ - Fixed terraform action script
+ - Changed source name for infra
+ - Added terraform action
+ - Merge pull request #40 from michael-molchanov/feature/taurus
+ - Add iterations support to taurus action.
+ - Merge pull request #38 from michael-molchanov/master
+ - Allow to define params for each triggered job.
+ - Merge pull request #37 from michael-molchanov/master
+ - Add optional match group to match also jobs in root, not only in folder.
+ - Merge pull request #36 from michael-molchanov/master
+ - Check job in folder.
+ - Merge pull request #35 from michael-molchanov/master
+ - Switch to master branch for prod.
+ - Merge pull request #33 from michael-molchanov/feature/redis
+ - Merge pull request #34 from michael-molchanov/feature/mm_notifications_param
+ - Add notify checkboxes to jenkins params.
+ - Escape value to avoid markdown interpretation.
+ - Fix class name
+ - Fix for loop.
+ - Check only port.
+ - Fix comment style.
+ - Fix class name.
+ - Allow to use DSNs separate by pipe.
+ - Add redis default command.
+ - Add redis command action.
+ - Merge pull request #32 from michael-molchanov/feature/mattermost
+ - Revert "Create copy of params."
+ - Fix each method.
+ - Merge pull request #31 from michael-molchanov/feature/mattermost
+ - Create copy of params.
+ - Merge pull request #30 from michael-molchanov/feature/mattermost
+ - Add job params to build status notification.
+ - Add params dump.
+ - Merge pull request #29 from michael-molchanov/feature/mattermost
+ - Add message prefix.
+ - Allow atomic action notifications.
+ - Merge pull request #28 from michael-molchanov/feature/mattermost
+ - Merge branch 'feature/mattermost' of github.com:michael-molchanov/drupipe into feature/mattermost
+ - Fix null status.
+ - Merge pull request #27 from michael-molchanov/feature/mattermost
+ - Merge branch 'master' into feature/mattermost
+ - Fix action notification.
+ - Merge pull request #26 from aroq/revert-25-feature/mattermost
+ - Revert "Fix action return value."
+ - Merge pull request #25 from michael-molchanov/feature/mattermost
+ - Merge pull request #23 from michael-molchanov/feature/dis_webhook
+ - Fix action return value.
+ - Disable webhooks and triggers with webhook_trigger job configuration.
+ - Merge pull request #24 from michael-molchanov/master
+ - Fix missspelling.
+ - Merge pull request #22 from michael-molchanov/feature/mattermost
+ - Send started message if job available.
+ - Add mention for mattermost notifications.
+ - Add channels and levels support.
+ - Switch to context.
+ - Merge pull request #21 from michael-molchanov/feature/mattermost
+ - Allow to override ican and endpoint.
+ - Merge branch 'develop'
+ - Fixed conflict with VegetaTester
+ - vegeta debug
+ - vegeta debug
+ - vegeta debug
+ - vegeta debug
+ - Debug vegeta input.txt
+ - Merge pull request #19 from michael-molchanov/develop
+ - Force remove report.bin, run with shell.
+ - Merge pull request #18 from michael-molchanov/feature/vegeta
+ - Fix condition.
+ - Merge branch 'develop'
+ - Merge pull request #17 from michael-molchanov/feature/vegeta
+ - Add debug, save input.txt in artifacts.
+ - Merge branch 'develop'
+ - Merge pull request #16 from michael-molchanov/feature/vegeta
+ - Fix vegeta command exec.
+ - Merge branch 'develop'
+ - Merge pull request #15 from michael-molchanov/feature/vegeta
+ - Fix property names.
+ - Fix forgot rate.
+ - Merge branch 'develop'
+ - Merge pull request #14 from michael-molchanov/feature/vegeta
+ - Add vegeta actions.
+
 Version 0.7.2:
  - Fixed conflict
  - Merge branch 'develop' of github.com:aroq/drupipe into develop
