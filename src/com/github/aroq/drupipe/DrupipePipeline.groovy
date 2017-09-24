@@ -114,10 +114,10 @@ class DrupipePipeline implements Serializable {
                         String containerName = 'golang'
 
                         script.podTemplate(label: nodeName, containers: [
-                            script.containerTemplate(name: 'golang', image: 'golang', ttyEnabled: true, command: 'cat', alwaysPullImage: true),
+                            script.containerTemplate(name: containerName, image: 'golang', ttyEnabled: true, command: 'cat', alwaysPullImage: true),
                         ]) {
                             script.node(nodeName) {
-                                script.container('golang') {
+                                script.container(containerName) {
                                     script.unstash('config')
                                     context.workspace = script.pwd()
                                     script.sshagent([context.credentialsId]) {
