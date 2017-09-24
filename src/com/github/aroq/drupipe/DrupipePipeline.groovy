@@ -113,19 +113,29 @@ class DrupipePipeline implements Serializable {
                         def testContainer = script.containerTemplate(name: containerName, image: 'golang', ttyEnabled: true, command: 'cat', alwaysPullImage: true)
                         containers.add(testContainer)
 
-//                        for (def i = 0; i < blocks.size(); i++) {
-//                            containers << script.containerTemplate(name: "block${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true)
-//                        }
+                        for (def i = 0; i < blocks.size(); i++) {
+                            containers.add(script.containerTemplate(name: "block${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true))
+                        }
 
                         script.podTemplate(label: nodeName, containers:
                             containers
                         ) {
                             script.node(nodeName) {
-                                script.container(containerName) {
-                                    script.unstash('config')
-                                    context.workspace = script.pwd()
-                                    script.sshagent([context.credentialsId]) {
+//                                script.container(containerName) {
+//                                    script.unstash('config')
+//                                    context.workspace = script.pwd()
+//                                    script.sshagent([context.credentialsId]) {
+//                                    }
+//                                }
+                                for (def i = 0; i < blocks.size(); i++) {
+                                    blocks[i].name = "block${i}"
+                                    script.container("block${i}") {
+                                        script.unstash('config')
+                                        def block = new DrupipeBlock(blocks[i])
+                                        script.echo 'BLOCK EXECUTE START'
+//                                        context << block.execute(context)
                                         script.echo "Kubernetes mode test"
+                                        script.echo 'BLOCK EXECUTE END'
                                     }
                                 }
                             }
