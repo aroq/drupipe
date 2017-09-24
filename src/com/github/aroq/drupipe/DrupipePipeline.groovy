@@ -117,13 +117,12 @@ class DrupipePipeline implements Serializable {
                             containers.add(script.containerTemplate(name: "block${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true))
                         }
 
+                        def envVars = [script.envVar(key: 'TF_VAR_consul_address', value: context.env.TF_VAR_consul_address)]
+
                         script.podTemplate(
                             label: nodeName,
                             containers: containers,
-                            envVars: [
-                                envVar(key: 'TF_VAR_consul_address', value: context.env.TF_VAR_consul_address),
-//                                secretEnvVar(key: 'POD_ENV_VAR_FROM_SECRET', secretName: 'pod-secret', secretKey: 'password')
-                            ],
+                            envVars: envVars,
                         ) {
                             script.node(nodeName) {
                                 for (def i = 0; i < blocks.size(); i++) {
