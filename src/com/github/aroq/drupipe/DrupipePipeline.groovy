@@ -129,7 +129,7 @@ class DrupipePipeline implements Serializable {
                                         def block = new DrupipeBlock(blocks[i])
                                         script.echo 'BLOCK EXECUTE START'
                                         script.sshagent([context.credentialsId]) {
-                                            blocks[i].blockInNode = true
+                                            block.blockInNode = true
                                             context << block.execute(context)
                                         }
                                         script.echo 'BLOCK EXECUTE END'
