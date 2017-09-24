@@ -16,6 +16,9 @@ class DrupipeBlock implements Serializable {
 
     LinkedHashMap config = [:]
 
+    // Indicates that node is already defined for the block (e.g. in DrupipePipeline).
+    Boolean blockInNode = false
+
     def execute(c, body = null) {
         def utils = new com.github.aroq.drupipe.Utils()
         if (c) {
@@ -43,7 +46,6 @@ class DrupipeBlock implements Serializable {
         context.block = this
 
         if (nodeName && withDocker && context.containerMode == 'docker') {
-            //utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'START', level: 'block'])
             context.pipeline.script.echo "NODE NAME: ${nodeName}"
             context.pipeline.script.node(nodeName) {
                 utils.dump(this.config, 'BLOCK-CONFIG')
@@ -54,14 +56,16 @@ class DrupipeBlock implements Serializable {
                     result = _execute(body)
                 }
             }
-            //utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'END', level: 'block'])
         }
         else if (withDocker && context.containerMode == 'kubernetes') {
-//            context.pipeline.script.unstash('config')
-
-//            context.pipeline.script.drupipeWithKubernetes(context) {
+            if (this.blockInNode) {
                 result = _execute(body)
-//            }
+            }
+            else {
+                context.pipeline.script.drupipeWithKubernetes(context) {
+                    result = _execute(body)
+                }
+            }
         }
         else {
             context.pipeline.script.sshagent([context.credentialsId]) {

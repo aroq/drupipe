@@ -121,19 +121,13 @@ class DrupipePipeline implements Serializable {
                             containers
                         ) {
                             script.node(nodeName) {
-//                                script.container(containerName) {
-//                                    script.unstash('config')
-//                                    context.workspace = script.pwd()
-//                                    script.sshagent([context.credentialsId]) {
-//                                    }
-//                                }
                                 for (def i = 0; i < blocks.size(); i++) {
                                     blocks[i].name = "block${i}"
                                     script.container("block${i}") {
+                                        scmCheckout()
                                         script.unstash('config')
                                         def block = new DrupipeBlock(blocks[i])
                                         script.echo 'BLOCK EXECUTE START'
-                                        script.echo "Kubernetes mode test"
                                         script.sshagent([context.credentialsId]) {
                                             context << block.execute(context)
                                         }
@@ -142,29 +136,6 @@ class DrupipePipeline implements Serializable {
                                 }
                             }
                         }
-//                        script.podTemplate(label: nodeName, containers: [
-//                            script.containerTemplate(name: "block0", image: 'golang', ttyEnabled: true, command: 'cat', alwaysPullImage: true),
-//                        ]) {
-//                            script.node(nodeName) {
-//                                script.container("block0") {
-//                                    script.unstash('config')
-//                                    script.sshagent([context.credentialsId]) {
-//                                        script.echo "test"
-//                                    }
-//                                }
-//                                for (def i = 0; i < blocks.size(); i++) {
-//                                    blocks[i].name = "block${i}"
-//                                    script.container("block${i}") {
-//                                        script.unstash('config')
-//                                        def block = new DrupipeBlock(blocks[i])
-//                                        script.echo 'BLOCK EXECUTE START'
-//                                        context << block.execute(context)
-//                                        script.echo 'BLOCK EXECUTE END'
-//                                    }
-//                                }
-//                            }
-//                        }
-
                     } else {
                         executeBlocks()
                     }
