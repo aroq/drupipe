@@ -120,9 +120,9 @@ class DrupipePipeline implements Serializable {
                                 script.container(containerName) {
 //                                    script.unstash('config')
 //                                    context.workspace = script.pwd()
-                                    script.sshagent([context.credentialsId]) {
+//                                    script.sshagent([context.credentialsId]) {
                                         script.echo "Kubernetes mode test"
-                                    }
+//                                    }
                                 }
                             }
                         }
