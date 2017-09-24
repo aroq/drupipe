@@ -59,9 +59,9 @@ class DrupipeBlock implements Serializable {
         else if (withDocker && context.containerMode == 'kubernetes') {
 //            context.pipeline.script.unstash('config')
 
-            context.pipeline.script.drupipeWithKubernetes(context) {
+//            context.pipeline.script.drupipeWithKubernetes(context) {
                 result = _execute(body)
-            }
+//            }
         }
         else {
             context.pipeline.script.sshagent([context.credentialsId]) {
