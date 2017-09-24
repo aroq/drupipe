@@ -107,15 +107,19 @@ class DrupipePipeline implements Serializable {
                     if (context.containerMode == 'kubernetes') {
                         script.echo "Container mode: kubernetes"
                         def nodeName = 'drupipe'
-//                        def containers = []
+                        def containers = []
+
+                        def testContainer = script.containerTemplate(name: containerName, image: 'golang', ttyEnabled: true, command: 'cat', alwaysPullImage: true)
+                        containers.add(testContainer)
+
 //                        for (def i = 0; i < blocks.size(); i++) {
 //                            containers << script.containerTemplate(name: "block${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true)
 //                        }
                         String containerName = 'golang'
 
-                        script.podTemplate(label: nodeName, containers: [
-                            script.containerTemplate(name: containerName, image: 'golang', ttyEnabled: true, command: 'cat', alwaysPullImage: true),
-                        ]) {
+                        script.podTemplate(label: nodeName, containers:
+                            containers
+                        ) {
                             script.node(nodeName) {
                                 script.container(containerName) {
                                     script.unstash('config')
