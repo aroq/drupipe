@@ -6,6 +6,7 @@ def call(shellCommand, context) {
         if (context.shellCommandWithBashLogin) {
             echo "With bash login session"
             shellCommand = """#!/bin/bash -l
+                printenv
                 export SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK}
                 ${shellCommand}
                 """
