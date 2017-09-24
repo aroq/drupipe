@@ -12,7 +12,7 @@ def call(shellCommand, context) {
                 """
         }
         else {
-            shellCommand = "export SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK}; ${shellCommand}"
+            shellCommand = "printenv; export SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK}; ${shellCommand}"
         }
     }
     else {
