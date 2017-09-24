@@ -104,6 +104,7 @@ class DrupipePipeline implements Serializable {
 
                 if (blocks) {
                     if (context.containerMode == 'kubernetes') {
+                        script.echo "Container mode: kubernetes"
                         def nodeName = 'drupipe'
 //                        def containers = []
 //                        for (def i = 0; i < blocks.size(); i++) {
