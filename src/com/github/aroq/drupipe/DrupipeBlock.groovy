@@ -46,6 +46,7 @@ class DrupipeBlock implements Serializable {
         context.block = this
 
         if (nodeName && withDocker && context.containerMode == 'docker') {
+            context.pipeline.script.echo "Execute block in ${context.containerMode} container mode"
             context.pipeline.script.echo "NODE NAME: ${nodeName}"
             context.pipeline.script.node(nodeName) {
                 utils.dump(this.config, 'BLOCK-CONFIG')
@@ -58,6 +59,7 @@ class DrupipeBlock implements Serializable {
             }
         }
         else if (withDocker && context.containerMode == 'kubernetes') {
+            context.pipeline.script.echo "Execute block in ${context.containerMode} container mode"
             if (this.blockInNode) {
                 result = _execute(body)
             }
@@ -68,6 +70,7 @@ class DrupipeBlock implements Serializable {
             }
         }
         else {
+            context.pipeline.script.echo "Execute block in non container mode"
             context.pipeline.script.sshagent([context.credentialsId]) {
                 result = _execute(body)
             }
