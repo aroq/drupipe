@@ -347,7 +347,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             config.docmanConfig.projects?.each { project ->
                                 println "Project: ${project}"
                                 if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
-                                    if (config.params.webhooksEnvironments[config.env.drupipeEnvironment]) {
+                                    if (config.params.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
                                         config.gitlabHelper.addWebhook(
                                             project.value.repo,
                                             "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}"
@@ -650,7 +650,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             cron(job.value.cron)
                         }
                     }
-                    if (job.value.webhooks && job.value.configRepo && config.params.webhooksEnvironments[config.env.drupipeEnvironment]) {
+                    if (job.value.webhooks && job.value.configRepo && config.params.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
                         properties {
                             gitLabConnectionProperty {
                                 gitLabConnection('Gitlab')
@@ -659,7 +659,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     }
                 }
 
-                if (job.value.webhooks && job.value.configRepo && config.params.webhooksEnvironments[config.env.drupipeEnvironment]) {
+                if (job.value.webhooks && job.value.configRepo && config.params.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
                     job.value.webhooks.each { hook ->
                         config.gitlabHelper.addWebhook(
                             job.value.configRepo,
