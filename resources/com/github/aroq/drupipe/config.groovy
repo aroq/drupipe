@@ -17,7 +17,7 @@ logRotatorNumToKeep = 5
 // Environments section.
 environments {
     dev {
-        drupipeLibraryBranch = 'develop'
+        drupipeLibraryBranch = 'k8s'
         dockerImage = 'aroq/drudock:dev'
     }
     stage {
