@@ -70,9 +70,11 @@ class DrupipeBlock implements Serializable {
             }
         }
         else {
-            context.pipeline.script.echo "Execute block in non container mode"
-            context.pipeline.script.sshagent([context.credentialsId]) {
-                result = _execute(body)
+            context.pipeline.script.node(nodeName) {
+                context.pipeline.script.echo "Execute block in non container mode"
+                context.pipeline.script.sshagent([context.credentialsId]) {
+                    result = _execute(body)
+                }
             }
         }
 
