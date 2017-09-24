@@ -69,6 +69,8 @@ class Config extends BaseAction {
             }
         }
 
+        utils.debugLog(context, context, 'CONFIG CONTEXT')
+
         context.drupipeShellReturnStdout = false
 
         def stashes = context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
@@ -132,12 +134,7 @@ class Config extends BaseAction {
             result = context.pipeline.executePipelineActionList(providers, context)
             def mothershipConfig = this.utils.getMothershipConfigFile(context)
 
-            if (mothershipConfig[context.jenkinsFolderName]) {
-                result = utils.merge(result, mothershipConfig[context.jenkinsFolderName] << [override: true])
-            }
-            else {
-                result = utils.merge(result, mothershipConfig[context.jenkinsFolderName])
-            }
+            result = utils.merge(result, mothershipConfig[context.jenkinsFolderName])
 
             this.configRepo = result.configRepo
 

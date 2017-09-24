@@ -417,6 +417,7 @@ Map merge(Map[] sources) {
             source.each { k, v ->
                 if (result[k] instanceof Map && v instanceof Map ) {
                     if (v.containsKey('override') && v['override']) {
+                        v.remove('override')
                         result[k] = v
                     }
                     else {
