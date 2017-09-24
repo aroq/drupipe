@@ -42,37 +42,31 @@ class DrupipeBlock implements Serializable {
         def result = [:]
         context.block = this
 
-        if (nodeName) {
+        if (nodeName && withDocker && context.containerMode == 'docker') {
             //utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'START', level: 'block'])
             context.pipeline.script.echo "NODE NAME: ${nodeName}"
             context.pipeline.script.node(nodeName) {
                 utils.dump(this.config, 'BLOCK-CONFIG')
                 utils.dump(this.context, 'BLOCK-CONTEXT')
                 context.pipeline.script.unstash('config')
-                if (withDocker) {
-                    if (context.containerMode == 'kubernetes') {
-                        context.pipeline.script.drupipeWithKubernetes(context) {
-                            context.pipeline.scmCheckout()
-                            result = _execute(body)
-                        }
-                    }
-                    else if (context.containerMode == 'docker') {
-                        context.pipeline.script.drupipeWithDocker(context) {
-                            context.pipeline.scmCheckout()
-                            result = _execute(body)
-                        }
-                    }
-                }
-                else {
-                    context.pipeline.script.sshagent([context.credentialsId]) {
-                        result = _execute(body)
-                    }
+                context.pipeline.script.drupipeWithDocker(context) {
+                    context.pipeline.scmCheckout()
+                    result = _execute(body)
                 }
             }
             //utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'END', level: 'block'])
         }
+        else if (withDocker && context.containerMode == 'kubernetes') {
+//            context.pipeline.script.unstash('config')
+
+            context.pipeline.script.drupipeWithKubernetes(context) {
+                result = _execute(body)
+            }
+        }
         else {
-            result = _execute(body)
+            context.pipeline.script.sshagent([context.credentialsId]) {
+                result = _execute(body)
+            }
         }
 
         result
