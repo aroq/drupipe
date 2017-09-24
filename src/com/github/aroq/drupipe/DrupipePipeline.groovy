@@ -121,7 +121,7 @@ class DrupipePipeline implements Serializable {
                             label: nodeName,
                             containers: containers,
                             envVars: [
-                                this.script.envVar(key: 'TF_VAR_consul_address', value: context.env.TF_VAR_consul_address),
+                                envVar(key: 'TF_VAR_consul_address', value: context.env.TF_VAR_consul_address),
 //                                secretEnvVar(key: 'POD_ENV_VAR_FROM_SECRET', secretName: 'pod-secret', secretKey: 'password')
                             ],
                         ) {
