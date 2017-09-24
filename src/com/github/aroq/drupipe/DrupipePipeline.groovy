@@ -133,8 +133,7 @@ class DrupipePipeline implements Serializable {
                                         script.unstash('config')
                                         def block = new DrupipeBlock(blocks[i])
                                         script.echo 'BLOCK EXECUTE START'
-//                                        context << block.execute(context)
-                                        script.echo "Kubernetes mode test"
+                                        context << block.execute(context)
                                         script.echo 'BLOCK EXECUTE END'
                                     }
                                 }
