@@ -25,8 +25,11 @@ class Terraform extends BaseAction {
 
     def init() {
         initializeAction()
-        def creds = script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN')
-        this.script.withCredentials([creds]) {
+        def creds = []
+        if (!context.containerMode == 'kubernetes') {
+           creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN')]
+        }
+        this.script.withCredentials(creds) {
             this.script.drupipeShell("""
             cd ${this.action.params.workingDir}
             ${terraformExecutable} init -input=false -backend-config="address=${this.context.env.TF_VAR_consul_address}" -backend-config="access_token=\${CONSUL_ACCESS_TOKEN}"
@@ -49,7 +52,11 @@ class Terraform extends BaseAction {
 
         initializeAction()
 
-        def creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN'), script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
+        def creds = []
+        if (!context.containerMode == 'kubernetes') {
+            creds = [script.string(credentialsId: 'CONSUL_ACCESS_TOKEN', variable: 'CONSUL_ACCESS_TOKEN')]
+        }
+
         script.withCredentials(creds) {
             this.script.drupipeShell("""
             cd ${this.action.params.workingDir}
