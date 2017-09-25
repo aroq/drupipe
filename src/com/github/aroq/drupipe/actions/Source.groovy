@@ -41,7 +41,7 @@ class Source extends BaseAction {
 //                    this.script.sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
 //                }
                 else {
-                    this.script.sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
+                    this.script.drupipeShell("git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}", context)
                 }
                 result = source.path
                 break
