@@ -5,6 +5,8 @@ def call(context = [:], body) {
     def nodeName = 'drupipe'
     def containers = []
 
+    def blocks = context.pipeline.blocks
+
     for (def i = 0; i < blocks.size(); i++) {
         containers.add(containerTemplate(name: "block${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true))
     }
