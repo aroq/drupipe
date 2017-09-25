@@ -105,46 +105,7 @@ class DrupipePipeline implements Serializable {
 
                 if (blocks) {
                     if (context.containerMode == 'kubernetes') {
-                        script.echo "Container mode: kubernetes"
-                        def nodeName = 'drupipe'
-                        String containerName = 'golang'
-                        def containers = []
-
-                        def testContainer = script.containerTemplate(name: containerName, image: 'golang', ttyEnabled: true, command: 'cat', alwaysPullImage: true)
-                        containers.add(testContainer)
-
-                        for (def i = 0; i < blocks.size(); i++) {
-                            containers.add(script.containerTemplate(name: "block${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true))
-                        }
-
-                        def creds = [script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
-                        script.withCredentials(creds) {
-                            script.podTemplate(
-                                label: nodeName,
-                                containers: containers,
-                                envVars: [
-                                    envVar(key: 'TF_VAR_consul_address', value: context.env.TF_VAR_consul_address),
-                                    secretEnvVar(key: 'DIGITALOCEAN_TOKEN', value: script.env.DIGITALOCEAN_TOKEN),
-                                ],
-                            ) {
-                                script.node(nodeName) {
-                                    for (def i = 0; i < blocks.size(); i++) {
-                                        blocks[i].name = "block${i}"
-                                        script.container("block${i}") {
-                                            scmCheckout()
-                                            script.unstash('config')
-                                            def block = new DrupipeBlock(blocks[i])
-                                            script.echo 'BLOCK EXECUTE START'
-                                            script.sshagent([context.credentialsId]) {
-                                                block.blockInNode = true
-                                                context << block.execute(context)
-                                            }
-                                            script.echo 'BLOCK EXECUTE END'
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        script.drupipeExecuteBlocksWithKubernetes(context, body)
                     } else {
                         executeBlocks()
                     }
