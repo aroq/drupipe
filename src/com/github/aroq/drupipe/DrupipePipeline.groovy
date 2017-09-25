@@ -119,15 +119,13 @@ class DrupipePipeline implements Serializable {
 
                         def creds = [script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
                         script.withCredentials(creds) {
-                            def envVars = [
-                                script.envVar(key: 'TF_VAR_consul_address', value: context.env.TF_VAR_consul_address),
-                                script.secretEnvVar(key: 'DIGITALOCEAN_TOKEN', value: script.env.DIGITALOCEAN_TOKEN),
-                            ]
-
                             script.podTemplate(
                                 label: nodeName,
                                 containers: containers,
-                                envVars: envVars,
+                                envVars: [
+                                    envVar(key: 'TF_VAR_consul_address', value: context.env.TF_VAR_consul_address),
+                                    secretEnvVar(key: 'DIGITALOCEAN_TOKEN', value: script.env.DIGITALOCEAN_TOKEN),
+                                ],
                             ) {
                                 script.node(nodeName) {
                                     for (def i = 0; i < blocks.size(); i++) {
