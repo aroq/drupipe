@@ -41,16 +41,10 @@ class Jenkins extends BaseAction {
         action.params.playbookParams << [
             env: context.jenkinsParams.terraformEnv,
             jenkins_default_slave_address: getJenkinsSlaveAddress(),
-            user_token_temp_file_dest: context.workspace,
+            user_token_temp_file_dest: this.script.pwd(),
         ]
         action.params.inventoryArgument = getJenkinsAddress() + ','
         script.drupipeAction([action: 'Ansible.executeAnsiblePlaybook', params: [action.params]], context)
-        this.script.drupipeShell("""
-                ls -l
-                ls -l ../
-                ls -l ${this.context.jenkinsParams.workingDir}
-                ls -l ${this.context.workspace}
-                """, this.context << [shellCommandWithBashLogin: false])
 
         context.jenkinsUserToken = script.readFile(file: "user_token")
         context
