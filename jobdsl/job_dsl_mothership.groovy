@@ -41,6 +41,24 @@ if (projects.size() == 0) {
 
 println 'Projects: ' + projects.keySet().join(', ')
 
+def servers = [:]
+def serversFileNames = ['servers.yaml', 'servers.yml']
+for (serversFileName in serversFileNames) {
+    file = projectsFileRead(serversFileName)
+    if (file) {
+        println "Using ${serversFileName}"
+        println file
+        Yaml yaml = new Yaml()
+        def config = yaml.load(file)
+        servers = config.servers
+        break
+    }
+}
+
+if (servers.size() == 0) {
+    println "Servers empty. Check configuration file servers.(yaml|yml)."
+}
+
 def gitlabHelper = new GitlabHelper(script: this, config: configMain)
 
 projects.each { project ->
@@ -122,6 +140,12 @@ projects.each { project ->
             }
         }
         if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
+            def servers = getServersByTags(config.tags, servers)
+            gitlabHelper.deleteWebhook(
+                config.configRepo,
+                servers,
+                "project/${project.key}/seed"
+            )
             gitlabHelper.addWebhook(
                 config.configRepo,
                 "${config.env.JENKINS_URL}project/${project.key}/seed"
@@ -138,6 +162,21 @@ projects.each { project ->
             }
         }
     }
+}
+
+def getServersByTags(tags, servers) {
+    def result = [:]
+    if (tags && tags instanceof ArrayList) {
+        for (def i = 0; i < tags.size(); i++) {
+            def tag = tags[i]
+            for (server in servers) {
+                if (server.value?.tags && tag in server.value?.tags && server.value?.jenkinsUrl) {
+                    result << ["${server.key}": server]
+                }
+            }
+        }
+    }
+    result
 }
 
 @Grab('org.codehaus.groovy.modules.http-builder:http-builder:0.7')
@@ -194,6 +233,41 @@ class GitlabHelper {
         }
         catch (e) {
             script.println e
+        }
+    }
+
+    def deleteWebhook(String repo, servers, url) {
+        setRepoProperties(repo)
+
+        def urls = servers.collect {
+            it.jenkinsUrl.substring(0, it.jenkinsUrl.length() - (it.jenkinsUrl.endsWith("/") ? 1 : 0)) + '/' + url
+        }
+
+        def webhooks = getWebhooks(repo)
+
+        for (webhook in webhooks) {
+            if (!(webhook.url in urls) {
+                def hook_id = webhook.id
+                //def http = new HTTPBuilder()
+                //http.setHeaders([
+                //    'PRIVATE-TOKEN': config.env.GITLAB_API_TOKEN_TEXT,
+                //])
+
+                try {
+                    if (hook_id) {
+                      script.println "DELETE HOOK response: ${json}"
+                        //http.request("https://${config.repoParams.gitlabAddress}/api/v3/projects/${config.repoParams.projectID}/hooks/${hook_id}", DELETE, JSON) {
+                        //    send URLENC
+                        //    response.success = { resp, json ->
+                        //        script.println "DELETE HOOK response: ${json}"
+                        //    }
+                        //}
+                    }
+                }
+                catch (e) {
+                    script.println e
+                }
+            }
         }
     }
 

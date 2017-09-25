@@ -113,7 +113,14 @@ if (!config.tags || (!config.tags.contains('docman') && !config.tags.contains('d
             if (config.env.GITLAB_API_TOKEN_TEXT) {
                 docmanConfig.projects?.each { project ->
                     if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
-                        if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                        def tags
+                        if (config.tags) {
+                            tags = config.tags
+                        }
+                        else if (config.webhooksEnvironments) {
+                            tags = config.webhooksEnvironments
+                        }
+                        if (tags && tags.contains(config.env.drupipeEnvironment)) {
                             gitlabHelper.addWebhook(
                                 project.value.repo,
                                 "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${state.key}"

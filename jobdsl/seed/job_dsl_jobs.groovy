@@ -347,7 +347,14 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             config.docmanConfig.projects?.each { project ->
                                 println "Project: ${project}"
                                 if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
-                                    if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                                    def tags
+                                    if (config.tags) {
+                                        tags = config.tags
+                                    }
+                                    else if (config.webhooksEnvironments) {
+                                        tags = config.webhooksEnvironments
+                                    }
+                                    if (tags && tags.contains(config.env.drupipeEnvironment)) {
                                         config.gitlabHelper.addWebhook(
                                             project.value.repo,
                                             "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}"
@@ -652,7 +659,14 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             cron(job.value.cron)
                         }
                     }
-                    if (job.value.webhooks && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                    def tags
+                    if (config.tags) {
+                        tags = config.tags
+                    }
+                    else if (config.webhooksEnvironments) {
+                        tags = config.webhooksEnvironments
+                    }
+                    if (job.value.webhooks && job.value.configRepo && tags && tags.contains(config.env.drupipeEnvironment)) {
                         properties {
                             gitLabConnectionProperty {
                                 gitLabConnection('Gitlab')
@@ -661,7 +675,14 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     }
                 }
 
-                if (job.value.webhooks && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                def tags
+                if (config.tags) {
+                    tags = config.tags
+                }
+                else if (config.webhooksEnvironments) {
+                    tags = config.webhooksEnvironments
+                }
+                if (job.value.webhooks && job.value.configRepo && tags && tags.contains(config.env.drupipeEnvironment)) {
                     job.value.webhooks.each { hook ->
                         config.gitlabHelper.addWebhook(
                             job.value.configRepo,
