@@ -18,6 +18,7 @@ def call(context = [:], body) {
             containers: containers,
             envVars: [
                 envVar(key: 'TF_VAR_consul_address', value: context.env.TF_VAR_consul_address),
+                envVar(key: 'ANSIBLE_VAULT_PASS_FILE', value: context.env.ANSIBLE_VAULT_PASS_FILE),
                 secretEnvVar(key: 'DIGITALOCEAN_TOKEN', secretName: 'zebra-keys', secretKey: 'zebra_do_token'),
             ],
         ) {
