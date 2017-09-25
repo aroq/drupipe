@@ -176,7 +176,7 @@ class Docman extends BaseAction {
             mode: 'shell',
         ]
 
-        this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
+        this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context << [drupipeShellReturnStdout: false])
     }
 }
 
