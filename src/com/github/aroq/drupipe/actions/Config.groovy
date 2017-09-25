@@ -130,12 +130,15 @@ class Config extends BaseAction {
                 ]
             ]
             result = context.pipeline.executePipelineActionList(providers, context)
-            def mothershipConfigFileContent = this.utils.getMothershipConfigFile(context)
-            this.script.echo("mothershipConfigFileContent: ${mothershipConfigFileContent}")
-            this.script.echo("context.jenkinsFolderName: ${context.jenkinsFolderName}")
-            this.script.echo("mothershipConfigFileContent repo: ${mothershipConfigFileContent[context.jenkinsFolderName]}")
-            result = utils.merge(result, mothershipConfigFileContent[context.jenkinsFolderName])
-            this.script.echo("mothershipConfigFileContent result: ${result}")
+            def mothershipConfig = this.utils.getMothershipConfigFile(context)
+
+            if (mothershipConfig[context.jenkinsFolderName]) {
+                result = utils.merge(result, mothershipConfig[context.jenkinsFolderName] << [override: true])
+            }
+            else {
+                result = utils.merge(result, mothershipConfig[context.jenkinsFolderName])
+            }
+
             this.configRepo = result.configRepo
         }
         result
