@@ -58,7 +58,7 @@ class Jenkins extends BaseAction {
             this.script.withEnv(envvars) {
                 this.script.drupipeShell("""
                 java -version
-                /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:${action.params.jenkinsUserToken} ${this.action.params.command}
+                /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:${this.action.params.jenkinsUserToken} ${this.action.params.command}
                 """, this.context << [shellCommandWithBashLogin: false])
             }
         }
@@ -70,7 +70,7 @@ class Jenkins extends BaseAction {
                 this.script.withEnv(envvars) {
                     this.script.drupipeShell("""
                 java -version
-                /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:${action.params.jenkinsUserToken} ${this.action.params.command}
+                /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:${this.action.params.jenkinsUserToken} ${this.action.params.command}
                 """, this.context << [shellCommandWithBashLogin: false])
                 }
             }
