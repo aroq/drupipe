@@ -36,13 +36,25 @@ def call(context = [:], body) {
             node(nodeName) {
                 for (def i = 0; i < blocks.size(); i++) {
                     blocks[i].name = "block${i}"
-                    container("block${i}") {
+                    if (blocks[i].withDocker) {
+                        container("block${i}") {
+                            context.pipeline.scmCheckout()
+                            unstash('config')
+                            def block = new DrupipeBlock(blocks[i])
+                            echo 'BLOCK EXECUTE START'
+                            sshagent([context.credentialsId]) {
+                                block.blockInNode = true
+                                context << block.execute(context)
+                            }
+                            echo 'BLOCK EXECUTE END'
+                        }
+                    }
+                    else {
                         context.pipeline.scmCheckout()
                         unstash('config')
                         def block = new DrupipeBlock(blocks[i])
                         echo 'BLOCK EXECUTE START'
                         sshagent([context.credentialsId]) {
-                            block.blockInNode = true
                             context << block.execute(context)
                         }
                         echo 'BLOCK EXECUTE END'
