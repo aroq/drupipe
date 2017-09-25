@@ -25,11 +25,11 @@ if (config.tags && config.tags.contains('docman')) {
 }
 
 if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
-    if (config.servers.size() == 0) {
+    if (config.jenkinsServers.size() == 0) {
         println "Servers empty. Check configuration file servers.(yaml|yml)."
     }
 
-    println 'Servers: ' + config.servers.keySet().join(', ')
+    println 'Servers: ' + config.jenkinsServers.keySet().join(', ')
 
     config.gitlabHelper = new GitlabHelper(script: this, config: config)
 }
@@ -371,7 +371,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                     }
                                     println "Webhook Tags: ${webhook_tags}"
                                     if (webhook_tags && webhook_tags.contains(config.env.drupipeEnvironment)) {
-                                        def tag_servers = getServersByTags(webhook_tags, config.servers)
+                                        def tag_servers = getServersByTags(webhook_tags, config.jenkinsServers)
                                         config.gitlabHelper.deleteWebhook(
                                             project.value.repo,
                                             tag_servers,
@@ -700,7 +700,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                 println "Webhook Tags: ${webhook_tags}"
                 if (job.value.webhooks && job.value.configRepo && webhook_tags && webhook_tags.contains(config.env.drupipeEnvironment)) {
                     job.value.webhooks.each { hook ->
-                        def tag_servers = getServersByTags(webhook_tags, config.servers)
+                        def tag_servers = getServersByTags(webhook_tags, config.jenkinsServers)
                         config.gitlabHelper.deleteWebhook(
                             job.value.configRepo,
                             tag_servers,
