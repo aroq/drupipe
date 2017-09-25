@@ -1,3 +1,15 @@
+@Grab(group='org.yaml', module='snakeyaml', version='1.18')
+import org.yaml.snakeyaml.Yaml
+
+def projectsFileRead(filePath) {
+  try {
+      return readFileFromWorkspace(filePath)
+  }
+  catch(e) {
+      return null
+  }
+}
+
 println "Subjobs Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
@@ -13,6 +25,29 @@ if (config.tags && config.tags.contains('docman')) {
 }
 
 if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
+    println "loadedSources: ${config}"
+    def servers = [:]
+    def serversFileNames = ['servers.yaml', 'servers.yml']
+    for (serversFileName in serversFileNames) {
+        def servers_path = sourcePath(config, 'mothership', serversFileName)
+        println "Servers path: ${servers_path}"
+        def file = projectsFileRead(servers_path)
+        if (file) {
+            println "Using ${serversFileName}"
+            println file
+            Yaml yaml = new Yaml()
+            def servers_config = yaml.load(file)
+            servers = servers_config.servers
+            break
+        }
+    }
+
+    if (servers.size() == 0) {
+        println "Servers empty. Check configuration file servers.(yaml|yml)."
+    }
+
+    println 'Servers: ' + servers.keySet().join(', ')
+
     config.gitlabHelper = new GitlabHelper(script: this, config: config)
 }
 
@@ -347,14 +382,18 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             config.docmanConfig.projects?.each { project ->
                                 println "Project: ${project}"
                                 if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
-                                    def tags
-                                    if (config.params.tags) {
-                                        tags = config.params.tags
+                                    def webhook_tags
+                                    if (config.webhooksEnvironments) {
+                                        webhook_tags = config.webhooksEnvironments
                                     }
-                                    else if (config.params.webhooksEnvironments) {
-                                        tags = config.params.webhooksEnvironments
-                                    }
-                                    if (tags && tags.contains(config.env.drupipeEnvironment)) {
+                                    println "Webhook Tags: ${webhook_tags}"
+                                    if (webhook_tags && webhook_tags.contains(config.env.drupipeEnvironment)) {
+                                        def tag_servers = getServersByTags(webhook_tags, servers)
+                                        config.gitlabHelper.deleteWebhook(
+                                            project.value.repo,
+                                            tag_servers,
+                                            "project/${config.jenkinsFolderName}/${currentName}"
+                                        )
                                         config.gitlabHelper.addWebhook(
                                             project.value.repo,
                                             "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}"
@@ -659,14 +698,12 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             cron(job.value.cron)
                         }
                     }
-                    def tags
-                    if (config.params.tags) {
-                        tags = config.params.tags
+                    def webhook_tags
+                    if (config.webhooksEnvironments) {
+                        webhook_tags = config.webhooksEnvironments
                     }
-                    else if (config.params.webhooksEnvironments) {
-                        tags = config.params.webhooksEnvironments
-                    }
-                    if (job.value.webhooks && job.value.configRepo && tags && tags.contains(config.env.drupipeEnvironment)) {
+                    println "Webhook Tags: ${webhook_tags}"
+                    if (job.value.webhooks && job.value.configRepo && webhook_tags && webhook_tags.contains(config.env.drupipeEnvironment)) {
                         properties {
                             gitLabConnectionProperty {
                                 gitLabConnection('Gitlab')
@@ -675,15 +712,19 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     }
                 }
 
-                def tags
-                if (config.params.tags) {
-                    tags = config.params.tags
+                def webhook_tags
+                if (config.webhooksEnvironments) {
+                    webhook_tags = config.params.webhooksEnvironments
                 }
-                else if (config.params.webhooksEnvironments) {
-                    tags = config.params.webhooksEnvironments
-                }
-                if (job.value.webhooks && job.value.configRepo && tags && tags.contains(config.env.drupipeEnvironment)) {
+                println "Webhook Tags: ${webhook_tags}"
+                if (job.value.webhooks && job.value.configRepo && webhook_tags && webhook_tags.contains(config.env.drupipeEnvironment)) {
                     job.value.webhooks.each { hook ->
+                        def tag_servers = getServersByTags(webhook_tags, servers)
+                        config.gitlabHelper.deleteWebhook(
+                            job.value.configRepo,
+                            tag_servers,
+                            "project/${config.jenkinsFolderName}/${currentName}"
+                        )
                         config.gitlabHelper.addWebhook(
                             job.value.configRepo,
                             "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}",
@@ -952,6 +993,36 @@ def isGitlabRepo(repo, config) {
     config.env.GITLAB_HOST && repo.contains(config.env.GITLAB_HOST)
 }
 
+def sourcePath(params, sourceName, String path) {
+    if (sourceName in params.loadedSources) {
+        println "sourcePath: " + params.loadedSources[sourceName].path + '/' + path
+        params.loadedSources[sourceName].path + '/' + path
+    }
+}
+
+def sourceDir(params, sourceName) {
+    if (sourceName in params.loadedSources) {
+        println "sourceDir: " + params.loadedSources[sourceName].path
+        params.loadedSources[sourceName].path
+    }
+}
+
+def getServersByTags(tags, servers) {
+    def result = [:]
+    if (tags && tags instanceof ArrayList) {
+        for (def i = 0; i < tags.size(); i++) {
+            def tag = tags[i]
+            for (server in servers) {
+                if (server.value?.tags && tag in server.value?.tags && server.value?.jenkinsUrl) {
+                    result << ["${server.key}": server.value]
+                }
+            }
+        }
+    }
+    println "getServersByTags: ${result}"
+    result
+}
+
 @Grab('org.codehaus.groovy.modules.http-builder:http-builder:0.7')
 import groovyx.net.http.HTTPBuilder
 import static groovyx.net.http.Method.*
@@ -1007,6 +1078,48 @@ class GitlabHelper {
         }
         catch (e) {
             script.println e
+        }
+    }
+
+    def deleteWebhook(String repo, servers, url) {
+        setRepoProperties(repo)
+
+        script.println "deleteWebhook Servers: ${servers.toString()}"
+
+        def urls = []
+        for (server in servers) {
+            urls << server.value.jenkinsUrl.substring(0, server.value.jenkinsUrl.length() - (server.value.jenkinsUrl.endsWith("/") ? 1 : 0)) + '/' + url
+        }
+
+        script.println "deleteWebhook URLs: ${urls.toString()}"
+
+        def webhooks = getWebhooks(repo)
+
+        for (webhook in webhooks) {
+            if (webhook.url in urls) {
+                script.println "SKIP DELETE HOOK: ${webhook.toString()}"
+            }
+            else {
+                //def http = new HTTPBuilder()
+                //http.setHeaders([
+                //    'PRIVATE-TOKEN': config.env.GITLAB_API_TOKEN_TEXT,
+                //])
+
+                try {
+                    if (webhook.id) {
+                        script.println "DELETE HOOK: ${webhook.toString()}"
+                        //http.request("https://${config.repoParams.gitlabAddress}/api/v3/projects/${config.repoParams.projectID}/hooks/${hook_id}", DELETE, JSON) {
+                        //    send URLENC
+                        //    response.success = { resp, json ->
+                        //        script.println "DELETE HOOK response: ${json}"
+                        //    }
+                        //}
+                    }
+                }
+                catch (e) {
+                    script.println e
+                }
+            }
         }
     }
 
