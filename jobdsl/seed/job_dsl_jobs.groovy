@@ -669,6 +669,9 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         println "Webhook added for project ${config.jenkinsFolderName}/${currentName}"
                     }
                 }
+                else {
+                    println "Job: ${job.value}"
+                }
 
             }
             else if (job.value.type == 'selenese') {

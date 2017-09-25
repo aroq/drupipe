@@ -8,7 +8,14 @@ def call(context = [:], body) {
     def blocks = context.pipeline.blocks
 
     for (def i = 0; i < blocks.size(); i++) {
-        containers.add(containerTemplate(name: "block${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true))
+        echo "Create k8s containerTemplate for block: ${blocks[i].name}, image: ${blocks[i].dockerImage}"
+        containers.add(containerTemplate(
+            name: "block${i}",
+            image: blocks[i].dockerImage,
+            ttyEnabled: true,
+            command: 'cat',
+            alwaysPullImage: true,
+        ))
     }
 
     def creds = [string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
@@ -19,7 +26,9 @@ def call(context = [:], body) {
             envVars: [
                 envVar(key: 'TF_VAR_consul_address', value: context.env.TF_VAR_consul_address),
                 secretEnvVar(key: 'DIGITALOCEAN_TOKEN', secretName: 'zebra-keys', secretKey: 'zebra_do_token'),
+                secretEnvVar(key: 'CONSUL_ACCESS_TOKEN', secretName: 'zebra-keys', secretKey: 'zebra_consul_access_token'),
                 secretEnvVar(key: 'ANSIBLE_VAULT_PASS_FILE', secretName: 'zebra-keys', secretKey: 'zebra_ansible_vault_pass'),
+                secretEnvVar(key: 'GITLAB_API_TOKEN_TEXT', secretName: 'zebra-keys', secretKey: 'zebra_gitlab_api_token'),
             ],
         ) {
             node(nodeName) {
