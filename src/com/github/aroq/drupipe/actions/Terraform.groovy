@@ -60,7 +60,7 @@ class Terraform extends BaseAction {
         script.withCredentials(creds) {
             this.script.drupipeShell("""
             cd ${this.action.params.workingDir}
-            TF_WORKSPACE=${terraformWorkspace} TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} ${terraformCommand} -var-file=terraform/${terraformEnv}/terraform.tfvars -var-file=terraform/${terraformEnv}/secrets.tfvars
+            TF_WORKSPACE=${terraformWorkspace} TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN2 ${this.terraformExecutable} ${terraformCommand} -var-file=terraform/${terraformEnv}/terraform.tfvars -var-file=terraform/${terraformEnv}/secrets.tfvars
             """, this.context << [shellCommandWithBashLogin: false])
         }
     }
