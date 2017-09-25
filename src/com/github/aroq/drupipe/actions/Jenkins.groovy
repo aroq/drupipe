@@ -49,6 +49,7 @@ class Jenkins extends BaseAction {
                 ls -l
                 ls -l ../
                 ls -l ${context.jenkinsParams.workingDir}
+                ls -l ${context.workspace}
                 """, this.context << [shellCommandWithBashLogin: false])
 
         context.jenkinsUserToken = script.readFile(file: "user_token")

@@ -115,6 +115,7 @@ class Ansible extends BaseAction {
                 cd ${this.action.params.workingDir}
                 ${command}
                 ls -l
+                ls -l ${context.workspace}
             """, this.context << [shellCommandWithBashLogin: true]
             )
         }
