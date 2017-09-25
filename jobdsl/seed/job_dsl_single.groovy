@@ -16,11 +16,11 @@ def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dum
 
 if (!config.tags || (!config.tags.contains('drupipe') && config.configSeedType == 'single')) {
     if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
-        if (config.servers.size() == 0) {
+        if (config.jenkinsServers.size() == 0) {
             println "Servers empty. Check configuration file servers.(yaml|yml)."
         }
 
-        println 'Servers: ' + config.servers.keySet().join(', ')
+        println 'Servers: ' + config.jenkinsServers.keySet().join(', ')
 
         println "Initialize Gitlab Helper"
         config.gitlabHelper = new GitlabHelper(script: this, config: config)
@@ -123,7 +123,7 @@ if (!config.tags || (!config.tags.contains('drupipe') && config.configSeedType =
                     }
                     println "Webhook Tags: ${webhook_tags}"
                     if (webhook_tags && webhook_tags.contains(config.env.drupipeEnvironment)) {
-                        def tag_servers = getServersByTags(webhook_tags, config.servers)
+                        def tag_servers = getServersByTags(webhook_tags, config.jenkinsServers)
                         gitlabHelper.deleteWebhook(
                             config.configRepo,
                             tag_servers,

@@ -33,11 +33,11 @@ if (!config.tags || (!config.tags.contains('docman') && !config.tags.contains('d
         println "Docman config: ${docmanConfig.init()}"
 
         if (config.env.GITLAB_API_TOKEN_TEXT) {
-            if (config.servers.size() == 0) {
+            if (config.jenkinsServers.size() == 0) {
                 println "Servers empty. Check configuration file servers.(yaml|yml)."
             }
 
-            println 'Servers: ' + config.servers.keySet().join(', ')
+            println 'Servers: ' + config.jenkinsServers.keySet().join(', ')
 
             println "Initialize Gitlab Helper"
             gitlabHelper = new GitlabHelper(script: this, config: config)
@@ -137,7 +137,7 @@ if (!config.tags || (!config.tags.contains('docman') && !config.tags.contains('d
                         }
                         println "Webhook Tags: ${webhook_tags}"
                         if (webhook_tags && webhook_tags.contains(config.env.drupipeEnvironment)) {
-                            def tag_servers = getServersByTags(webhook_tags, config.servers)
+                            def tag_servers = getServersByTags(webhook_tags, config.jenkinsServers)
                             gitlabHelper.deleteWebhook(
                                 project.value.repo,
                                 tag_servers,
