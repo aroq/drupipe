@@ -348,11 +348,11 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                 println "Project: ${project}"
                                 if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
                                     def tags
-                                    if (config.tags) {
-                                        tags = config.tags
+                                    if (config.params.tags) {
+                                        tags = config.params.tags
                                     }
-                                    else if (config.webhooksEnvironments) {
-                                        tags = config.webhooksEnvironments
+                                    else if (config.params.webhooksEnvironments) {
+                                        tags = config.params.webhooksEnvironments
                                     }
                                     if (tags && tags.contains(config.env.drupipeEnvironment)) {
                                         config.gitlabHelper.addWebhook(
@@ -660,11 +660,11 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         }
                     }
                     def tags
-                    if (config.tags) {
-                        tags = config.tags
+                    if (config.params.tags) {
+                        tags = config.params.tags
                     }
-                    else if (config.webhooksEnvironments) {
-                        tags = config.webhooksEnvironments
+                    else if (config.params.webhooksEnvironments) {
+                        tags = config.params.webhooksEnvironments
                     }
                     if (job.value.webhooks && job.value.configRepo && tags && tags.contains(config.env.drupipeEnvironment)) {
                         properties {
@@ -676,11 +676,11 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                 }
 
                 def tags
-                if (config.tags) {
-                    tags = config.tags
+                if (config.params.tags) {
+                    tags = config.params.tags
                 }
-                else if (config.webhooksEnvironments) {
-                    tags = config.webhooksEnvironments
+                else if (config.params.webhooksEnvironments) {
+                    tags = config.params.webhooksEnvironments
                 }
                 if (job.value.webhooks && job.value.configRepo && tags && tags.contains(config.env.drupipeEnvironment)) {
                     job.value.webhooks.each { hook ->

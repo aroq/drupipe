@@ -100,11 +100,11 @@ if (!config.tags || (!config.tags.contains('drupipe') && config.configSeedType =
             config.components.each { project ->
                 if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
                     def tags
-                    if (config.tags) {
-                        tags = config.tags
+                    if (config.params.tags) {
+                        tags = config.params.tags
                     }
-                    else if (config.webhooksEnvironments) {
-                        tags = config.webhooksEnvironments
+                    else if (config.params.webhooksEnvironments) {
+                        tags = config.params.webhooksEnvironments
                     }
                     if (tags && tags.contains(config.env.drupipeEnvironment)) {
                         gitlabHelper.addWebhook(
