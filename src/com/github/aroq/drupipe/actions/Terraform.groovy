@@ -30,7 +30,6 @@ class Terraform extends BaseAction {
             this.script.drupipeShell("""
             cd ${this.action.params.workingDir}
             ${terraformExecutable} init -input=false -backend-config="address=${this.context.env.TF_VAR_consul_address}" -backend-config="access_token=\${CONSUL_ACCESS_TOKEN}"
-
             """, this.context << [shellCommandWithBashLogin: false])
         }
     }
