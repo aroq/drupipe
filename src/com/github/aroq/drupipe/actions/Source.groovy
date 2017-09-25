@@ -37,11 +37,11 @@ class Source extends BaseAction {
                         }
                     }
                 }
-//                else if (source.refType == 'branch' && source.mode == 'shell') {
-//                    this.script.sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
-//                }
                 else {
-                    this.script.drupipeShell("git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}", context)
+                    this.script.drupipeShell("""
+                        git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}
+
+                    """, this.context << [shellCommandWithBashLogin: false])
                 }
                 result = source.path
                 break
