@@ -1,7 +1,7 @@
 @Grab(group='org.yaml', module='snakeyaml', version='1.18')
+import org.yaml.snakeyaml.Yaml
 
 def configMain = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
-import org.yaml.snakeyaml.Yaml
 
 def projectsFileRead(filePath) {
   try {
@@ -49,8 +49,8 @@ for (serversFileName in serversFileNames) {
         println "Using ${serversFileName}"
         println file
         Yaml yaml = new Yaml()
-        def config = yaml.load(file)
-        servers = config.servers
+        def servers_config = yaml.load(file)
+        servers = servers_config.servers
         break
     }
 }
@@ -58,6 +58,8 @@ for (serversFileName in serversFileNames) {
 if (servers.size() == 0) {
     println "Servers empty. Check configuration file servers.(yaml|yml)."
 }
+
+println 'Servers: ' + servers.keySet().join(', ')
 
 def gitlabHelper = new GitlabHelper(script: this, config: configMain)
 
@@ -140,10 +142,15 @@ projects.each { project ->
             }
         }
         if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
-            def servers = getServersByTags(config.tags, servers)
+            def webhook_tags
+            if (config.webhooksEnvironments) {
+                webhook_tags = config.webhooksEnvironments
+            }
+            println "Webhook Tags: ${webhook_tags}"
+            def tag_servers = getServersByTags(webhook_tags, servers)
             gitlabHelper.deleteWebhook(
                 config.configRepo,
-                servers,
+                tag_servers,
                 "project/${project.key}/seed"
             )
             gitlabHelper.addWebhook(
@@ -171,11 +178,12 @@ def getServersByTags(tags, servers) {
             def tag = tags[i]
             for (server in servers) {
                 if (server.value?.tags && tag in server.value?.tags && server.value?.jenkinsUrl) {
-                    result << ["${server.key}": server]
+                    result << ["${server.key}": server.value]
                 }
             }
         }
     }
+    println "getServersByTags: ${result}"
     result
 }
 
@@ -239,23 +247,30 @@ class GitlabHelper {
     def deleteWebhook(String repo, servers, url) {
         setRepoProperties(repo)
 
-        def urls = servers.collect {
-            it.jenkinsUrl.substring(0, it.jenkinsUrl.length() - (it.jenkinsUrl.endsWith("/") ? 1 : 0)) + '/' + url
+        script.println "deleteWebhook Servers: ${servers.toString()}"
+
+        def urls = []
+        for (server in servers) {
+            urls << server.value.jenkinsUrl.substring(0, server.value.jenkinsUrl.length() - (server.value.jenkinsUrl.endsWith("/") ? 1 : 0)) + '/' + url
         }
+
+        script.println "deleteWebhook URLs: ${urls.toString()}"
 
         def webhooks = getWebhooks(repo)
 
         for (webhook in webhooks) {
-            if (!(webhook.url in urls) {
-                def hook_id = webhook.id
+            if (webhook.url in urls) {
+                script.println "SKIP DELETE HOOK: ${webhook.toString()}"
+            }
+            else {
                 //def http = new HTTPBuilder()
                 //http.setHeaders([
                 //    'PRIVATE-TOKEN': config.env.GITLAB_API_TOKEN_TEXT,
                 //])
 
                 try {
-                    if (hook_id) {
-                      script.println "DELETE HOOK response: ${json}"
+                    if (webhook.id) {
+                        script.println "DELETE HOOK: ${webhook.toString()}"
                         //http.request("https://${config.repoParams.gitlabAddress}/api/v3/projects/${config.repoParams.projectID}/hooks/${hook_id}", DELETE, JSON) {
                         //    send URLENC
                         //    response.success = { resp, json ->
