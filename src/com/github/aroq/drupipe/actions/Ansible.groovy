@@ -94,7 +94,7 @@ class Ansible extends BaseAction {
             echo "\${ANSIBLE_VAULT_PASS_FILE}" > .vault_pass
             """, this.context << [shellCommandWithBashLogin: true]
             )
-            vaultPassFile = '../.vault_pass'
+            vaultPassFile = action.params.workingDir ? '../.vault_pass' : '.vault_pass'
         }
         else {
             vaultPassFile = "\${ANSIBLE_VAULT_PASS_FILE}"

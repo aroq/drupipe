@@ -55,7 +55,6 @@ class Jenkins extends BaseAction {
         String jenkinsAddress = "${getJenkinsAddress()}:${this.action.params.port}"
         if (action.params.jenkinsUserToken) {
             def envvars = ["JENKINS_URL=http://${jenkinsAddress}", "JENKINS_API_TOKEN=${action.params.jenkinsUserToken}"]
-//            executeCli(envvars)
             this.script.withEnv(envvars) {
                 this.script.drupipeShell("""
                 JENKINS_URL=http://${jenkinsAddress} /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:${this.action.params.jenkinsUserToken} ${this.action.params.command}
@@ -66,7 +65,6 @@ class Jenkins extends BaseAction {
             def creds = [this.script.string(credentialsId: 'JENKINS_API_TOKEN', variable: 'JENKINS_API_TOKEN')]
             this.script.withCredentials(creds) {
                 def envvars = ["JENKINS_URL=http://${getJenkinsAddress()}:${this.action.params.port}"]
-//                executeCli(envvars)
                 this.script.withEnv(envvars) {
                     this.script.drupipeShell("""
                 JENKINS_URL=http://${jenkinsAddress} /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${this.action.params.command}
@@ -74,9 +72,6 @@ class Jenkins extends BaseAction {
                 }
             }
         }
-    }
-
-    def executeCli(envvars) {
     }
 
     def crumb() {
