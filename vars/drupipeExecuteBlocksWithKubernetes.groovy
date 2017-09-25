@@ -8,14 +8,16 @@ def call(context = [:], body) {
     def blocks = context.pipeline.blocks
 
     for (def i = 0; i < blocks.size(); i++) {
-        echo "Create k8s containerTemplate for block: ${blocks[i].name}, image: ${blocks[i].dockerImage}"
-        containers.add(containerTemplate(
-            name: "block${i}",
-            image: blocks[i].dockerImage,
-            ttyEnabled: true,
-            command: 'cat',
-            alwaysPullImage: true,
-        ))
+        if (blocks[i].withDocker) {
+            echo "Create k8s containerTemplate for block: ${blocks[i].name}, image: ${blocks[i].dockerImage}"
+            containers.add(containerTemplate(
+                name: "block${i}",
+                image: blocks[i].dockerImage,
+                ttyEnabled: true,
+                command: 'cat',
+                alwaysPullImage: true,
+            ))
+        }
     }
 
     def creds = [string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
