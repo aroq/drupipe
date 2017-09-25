@@ -342,6 +342,22 @@ def getMothershipConfigFile(params) {
     return null
 }
 
+def getMothershipServersFile(params) {
+    def serversFileName = 'servers'
+    def extensions = ['yaml', 'yml']
+    def dir = sourceDir(params, 'mothership')
+    for (extension in extensions) {
+        def serversFile = "${dir}/${serversFileName}.${extension}"
+        if (fileExists(serversFile)) {
+            def file = readFile(serversFile)
+            if (file) {
+                return readYaml(text: file).servers
+            }
+        }
+    }
+    return null
+}
+
 def sourcePath(params, sourceName, String path) {
     debugLog(params, sourceName, 'Source name')
     if (sourceName in params.loadedSources) {
