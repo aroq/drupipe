@@ -48,8 +48,8 @@ class Jenkins extends BaseAction {
         this.script.drupipeShell("""
                 ls -l
                 ls -l ../
-                ls -l ${context.jenkinsParams.workingDir}
-                ls -l ${context.workspace}
+                ls -l ${this.context.jenkinsParams.workingDir}
+                ls -l ${this.context.workspace}
                 """, this.context << [shellCommandWithBashLogin: false])
 
         context.jenkinsUserToken = script.readFile(file: "user_token")
