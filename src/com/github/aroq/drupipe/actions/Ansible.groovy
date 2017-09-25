@@ -114,6 +114,7 @@ class Ansible extends BaseAction {
             this.script.drupipeShell("""
                 cd ${this.action.params.workingDir}
                 ${command}
+                ls -l
             """, this.context << [shellCommandWithBashLogin: true]
             )
         }

@@ -45,6 +45,12 @@ class Jenkins extends BaseAction {
         ]
         action.params.inventoryArgument = getJenkinsAddress() + ','
         script.drupipeAction([action: 'Ansible.executeAnsiblePlaybook', params: [action.params]], context)
+        this.script.drupipeShell("""
+                ls -l
+                ls -l ../
+                ls -l ${context.jenkinsParams.workingDir}
+                """, this.context << [shellCommandWithBashLogin: false])
+
         context.jenkinsUserToken = script.readFile(file: "user_token")
         context
     }
