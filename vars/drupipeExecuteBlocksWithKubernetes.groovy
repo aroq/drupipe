@@ -18,7 +18,7 @@ def call(context = [:], body) {
             containers: containers,
             envVars: [
                 envVar(key: 'TF_VAR_consul_address', value: context.env.TF_VAR_consul_address),
-                secretEnvVar(key: 'DIGITALOCEAN_TOKEN', value: env.DIGITALOCEAN_TOKEN),
+                secretEnvVar(key: 'DIGITALOCEAN_TOKEN', secretName: 'zebra-keys', secretKey: 'zebra_do_token'),
             ],
         ) {
             node(nodeName) {
