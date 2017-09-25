@@ -52,13 +52,13 @@ class Jenkins extends BaseAction {
 
     def cli() {
         action.params.jenkinsUserToken = context.jenkinsUserToken
+        String jenkinsAddress = "${getJenkinsAddress()}:${this.action.params.port}"
         if (action.params.jenkinsUserToken) {
-            def envvars = ["JENKINS_URL=http://${getJenkinsAddress()}:${this.action.params.port}", "JENKINS_API_TOKEN=${action.params.jenkinsUserToken}"]
+            def envvars = ["JENKINS_URL=http://${jenkinsAddress}", "JENKINS_API_TOKEN=${action.params.jenkinsUserToken}"]
 //            executeCli(envvars)
             this.script.withEnv(envvars) {
                 this.script.drupipeShell("""
-                java -version
-                /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:${this.action.params.jenkinsUserToken} ${this.action.params.command}
+                JENKINS_URL=http://${jenkinsAddress} /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:${this.action.params.jenkinsUserToken} ${this.action.params.command}
                 """, this.context << [shellCommandWithBashLogin: false])
             }
         }
@@ -69,8 +69,7 @@ class Jenkins extends BaseAction {
 //                executeCli(envvars)
                 this.script.withEnv(envvars) {
                     this.script.drupipeShell("""
-                java -version
-                /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:${this.action.params.jenkinsUserToken} ${this.action.params.command}
+                JENKINS_URL=http://${jenkinsAddress} /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${this.action.params.command}
                 """, this.context << [shellCommandWithBashLogin: false])
                 }
             }
