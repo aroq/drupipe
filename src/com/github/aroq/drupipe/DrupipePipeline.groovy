@@ -117,26 +117,32 @@ class DrupipePipeline implements Serializable {
                             containers.add(script.containerTemplate(name: "block${i}", image: blocks[i].dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true))
                         }
 
-                        def envVars = [script.envVar(key: 'TF_VAR_consul_address', value: context.env.TF_VAR_consul_address)]
+                        def creds = [script.string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
+                        script.withCredentials(creds) {
+                            def envVars = [
+                                script.envVar(key: 'TF_VAR_consul_address', value: context.env.TF_VAR_consul_address),
+                                script.secretEnvVar(key: 'DIGITALOCEAN_TOKEN', value: script.env.DIGITALOCEAN_TOKEN),
+                            ]
 
-                        script.podTemplate(
-                            label: nodeName,
-                            containers: containers,
-                            envVars: envVars,
-                        ) {
-                            script.node(nodeName) {
-                                for (def i = 0; i < blocks.size(); i++) {
-                                    blocks[i].name = "block${i}"
-                                    script.container("block${i}") {
-                                        scmCheckout()
-                                        script.unstash('config')
-                                        def block = new DrupipeBlock(blocks[i])
-                                        script.echo 'BLOCK EXECUTE START'
-                                        script.sshagent([context.credentialsId]) {
-                                            block.blockInNode = true
-                                            context << block.execute(context)
+                            script.podTemplate(
+                                label: nodeName,
+                                containers: containers,
+                                envVars: envVars,
+                            ) {
+                                script.node(nodeName) {
+                                    for (def i = 0; i < blocks.size(); i++) {
+                                        blocks[i].name = "block${i}"
+                                        script.container("block${i}") {
+                                            scmCheckout()
+                                            script.unstash('config')
+                                            def block = new DrupipeBlock(blocks[i])
+                                            script.echo 'BLOCK EXECUTE START'
+                                            script.sshagent([context.credentialsId]) {
+                                                block.blockInNode = true
+                                                context << block.execute(context)
+                                            }
+                                            script.echo 'BLOCK EXECUTE END'
                                         }
-                                        script.echo 'BLOCK EXECUTE END'
                                     }
                                 }
                             }
