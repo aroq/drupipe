@@ -119,6 +119,13 @@ class Ansible extends BaseAction {
             """, this.context << [shellCommandWithBashLogin: true]
             )
         }
+        if (context.containerMode == 'kubernetes') {
+            this.script.drupipeShell("""
+            rm -f .vault_pass
+            """, this.context << [shellCommandWithBashLogin: true]
+            )
+            vaultPassFile = '../.vault_pass'
+        }
 
     }
 
