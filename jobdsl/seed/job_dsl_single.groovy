@@ -16,27 +16,11 @@ def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dum
 
 if (!config.tags || (!config.tags.contains('drupipe') && config.configSeedType == 'single')) {
     if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
-        def servers = [:]
-        def serversFileNames = ['servers.yaml', 'servers.yml']
-        for (serversFileName in serversFileNames) {
-            def servers_path = sourcePath(config, 'mothership', serversFileName)
-            println "Servers path: ${servers_path}"
-            def file = projectsFileRead(servers_path)
-            if (file) {
-                println "Using ${serversFileName}"
-                println file
-                Yaml yaml = new Yaml()
-                def servers_config = yaml.load(file)
-                servers = servers_config.servers
-                break
-            }
-        }
-
-        if (servers.size() == 0) {
+        if (config.servers.size() == 0) {
             println "Servers empty. Check configuration file servers.(yaml|yml)."
         }
 
-        println 'Servers: ' + servers.keySet().join(', ')
+        println 'Servers: ' + config.servers.keySet().join(', ')
 
         println "Initialize Gitlab Helper"
         config.gitlabHelper = new GitlabHelper(script: this, config: config)
@@ -139,7 +123,7 @@ if (!config.tags || (!config.tags.contains('drupipe') && config.configSeedType =
                     }
                     println "Webhook Tags: ${webhook_tags}"
                     if (webhook_tags && webhook_tags.contains(config.env.drupipeEnvironment)) {
-                        def tag_servers = getServersByTags(webhook_tags, servers)
+                        def tag_servers = getServersByTags(webhook_tags, config.servers)
                         gitlabHelper.deleteWebhook(
                             config.configRepo,
                             tag_servers,
