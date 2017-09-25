@@ -41,7 +41,7 @@ class Source extends BaseAction {
                     this.script.drupipeShell("""
                         git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}
 
-                    """, this.context << [shellCommandWithBashLogin: false])
+                    """, this.context << [shellCommandWithBashLogin: false, drupipeShellReturnStdout: false])
                 }
                 result = source.path
                 break
