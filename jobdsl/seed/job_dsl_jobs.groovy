@@ -1,15 +1,6 @@
 @Grab(group='org.yaml', module='snakeyaml', version='1.18')
 import org.yaml.snakeyaml.Yaml
 
-def projectsFileRead(filePath) {
-  try {
-      return readFileFromWorkspace(filePath)
-  }
-  catch(e) {
-      return null
-  }
-}
-
 println "Subjobs Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
