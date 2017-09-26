@@ -132,7 +132,10 @@ if (!config.tags || (!config.tags.contains('docman') && !config.tags.contains('d
                 docmanConfig.projects?.each { project ->
                     if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
                         def webhook_tags
-                        if (config.webhooksEnvironments) {
+                        if (config.params.webhooksEnvironments) {
+                            webhook_tags = config.params.webhooksEnvironments
+                        }
+                        else if (config.webhooksEnvironments) {
                             webhook_tags = config.webhooksEnvironments
                         }
                         println "Webhook Tags: ${webhook_tags}"

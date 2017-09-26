@@ -366,7 +366,10 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                 println "Project: ${project}"
                                 if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
                                     def webhook_tags
-                                    if (config.webhooksEnvironments) {
+                                    if (config.params.webhooksEnvironments) {
+                                        webhook_tags = config.params.webhooksEnvironments
+                                    }
+                                    else if (config.webhooksEnvironments) {
                                         webhook_tags = config.webhooksEnvironments
                                     }
                                     println "Webhook Tags: ${webhook_tags}"
@@ -680,7 +683,10 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         }
                     }
                     def webhook_tags
-                    if (config.webhooksEnvironments) {
+                    if (config.params.webhooksEnvironments) {
+                        webhook_tags = config.params.webhooksEnvironments
+                    }
+                    else if (config.webhooksEnvironments) {
                         webhook_tags = config.webhooksEnvironments
                     }
                     println "Webhook Tags: ${webhook_tags}"
@@ -694,8 +700,11 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                 }
 
                 def webhook_tags
-                if (config.webhooksEnvironments) {
+                if (config.params.webhooksEnvironments) {
                     webhook_tags = config.params.webhooksEnvironments
+                }
+                else if (config.webhooksEnvironments) {
+                    webhook_tags = config.webhooksEnvironments
                 }
                 println "Webhook Tags: ${webhook_tags}"
                 if (job.value.webhooks && job.value.configRepo && webhook_tags && webhook_tags.contains(config.env.drupipeEnvironment)) {

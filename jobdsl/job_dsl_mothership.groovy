@@ -143,7 +143,10 @@ projects.each { project ->
         }
         if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
             def webhook_tags
-            if (config.webhooksEnvironments) {
+            if (config.params.webhooksEnvironments) {
+                webhook_tags = config.params.webhooksEnvironments
+            }
+            else if (config.webhooksEnvironments) {
                 webhook_tags = config.webhooksEnvironments
             }
             println "Webhook Tags: ${webhook_tags}"
