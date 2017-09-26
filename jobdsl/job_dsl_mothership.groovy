@@ -266,20 +266,19 @@ class GitlabHelper {
                 script.println "SKIP DELETE HOOK: ${webhook.toString()}"
             }
             else {
-                //def http = new HTTPBuilder()
-                //http.setHeaders([
-                //    'PRIVATE-TOKEN': config.env.GITLAB_API_TOKEN_TEXT,
-                //])
+                def http = new HTTPBuilder()
+                http.setHeaders([
+                    'PRIVATE-TOKEN': config.env.GITLAB_API_TOKEN_TEXT,
+                ])
 
                 try {
                     if (webhook.id) {
                         script.println "DELETE HOOK: ${webhook.toString()}"
-                        //http.request("https://${config.repoParams.gitlabAddress}/api/v3/projects/${config.repoParams.projectID}/hooks/${hook_id}", DELETE, JSON) {
-                        //    send URLENC
-                        //    response.success = { resp, json ->
-                        //        script.println "DELETE HOOK response: ${json}"
-                        //    }
-                        //}
+                        http.request("https://${config.repoParams.gitlabAddress}/api/v3/projects/${config.repoParams.projectID}/hooks/${webhook.id}", DELETE, JSON) {
+                            response.success = { resp, json ->
+                                script.println "DELETE HOOK response: ${json}"
+                            }
+                        }
                     }
                 }
                 catch (e) {
