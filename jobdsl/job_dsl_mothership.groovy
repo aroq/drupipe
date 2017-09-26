@@ -150,16 +150,18 @@ projects.each { project ->
                 webhook_tags = config.webhooksEnvironments
             }
             println "Webhook Tags: ${webhook_tags}"
-            def tag_servers = getServersByTags(webhook_tags, servers)
-            gitlabHelper.deleteWebhook(
-                config.configRepo,
-                tag_servers,
-                "project/${project.key}/seed"
-            )
-            gitlabHelper.addWebhook(
-                config.configRepo,
-                "${config.env.JENKINS_URL}project/${project.key}/seed"
-            )
+            if (webhook_tags && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                def tag_servers = getServersByTags(webhook_tags, servers)
+                gitlabHelper.deleteWebhook(
+                    config.configRepo,
+                    tag_servers,
+                    "project/${project.key}/seed"
+                )
+                gitlabHelper.addWebhook(
+                    config.configRepo,
+                    "${config.env.JENKINS_URL}project/${project.key}/seed"
+                )
+            }
         }
     }
     else if (config.mothership_job_type == 'multibranch') {
