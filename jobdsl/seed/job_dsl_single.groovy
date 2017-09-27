@@ -132,10 +132,12 @@ if (!config.tags || (!config.tags.contains('drupipe') && config.configSeedType =
                             tag_servers,
                             "project/${config.jenkinsFolderName}/${state.key}"
                         )
-                        gitlabHelper.addWebhook(
-                            project.value.repo,
-                            "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${state.key}"
-                        )
+                        for (jenkinsServer in tag_servers) {
+                            gitlabHelper.addWebhook(
+                                project.value.repo,
+                                jenkinsServer.value.jenkinsUrl.substring(0, jenkinsServer.value.jenkinsUrl.length() - (jenkinsServer.value.jenkinsUrl.endsWith("/") ? 1 : 0)) + '/' + "project/${config.jenkinsFolderName}/${state.key}"
+                            )
+                        }
                     }
                 }
             }
@@ -266,23 +268,28 @@ class GitlabHelper {
                 script.println "SKIP DELETE HOOK: ${webhook.toString()}"
             }
             else {
-                def http = new HTTPBuilder()
-                http.setHeaders([
-                    'PRIVATE-TOKEN': config.env.GITLAB_API_TOKEN_TEXT,
-                ])
+                if (webhook.url.endsWith(url)) {
+                    def http = new HTTPBuilder()
+                    http.setHeaders([
+                        'PRIVATE-TOKEN': config.env.GITLAB_API_TOKEN_TEXT,
+                    ])
 
-                try {
-                    if (webhook.id) {
-                        script.println "DELETE HOOK: ${webhook.toString()}"
-                        http.request("https://${config.repoParams.gitlabAddress}/api/v3/projects/${config.repoParams.projectID}/hooks/${webhook.id}", DELETE, JSON) {
-                            response.success = { resp, json ->
-                                script.println "DELETE HOOK response: ${json}"
+                    try {
+                        if (webhook.id) {
+                            script.println "DELETE HOOK: ${webhook.toString()}"
+                            http.request("https://${config.repoParams.gitlabAddress}/api/v3/projects/${config.repoParams.projectID}/hooks/${webhook.id}", DELETE, JSON) {
+                                response.success = { resp, json ->
+                                    script.println "DELETE HOOK response: ${json}"
+                                }
                             }
                         }
                     }
+                    catch (e) {
+                        script.println e
+                    }
                 }
-                catch (e) {
-                    script.println e
+                else {
+                    script.println "SKIP DELETE HOOK: ${webhook.toString()}"
                 }
             }
         }
