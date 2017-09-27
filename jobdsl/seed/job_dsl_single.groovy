@@ -265,7 +265,7 @@ class GitlabHelper {
 
         for (webhook in webhooks) {
             if (webhook.url in urls) {
-                script.println "SKIP DELETE HOOK: ${webhook.toString()}"
+                script.println "SKIP DELETE HOOK IN URLS: ${webhook.toString()}"
             }
             else {
                 if (webhook.url.endsWith(url)) {
@@ -276,7 +276,7 @@ class GitlabHelper {
 
                     try {
                         if (webhook.id) {
-                            script.println "DELETE HOOK: ${webhook.toString()}"
+                            script.println "DELETE HOOK: ${config.repoParams.projectID} -> ${webhook.toString()}"
                             http.request("https://${config.repoParams.gitlabAddress}/api/v3/projects/${config.repoParams.projectID}/hooks/${webhook.id}", DELETE, JSON) {
                                 response.success = { resp, json ->
                                     script.println "DELETE HOOK response: ${json}"
@@ -289,7 +289,7 @@ class GitlabHelper {
                     }
                 }
                 else {
-                    script.println "SKIP DELETE HOOK: ${webhook.toString()}"
+                    script.println "SKIP DELETE HOOK FROM ANOTHER JENKINS: ${webhook.toString()}"
                 }
             }
         }
