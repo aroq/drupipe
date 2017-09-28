@@ -64,14 +64,14 @@ println 'Servers: ' + servers.keySet().join(', ')
 def gitlabHelper = new GitlabHelper(script: this, config: configMain)
 
 projects.each { project ->
+    println "PROJECT: ${project.value}"
+    def config = configMain.clone()
+    config << project.value
     def jenkins_servers
     if (config.params.jenkinsServers) {
         jenkins_servers = config.params.jenkinsServers
     }
     if (jenkins_servers && jenkins_servers.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
-        println "PROJECT: ${project.value}"
-        def config = configMain.clone()
-        config << project.value
         println "CONFIG mothership_job_subDir: ${config.mothership_job_subDir}"
         println "CONFIG mothership_job_name: ${config.mothership_job_name}"
         String subDir = config.mothership_job_subDir ? config.mothership_job_subDir + '/' : ''
