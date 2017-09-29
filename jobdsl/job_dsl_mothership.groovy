@@ -66,7 +66,7 @@ def gitlabHelper = new GitlabHelper(script: this, config: configMain)
 projects.each { project ->
     println "PROJECT: ${project.value}"
     def config = configMain.clone()
-    config << project.value
+    config = merge(config, project.value)
     def jenkins_servers
     if (config.params.jenkinsServers) {
         jenkins_servers = config.params.jenkinsServers
@@ -181,6 +181,38 @@ projects.each { project ->
                 }
             }
         }
+    }
+}
+
+Map merge(Map[] sources) {
+    if (sources.length == 0) return [:]
+    if (sources.length == 1) return sources[0]
+
+    sources.inject([:]) { result, source ->
+        if (source && source.containsKey('override') && source['override']) {
+            result = source
+        }
+        else {
+            source.each { k, v ->
+                if (result[k] instanceof Map && v instanceof Map ) {
+                    if (v.containsKey('override') && v['override']) {
+                        v.remove('override')
+                        result[k] = v
+                    }
+                    else {
+                        result[k] = merge(result[k], v)
+                    }
+                }
+                else if (result[k] instanceof List && v instanceof List) {
+                    result[k] += v
+                    result[k] = result[k].unique()
+                }
+                else {
+                    result[k] = v
+                }
+            }
+        }
+        result
     }
 }
 
