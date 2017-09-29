@@ -99,24 +99,34 @@ String configToSlurperFile(config) {
 }
 
 String getJenkinsFolderName(String buildUrl) {
-    def result = (buildUrl =~ $/(job/(.+?)/)?job/(.+?)/.*/$)
-    if (result && result[0] && result[0][2]) {
-        return result[0][2]
+    if (buildUrl && buildUrl instanceof CharSequence && buildUrl.length() > 0) {
+        def result = (buildUrl =~ $/(job/(.+?)/)?job/(.+?)/.*/$)
+        if (result && result[0] && result[0][2]) {
+            return result[0][2]
+        }
+        else {
+            echo "Job not in folder."
+            return ""
+        }
     }
     else {
-        echo "Job not in folder."
-        return ""
+        throw new Exception("getJenkinsFolderName: buildUrl is empty or null.")
     }
 }
 
 String getJenkinsJobName(String buildUrl) {
-    def result = (buildUrl =~ $/(job/(.+?)/)?job/(.+?)/.*/$)
-    if (result && result[0] && result[0][3]) {
-        return result[0][3]
+    if (buildUrl && buildUrl instanceof CharSequence && buildUrl.length() > 0) {
+        def result = (buildUrl =~ $/(job/(.+?)/)?job/(.+?)/.*/$)
+        if (result && result[0] && result[0][3]) {
+            return result[0][3]
+        }
+        else {
+            echo "Empty job name."
+            return ""
+        }
     }
     else {
-        echo "Empty job name."
-        return ""
+        throw new Exception("getJenkinsJobName: buildUrl is empty or null.")
     }
 }
 
@@ -339,7 +349,7 @@ def getMothershipConfigFile(params) {
             }
         }
     }
-    return null
+    throw new Exception("getMothershipConfigFile: mothersip config file not found.")
 }
 
 def getMothershipServersFile(params) {
@@ -355,7 +365,7 @@ def getMothershipServersFile(params) {
             }
         }
     }
-    return null
+    throw new Exception("getMothershipServersFile: servers config file not found.")
 }
 
 def sourcePath(params, sourceName, String path) {
