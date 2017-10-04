@@ -506,6 +506,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     logRotator(-1, config.logRotatorNumToKeep)
                     parameters {
                         stringParam('debugEnabled', '0')
+                        stringParam('force', '0')
                         stringParam('configRepo', config.configRepo)
                         job.value.params?.each { key, value ->
                             stringParam(key, value)
