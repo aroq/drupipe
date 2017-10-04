@@ -16,8 +16,6 @@ def call(context = [:], body) {
                 ttyEnabled: true,
                 command: 'cat',
                 alwaysPullImage: true,
-                resourceRequestCpu: '200m',
-                resourceLimitCpu: '1',
                 envVars: [
                     envVar(key: 'TF_VAR_consul_address', value: context.env.TF_VAR_consul_address),
                     secretEnvVar(key: 'DIGITALOCEAN_TOKEN', secretName: 'zebra-keys', secretKey: 'zebra_do_token'),
@@ -34,7 +32,7 @@ def call(context = [:], body) {
         podTemplate(
             label: nodeName,
             resourceRequestCpu: '200m',
-            resourceLimitCpu: '1',
+            resourceLimitCpu: '400m',
             containers: containers
         ) {
             node(nodeName) {
