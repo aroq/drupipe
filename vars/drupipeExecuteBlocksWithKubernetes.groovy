@@ -33,6 +33,8 @@ def call(context = [:], body) {
     withCredentials(creds) {
         podTemplate(
             label: nodeName,
+            resourceRequestCpu: '500m',
+            resourceLimitCpu: '1',
             containers: containers
         ) {
             node(nodeName) {
