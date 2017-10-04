@@ -58,7 +58,7 @@ class DrupipeBlock implements Serializable {
                     }
                     else if (context.containerMode == 'docker') {
                         context.pipeline.script.drupipeWithDocker(context) {
-//                            context.pipeline.script.checkout context.pipeline.script.scm
+                            context.pipeline.script.checkout context.pipeline.script.scm
                             result = _execute(body)
                         }
                     }
