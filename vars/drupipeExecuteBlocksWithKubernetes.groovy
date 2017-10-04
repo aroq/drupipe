@@ -16,7 +16,7 @@ def call(context = [:], body) {
                 ttyEnabled: true,
                 command: 'cat',
                 alwaysPullImage: true,
-                resourceRequestCpu: '500m',
+                resourceRequestCpu: '200m',
                 resourceLimitCpu: '1',
                 envVars: [
                     envVar(key: 'TF_VAR_consul_address', value: context.env.TF_VAR_consul_address),
@@ -33,7 +33,7 @@ def call(context = [:], body) {
     withCredentials(creds) {
         podTemplate(
             label: nodeName,
-            resourceRequestCpu: '500m',
+            resourceRequestCpu: '200m',
             resourceLimitCpu: '1',
             containers: containers
         ) {
