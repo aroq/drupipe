@@ -164,6 +164,12 @@ def getMothershipProjectParams(config, json) {
 
 def loadLibrary(script, context) {
     if (!context.libraryLoaded) {
+        // TODO: check for the version ref type)
+        if (context.env['library.global.version']) {
+            context.drupipeLibraryBranch = context.env['library.global.version']
+            context.drupipeLibraryType = 'branch'
+            script.echo "Set drupipeLibraryBranch to ${context.drupipeLibraryBranch } as library.global.version was set"
+        }
         script.drupipeAction([
             action: 'Source.add',
             params: [
