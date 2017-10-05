@@ -167,7 +167,7 @@ def loadLibrary(script, context) {
         // TODO: check for the version ref type)
         if (context.env['library.global.version']) {
             context.drupipeLibraryBranch = context.env['library.global.version']
-            context.drupipeLibraryType = 'branch'
+            context.drupipeLibraryType = 'tag'
             script.echo "Set drupipeLibraryBranch to ${context.drupipeLibraryBranch } as library.global.version was set"
         }
         else {
