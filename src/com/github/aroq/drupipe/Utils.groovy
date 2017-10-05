@@ -170,6 +170,9 @@ def loadLibrary(script, context) {
             context.drupipeLibraryType = 'branch'
             script.echo "Set drupipeLibraryBranch to ${context.drupipeLibraryBranch } as library.global.version was set"
         }
+        else {
+            script.echo "ENV variable library.global.version is not set"
+        }
         script.drupipeAction([
             action: 'Source.add',
             params: [
