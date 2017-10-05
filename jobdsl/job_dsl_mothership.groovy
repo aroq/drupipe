@@ -131,18 +131,31 @@ projects.each { project ->
                         }
                     }
                 }
-                triggers {
-                    gitlabPush {
-                        buildOnPushEvents()
-                        buildOnMergeRequestEvents(false)
-                        enableCiSkip()
-                        useCiFeatures()
-                        includeBranches('master')
+                def webhook_tags
+                if (config.params.webhooksEnvironments) {
+                    webhook_tags = config.params.webhooksEnvironments
+                }
+                else if (config.webhooksEnvironments) {
+                    webhook_tags = config.webhooksEnvironments
+                }
+                if (!config.noHooks && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                    triggers {
+                        if (config.env.GITLAB_API_TOKEN_TEXT) {
+                            gitlabPush {
+                                buildOnPushEvents()
+                                buildOnMergeRequestEvents(false)
+                                enableCiSkip()
+                                useCiFeatures()
+                                includeBranches('master')
+                            }
+                        }
                     }
                 }
                 properties {
-                    gitLabConnectionProperty {
-                        gitLabConnection('Gitlab')
+                    if (config.env.GITLAB_API_TOKEN_TEXT) {
+                        gitLabConnectionProperty {
+                            gitLabConnection('Gitlab')
+                        }
                     }
                 }
             }

@@ -330,19 +330,32 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         println "Triggers disabled by webhook_trigger configuration option"
                     }
                     else {
-                        triggers {
-                            gitlabPush {
-                                buildOnPushEvents()
-                                buildOnMergeRequestEvents(false)
-                                enableCiSkip()
-                                useCiFeatures()
-                                includeBranches(branch)
+                        def webhook_tags
+                        if (config.params.webhooksEnvironments) {
+                            webhook_tags = config.params.webhooksEnvironments
+                        }
+                        else if (config.webhooksEnvironments) {
+                            webhook_tags = config.webhooksEnvironments
+                        }
+                        if (webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                            triggers {
+                                if (config.env.GITLAB_API_TOKEN_TEXT) {
+                                    gitlabPush {
+                                        buildOnPushEvents()
+                                        buildOnMergeRequestEvents(false)
+                                        enableCiSkip()
+                                        useCiFeatures()
+                                        includeBranches(branch)
+                                    }
+                                }
                             }
                         }
                     }
                     properties {
-                        gitLabConnectionProperty {
-                            gitLabConnection('Gitlab')
+                        if (config.env.GITLAB_API_TOKEN_TEXT) {
+                            gitLabConnectionProperty {
+                                gitLabConnection('Gitlab')
+                            }
                         }
                     }
                 }
