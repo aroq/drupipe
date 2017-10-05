@@ -1,3 +1,7 @@
+Version 0.7.5:
+ - Try to load global library version
+ - Try to load global library version
+
 Version 0.7.4:
  - Change stable drupipe version to v0.7.4
  - Merge branch 'develop'
