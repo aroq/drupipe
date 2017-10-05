@@ -1,3 +1,6 @@
+Version 0.7.7:
+ - Remove library branch & type params as not needed anymore
+
 Version 0.7.6:
  - Try to load global library version
 
