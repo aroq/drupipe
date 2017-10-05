@@ -1,3 +1,280 @@
+Version 0.7.4:
+ - Change stable drupipe version to v0.7.4
+ - Merge branch 'develop'
+ - Merge pull request #54 from michael-molchanov/aroq_develop
+ - Skip incoming triggers creation for jenkins jobs.
+ - Merge branch 'master' into develop
+ - Merge pull request #53 from michael-molchanov/aroq_develop
+ - Add checks.
+ - Add force param for common jenkins jobs
+ - Test for scm checkout fix
+ - Scm check bach (again) it will break stage, but this is problem of stage finally
+ - Temp fix for failes builds
+ - Add block scm checkout
+ - Add throw exceptions.
+ - Merge project config to config to use override parameter properly.
+ - Fix config not defined.
+ - Allow to limit mothersheep seed by jenkins server.
+ - Improve console messages.
+ - Create webhooks for all configured servers. Avoid delete webhooks from another jobs.
+ - Avoid creating and deleting webhooks if not in webhooksEnvironments.
+ - Remove unused function.
+ - Uncoment delete webhooks http requests.
+ - Fix webhook environments.
+ - Fix config name.
+ - Switch servers to config.
+ - Store servers in config.
+ - fix
+ - Switch to tags, add delete webhook gitlab helper.
+ - Fix scm checkout
+ - Fix scm checkout
+ - Fix for parseProjects
+ - Change mothership project params hierarchy
+ - Change mothership project params hierarchy
+ - Try to fix override issue with mothership
+ - Test mothership config override mode
+ - Add config context debug
+ - Add config context debug
+ - Merge branch 'develop'
+ - Fix mothership config
+ - Merge branch 'develop'
+ - Override mothership config on merge
+ - Merge branch 'develop'
+ - Fix folder & job names retrieve due to first jenksin config save bug
+ - Merge pull request #52 from michael-molchanov/hotfix/store_result
+ - Fix shell action drupipeShell output return and notifications cleanup.
+ - Make sure terraform commands are not executed with bash
+ - Add jenkins cli build args
+ - Add scm checkout for blocks
+ - Move token retrieve from file into cli action for jenkins
+ - Move token retrieve from file into cli action for jenkins
+ - Move token retrieve from file into cli action for jenkins
+ - Move token retrieve from file into cli action for jenkins
+ - Move token retrieve from file into cli action for jenkins
+ - Move token retrieve from file into cli action for jenkins
+ - Merge branch 'master' into develop
+ - Add debug info to ansible jenkins
+ - Add ansible -vvv
+ - Add debug to ansible playbook
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Disable git scm checkout in blocks
+ - Add jenkins user token retrieve
+ - Merge pull request #51 from michael-molchanov/hotfix/drush_feature_list_hash_assignment
+ - Fix hash assignment.
+ - Resolve conflict & merged develop
+ - Add getJenkinsSlaveAddress()
+ - Add ansible vault credentials file
+ - Merge pull request #50 from michael-molchanov/feature/store_result
+ - Use readJSON.
+ - Send drush output if notification turned on (required for notifications).
+ - Fix drush fl action.
+ - Add context switch to return shell command result.
+ - Switch drush output with context flag.
+ - Fix drush command output and exceptions.
+ - Drush fix + store result.
+ - Add env params for jenkins execute ansible action
+ - Fix JobDSL parent config params
+ - Fix JobDSL parent config params
+ - Fix JobDSL parent config params
+ - Add scm checkout to blocks
+ - Remove -v option from jenkins build
+ - Add workingDir to ansible action
+ - Add workingDir to ansible action
+ - Add source add for docman get stable
+ - Change for stable dir scm
+ - Change for stable dir scm
+ - Change for stable dir scm
+ - Change for stable dir scm
+ - Change for stable dir scm
+ - Change for stable dir scm
+ - Fix for terraform cd working dir
+ - Fix for terraform cd working dir
+ - Add initializeAction()
+ - Add initializeAction()
+ - Add job param: repoDir to store repo during build
+ - debug SCM checkout
+ - debug SCM checkout
+ - debug SCM checkout
+ - debug SCM checkout
+ - Fix conflict
+ - Add scmCheckout debug message
+ - Add scmCheckout debug message
+ - Change Job DSL trigger conditions for common
+ - Add checkout scm function
+ - Fixed conflict
+ - Perform scm checkout on pipeline level and store used scm
+ - Perform scm checkout on pipeline level and store used scm
+ - Add condition for scm checkout on block level
+ - Add getStable() for docman
+ - Add getStable() for docman
+ - Add getStable() for docman
+ - Add getStable() for docman
+ - Add getStable() for docman
+ - Add getStable() for docman
+ - Add getStable() for docman
+ - Add docman bump stable
+ - Renamed Jenkins ansible action
+ - Renamed Jenkins ansible action
+ - Add Gitlab action
+ - Add Gitlab action
+ - Merge pull request #49 from michael-molchanov/hotfix/interpolation
+ - Fixed jenkins get address from consul
+ - Don't interpolate config action.
+ - Fix condition.
+ - Add terraform workspace
+ - Merge pull request #48 from michael-molchanov/hotfix/interpolation
+ - Allow interpolation if not disable explicitly
+ - add parent config params for dsl jobs
+ - Fix interpolate.
+ - add parent config params for dsl jobs
+ - add parent config params for dsl jobs
+ - add parent config params for dsl jobs
+ - add parent config params for dsl jobs
+ - add parent config params for dsl jobs
+ - add parent config params for dsl jobs
+ - add parent config params for dsl jobs
+ - add common job webhooks
+ - Add webhook creation for common jobs
+ - Add webhook creation for common jobs
+ - Add webhook creation for common jobs
+ - Add webhook creation for common jobs
+ - Add webhook creation for common jobs
+ - Merge branch 'master' into develop
+ - Add scm checkout to blocks
+ - Remove source add from terraform
+ - Merge pull request #46 from michael-molchanov/hotfix/config_sources
+ - Use read json and yaml functions instead of classes.
+ - Fix terraform execute command
+ - Remove terraform destroy approve flag
+ - FIx terraform executable for destroy
+ - Remove projects.json hardcode.
+ - Fix config file not found.
+ - Add terraform infraSourceName default config
+ - Fix for terraform destroy env var
+ - Remove unneeded block in simple dsl job
+ - Merged master & fixed conflicts
+ - Add checkout scm to dsl block
+ - Merge pull request #45 from michael-molchanov/feature/interpolate
+ - Add interpolation params function.
+ - Merge pull request #44 from michael-molchanov/feature/projects_yaml
+ - Allow to use Yaml for projects config.
+ - Remove try/catch on jenkins jobs testing
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Jenkins init action
+ - Merge branch 'master' into develop
+ - Added jenkins init with ansible
+ - Add interpolateParams() stab
+ - Terraform to use consul state
+ - Terraform to use consul state
+ - Merge pull request #43 from michael-molchanov/hotfix/notification_noncps
+ - Fix  piplene notify function.
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Added stash/unstash
+ - Merge pull request #42 from michael-molchanov/hotfix/active_choice_param
+ - Fix notifications for not manual job triggers.
+ - Disable mute_notifications param for triggered jobs, not manually triggered jobs.
+ - Check that build was triggered by user.
+ - Disable disable_block and disable_trigger params for triggered jobs, not manually started.
+ - Add cron trigger support for common job.
+ - Fix disable trigger check.
+ - Add jenkins params check.
+ - Add function to check that build was triggered by user
+ - Merge pull request #1 from aroq/master
+ - Merge pull request #41 from michael-molchanov/feature/mattermost
+ - Merge branch 'feature/mattermost' of github.com:michael-molchanov/drupipe into feature/mattermost
+ - Add check to disable block param.
+ - Merge pull request #39 from michael-molchanov/feature/mattermost
+ - Merge branch 'master' into feature/mattermost
+ - Allow to select node for pipeline block.
+ - Send mention for build start and stop.
+ - Allow to disable blocks on job start.
+ - Add job triggers support.
+ - Add parameters existance check before length check to avoid errors.
+ - Add iterations support to taurus action.
+ - Merge branch 'develop'
+ - git config in docman info
+ - Merge branch 'master' into develop
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Jenkins seed test
+ - Merge branch 'develop'
+ - Jenkins cli auth
+ - Jenkins cli auth
+ - Jenkins cli auth
+ - Jenkins cli auth
+ - Jenkins cli auth
+ - Jenkins cli auth
+ - Jenkins cli auth
+ - Jenkins cli auth
+ - Jenkins cli auth
+ - Jenkins cli auth
+ - Store terraform state in file
+ - Store terraform state in file
+ - Store terraform state in file
+ - Store terraform state in file
+ - Store terraform state in file
+ - Store terraform state in file
+ - Store terraform state in file
+ - Store terraform state in file
+ - Store terraform state in file
+ - Added withEnv to DrupipeAction
+ - Added withEnv to DrupipeAction
+ - Added withEnv to DrupipeAction
+ - Added withEnv to DrupipeAction
+ - Merge branch 'master' into develop
+ - Add action output to notification.
+ - Refactor to mute notifications config.
+ - Add DrushFeaturesList action.
+ - Add Drush action.
+ - Change message formatting.
+ - Send action and pipeline status to pipelineNotify.
+ - Add notification message support and limit it to 3500 symbols.
+ - Switch to new configuration format with statuses.
+ - Disable block notifications.
+ - Return shell command output from drupipeShell.
+ - Filter job name to use it in job param.
+ - Merge branch 'master' into develop
+ - Merged master to develop
+ - Merge pull request #20 from michael-molchanov/feature/redis_command
+ - Add redis default command.
+ - Add redis command action.
+
 Version 0.7.3:
  - Removed empty line
  - Fixed terraform action script
