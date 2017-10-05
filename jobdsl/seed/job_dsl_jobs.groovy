@@ -1,3 +1,6 @@
+@Grab(group='org.yaml', module='snakeyaml', version='1.18')
+import org.yaml.snakeyaml.Yaml
+
 println "Subjobs Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
@@ -13,6 +16,12 @@ if (config.tags && config.tags.contains('docman')) {
 }
 
 if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
+    if (config.jenkinsServers.size() == 0) {
+        println "Servers empty. Check configuration file servers.(yaml|yml)."
+    }
+
+    println 'Servers: ' + config.jenkinsServers.keySet().join(', ')
+
     config.gitlabHelper = new GitlabHelper(script: this, config: config)
 }
 
@@ -321,19 +330,32 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         println "Triggers disabled by webhook_trigger configuration option"
                     }
                     else {
-                        triggers {
-                            gitlabPush {
-                                buildOnPushEvents()
-                                buildOnMergeRequestEvents(false)
-                                enableCiSkip()
-                                useCiFeatures()
-                                includeBranches(branch)
+                        def webhook_tags
+                        if (config.params.webhooksEnvironments) {
+                            webhook_tags = config.params.webhooksEnvironments
+                        }
+                        else if (config.webhooksEnvironments) {
+                            webhook_tags = config.webhooksEnvironments
+                        }
+                        if (webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                            triggers {
+                                if (config.env.GITLAB_API_TOKEN_TEXT) {
+                                    gitlabPush {
+                                        buildOnPushEvents()
+                                        buildOnMergeRequestEvents(false)
+                                        enableCiSkip()
+                                        useCiFeatures()
+                                        includeBranches(branch)
+                                    }
+                                }
                             }
                         }
                     }
                     properties {
-                        gitLabConnectionProperty {
-                            gitLabConnection('Gitlab')
+                        if (config.env.GITLAB_API_TOKEN_TEXT) {
+                            gitLabConnectionProperty {
+                                gitLabConnection('Gitlab')
+                            }
                         }
                     }
                 }
@@ -347,11 +369,27 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             config.docmanConfig.projects?.each { project ->
                                 println "Project: ${project}"
                                 if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
-                                    if (config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
-                                        config.gitlabHelper.addWebhook(
+                                    def webhook_tags
+                                    if (config.params.webhooksEnvironments) {
+                                        webhook_tags = config.params.webhooksEnvironments
+                                    }
+                                    else if (config.webhooksEnvironments) {
+                                        webhook_tags = config.webhooksEnvironments
+                                    }
+                                    println "Webhook Tags: ${webhook_tags}"
+                                    if (webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                                        def tag_servers = getServersByTags(webhook_tags, config.jenkinsServers)
+                                        config.gitlabHelper.deleteWebhook(
                                             project.value.repo,
-                                            "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}"
+                                            tag_servers,
+                                            "project/${config.jenkinsFolderName}/${currentName}"
                                         )
+                                        for (jenkinsServer in tag_servers) {
+                                            config.gitlabHelper.addWebhook(
+                                                project.value.repo,
+                                                jenkinsServer.value.jenkinsUrl.substring(0, jenkinsServer.value.jenkinsUrl.length() - (jenkinsServer.value.jenkinsUrl.endsWith("/") ? 1 : 0)) + '/' + "project/${config.jenkinsFolderName}/${currentName}"
+                                            )
+                                        }
                                         println "Webhook added for project ${project}"
                                     }
                                 }
@@ -651,7 +689,15 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             cron(job.value.cron)
                         }
                     }
-                    if (job.value.webhooks && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                    def webhook_tags
+                    if (config.params.webhooksEnvironments) {
+                        webhook_tags = config.params.webhooksEnvironments
+                    }
+                    else if (config.webhooksEnvironments) {
+                        webhook_tags = config.webhooksEnvironments
+                    }
+                    println "Webhook Tags: ${webhook_tags}"
+                    if (job.value.webhooks && job.value.configRepo && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
                         properties {
                             gitLabConnectionProperty {
                                 gitLabConnection('Gitlab')
@@ -660,13 +706,29 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     }
                 }
 
-                if (job.value.webhooks && job.value.configRepo && config.webhooksEnvironments.contains(config.env.drupipeEnvironment)) {
+                def webhook_tags
+                if (config.params.webhooksEnvironments) {
+                    webhook_tags = config.params.webhooksEnvironments
+                }
+                else if (config.webhooksEnvironments) {
+                    webhook_tags = config.webhooksEnvironments
+                }
+                println "Webhook Tags: ${webhook_tags}"
+                if (job.value.webhooks && job.value.configRepo && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
                     job.value.webhooks.each { hook ->
-                        config.gitlabHelper.addWebhook(
+                        def tag_servers = getServersByTags(webhook_tags, config.jenkinsServers)
+                        config.gitlabHelper.deleteWebhook(
                             job.value.configRepo,
-                            "${config.env.JENKINS_URL}project/${config.jenkinsFolderName}/${currentName}",
-                            hook
+                            tag_servers,
+                            "project/${config.jenkinsFolderName}/${currentName}"
                         )
+                        for (jenkinsServer in tag_servers) {
+                            config.gitlabHelper.addWebhook(
+                                project.value.repo,
+                                jenkinsServer.value.jenkinsUrl.substring(0, jenkinsServer.value.jenkinsUrl.length() - (jenkinsServer.value.jenkinsUrl.endsWith("/") ? 1 : 0)) + '/' + "project/${config.jenkinsFolderName}/${currentName}",
+                                hook
+                            )
+                        }
                         println "Webhook added for project ${config.jenkinsFolderName}/${currentName}"
                     }
                 }
@@ -928,6 +990,36 @@ def isGitlabRepo(repo, config) {
     config.env.GITLAB_HOST && repo.contains(config.env.GITLAB_HOST)
 }
 
+def sourcePath(params, sourceName, String path) {
+    if (sourceName in params.loadedSources) {
+        println "sourcePath: " + params.loadedSources[sourceName].path + '/' + path
+        params.loadedSources[sourceName].path + '/' + path
+    }
+}
+
+def sourceDir(params, sourceName) {
+    if (sourceName in params.loadedSources) {
+        println "sourceDir: " + params.loadedSources[sourceName].path
+        params.loadedSources[sourceName].path
+    }
+}
+
+def getServersByTags(tags, servers) {
+    def result = [:]
+    if (tags && tags instanceof ArrayList) {
+        for (def i = 0; i < tags.size(); i++) {
+            def tag = tags[i]
+            for (server in servers) {
+                if (server.value?.tags && tag in server.value?.tags && server.value?.jenkinsUrl) {
+                    result << ["${server.key}": server.value]
+                }
+            }
+        }
+    }
+    println "getServersByTags: ${result}"
+    result
+}
+
 @Grab('org.codehaus.groovy.modules.http-builder:http-builder:0.7')
 import groovyx.net.http.HTTPBuilder
 import static groovyx.net.http.Method.*
@@ -983,6 +1075,52 @@ class GitlabHelper {
         }
         catch (e) {
             script.println e
+        }
+    }
+
+    def deleteWebhook(String repo, servers, url) {
+        setRepoProperties(repo)
+
+        script.println "deleteWebhook Servers: ${servers.toString()}"
+
+        def urls = []
+        for (server in servers) {
+            urls << server.value.jenkinsUrl.substring(0, server.value.jenkinsUrl.length() - (server.value.jenkinsUrl.endsWith("/") ? 1 : 0)) + '/' + url
+        }
+
+        script.println "deleteWebhook URLs: ${urls.toString()}"
+
+        def webhooks = getWebhooks(repo)
+
+        for (webhook in webhooks) {
+            if (webhook.url in urls) {
+                script.println "SKIP DELETE HOOK IN URLS: ${webhook.toString()}"
+            }
+            else {
+                if (webhook.url.endsWith(url)) {
+                    def http = new HTTPBuilder()
+                    http.setHeaders([
+                        'PRIVATE-TOKEN': config.env.GITLAB_API_TOKEN_TEXT,
+                    ])
+
+                    try {
+                        if (webhook.id) {
+                            script.println "DELETE HOOK: ${config.repoParams.projectID} -> ${webhook.toString()}"
+                            http.request("https://${config.repoParams.gitlabAddress}/api/v3/projects/${config.repoParams.projectID}/hooks/${webhook.id}", DELETE, JSON) {
+                                response.success = { resp, json ->
+                                    script.println "DELETE HOOK response: ${json}"
+                                }
+                            }
+                        }
+                    }
+                    catch (e) {
+                        script.println e
+                    }
+                }
+                else {
+                    script.println "SKIP DELETE HOOK FROM ANOTHER JENKINS: ${webhook.toString()}"
+                }
+            }
         }
     }
 

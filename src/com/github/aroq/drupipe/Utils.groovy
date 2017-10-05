@@ -99,24 +99,34 @@ String configToSlurperFile(config) {
 }
 
 String getJenkinsFolderName(String buildUrl) {
-    def result = (buildUrl =~ $/(job/(.+?)/)?job/(.+?)/.*/$)
-    if (result && result[0] && result[0][2]) {
-        return result[0][2]
+    if (buildUrl && buildUrl instanceof CharSequence && buildUrl.length() > 0) {
+        def result = (buildUrl =~ $/(job/(.+?)/)?job/(.+?)/.*/$)
+        if (result && result[0] && result[0][2]) {
+            return result[0][2]
+        }
+        else {
+            echo "Job not in folder."
+            return ""
+        }
     }
     else {
-        echo "Job not in folder."
-        return ""
+        throw new Exception("getJenkinsFolderName: buildUrl is empty or null.")
     }
 }
 
 String getJenkinsJobName(String buildUrl) {
-    def result = (buildUrl =~ $/(job/(.+?)/)?job/(.+?)/.*/$)
-    if (result && result[0] && result[0][3]) {
-        return result[0][3]
+    if (buildUrl && buildUrl instanceof CharSequence && buildUrl.length() > 0) {
+        def result = (buildUrl =~ $/(job/(.+?)/)?job/(.+?)/.*/$)
+        if (result && result[0] && result[0][3]) {
+            return result[0][3]
+        }
+        else {
+            echo "Empty job name."
+            return ""
+        }
     }
     else {
-        echo "Empty job name."
-        return ""
+        throw new Exception("getJenkinsJobName: buildUrl is empty or null.")
     }
 }
 
@@ -339,7 +349,23 @@ def getMothershipConfigFile(params) {
             }
         }
     }
-    return null
+    throw new Exception("getMothershipConfigFile: mothersip config file not found.")
+}
+
+def getMothershipServersFile(params) {
+    def serversFileName = 'servers'
+    def extensions = ['yaml', 'yml']
+    def dir = sourceDir(params, 'mothership')
+    for (extension in extensions) {
+        def serversFile = "${dir}/${serversFileName}.${extension}"
+        if (fileExists(serversFile)) {
+            def file = readFile(serversFile)
+            if (file) {
+                return readYaml(text: file).servers
+            }
+        }
+    }
+    throw new Exception("getMothershipServersFile: servers config file not found.")
 }
 
 def sourcePath(params, sourceName, String path) {
@@ -417,6 +443,7 @@ Map merge(Map[] sources) {
             source.each { k, v ->
                 if (result[k] instanceof Map && v instanceof Map ) {
                     if (v.containsKey('override') && v['override']) {
+                        v.remove('override')
                         result[k] = v
                     }
                     else {
