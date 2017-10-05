@@ -1,3 +1,6 @@
+Version 0.7.6:
+ - Try to load global library version
+
 Version 0.7.5:
  - Try to load global library version
  - Try to load global library version
