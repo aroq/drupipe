@@ -125,7 +125,7 @@ if (!config.tags || (!config.tags.contains('drupipe') && config.configSeedType =
                         webhook_tags = config.webhooksEnvironments
                     }
                     println "Webhook Tags: ${webhook_tags}"
-                    if (webhook_tags && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                    if (webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
                         def tag_servers = getServersByTags(webhook_tags, config.jenkinsServers)
                         gitlabHelper.deleteWebhook(
                             config.configRepo,

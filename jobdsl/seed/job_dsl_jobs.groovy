@@ -373,7 +373,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                         webhook_tags = config.webhooksEnvironments
                                     }
                                     println "Webhook Tags: ${webhook_tags}"
-                                    if (webhook_tags && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                                    if (webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
                                         def tag_servers = getServersByTags(webhook_tags, config.jenkinsServers)
                                         config.gitlabHelper.deleteWebhook(
                                             project.value.repo,
@@ -694,7 +694,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         webhook_tags = config.webhooksEnvironments
                     }
                     println "Webhook Tags: ${webhook_tags}"
-                    if (job.value.webhooks && job.value.configRepo && webhook_tags && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                    if (job.value.webhooks && job.value.configRepo && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
                         properties {
                             gitLabConnectionProperty {
                                 gitLabConnection('Gitlab')
@@ -711,7 +711,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     webhook_tags = config.webhooksEnvironments
                 }
                 println "Webhook Tags: ${webhook_tags}"
-                if (job.value.webhooks && job.value.configRepo && webhook_tags && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                if (job.value.webhooks && job.value.configRepo && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
                     job.value.webhooks.each { hook ->
                         def tag_servers = getServersByTags(webhook_tags, config.jenkinsServers)
                         config.gitlabHelper.deleteWebhook(

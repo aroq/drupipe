@@ -71,7 +71,7 @@ projects.each { project ->
     if (config.params.jenkinsServers) {
         jenkins_servers = config.params.jenkinsServers
     }
-    if (jenkins_servers && jenkins_servers.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+    if (jenkins_servers && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && jenkins_servers.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
         println "CONFIG mothership_job_subDir: ${config.mothership_job_subDir}"
         println "CONFIG mothership_job_name: ${config.mothership_job_name}"
         String subDir = config.mothership_job_subDir ? config.mothership_job_subDir + '/' : ''
@@ -155,7 +155,7 @@ projects.each { project ->
                     webhook_tags = config.webhooksEnvironments
                 }
                 println "Webhook Tags: ${webhook_tags}"
-                if (webhook_tags && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                if (webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
                     def tag_servers = getServersByTags(webhook_tags, servers)
                     gitlabHelper.deleteWebhook(
                         config.configRepo,
