@@ -45,14 +45,20 @@ class YamlFileHandler extends BaseAction {
     }
 
     def process(String stage) {
-        utils.dump(context, 'YamlFileHandler process context')
-        script.drupipeShell('pwd && ls -lah && ls -lah docroot && ls -lah docroot/master', context)
-        executeCommand('pwd && ls -lah')
-        String deployFile = context.builder ? context.builder.artifactParams.dir + '/' + action.params.deployFile : 'docroot/master/' + action.params.deployFile
+        String deployDir = context.builder ? context.builder.artifactParams.dir : 'docroot/master'
+        String deployFile = deployDir + '/' + action.params.deployFile
         if (script.fileExists(deployFile)) {
             def deployYAML = script.readYaml(file: deployFile)
             utils.dump(deployYAML, 'DEPLOY YAML')
             def commands = []
+            if (stage == 'operations') {
+                def root = context.environmentParams.root
+                root = root.substring(0, root.length() - (root.endsWith("/") ? 1 : 0))
+                commands << "cd ${root}"
+            }
+            else {
+                commands << "cd ${deployDir}"
+            }
             if (deployYAML[stage]) {
                 for (def i = 0; i < deployYAML[stage].size(); i++) {
                     commands << interpolateCommand(deployYAML[stage][i])
