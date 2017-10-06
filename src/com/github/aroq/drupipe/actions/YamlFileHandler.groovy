@@ -57,7 +57,12 @@ class YamlFileHandler extends BaseAction {
             }
             if (commands) {
                 def joinedCommands = commands.join("\n")
-                executeCommand(joinedCommands)
+                if (stage == 'operations') {
+                    executeCommand(joinedCommands)
+                }
+                else {
+                    script.drupipeShell(joinedCommands, context)
+                }
             }
         }
         else {
