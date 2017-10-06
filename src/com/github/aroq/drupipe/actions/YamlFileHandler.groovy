@@ -39,6 +39,9 @@ class YamlFileHandler extends BaseAction {
     }
 
     def process(String stage) {
+        utils.dump(context, 'YamlFileHandler process context')
+        script.drupipeShell('pwd && ls -lah', context)
+        executeCommand('pwd && ls -lah')
         String deployFile = context.builder ? context.builder.artifactParams.dir + '/' + action.params.deployFile : 'docroot/master/' + action.params.deployFile
         if (script.fileExists(deployFile)) {
             def deployYAML = script.readYaml(file: deployFile)
