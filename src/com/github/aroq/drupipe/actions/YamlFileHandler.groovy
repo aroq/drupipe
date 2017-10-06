@@ -13,15 +13,21 @@ class YamlFileHandler extends BaseAction {
     def DrupipeAction action
 
     def build() {
+        def repo_url
         if (context.components && context.components['master'] && context.components['master'].repo) {
-            def repoParams = [
-                repoAddress: context.components['master'].repo,
-                reference: context.environmentParams.git_reference,
-                dir: 'docroot',
-                repoDirName: 'master',
-            ]
-            script.drupipeAction([action: "Git.clone", params: repoParams << action.params], context)
+            repo_url = context.components['master'].repo
         }
+        else {
+            repo_url = context.configRepo
+        }
+
+        def repoParams = [
+            repoAddress: repo_url,
+            reference: context.environmentParams.git_reference,
+            dir: 'docroot',
+            repoDirName: 'master',
+        ]
+        script.drupipeAction([action: "Git.clone", params: repoParams << action.params], context)
 
         process('build')
     }
