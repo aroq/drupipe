@@ -46,6 +46,8 @@ class YamlFileHandler extends BaseAction {
 
     def process(String stage) {
         String deployDir = context.builder ? context.builder.artifactParams.dir : 'docroot/master'
+        context['builder']['artifactParams'] = [:]
+        context['builder']['artifactParams']['dir'] = deployDir
         String deployFile = deployDir + '/' + action.params.deployFile
         if (script.fileExists(deployFile)) {
             def deployYAML = script.readYaml(file: deployFile)
