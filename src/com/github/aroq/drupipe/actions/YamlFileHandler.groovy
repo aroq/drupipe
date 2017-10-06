@@ -55,9 +55,13 @@ class YamlFileHandler extends BaseAction {
                 def root = context.environmentParams.root
                 root = root.substring(0, root.length() - (root.endsWith("/") ? 1 : 0))
                 commands << "cd ${root}"
+                commands << "pwd"
+                commands << "ls -lah"
             }
             else {
                 commands << "cd ${deployDir}"
+                commands << "pwd"
+                commands << "ls -lah"
             }
             if (deployYAML[stage]) {
                 for (def i = 0; i < deployYAML[stage].size(); i++) {
