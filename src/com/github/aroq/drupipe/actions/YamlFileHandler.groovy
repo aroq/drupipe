@@ -13,13 +13,22 @@ class YamlFileHandler extends BaseAction {
     def DrupipeAction action
 
     def build() {
+        def repo_url
+        if (context.components && context.components['master'] && context.components['master'].repo) {
+            repo_url = context.components['master'].repo
+        }
+        else {
+            repo_url = context.configRepo
+        }
+
         def repoParams = [
-            repoAddress: context.components['master'].repo,
+            repoAddress: repo_url,
             reference: context.environmentParams.git_reference,
             dir: 'docroot',
             repoDirName: 'master',
         ]
         script.drupipeAction([action: "Git.clone", params: repoParams << action.params], context)
+
         process('build')
     }
 
@@ -36,11 +45,26 @@ class YamlFileHandler extends BaseAction {
     }
 
     def process(String stage) {
-        String deployFile = context.builder ? context.builder.artifactParams.dir + '/' + action.params.deployFile : 'docroot/master/' + action.params.deployFile
+        String deployDir = 'docroot/master'
+        context['builder']['artifactParams'] = [:]
+        context['builder']['artifactParams']['dir'] = '../../' + deployDir
+        String deployFile = deployDir + '/' + action.params.deployFile
         if (script.fileExists(deployFile)) {
             def deployYAML = script.readYaml(file: deployFile)
             utils.dump(deployYAML, 'DEPLOY YAML')
             def commands = []
+            if (stage == 'operations') {
+                def root = context.environmentParams.root
+                root = root.substring(0, root.length() - (root.endsWith("/") ? 1 : 0))
+                commands << "cd ${root}"
+                commands << "pwd"
+                commands << "ls -lah"
+            }
+            else {
+                commands << "cd ${deployDir}"
+                commands << "pwd"
+                commands << "ls -lah"
+            }
             if (deployYAML[stage]) {
                 for (def i = 0; i < deployYAML[stage].size(); i++) {
                     commands << interpolateCommand(deployYAML[stage][i])
@@ -51,7 +75,12 @@ class YamlFileHandler extends BaseAction {
             }
             if (commands) {
                 def joinedCommands = commands.join("\n")
-                executeCommand(joinedCommands)
+                if (stage == 'operations') {
+                    executeCommand(joinedCommands)
+                }
+                else {
+                    script.drupipeShell(joinedCommands, context)
+                }
             }
         }
         else {
@@ -75,4 +104,3 @@ class YamlFileHandler extends BaseAction {
         )
     }
 }
-
