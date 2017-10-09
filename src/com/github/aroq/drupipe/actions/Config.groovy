@@ -192,12 +192,19 @@ class Config extends BaseAction {
 
                         def sourceDir = utils.sourceDir(context, scenarioSourceName)
 
-                        // Check config exists in sourceDir.
-                        if (script.fileExists(sourceDir + "/scenarios/${scenario.name}/config.yaml")) {
-                            fileName = sourceDir + "/scenarios/${scenario.name}/config.yaml"
-                        }
-                        else if (script.fileExists(sourceDir + "/scenarios/${scenario.name}/config.yml")) {
-                            fileName = sourceDir + "/scenarios/${scenario.name}/config.yml"
+                        filesToCheck = [
+                            "/.drupipe/scenarios/${scenario.name}/config.yaml",
+                            "/.drupipe/scenarios/${scenario.name}/config.yml",
+                            "/scenarios/${scenario.name}/config.yaml",
+                            "/scenarios/${scenario.name}/config.yml"
+                        ]
+
+                        for (def ifc = 0; ifc < filesToCheck.size(); ifc++) {
+                            def fileToCheck = filesToCheck[ifc]
+                            if (script.fileExists(sourceDir + fileToCheck)) {
+                                fileName = sourceDir + fileToCheck
+                                break
+                            }
                         }
 
                         // Merge scenario if exists.
@@ -234,11 +241,9 @@ class Config extends BaseAction {
                 mode: 'shell',
             ]
 
+            this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
+
             def providers = [
-                [
-                    action: 'Source.add',
-                    params: [source: sourceObject]
-                ],
                 [
                     action: 'Source.loadConfig',
                     params: [
@@ -247,15 +252,37 @@ class Config extends BaseAction {
                         configPath: context.projectConfigFile
                     ]
                 ],
-                [
-                    action: 'Source.loadConfig',
-                    params: [
-                        sourceName: 'project',
-                        configType: 'yaml',
-                        configPath: 'config.yaml'
-                    ]
-                ]
             ]
+
+            def fileName = null
+            def sourceDir = utils.sourceDir(context, scenarioSourceName)
+
+            filesToCheck = [
+                "/.drupipe/config.yaml",
+                "/.drupipe/config.yml",
+                "/config.yaml",
+                "/config.yml"
+            ]
+
+            for (def ifc = 0; ifc < filesToCheck.size(); ifc++) {
+                def fileToCheck = filesToCheck[ifc]
+                if (script.fileExists(sourceDir + fileToCheck)) {
+                    fileName = sourceDir + fileToCheck
+                    break
+                }
+            }
+
+            if (fileName != null) {
+              providers << [
+                  action: 'Source.loadConfig',
+                  params: [
+                      sourceName: 'project',
+                      configType: 'yaml',
+                      configPath: fileName
+                  ]
+              ]
+            }
+
             def projectConfig
             script.sshagent([context.credentialsId]) {
                 projectConfig = context.pipeline.executePipelineActionList(providers, context)
