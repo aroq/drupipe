@@ -1,15 +1,6 @@
 @Grab(group='org.yaml', module='snakeyaml', version='1.18')
 import org.yaml.snakeyaml.Yaml
 
-def projectsFileRead(filePath) {
-  try {
-      return readFileFromWorkspace(filePath)
-  }
-  catch(e) {
-      return null
-  }
-}
-
 println "Subjobs Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
@@ -555,6 +546,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     logRotator(-1, config.logRotatorNumToKeep)
                     parameters {
                         stringParam('debugEnabled', '0')
+                        stringParam('force', '0')
                         stringParam('configRepo', config.configRepo)
                         job.value.params?.each { key, value ->
                             stringParam(key, value)
