@@ -74,7 +74,9 @@ projects.each { project ->
     if (jenkins_servers && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && jenkins_servers.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
         println "CONFIG mothership_job_subDir: ${config.mothership_job_subDir}"
         println "CONFIG mothership_job_name: ${config.mothership_job_name}"
-        String subDir = config.mothership_job_subDir ? config.mothership_job_subDir + '/' : ''
+        println "CONFIG mothership_job_jenkinsfile: ${config.mothership_job_jenkinsfile}"
+        String subDir = config.mothership_job_subDir ? config.mothership_job_subDir.substring(0, config.mothership_job_subDir.length() - (config.mothership_job_subDir.endsWith("/") ? 1 : 0)) + '/' : ''
+        String jenkinsfile = config.mothership_job_jenkinsfile ? config.mothership_job_jenkinsfile : 'Jenkinsfile'
         if (config.mothership_job_type == 'Jenkinsfile') {
             String jobName = config.mothership_job_name ? config.mothership_job_name : project.key
             println "JOB NAME: ${jobName}"
@@ -127,7 +129,7 @@ projects.each { project ->
                                     relativeTargetDirectory(subDir)
                                 }
                             }
-                            scriptPath("${subDir}Jenkinsfile")
+                            scriptPath("${subDir}${jenkinsfile}")
                         }
                     }
                 }
