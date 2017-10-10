@@ -192,7 +192,7 @@ class Config extends BaseAction {
 
                         def sourceDir = utils.sourceDir(context, scenarioSourceName)
 
-                        filesToCheck = [
+                        def filesToCheck = [
                             "/.drupipe/scenarios/${scenario.name}/config.yaml",
                             "/.drupipe/scenarios/${scenario.name}/config.yml",
                             "/scenarios/${scenario.name}/config.yaml",
@@ -241,7 +241,9 @@ class Config extends BaseAction {
                 mode: 'shell',
             ]
 
-            this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
+            script.sshagent([context.credentialsId]) {
+                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
+            }
 
             def providers = [
                 [
@@ -255,19 +257,23 @@ class Config extends BaseAction {
             ]
 
             def fileName = null
-            def sourceDir = utils.sourceDir(context, scenarioSourceName)
+            def sourceDir = utils.sourceDir(context, 'project')
+            this.script.echo("PROJECTS SOURCE DIR: ${sourceDir}")
 
-            filesToCheck = [
-                "/.drupipe/config.yaml",
-                "/.drupipe/config.yml",
-                "/config.yaml",
-                "/config.yml"
+            def filesToCheck = [
+                ".drupipe/config.yaml",
+                ".drupipe/config.yml",
+                "config.yaml",
+                "config.yml"
             ]
 
             for (def ifc = 0; ifc < filesToCheck.size(); ifc++) {
                 def fileToCheck = filesToCheck[ifc]
-                if (script.fileExists(sourceDir + fileToCheck)) {
-                    fileName = sourceDir + fileToCheck
+                def fileNameToCheck = sourceDir + '/' + fileToCheck
+                this.script.echo("PROJECT FILE NAME TO CHECK: ${fileNameToCheck}")
+                if (this.script.fileExists(fileNameToCheck)) {
+                    this.script.echo("SELECTING PROJECT FILE: ${fileNameToCheck}")
+                    fileName = fileToCheck
                     break
                 }
             }
