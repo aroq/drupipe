@@ -1,11 +1,11 @@
 @Grab(group='org.yaml', module='snakeyaml', version='1.18')
 import org.yaml.snakeyaml.Yaml
 
-println "Docman Job DSL processing"
+println "Single Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 
-if (!config.tags || (!config.tags.contains('single') && !config.tags.contains('drupipe'))) {
+if (config.tags && (config.tags.contains('single') && config.tags.contains('drupipe') && !config.tags.contains('docman'))) {
     if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
         if (config.jenkinsServers.size() == 0) {
             println "Servers empty. Check configuration file servers.(yaml|yml)."
