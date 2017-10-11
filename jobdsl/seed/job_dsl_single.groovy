@@ -5,7 +5,7 @@ println "Docman Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 
-if (!config.tags || (!config.tags.contains('drupipe') && config.configSeedType == 'single')) {
+if (!config.tags || (!config.tags.contains('single') && !config.tags.contains('drupipe'))) {
     if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
         if (config.jenkinsServers.size() == 0) {
             println "Servers empty. Check configuration file servers.(yaml|yml)."
