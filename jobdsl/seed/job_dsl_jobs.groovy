@@ -206,6 +206,10 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     buildEnvironment = config.docmanConfig.getEnvironmentByState(state)
                     branch = config.docmanConfig.getVersionBranch('', state)
                 }
+                else if (config.tags && config.tags.contains('single') && config.components && config.states && config.states.containsKey(state) && config.components.containsKey('master') && config.components.master.containsKey('states') && config.components.master.states.containsKey(state) && config.components.master.states[state].containsKey('version')) {
+                    buildEnvironment = config.states[state]
+                    branch = config.components.master.states[state].version
+                }
                 else {
                     // TODO: Check it.
                     buildEnvironment = job.value.env
@@ -365,7 +369,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             println "Webhooks creation disabled by webhook_trigger configuration option"
                         }
                         else {
-                            println "Processing Gitlab webhooks"
+                            println "Processing Gitlab webhooks for Docman project type"
                             config.docmanConfig.projects?.each { project ->
                                 println "Project: ${project}"
                                 if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
@@ -392,6 +396,42 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                         }
                                         println "Webhook added for project ${project}"
                                     }
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (config.tags && config.tags.contains('single') && config.components && config.states && config.states.containsKey(state) && config.components.containsKey('master') && config.components.master.containsKey('states') && config.components.master.states.containsKey(state) && config.components.master.states[state].containsKey('version')) {
+                    if (config.env.GITLAB_API_TOKEN_TEXT) {
+                        if (job.value.containsKey('webhook_trigger') && (job.value.webhook_trigger == 0 || job.value.webhook_trigger == '0' || job.value.webhook_trigger == false || job.value.webhook_trigger == 'false')) {
+                            println "Webhooks creation disabled by webhook_trigger configuration option"
+                        }
+                        else {
+                            println "Processing Gitlab webhooks for Single project type"
+                            println "Project: master"
+                            if (isGitlabRepo(config.configRepo, config)) {
+                                def webhook_tags
+                                if (config.params.webhooksEnvironments) {
+                                    webhook_tags = config.params.webhooksEnvironments
+                                }
+                                else if (config.webhooksEnvironments) {
+                                    webhook_tags = config.webhooksEnvironments
+                                }
+                                println "Webhook Tags: ${webhook_tags}"
+                                if (webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                                    def tag_servers = getServersByTags(webhook_tags, config.jenkinsServers)
+                                    config.gitlabHelper.deleteWebhook(
+                                        config.configRepo,
+                                        tag_servers,
+                                        "project/${config.jenkinsFolderName}/${currentName}"
+                                    )
+                                    for (jenkinsServer in tag_servers) {
+                                        config.gitlabHelper.addWebhook(
+                                            config.configRepo,
+                                            jenkinsServer.value.jenkinsUrl.substring(0, jenkinsServer.value.jenkinsUrl.length() - (jenkinsServer.value.jenkinsUrl.endsWith("/") ? 1 : 0)) + '/' + "project/${config.jenkinsFolderName}/${currentName}"
+                                        )
+                                    }
+                                    println "Webhook added for project master"
                                 }
                             }
                         }
