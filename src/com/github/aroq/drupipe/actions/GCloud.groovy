@@ -21,7 +21,7 @@ class GCloud extends BaseAction {
         script.withCredentials(creds) {
             this.script.withEnv(["KUBECONFIG=${this.action.params.workingDir}"]) {
                 this.script.drupipeShell("""
-                      gcloud auth activate-service-account --key-file ${GCLOUD_ACCESS_KEY}
+                      gcloud auth activate-service-account --key-file \${GCLOUD_ACCESS_KEY}
                       gcloud config set compute/zone europe-west1-b
                       gcloud config set project zebra-aroq
                       gcloud config set container/use_client_certificate True
