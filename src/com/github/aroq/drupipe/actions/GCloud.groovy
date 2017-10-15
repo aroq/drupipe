@@ -13,8 +13,6 @@ class GCloud extends BaseAction {
     def DrupipeAction action
 
     def auth() {
-        this.script.echo "gcloud.auth"
-
         action.params.workingDir = this.script.pwd()
 
         def creds = [script.file(credentialsId: 'GCLOUD_ACCESS_KEY', variable: 'GCLOUD_ACCESS_KEY')]

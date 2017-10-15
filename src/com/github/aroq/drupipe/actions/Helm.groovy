@@ -17,7 +17,11 @@ class Helm extends BaseAction {
     }
 
     def status() {
-        this.script.echo "Helm.status"
+        this.script.withEnv(["KUBECONFIG=${this.action.params.workingDir}/.kubeconfig"]) {
+            kubectl get pods
+            this.script.drupipeShell("""
+            """, this.context << [shellCommandWithBashLogin: false])
+        }
     }
 
     def install() {
