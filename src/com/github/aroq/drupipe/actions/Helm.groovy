@@ -12,6 +12,10 @@ class Helm extends BaseAction {
 
     def DrupipeAction action
 
+    def config() {
+        this.script.echo "Helm.config"
+    }
+
     def status() {
         this.script.echo "Helm.status"
     }
