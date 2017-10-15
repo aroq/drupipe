@@ -31,10 +31,13 @@ class Helm extends BaseAction {
         String helmEnv = this.context.jenkinsParams.helmEnv
         action.params.valuesFile = 'zebra.values.yaml'
 
-        this.script.withEnv([script.file(credentialsId: 'HELM_ZEBRA_SECRETS_FILE', variable: 'HELM_ZEBRA_SECRETS_FILE'), "KUBECONFIG=${this.action.params.workingDir}/.kubeconfig"]) {
-            this.script.drupipeShell("""
-            helm install --wait --timeout 120 --name zebra-cd-${helmEnv} . -f ${action.params.valuesFile} -f \${HELM_ZEBRA_SECRETS_FILE}
-            """, this.context << [shellCommandWithBashLogin: false])
+        def creds = [script.file(credentialsId: 'HELM_ZEBRA_SECRETS_FILE', variable: 'HELM_ZEBRA_SECRETS_FILE')]
+        script.withCredentials(creds) {
+            this.script.withEnv(["KUBECONFIG=${this.action.params.workingDir}/.kubeconfig"]) {
+                this.script.drupipeShell("""
+                helm install --wait --timeout 120 --name zebra-cd-${helmEnv} . -f ${this.action.params.valuesFile} -f \${HELM_ZEBRA_SECRETS_FILE}
+                """, this.context << [shellCommandWithBashLogin: false])
+            }
         }
     }
 
