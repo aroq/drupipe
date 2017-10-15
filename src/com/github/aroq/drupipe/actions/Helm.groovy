@@ -17,6 +17,8 @@ class Helm extends BaseAction {
     }
 
     def status() {
+        action.params.workingDir = this.script.pwd()
+
         this.script.withEnv(["KUBECONFIG=${this.action.params.workingDir}/.kubeconfig"]) {
             this.script.drupipeShell("""
             kubectl get pods
