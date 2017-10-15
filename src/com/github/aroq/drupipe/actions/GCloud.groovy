@@ -19,7 +19,7 @@ class GCloud extends BaseAction {
 
         def creds = [script.file(credentialsId: 'GCLOUD_ACCESS_KEY', variable: 'GCLOUD_ACCESS_KEY')]
         script.withCredentials(creds) {
-            this.script.withEnv("KUBECONFIG=${this.action.params.workingDir}") {
+            this.script.withEnv(["KUBECONFIG=${this.action.params.workingDir}"]) {
                 this.script.drupipeShell("""
                       gcloud auth activate-service-account --key-file ${GCLOUD_ACCESS_KEY}
                       gcloud config set compute/zone europe-west1-b
