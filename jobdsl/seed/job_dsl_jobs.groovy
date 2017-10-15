@@ -724,7 +724,9 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         )
                         for (jenkinsServer in tag_servers) {
                             config.gitlabHelper.addWebhook(
-                                project.value.repo,
+                                // TODO: check if this is OK.
+                                //project.value.repo,
+                                job.value.configRepo,
                                 jenkinsServer.value.jenkinsUrl.substring(0, jenkinsServer.value.jenkinsUrl.length() - (jenkinsServer.value.jenkinsUrl.endsWith("/") ? 1 : 0)) + '/' + "project/${config.jenkinsFolderName}/${currentName}",
                                 hook
                             )
