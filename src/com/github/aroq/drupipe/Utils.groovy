@@ -502,4 +502,9 @@ def interpolateParams(params, context, action) {
     return params
 }
 
+def getActionParam(String name, actionParams, overrides) {
+    def params = actionParams << overrides
+    params.containsKey(name) ? params[name] : ''
+}
+
 return this

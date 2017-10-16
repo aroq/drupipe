@@ -26,22 +26,24 @@ class Helm extends BaseAction {
         }
     }
 
+    // Idempotent command to apply Helm chart.
     def apply() {
-        // Prepare params
+        // Prepare params.
         String valueFileSuffix = 'values.yaml'
-        String helmChartsDir = 'charts'
+        String helmChartsDir   = 'charts'
 
-        String helmChartName = this.context.jenkinsParams.chartName
-        String helmChartDir = helmChartsDir + '/' + helmChartName
-        String helmEnv = this.context.jenkinsParams.helmEnv
-        String helmReleaseName = this.context.jenkinsParams.helmReleaseName ? this.context.jenkinsParams.helmReleaseName : "${helmChartName}-${helmEnv}"
-        String k8sNamespace = this.context.jenkinsParams.k8sNamespace ? this.context.jenkinsParams.k8sNamespace : "${helmReleaseName}-${helmEnv}"
-        String valuesFile = "${helmReleaseName}.${valueFileSuffix}"
-        String envValuesFile = "${helmEnv}.${helmReleaseName}.${valueFileSuffix}"
-        String workingDir = this.script.pwd()
-        String helmExecutable = this.action.params.helmExecutable
-        String helmCommand = this.action.params.helmCommand
+        String helmChartName   = utils.getActionParam('helmChartName',   this.action.params, this.context.jenkinsParams)
+        String helmChartDir    = helmChartsDir + '/' + helmChartName
+        String helmEnv         = utils.getActionParam('helmEnv',         this.action.params, this.context.jenkinsParams)
+        String helmReleaseName = utils.getActionParam('helmReleaseName', this.action.params, this.context.jenkinsParams)
+        String k8sNamespace    = utils.getActionParam('k8sNamespace',    this.action.params, this.context.jenkinsParams)
+        String helmExecutable  = utils.getActionParam('helmExecutable',  this.action.params, this.context.jenkinsParams)
+        String helmCommand     = utils.getActionParam('helmCommand',     this.action.params, this.context.jenkinsParams)
+        String valuesFile      = "${helmReleaseName}.${valueFileSuffix}"
+        String envValuesFile   = "${helmEnv}.${helmReleaseName}.${valueFileSuffix}"
+        String workingDir      = this.script.pwd()
 
+        // Prepare flags.
         this.action.params.helmFlags << [namespace: k8sNamespace]
         def helmFlags= prepareFlags(this.action.params.helmFlags)
 
