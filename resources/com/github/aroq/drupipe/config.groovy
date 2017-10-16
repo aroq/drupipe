@@ -154,4 +154,17 @@ defaultActionParams = [
     YamlFileHandler: [
         deployFile: '.drupipe.yml',
     ],
+    Helm: [
+        helmExecutable: 'helm',
+    ],
+    Helm_apply: [
+        helmCommand: 'upgrade',
+        waitTimeout: '120',
+        helmFlags: [
+            'install': '',
+            'wait': '',
+            'timeout': '120'
+        ]
+    ],
+
 ]
