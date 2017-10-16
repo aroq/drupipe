@@ -65,14 +65,12 @@ class Helm extends BaseAction {
         String helmChartName   = utils.getActionParam('helmChartName',   this.action.params, this.context.jenkinsParams)
         String helmEnv         = utils.getActionParam('helmEnv',         this.action.params, this.context.jenkinsParams)
         String helmReleaseName = utils.getActionParam('helmReleaseName', this.action.params, this.context.jenkinsParams, [helmChartName, helmEnv].join('-'))
-        String helmNamespace   = utils.getActionParam('helmNamespace',   this.action.params, this.context.jenkinsParams, [helmChartName, helmEnv].join('-'))
         String helmExecutable  = utils.getActionParam('helmExecutable',  this.action.params, this.context.jenkinsParams)
         String helmCommand     = utils.getActionParam('helmCommand',     this.action.params, this.context.jenkinsParams)
 
         String workingDir      = this.script.pwd()
 
         // Prepare flags.
-        this.action.params.helmFlags << [namespace: helmNamespace]
         def helmFlags = prepareFlags(this.action.params.helmFlags)
 
         this.script.withEnv(["KUBECONFIG=${workingDir}/.kubeconfig"]) {
@@ -86,14 +84,12 @@ class Helm extends BaseAction {
         String helmChartName   = utils.getActionParam('helmChartName',   this.action.params, this.context.jenkinsParams)
         String helmEnv         = utils.getActionParam('helmEnv',         this.action.params, this.context.jenkinsParams)
         String helmReleaseName = utils.getActionParam('helmReleaseName', this.action.params, this.context.jenkinsParams, [helmChartName, helmEnv].join('-'))
-        String helmNamespace   = utils.getActionParam('helmNamespace',   this.action.params, this.context.jenkinsParams, [helmChartName, helmEnv].join('-'))
         String helmExecutable  = utils.getActionParam('helmExecutable',  this.action.params, this.context.jenkinsParams)
         String helmCommand     = utils.getActionParam('helmCommand',     this.action.params, this.context.jenkinsParams)
 
         String workingDir      = this.script.pwd()
 
         // Prepare flags.
-        this.action.params.helmFlags << [namespace: helmNamespace]
         def helmFlags= prepareFlags(this.action.params.helmFlags)
 
         this.script.withEnv(["KUBECONFIG=${workingDir}/.kubeconfig"]) {
