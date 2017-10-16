@@ -29,16 +29,17 @@ class Helm extends BaseAction {
         String helmCommand     = utils.getActionParam('helmCommand',         this.action.params, this.context.jenkinsParams)
         String kubeConfigFile  = utils.getActionParam('kubeConfigFile',      this.action.params, this.context.jenkinsParams)
 
-        String valuesFile      = [helmChartName, valueFileSuffix].join('.')
-        String envValuesFile   = [helmEnv, helmChartName, valueFileSuffix].join('.')
-        String helmChartDir    = [helmChartsDir, helmChartName].join('/')
+        String valuesFile         = [helmChartName, valueFileSuffix].join('.')
+        String envValuesFile      = [helmEnv, helmChartName, valueFileSuffix].join('.')
+        String secretsValuesFile  = "\${HELM_ZEBRA_SECRETS_FILE}"
+        String helmChartDir       = [helmChartsDir, helmChartName].join('/')
 
         String workingDir      = this.script.pwd()
 
         // Prepare flags.
         this.action.params.helmFlags << [
             '--namespace': [helmNamespace],
-            '-f': [valuesFile, envValuesFile, "\${HELM_ZEBRA_SECRETS_FILE}"]
+            '-f': [valuesFile, envValuesFile, secretsValuesFile]
         ]
         def helmFlags= prepareFlags(this.action.params.helmFlags)
 

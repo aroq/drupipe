@@ -163,8 +163,8 @@ defaultActionParams = [
     Helm_apply: [
         helmCommand: 'upgrade',
         helmFlags: [
-            '--install': [],
-            '--wait': [],
+            '--install': [''],
+            '--wait': [''],
             '--timeout': ['120']
         ]
     ],
