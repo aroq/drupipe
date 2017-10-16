@@ -163,19 +163,19 @@ defaultActionParams = [
     Helm_apply: [
         helmCommand: 'upgrade',
         helmFlags: [
-            '--install': '',
-            '--wait': '',
-            '--timeout': '120'
+            ['--install': ''],
+            ['--wait': ''],
+            ['--timeout': '120'],
         ]
     ],
     Helm_status: [
         helmCommand: 'status',
-        helmFlags: [:]
+        helmFlags: []
     ],
     Helm_delete: [
         helmCommand: 'delete',
         helmFlags: [
-            '--purge': '',
+            ['--purge': '',]
         ]
     ],
 
