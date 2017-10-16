@@ -36,8 +36,8 @@ class Helm extends BaseAction {
         script.withCredentials(creds) {
             this.script.withEnv(["KUBECONFIG=${this.action.params.workingDir}/.kubeconfig"]) {
                 this.script.drupipeShell("""
-                helm upgrade --install --wait --timeout 120 --name zebra-cd-${helmEnv} \
-                    --namespace zebra-cd-${helmEnv} ${chartDir} \
+                helm upgrade --install --wait --timeout 120 \
+                    --namespace zebra-cd-${helmEnv} zebra-cd-${helmEnv} ${chartDir} \
                     -f ${this.action.params.valuesFile} \
                     -f \${HELM_ZEBRA_SECRETS_FILE}
                 """, this.context << [shellCommandWithBashLogin: false])
