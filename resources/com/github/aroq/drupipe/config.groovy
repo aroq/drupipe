@@ -155,16 +155,17 @@ defaultActionParams = [
         deployFile: '.drupipe.yml',
     ],
     Helm: [
-        helmExecutable: 'helm',
+        helmExecutable:      'helm',
         helmValueFileSuffix: 'values.yaml',
-        helmChartsDir: 'charts',
+        helmChartsDir:       'charts',
+        kubeConfigFile:      '.kubeconfig',
     ],
     Helm_apply: [
         helmCommand: 'upgrade',
         helmFlags: [
-            'install': '',
-            'wait': '',
-            'timeout': '120'
+            '--install': '',
+            '--wait': '',
+            '--timeout': '120'
         ]
     ],
     Helm_status: [
@@ -174,7 +175,7 @@ defaultActionParams = [
     Helm_delete: [
         helmCommand: 'delete',
         helmFlags: [
-            'purge': '',
+            '--purge': '',
         ]
     ],
 
