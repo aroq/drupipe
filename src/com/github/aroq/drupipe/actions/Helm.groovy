@@ -27,6 +27,7 @@ class Helm extends BaseAction {
     }
 
     def install() {
+        String chartDir = this.context.jenkinsParams.chartDir
         action.params.workingDir = this.script.pwd()
         String helmEnv = this.context.jenkinsParams.helmEnv
         action.params.valuesFile = 'zebra.values.yaml'
@@ -35,7 +36,10 @@ class Helm extends BaseAction {
         script.withCredentials(creds) {
             this.script.withEnv(["KUBECONFIG=${this.action.params.workingDir}/.kubeconfig"]) {
                 this.script.drupipeShell("""
-                helm install --wait --timeout 120 --name zebra-cd-${helmEnv} --namespace zebra-cd-${helmEnv} . -f ${this.action.params.valuesFile} -f \${HELM_ZEBRA_SECRETS_FILE}
+                helm install --wait --timeout 120 --name zebra-cd-${helmEnv} \
+                    --namespace zebra-cd-${helmEnv} ${chartDir} \
+                    -f ${this.action.params.valuesFile} \
+                    -f \${HELM_ZEBRA_SECRETS_FILE}
                 """, this.context << [shellCommandWithBashLogin: false])
             }
         }
