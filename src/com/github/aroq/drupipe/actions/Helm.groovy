@@ -37,8 +37,8 @@ class Helm extends BaseAction {
 
         // Prepare flags.
         this.action.params.helmFlags << [
-            ['--namespace': [helmNamespace]],
-            ['-f': [valuesFile, envValuesFile, "\${HELM_ZEBRA_SECRETS_FILE}"]]
+            '--namespace': [helmNamespace],
+            '-f': [valuesFile, envValuesFile, "\${HELM_ZEBRA_SECRETS_FILE}"]
         ]
         def helmFlags= prepareFlags(this.action.params.helmFlags)
 
