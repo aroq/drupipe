@@ -91,7 +91,7 @@ class Helm extends BaseAction {
 
     @NonCPS
     prepareFlags(flags) {
-        flags.collect { k, v ->  "${k} ${v}".trim() }
+        flags.collect { k, v ->  "${k} ${v}".trim() }.join(' ')
     }
 
 }
