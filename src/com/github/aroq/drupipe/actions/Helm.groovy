@@ -36,7 +36,9 @@ class Helm extends BaseAction {
         String workingDir      = this.script.pwd()
 
         // Prepare flags.
-        this.action.params.helmFlags << ['--namespace': helmNamespace, '-f': valuesFile, '-f': envValuesFile, '-f': "\${HELM_ZEBRA_SECRETS_FILE}"]
+        this.action.params.helmFlags << [
+            ['--namespace': helmNamespace], ['-f': valuesFile], ['-f': envValuesFile], ['-f': "\${HELM_ZEBRA_SECRETS_FILE}"]
+        ]
         def helmFlags= prepareFlags(this.action.params.helmFlags)
 
         def creds = [script.file(credentialsId: 'HELM_ZEBRA_SECRETS_FILE', variable: 'HELM_ZEBRA_SECRETS_FILE')]
@@ -91,7 +93,7 @@ class Helm extends BaseAction {
 
     @NonCPS
     prepareFlags(flags) {
-        flags.collect { k, v ->  "${k} ${v}".trim() }.join(' ')
+        flags.collect { v ->  "${v.key} ${v.value}".trim() }.join(' ')
     }
 
 }
