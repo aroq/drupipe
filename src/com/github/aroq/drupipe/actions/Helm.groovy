@@ -73,7 +73,7 @@ class Helm extends BaseAction {
 
         // Prepare flags.
         this.action.params.helmFlags << [namespace: helmNamespace]
-        def helmFlags= prepareFlags(this.action.params.helmFlags)
+        def helmFlags = prepareFlags(this.action.params.helmFlags)
 
         this.script.withEnv(["KUBECONFIG=${workingDir}/.kubeconfig"]) {
             this.script.drupipeShell("""

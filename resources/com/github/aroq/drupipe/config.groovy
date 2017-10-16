@@ -169,8 +169,7 @@ defaultActionParams = [
     ],
     Helm_status: [
         helmCommand: 'status',
-        helmFlags: [
-        ]
+        helmFlags: [:]
     ],
     Helm_delete: [
         helmCommand: 'delete',
