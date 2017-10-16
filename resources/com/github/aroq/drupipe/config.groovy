@@ -156,10 +156,11 @@ defaultActionParams = [
     ],
     Helm: [
         helmExecutable: 'helm',
+        helmValueFileSuffix: 'values.yaml',
+        helmChartsDir: 'charts',
     ],
     Helm_apply: [
         helmCommand: 'upgrade',
-        waitTimeout: '120',
         helmFlags: [
             'install': '',
             'wait': '',

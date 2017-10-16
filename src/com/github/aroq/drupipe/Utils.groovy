@@ -502,7 +502,17 @@ def interpolateParams(params, context, action) {
     return params
 }
 
-def getActionParam(String name, actionParams, overrides, defValue = '') {
+@NonCPS
+// TODO: Add interpolate logic.
+def processActionParams(params, action) {
+    Map result = [:]
+    params.each { k, v ->
+        result[k] = getActionParam(k, action.action.params, action.context.jenkinsParams, v)
+    }
+    result
+}
+
+def getActionParam(String name, Map actionParams, Map overrides, String defValue = '') {
     def params = actionParams << overrides
     params.containsKey(name) ? params[name] : defValue
 }

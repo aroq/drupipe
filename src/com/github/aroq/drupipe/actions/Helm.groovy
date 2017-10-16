@@ -29,9 +29,8 @@ class Helm extends BaseAction {
     // Idempotent command to apply Helm chart.
     def apply() {
         // Prepare params.
-        String valueFileSuffix = 'values.yaml'
-        String helmChartsDir   = 'charts'
-
+        String valueFileSuffix = utils.getActionParam('helmValueFileSuffix', this.action.params, this.context.jenkinsParams)
+        String helmChartsDir   = utils.getActionParam('helmChartsDir',   this.action.params, this.context.jenkinsParams)
         String helmChartName   = utils.getActionParam('helmChartName',   this.action.params, this.context.jenkinsParams)
         String helmEnv         = utils.getActionParam('helmEnv',         this.action.params, this.context.jenkinsParams)
         String helmReleaseName = utils.getActionParam('helmReleaseName', this.action.params, this.context.jenkinsParams, [helmChartName, helmEnv].join('-'))
