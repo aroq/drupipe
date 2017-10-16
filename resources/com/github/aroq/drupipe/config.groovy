@@ -167,5 +167,16 @@ defaultActionParams = [
             'timeout': '120'
         ]
     ],
+    Helm_status: [
+        helmCommand: 'status',
+        helmFlags: [
+        ]
+    ],
+    Helm_delete: [
+        helmCommand: 'delete',
+        helmFlags: [
+            'purge': '',
+        ]
+    ],
 
 ]
