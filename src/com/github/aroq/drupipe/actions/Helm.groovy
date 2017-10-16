@@ -37,7 +37,8 @@ class Helm extends BaseAction {
 
         // Prepare flags.
         this.action.params.helmFlags << [
-            ['--namespace': helmNamespace], ['-f': valuesFile], ['-f': envValuesFile], ['-f': "\${HELM_ZEBRA_SECRETS_FILE}"]
+            ['--namespace': [helmNamespace]],
+            ['-f': [valuesFile, envValuesFile, "\${HELM_ZEBRA_SECRETS_FILE}"]]
         ]
         def helmFlags= prepareFlags(this.action.params.helmFlags)
 
@@ -92,8 +93,12 @@ class Helm extends BaseAction {
     }
 
     @NonCPS
-    prepareFlags(flags) {
-        flags.collect { v ->  "${v.key} ${v.value}".trim() }.join(' ')
+    def prepareFlags(flags) {
+        flags.collect { k, v ->
+            v.collect { subItem ->
+                "${k} ${subItem}".trim()
+            }.join(' ').trim()
+        }.join(' ')
     }
 
 }
