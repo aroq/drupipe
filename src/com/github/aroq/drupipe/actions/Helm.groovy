@@ -30,7 +30,7 @@ class Helm extends BaseAction {
         String chartDir = this.context.jenkinsParams.chartDir
         action.params.workingDir = this.script.pwd()
         String helmEnv = this.context.jenkinsParams.helmEnv
-        action.params.valuesFile = 'zebra.values.yaml'
+        action.params.valuesFile = "${chartDir}/zebra.values.yaml"
 
         def creds = [script.file(credentialsId: 'HELM_ZEBRA_SECRETS_FILE', variable: 'HELM_ZEBRA_SECRETS_FILE')]
         script.withCredentials(creds) {
