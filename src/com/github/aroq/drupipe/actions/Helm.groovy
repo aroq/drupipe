@@ -23,13 +23,6 @@ class Helm extends BaseAction {
         params.working_dir = this.script.pwd()
 
         // Prepare flags.
-        params.flags << [
-            '-f': [
-                params.values_file,
-                params.env_values_file,
-                "\${${params.secret_values_file_id}}", // To interpolate inside shell script.
-            ]
-        ]
         params.flags = prepareFlags(params.flags)
 
         // Execute helm command.
