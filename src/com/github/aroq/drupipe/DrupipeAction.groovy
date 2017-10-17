@@ -67,7 +67,7 @@ class DrupipeAction implements Serializable {
                 this.context.pipeline.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
             }
             else {
-                this.params = utils.interpolateParams(this.params, context, this)
+                this.params = utils.processActionParams(params, context, this, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
             }
 
             actionParams << this.params

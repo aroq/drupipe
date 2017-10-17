@@ -19,35 +19,37 @@ class Helm extends BaseAction {
     // Apply Helm chart idempotently.
     def apply() {
         // Prepare params.
-        String valueFileSuffix = utils.getActionParam('helmValueFileSuffix', this.action.params, this.context.jenkinsParams)
-        String helmChartsDir   = utils.getActionParam('helmChartsDir',       this.action.params, this.context.jenkinsParams)
-        String helmChartName   = utils.getActionParam('helmChartName',       this.action.params, this.context.jenkinsParams)
-        String helmEnv         = utils.getActionParam('helmEnv',             this.action.params, this.context.jenkinsParams)
-        String helmReleaseName = utils.getActionParam('helmReleaseName',     this.action.params, this.context.jenkinsParams, [helmChartName, helmEnv].join('-'))
-        String helmNamespace   = utils.getActionParam('helmNamespace',       this.action.params, this.context.jenkinsParams, [helmChartName, helmEnv].join('-'))
-        String helmExecutable  = utils.getActionParam('helmExecutable',      this.action.params, this.context.jenkinsParams)
-        String helmCommand     = utils.getActionParam('helmCommand',         this.action.params, this.context.jenkinsParams)
-        String kubeConfigFile  = utils.getActionParam('kubeConfigFile',      this.action.params, this.context.jenkinsParams)
+//        String valueFileSuffix = utils.getActionParam('helmValueFileSuffix', this.action.params, this.context.jenkinsParams)
+//        String helmChartsDir   = utils.getActionParam('helmChartsDir',       this.action.params, this.context.jenkinsParams)
+//        String helmChartName   = utils.getActionParam('helmChartName',       this.action.params, this.context.jenkinsParams)
+//        String helmEnv         = utils.getActionParam('helmEnv',             this.action.params, this.context.jenkinsParams)
+//        String helmReleaseName = utils.getActionParam('helmReleaseName',     this.action.params, this.context.jenkinsParams, [helmChartName, helmEnv].join('-'))
+//        String helmNamespace   = utils.getActionParam('helmNamespace',       this.action.params, this.context.jenkinsParams, [helmChartName, helmEnv].join('-'))
+//        String helmExecutable  = utils.getActionParam('helmExecutable',      this.action.params, this.context.jenkinsParams)
+//        String helmCommand     = utils.getActionParam('helmCommand',         this.action.params, this.context.jenkinsParams)
+//        String kubeConfigFile  = utils.getActionParam('kubeConfigFile',      this.action.params, this.context.jenkinsParams)
 
-        String valuesFile         = [helmChartName, valueFileSuffix].join('.')
-        String envValuesFile      = [helmEnv, helmChartName, valueFileSuffix].join('.')
-        String secretsValuesFile  = "\${HELM_ZEBRA_SECRETS_FILE}"
-        String helmChartDir       = [helmChartsDir, helmChartName].join('/')
+//        String valuesFile         = [helmChartName, valueFileSuffix].join('.')
+//        String envValuesFile      = [helmEnv, helmChartName, valueFileSuffix].join('.')
+//        String secretsValuesFile  = "\${HELM_ZEBRA_SECRETS_FILE}"
+//        String helmChartDir       = [helmChartsDir, helmChartName].join('/')
 
         String workingDir      = this.script.pwd()
 
-        // Prepare flags.
-        this.action.params.helmFlags << [
-            '--namespace': [helmNamespace],
-            '-f': [valuesFile, envValuesFile, secretsValuesFile]
-        ]
-        def helmFlags= prepareFlags(this.action.params.helmFlags)
+        def params = this.action.params
 
-        def creds = [script.file(credentialsId: 'HELM_ZEBRA_SECRETS_FILE', variable: 'HELM_ZEBRA_SECRETS_FILE')]
+        // Prepare flags.
+        params.helmFlags << [
+            '--namespace': [params.namespace],
+            '-f': [params.values_file, params.env_values_file, "\${${params.secret_values_file_id}}"]
+        ]
+        def helmFlags= prepareFlags(params.helmFlags)
+
+        def creds = [script.file(credentialsId: params.secret_values_file_id, variable: params.secret_values_file_id)]
         script.withCredentials(creds) {
-            this.script.withEnv(["KUBECONFIG=${workingDir}/${kubeConfigFile}"]) {
+            this.script.withEnv(["KUBECONFIG=${workingDir}/${params.kubeconfig_file}"]) {
                 this.script.drupipeShell("""
-                     ${helmExecutable} ${helmCommand} ${helmFlags} ${helmReleaseName} ${helmChartDir}
+                     ${params.executable} ${params.command} ${params.flags} ${params.release_name} ${params.chart_dir}
                 """, this.context << [shellCommandWithBashLogin: false])
             }
         }

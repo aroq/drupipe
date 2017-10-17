@@ -155,26 +155,38 @@ defaultActionParams = [
         deployFile: '.drupipe.yml',
     ],
     Helm: [
-        helmExecutable:      'helm',
-        helmValueFileSuffix: 'values.yaml',
-        helmChartsDir:       'charts',
-        kubeConfigFile:      '.kubeconfig',
+        executable:   'helm',
+        charts_dir:   'charts',
+        kubectl_config_file: '.kubeconfig',
     ],
+    // HELM_EXECUTABLE: test
+    // HELM_APPLY_EXECUTABLE: test
+    // HELM_APPLY_HELM_COMMAND: test
     Helm_apply: [
-        helmCommand: 'upgrade',
-        helmFlags: [
+        command: 'upgrade',
+        value_suffix: 'values.yaml',
+        chart_name: '',
+        env: '',
+        timeout: '120',
+        release_name: '${action.params.chart_name}-${action.params.env}',
+        namespace: '${action.params.chart_name}-${action.params.env}',
+        values_file: '${action.params.chart_name}.${action.params.value_suffix}',
+        env_values_file: '${action.params.env}.${action.params.values_file}',
+        secret_values_file: '',
+        chart_dir: '${action.params.charts_dir}/${action.params.chart_name}',
+        flags: [
             '--install': [''],
             '--wait': [''],
-            '--timeout': ['120']
+            '--timeout': ['${action.params.timeout}']
         ]
     ],
     Helm_status: [
-        helmCommand: 'status',
-        helmFlags: [:]
+        command: 'status',
+        flags: [:]
     ],
     Helm_delete: [
-        helmCommand: 'delete',
-        helmFlags: [
+        command: 'delete',
+        flags: [
             '--purge': [''],
         ]
     ],

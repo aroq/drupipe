@@ -490,31 +490,37 @@ def interpolateCommand(String command, context, action) {
 }
 
 @NonCPS
-def interpolateParams(params, context, action) {
+def processActionParams(params, context, action, ArrayList prefixes) {
     if (params instanceof CharSequence) {
         params = interpolateCommand(params, context, action)
-    }
-    else if (params instanceof Map) {
+    } else if (params instanceof Map) {
         for (param in params) {
-            params[param.key] = interpolateParams(param.value, context, action)
+            param.value = getActionParam(params[param.key], context, prefixes.collect {
+                [it, param.key.toUpperCase()].join('_')
+            })
+            params[param.key] = processActionParams(param.value, context, action, prefixes.collect {
+                [it, param.key.toUpperCase()].join('_')
+            })
         }
+    } else if (params instanceof List) {
+        for (def i = 0; i < params.size(); i++) {
+            params[i] = interpolateCommand(params[i], context, action)
+        }
+
     }
     return params
 }
 
 @NonCPS
-// TODO: Add interpolate logic.
-def processActionParams(params, action) {
-    Map result = [:]
-    params.each { k, v ->
-        result[k] = getActionParam(k, action.action.params, action.context.jenkinsParams, v)
+def getActionParam(param, context, prefixes) {
+    def result = param
+    prefixes.each {
+        if (context.jenkinsParams?.containsKey(it)) {
+            result = context.jenkinsParams[it]
+        }
     }
-    result
-}
 
-def getActionParam(String name, Map actionParams, Map overrides, String defValue = '') {
-    def params = actionParams << overrides
-    params.containsKey(name) ? params[name] : defValue
+    result
 }
 
 return this
