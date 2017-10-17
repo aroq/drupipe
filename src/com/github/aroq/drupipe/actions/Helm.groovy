@@ -45,7 +45,7 @@ class Helm extends BaseAction {
         ]
         def helmFlags= prepareFlags(params.helmFlags)
 
-        def creds = [script.file(credentialsId: params.secret_values_file_id, variable: params.secret_values_file_id)]
+        def creds = [script.file(credentialsId: params.secret_values_file, variable: params.secret_values_file)]
         script.withCredentials(creds) {
             this.script.withEnv(["KUBECONFIG=${workingDir}/${params.kubeconfig_file}"]) {
                 this.script.drupipeShell("""
