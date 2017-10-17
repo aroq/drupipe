@@ -13,10 +13,9 @@ class Helm extends BaseAction {
     DrupipeAction action
 
     def init() {
-        this.script.echo "Helm.init"
+        executeHelmCommand()
     }
 
-    // Apply Helm chart idempotently.
     def apply() {
         executeHelmCommand()
     }

@@ -158,23 +158,31 @@ defaultActionParams = [
         executable: 'gcloud',
         kubectl_config_file: '.kubeconfig',
     ],
+    // Examples of overriding command with jenkin params:
+    // HELM_EXECUTABLE: test
+    // HELM_APPLY_EXECUTABLE: test
+    // HELM_APPLY_HELM_COMMAND: test
     Helm: [
         executable: 'helm',
         env: '',
         charts_dir: 'charts',
         kubectl_config_file: '.kubeconfig',
+        env: [
+            KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
+        ],
     ],
-    // HELM_EXECUTABLE: test
-    // HELM_APPLY_EXECUTABLE: test
-    // HELM_APPLY_HELM_COMMAND: test
+    Helm_init: [
+        command: 'init',
+        full_command: [
+            '${action.params.executable}',
+            '${action.params.command}',
+        ],
+    ],
     Helm_apply: [
         command: 'upgrade',
         value_suffix: 'values.yaml',
         chart_name: '',
         environment: '',
-        env: [
-            KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
-        ],
         timeout: '120',
         release_name: '${action.params.chart_name}-${action.params.environment}',
         namespace: '${action.params.chart_name}-${action.params.environment}',
@@ -211,13 +219,24 @@ defaultActionParams = [
         command: 'status',
         chart_name: '',
         release_name: '${action.params.chart_name}-${action.params.env}',
-        flags: [:]
+        flags: [:],
+        full_command: [
+            '${action.params.executable}',
+            '${action.params.command}',
+            '${action.params.release_name}',
+        ],
     ],
     Helm_delete: [
         command: 'delete',
         flags: [
             '--purge': [''],
-        ]
+        ],
+        full_command: [
+            '${action.params.executable}',
+            '${action.params.command}',
+            '${prepareFlags(action.params.flags)}',
+            '${action.params.release_name}',
+        ],
     ],
 
 ]

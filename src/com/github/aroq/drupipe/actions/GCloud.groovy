@@ -24,7 +24,6 @@ class GCloud extends BaseAction {
                       gcloud config set project zebra-aroq
                       gcloud config set container/use_client_certificate True
                       gcloud container clusters get-credentials main
-                      ls -al ${this.action.params.workingDir}
             """, this.context << [shellCommandWithBashLogin: false])
             }
         }
