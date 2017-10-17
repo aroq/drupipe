@@ -172,7 +172,7 @@ defaultActionParams = [
         namespace: '${action.params.chart_name}-${action.params.env}',
         values_file: '${action.params.chart_name}.${action.params.value_suffix}',
         env_values_file: '${action.params.env}.${action.params.values_file}',
-        secret_values_file: '',
+        secret_values_file_id: '',
         chart_dir: '${action.params.charts_dir}/${action.params.chart_name}',
         flags: [
             '--install': [''],
