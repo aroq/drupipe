@@ -167,6 +167,9 @@ defaultActionParams = [
                 id: '${action.params.access_key_file_id}',
             ],
         ],
+        compute_zone: '',
+        project_name: '',
+        cluster_name: '',
     ],
     // Examples of overriding command with jenkin params:
     // HELM_EXECUTABLE: test
