@@ -492,7 +492,7 @@ def interpolateCommand(String command, context, action) {
         }.join(' ')
     }
 
-    def binding = [context: context, action: action]
+    def binding = [context: context, action: action, prepareFlags: prepareFlags]
     def engine = new groovy.text.SimpleTemplateEngine()
     def template = engine.createTemplate(command).make(binding)
     template.toString()
