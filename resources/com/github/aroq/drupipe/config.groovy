@@ -176,6 +176,12 @@ defaultActionParams = [
         env_values_file: '${action.params.env}.${action.params.values_file}',
         secret_values_file_id: '',
         chart_dir: '${action.params.charts_dir}/${action.params.chart_name}',
+        credentials: [
+            secret_values_file: [
+                type: 'file',
+                id: '${action.params.secret_values_file_id}',
+            ],
+        ],
         flags: [
             '--install': [''],
             '--wait': [''],
@@ -184,7 +190,7 @@ defaultActionParams = [
             '-f': [
                 '${action.params.values_file}',
                 '${action.params.env_values_file}',
-                '\\\$${action.params.secret_values_file_id}', // To interpolate inside shell script.
+                '\\\$${action.params.secret_values_file_id}', // To interpolate first "$" sign inside shell script.
             ]
         ]
     ],
