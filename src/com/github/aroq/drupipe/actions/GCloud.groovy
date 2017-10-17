@@ -14,7 +14,7 @@ class GCloud extends BaseAction {
 
     def auth() {
          this.script.drupipeShell("""
-              gcloud auth activate-service-account --key-file \${${action.params.access_key_file_id}
+              gcloud auth activate-service-account --key-file \${${action.params.access_key_file_id}}
               gcloud config set compute/zone europe-west1-b
               gcloud config set project zebra-aroq
               gcloud config set container/use_client_certificate True
