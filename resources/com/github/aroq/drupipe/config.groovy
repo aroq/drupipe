@@ -180,6 +180,11 @@ defaultActionParams = [
             '--wait': [''],
             '--timeout': ['${action.params.timeout}'],
             '--namespace': ['${action.params.namespace}'],
+            '-f': [
+                '${action.params.values_file}',
+                '${action.params.env_values_file}',
+                '\${${action.params.secret_values_file_id}}', // To interpolate inside shell script.
+            ]
         ]
     ],
     Helm_status: [

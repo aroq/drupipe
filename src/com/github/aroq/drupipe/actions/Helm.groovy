@@ -33,6 +33,7 @@ class Helm extends BaseAction {
         params.flags = prepareFlags(params.flags)
 
         // Execute helm command.
+        // TODO: Make sure only allowed credentials could be used. Control it with projects.yaml in mothership config.
         def creds = [script.file(credentialsId: params.secret_values_file_id, variable: params.secret_values_file_id)]
         script.withCredentials(creds) {
             this.script.withEnv(["KUBECONFIG=${params.working_dir}/${params.kubectl_config_file}"]) {
