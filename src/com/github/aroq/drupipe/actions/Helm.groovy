@@ -10,7 +10,7 @@ class Helm extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    DrupipeAction action
 
     def init() {
         this.script.echo "Helm.init"
@@ -21,20 +21,16 @@ class Helm extends BaseAction {
         executeHelmCommand()
     }
 
-    def executeHelmCommand() {
-//        this.script.withEnv(["KUBECONFIG=${this.context.drupipe_working_dir}/${this.action.params.kubectl_config_file}"]) {
-            this.script.drupipeShell("""
-                ${this.action.params.full_command.join(' ')} 
-            """, this.context << [shellCommandWithBashLogin: false])
-//        }
-    }
-
     def status() {
         executeHelmCommand()
     }
 
     def delete() {
         executeHelmCommand()
+    }
+
+    def executeHelmCommand() {
+        script.drupipeShell("${action.params.full_command.join(' ')}", context << [shellCommandWithBashLogin: false])
     }
 
 }
