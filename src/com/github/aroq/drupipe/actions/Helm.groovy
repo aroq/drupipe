@@ -26,7 +26,7 @@ class Helm extends BaseAction {
 
         this.script.withEnv(["KUBECONFIG=${this.action.params.working_dir}/${this.action.params.kubectl_config_file}"]) {
             this.script.drupipeShell("""
-                ${params.full_command.join(' ')} 
+                ${this.action.params.full_command.join(' ')} 
             """, this.context << [shellCommandWithBashLogin: false])
         }
     }
@@ -37,15 +37,6 @@ class Helm extends BaseAction {
 
     def delete() {
         executeHelmCommand()
-    }
-
-    @NonCPS
-    def prepareFlags(flags) {
-        flags.collect { k, v ->
-            v.collect { subItem ->
-                "${k} ${subItem}".trim()
-            }.join(' ').trim()
-        }.join(' ')
     }
 
 }
