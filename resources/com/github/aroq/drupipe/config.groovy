@@ -154,12 +154,15 @@ defaultActionParams = [
     YamlFileHandler: [
         deployFile: '.drupipe.yml',
     ],
+    GCloud: [
+        executable: 'gcloud',
+        kubectl_config_file: '.kubeconfig',
+    ],
     Helm: [
         executable: 'helm',
         env: '',
         charts_dir: 'charts',
         kubectl_config_file: '.kubeconfig',
-        working_dir: '',
     ],
     // HELM_EXECUTABLE: test
     // HELM_APPLY_EXECUTABLE: test
