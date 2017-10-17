@@ -157,6 +157,16 @@ defaultActionParams = [
     GCloud: [
         executable: 'gcloud',
         kubectl_config_file: '.kubeconfig',
+        env: [
+            KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
+        ],
+        access_key_file_id: '',
+        credentials: [
+            secret_values_file: [
+                type: 'file',
+                id: '${action.params.access_key_file_id}',
+            ],
+        ],
     ],
     // Examples of overriding command with jenkin params:
     // HELM_EXECUTABLE: test

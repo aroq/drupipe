@@ -13,20 +13,13 @@ class GCloud extends BaseAction {
     def DrupipeAction action
 
     def auth() {
-        action.params.workingDir = this.script.pwd()
-
-        def creds = [script.file(credentialsId: 'GCLOUD_ACCESS_KEY', variable: 'GCLOUD_ACCESS_KEY')]
-        script.withCredentials(creds) {
-            this.script.withEnv(["KUBECONFIG=${this.context.drupipe_working_dir}/${this.action.params.kubectl_config_file}"]) {
-                this.script.drupipeShell("""
-                      gcloud auth activate-service-account --key-file \${GCLOUD_ACCESS_KEY}
-                      gcloud config set compute/zone europe-west1-b
-                      gcloud config set project zebra-aroq
-                      gcloud config set container/use_client_certificate True
-                      gcloud container clusters get-credentials main
-            """, this.context << [shellCommandWithBashLogin: false])
-            }
-        }
+         this.script.drupipeShell("""
+              gcloud auth activate-service-account --key-file \${${action.params.access_key_file_id}
+              gcloud config set compute/zone europe-west1-b
+              gcloud config set project zebra-aroq
+              gcloud config set container/use_client_certificate True
+              gcloud container clusters get-credentials main
+        """, this.context << [shellCommandWithBashLogin: false])
     }
 
 }
