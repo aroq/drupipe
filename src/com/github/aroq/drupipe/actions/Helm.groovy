@@ -48,7 +48,7 @@ class Helm extends BaseAction {
         // Execute helm command.
         def creds = [script.file(credentialsId: params.secret_values_file_id, variable: params.secret_values_file_id)]
         script.withCredentials(creds) {
-            this.script.withEnv(["KUBECONFIG=${workingDir}/${params.kubeconfig_file}"]) {
+            this.script.withEnv(["KUBECONFIG=${workingDir}/${params.kubectl_config_file}"]) {
                 this.script.drupipeShell("""
                      ${params.executable} ${params.command} ${params.flags} ${params.release_name} ${params.chart_dir}
                 """, this.context << [shellCommandWithBashLogin: false])
