@@ -164,7 +164,7 @@ defaultActionParams = [
     // HELM_APPLY_HELM_COMMAND: test
     Helm: [
         executable: 'helm',
-        env: '',
+        environment: '',
         charts_dir: 'charts',
         kubectl_config_file: '.kubeconfig',
         env: [
@@ -182,7 +182,6 @@ defaultActionParams = [
         command: 'upgrade',
         value_suffix: 'values.yaml',
         chart_name: '',
-        environment: '',
         timeout: '120',
         release_name: '${action.params.chart_name}-${action.params.environment}',
         namespace: '${action.params.chart_name}-${action.params.environment}',
