@@ -172,6 +172,9 @@ defaultActionParams = [
         value_suffix: 'values.yaml',
         chart_name: '',
         environment: '',
+        env: [
+            KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
+        ],
         timeout: '120',
         release_name: '${action.params.chart_name}-${action.params.environment}',
         namespace: '${action.params.chart_name}-${action.params.environment}',
