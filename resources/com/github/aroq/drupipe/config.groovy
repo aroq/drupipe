@@ -155,8 +155,9 @@ defaultActionParams = [
         deployFile: '.drupipe.yml',
     ],
     Helm: [
-        executable:   'helm',
-        charts_dir:   'charts',
+        executable: 'helm',
+        env: '',
+        charts_dir: 'charts',
         kubectl_config_file: '.kubeconfig',
         working_dir: '',
     ],
@@ -189,6 +190,8 @@ defaultActionParams = [
     ],
     Helm_status: [
         command: 'status',
+        chart_name: '',
+        release_name: '${action.params.chart_name}-${action.params.env}',
         flags: [:]
     ],
     Helm_delete: [
