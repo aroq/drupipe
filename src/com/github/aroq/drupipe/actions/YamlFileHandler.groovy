@@ -21,9 +21,17 @@ class YamlFileHandler extends BaseAction {
             repo_url = context.configRepo
         }
 
+        def branch
+        if (context.environmentParams.git_reference) {
+            branch = context.environmentParams.git_reference
+        }
+        else {
+            branch = context.job.branch
+        }
+
         def repoParams = [
             repoAddress: repo_url,
-            reference: context.environmentParams.git_reference,
+            reference: branch,
             dir: 'docroot',
             repoDirName: 'master',
         ]
