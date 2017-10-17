@@ -27,30 +27,17 @@ class Helm extends BaseAction {
         params.working_dir = this.script.pwd()
 
         // Prepare flags.
-        params.flags = prepareFlags(params.flags)
+//        params.flags = prepareFlags(params.flags)
 
         // Execute helm command.
-        // TODO: Make sure only allowed credentials could be used. Control it with projects.yaml in mothership config.
-        String command = [params.executable, params.command, params.flags, params.release_name, params.chart_dir].join(' ')
+//        String command = [params.executable, params.command, params.flags, params.release_name, params.chart_dir].join(' ')
+//        String command = [params.executable, params.command, params.flags, params.release_name, params.chart_dir].join(' ')
 
-//        // Process credentials.
-//        ArrayList credentials = []
-//        if (params.credentials) {
-//            params.credentials.each { k, v ->
-//                if (v.type == 'file') {
-//                    v.variable_name = v.variable_name ? v.variable_name : v.id
-//                    credentials << this.script.file(credentialsId: v.id, variable: v.variable_name)
-//                }
-//            }
-//        }
-//
-//        script.withCredentials(credentials) {
-            this.script.withEnv(["KUBECONFIG=${params.working_dir}/${params.kubectl_config_file}"]) {
-                this.script.drupipeShell("""
-                    ${command} 
-                """, this.context << [shellCommandWithBashLogin: false])
-            }
-//        }
+        this.script.withEnv(["KUBECONFIG=${params.working_dir}/${params.kubectl_config_file}"]) {
+            this.script.drupipeShell("""
+                ${params.full_command.join(' ')} 
+            """, this.context << [shellCommandWithBashLogin: false])
+        }
     }
 
     def status() {

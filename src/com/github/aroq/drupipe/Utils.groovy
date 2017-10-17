@@ -523,4 +523,13 @@ def getActionParam(param, context, prefixes) {
     result
 }
 
+@NonCPS
+def prepareFlags(flags) {
+    flags.collect { k, v ->
+        v.collect { subItem ->
+            "${k} ${subItem}".trim()
+        }.join(' ').trim()
+    }.join(' ')
+}
+
 return this

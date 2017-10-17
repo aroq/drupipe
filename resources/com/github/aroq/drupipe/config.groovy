@@ -168,12 +168,12 @@ defaultActionParams = [
         command: 'upgrade',
         value_suffix: 'values.yaml',
         chart_name: '',
-        env: '',
+        environment: '',
         timeout: '120',
-        release_name: '${action.params.chart_name}-${action.params.env}',
-        namespace: '${action.params.chart_name}-${action.params.env}',
+        release_name: '${action.params.chart_name}-${action.params.environment}',
+        namespace: '${action.params.chart_name}-${action.params.environment}',
         values_file: '${action.params.chart_name}.${action.params.value_suffix}',
-        env_values_file: '${action.params.env}.${action.params.values_file}',
+        env_values_file: '${action.params.environment}.${action.params.values_file}',
         secret_values_file_id: '',
         chart_dir: '${action.params.charts_dir}/${action.params.chart_name}',
         credentials: [
@@ -192,7 +192,14 @@ defaultActionParams = [
                 '${action.params.env_values_file}',
                 '\\\$${action.params.secret_values_file_id}', // To interpolate first "$" sign inside shell script.
             ]
-        ]
+        ],
+        full_command: [
+            '${action.params.executable}',
+            '${action.params.command}',
+            '${prepareFlags(action.params.flags)}',
+            '${action.params.release_name}',
+            '${action.params.chart_dir}',
+        ],
     ],
     Helm_status: [
         command: 'status',

@@ -78,6 +78,7 @@ class DrupipeAction implements Serializable {
 
 
             // Process credentials.
+            // TODO: Make sure only allowed credentials could be used. Control it with projects.yaml in mothership config.
             ArrayList credentials = []
             if (actionParams.credentials) {
                 actionParams.credentials.each { k, v ->
