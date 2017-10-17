@@ -34,17 +34,18 @@ class Helm extends BaseAction {
 //        String secretsValuesFile  = "\${HELM_ZEBRA_SECRETS_FILE}"
 //        String helmChartDir       = [helmChartsDir, helmChartName].join('/')
 
-        String workingDir      = this.script.pwd()
+        String workingDir = this.script.pwd()
 
         def params = this.action.params
 
         // Prepare flags.
-        params.helmFlags << [
+        params.flags << [
             '--namespace': [params.namespace],
             '-f': [params.values_file, params.env_values_file, "\${${params.secret_values_file_id}}"]
         ]
-        def helmFlags= prepareFlags(params.helmFlags)
+        params.flags = prepareFlags(params.flags)
 
+        // Execute helm command.
         def creds = [script.file(credentialsId: params.secret_values_file, variable: params.secret_values_file)]
         script.withCredentials(creds) {
             this.script.withEnv(["KUBECONFIG=${workingDir}/${params.kubeconfig_file}"]) {
