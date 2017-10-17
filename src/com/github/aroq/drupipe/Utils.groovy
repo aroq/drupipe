@@ -484,7 +484,9 @@ def removeDir(dir, context) {
 @NonCPS
 def interpolateCommand(String command, context, action) {
 
-    def prepareFlags = this.prepareFlags()
+    def prepareFlags = { flags ->
+        prepareFlags(flags)
+    }
 
     def binding = [context: context, action: action, prepareFlags: prepareFlags]
     def engine = new groovy.text.SimpleTemplateEngine()
