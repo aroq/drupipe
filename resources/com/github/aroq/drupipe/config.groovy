@@ -165,6 +165,7 @@ defaultActionParams = [
     Helm: [
         executable: 'helm',
         environment: '',
+        chart_name: '', // HELM_CHART_NAME in Jenkins params.
         charts_dir: 'charts',
         kubectl_config_file: '.kubeconfig',
         env: [
@@ -181,7 +182,6 @@ defaultActionParams = [
     Helm_apply: [
         command: 'upgrade',
         value_suffix: 'values.yaml',
-        chart_name: '',
         timeout: '120',
         release_name: '${action.params.chart_name}-${action.params.environment}',
         namespace: '${action.params.chart_name}-${action.params.environment}',
@@ -200,6 +200,7 @@ defaultActionParams = [
             '--wait': [''],
             '--timeout': ['${action.params.timeout}'],
             '--namespace': ['${action.params.namespace}'],
+            // TODO: Files are REQUIRED now. Need to add checks in flags processing to make files optional.
             '-f': [
                 '${action.params.values_file}',
                 '${action.params.env_values_file}',
@@ -216,7 +217,6 @@ defaultActionParams = [
     ],
     Helm_status: [
         command: 'status',
-        chart_name: '',
         release_name: '${action.params.chart_name}-${action.params.environment}',
         flags: [:],
         full_command: [
@@ -227,6 +227,7 @@ defaultActionParams = [
     ],
     Helm_delete: [
         command: 'delete',
+        release_name: '${action.params.chart_name}-${action.params.environment}',
         flags: [
             '--purge': [''],
         ],
