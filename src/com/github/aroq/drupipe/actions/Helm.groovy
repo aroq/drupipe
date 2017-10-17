@@ -22,18 +22,9 @@ class Helm extends BaseAction {
     }
 
     def executeHelmCommand() {
-        // Prepare params.
-        def params = this.action.params
-        params.working_dir = this.script.pwd()
+        action.params.working_dir = this.script.pwd()
 
-        // Prepare flags.
-//        params.flags = prepareFlags(params.flags)
-
-        // Execute helm command.
-//        String command = [params.executable, params.command, params.flags, params.release_name, params.chart_dir].join(' ')
-//        String command = [params.executable, params.command, params.flags, params.release_name, params.chart_dir].join(' ')
-
-        this.script.withEnv(["KUBECONFIG=${params.working_dir}/${params.kubectl_config_file}"]) {
+        this.script.withEnv(["KUBECONFIG=${this.action.params.working_dir}/${this.action.params.kubectl_config_file}"]) {
             this.script.drupipeShell("""
                 ${params.full_command.join(' ')} 
             """, this.context << [shellCommandWithBashLogin: false])
