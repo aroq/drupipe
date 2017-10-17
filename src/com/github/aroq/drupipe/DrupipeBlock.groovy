@@ -46,6 +46,7 @@ class DrupipeBlock implements Serializable {
             //utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'START', level: 'block'])
             context.pipeline.script.echo "NODE NAME: ${nodeName}"
             context.pipeline.script.node(nodeName) {
+                context.drupipe_working_dir = [context.pipeline.script.pwd(), '.drupipe'].join('/')
                 utils.dump(this.config, 'BLOCK-CONFIG')
                 utils.dump(this.context, 'BLOCK-CONTEXT')
                 context.pipeline.script.unstash('config')
