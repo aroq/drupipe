@@ -68,6 +68,7 @@ class DrupipeAction implements Serializable {
             }
             else {
                 this.params = utils.processActionParams(params, context, this, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
+                // TODO: Store processed action params in context (context.actions['action_name']) to allow use it for interpolation in other actions.
             }
 
             actionParams << this.params

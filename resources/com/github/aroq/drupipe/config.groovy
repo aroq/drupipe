@@ -158,6 +158,7 @@ defaultActionParams = [
         executable:   'helm',
         charts_dir:   'charts',
         kubectl_config_file: '.kubeconfig',
+        working_dir: '',
     ],
     // HELM_EXECUTABLE: test
     // HELM_APPLY_EXECUTABLE: test
@@ -177,7 +178,8 @@ defaultActionParams = [
         flags: [
             '--install': [''],
             '--wait': [''],
-            '--timeout': ['${action.params.timeout}']
+            '--timeout': ['${action.params.timeout}'],
+            '--namespace': ['${action.params.namespace}'],
         ]
     ],
     Helm_status: [

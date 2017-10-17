@@ -19,36 +19,23 @@ class Helm extends BaseAction {
     // Apply Helm chart idempotently.
     def apply() {
         // Prepare params.
-//        String valueFileSuffix = utils.getActionParam('helmValueFileSuffix', this.action.params, this.context.jenkinsParams)
-//        String helmChartsDir   = utils.getActionParam('helmChartsDir',       this.action.params, this.context.jenkinsParams)
-//        String helmChartName   = utils.getActionParam('helmChartName',       this.action.params, this.context.jenkinsParams)
-//        String helmEnv         = utils.getActionParam('helmEnv',             this.action.params, this.context.jenkinsParams)
-//        String helmReleaseName = utils.getActionParam('helmReleaseName',     this.action.params, this.context.jenkinsParams, [helmChartName, helmEnv].join('-'))
-//        String helmNamespace   = utils.getActionParam('helmNamespace',       this.action.params, this.context.jenkinsParams, [helmChartName, helmEnv].join('-'))
-//        String helmExecutable  = utils.getActionParam('helmExecutable',      this.action.params, this.context.jenkinsParams)
-//        String helmCommand     = utils.getActionParam('helmCommand',         this.action.params, this.context.jenkinsParams)
-//        String kubeConfigFile  = utils.getActionParam('kubeConfigFile',      this.action.params, this.context.jenkinsParams)
-
-//        String valuesFile         = [helmChartName, valueFileSuffix].join('.')
-//        String envValuesFile      = [helmEnv, helmChartName, valueFileSuffix].join('.')
-//        String secretsValuesFile  = "\${HELM_ZEBRA_SECRETS_FILE}"
-//        String helmChartDir       = [helmChartsDir, helmChartName].join('/')
-
-        String workingDir = this.script.pwd()
-
         def params = this.action.params
+        params.working_dir = this.script.pwd()
 
         // Prepare flags.
         params.flags << [
-            '--namespace': [params.namespace],
-            '-f': [params.values_file, params.env_values_file, "\${${params.secret_values_file_id}}"]
+            '-f': [
+                params.values_file,
+                params.env_values_file,
+                "\${${params.secret_values_file_id}}", // To interpolate inside shell script.
+            ]
         ]
         params.flags = prepareFlags(params.flags)
 
         // Execute helm command.
         def creds = [script.file(credentialsId: params.secret_values_file_id, variable: params.secret_values_file_id)]
         script.withCredentials(creds) {
-            this.script.withEnv(["KUBECONFIG=${workingDir}/${params.kubectl_config_file}"]) {
+            this.script.withEnv(["KUBECONFIG=${params.working_dir}/${params.kubectl_config_file}"]) {
                 this.script.drupipeShell("""
                      ${params.executable} ${params.command} ${params.flags} ${params.release_name} ${params.chart_dir}
                 """, this.context << [shellCommandWithBashLogin: false])
