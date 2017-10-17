@@ -217,7 +217,7 @@ defaultActionParams = [
     Helm_status: [
         command: 'status',
         chart_name: '',
-        release_name: '${action.params.chart_name}-${action.params.env}',
+        release_name: '${action.params.chart_name}-${action.params.environment}',
         flags: [:],
         full_command: [
             '${action.params.executable}',
