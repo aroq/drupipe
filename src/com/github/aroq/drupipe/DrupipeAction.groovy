@@ -29,7 +29,6 @@ class DrupipeAction implements Serializable {
         def actionResult = [:]
 
         try {
-
             // Stage name & echo.
             String drupipeStageName
             if (this.context.stage) {
@@ -48,7 +47,6 @@ class DrupipeAction implements Serializable {
             utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} start <-")
 
             // Define action params.
-            //def actionParams = this.context
             def actionParams = [:]
             actionParams << ['action': this]
             def defaultActionParams = [:]
@@ -75,7 +73,6 @@ class DrupipeAction implements Serializable {
             utils.debugLog(context, actionParams, "${this.fullName} action params")
 
             def actionFile = null
-
 
             // Process credentials.
             // TODO: Make sure only allowed credentials could be used. Control it with projects.yaml in mothership config.
