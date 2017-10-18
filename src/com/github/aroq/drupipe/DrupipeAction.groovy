@@ -67,7 +67,8 @@ class DrupipeAction implements Serializable {
                 this.context.pipeline.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
             }
             else {
-                this.params = utils.interpolateParams(this.params, context, this)
+                this.params = utils.processActionParams(params, context, this, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
+                // TODO: Store processed action params in context (context.actions['action_name']) to allow use it for interpolation in other actions.
             }
 
             actionParams << this.params
@@ -75,36 +76,51 @@ class DrupipeAction implements Serializable {
 
             def actionFile = null
 
-            def envParams = actionParams.env ? actionParams.env.collect{ k, v -> "$k=$v"} : []
-            this.context.pipeline.script.withEnv(envParams) {
-                // Execute action from file if exist in sources...
-                if (context.sourcesList) {
-                    for (def i = 0; i < context.sourcesList.size(); i++) {
-                        def source = context.sourcesList[i]
-                        def fileName = utils.sourcePath(context, source.name, 'pipelines/actions/' + this.name + '.groovy')
-                        utils.debugLog(actionParams, fileName, "DrupipeAction file name to check")
-                        // To make sure we only check fileExists in Heavyweight executor mode.
-                        if (context.block?.nodeName && this.context.pipeline.script.fileExists(fileName)) {
-                            actionFile = this.context.pipeline.script.load(fileName)
-                            actionResult = actionFile."${this.methodName}"(actionParams)
-                        }
+
+            // Process credentials.
+            // TODO: Make sure only allowed credentials could be used. Control it with projects.yaml in mothership config.
+            ArrayList credentials = []
+            if (actionParams.credentials) {
+                actionParams.credentials.each { k, v ->
+                    if (v.type == 'file') {
+                        v.variable_name = v.variable_name ? v.variable_name : v.id
+                        credentials << this.context.pipeline.script.file(credentialsId: v.id, variable: v.variable_name)
                     }
                 }
-                // ...Otherwise execute from class.
-                if (!actionFile) {
-                    try {
-                        def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance(
-                            context: context,
-                            action: this,
-                            script: context.pipeline.script,
-                            utils: utils,
-                        )
+            }
 
-                        actionResult = actionInstance."${this.methodName}"()
+            this.context.pipeline.script.withCredentials(credentials) {
+                def envParams = actionParams.env ? actionParams.env.collect{ k, v -> "$k=$v"} : []
+                this.context.pipeline.script.withEnv(envParams) {
+                    // Execute action from file if exist in sources...
+                    if (context.sourcesList) {
+                        for (def i = 0; i < context.sourcesList.size(); i++) {
+                            def source = context.sourcesList[i]
+                            def fileName = utils.sourcePath(context, source.name, 'pipelines/actions/' + this.name + '.groovy')
+                            utils.debugLog(actionParams, fileName, "DrupipeAction file name to check")
+                            // To make sure we only check fileExists in Heavyweight executor mode.
+                            if (context.block?.nodeName && this.context.pipeline.script.fileExists(fileName)) {
+                                actionFile = this.context.pipeline.script.load(fileName)
+                                actionResult = actionFile."${this.methodName}"(actionParams)
+                            }
+                        }
                     }
-                    catch (err) {
-                        this.context.pipeline.script.echo err.toString()
-                        throw err
+                    // ...Otherwise execute from class.
+                    if (!actionFile) {
+                        try {
+                            def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance(
+                                context: context,
+                                action: this,
+                                script: context.pipeline.script,
+                                utils: utils,
+                            )
+
+                            actionResult = actionInstance."${this.methodName}"()
+                        }
+                        catch (err) {
+                            this.context.pipeline.script.echo err.toString()
+                            throw err
+                        }
                     }
                 }
             }

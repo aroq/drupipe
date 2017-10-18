@@ -88,10 +88,10 @@ class Ansible extends BaseAction {
         }
         utils.loadLibrary(script, context)
         def command =
-            "ansible-playbook ${action.params.playbook} \
+            """ansible-playbook ${action.params.playbook} \
             -i ${action.params.inventoryArgument} \
             --vault-password-file \${ANSIBLE_VAULT_PASS_FILE} \
-            -e '${joinParams(action.params.playbookParams, 'json')}'"
+            -e '${joinParams(action.params.playbookParams, 'json')}'"""
 
         script.echo "Ansible command: ${command}"
 
