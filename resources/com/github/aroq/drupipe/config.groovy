@@ -251,5 +251,26 @@ defaultActionParams = [
             '${action.params.release_name}',
         ],
     ],
+    Kubectl: [
+        executable: 'kubectl',
+        kubectl_config_file: '.kubeconfig',
+        env: [
+            KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
+        ],
+    ],
+    Kubectl_scale: [
+        command: 'scale',
+        full_command: [
+            '${action.params.executable}',
+            '${action.params.command}',
+        ],
+    ],
+    Kubectl_getPods: [
+        command: 'get pods',
+        full_command: [
+            '${action.params.executable}',
+            '${action.params.command}',
+        ],
+    ],
 
 ]
