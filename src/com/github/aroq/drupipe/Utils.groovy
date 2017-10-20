@@ -439,7 +439,7 @@ def echoDelimiter(String message) {
 }
 
 def jsonDump(params, value, String dumpName = '', force = false) {
-    if (debugEnabled() || force) {
+    if (debugEnabled(params) || force) {
         if (dumpName) {
             echo "Dumping ${dumpName}:"
         }
