@@ -29,11 +29,11 @@ environments {
     }
 }
 
-parameters = [
-    block = [
+parameters: [
+    block: [
 
     ],
-    action = [
+    action: [
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
             //projectConfigPath: 'docroot/config',
