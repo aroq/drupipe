@@ -98,20 +98,18 @@ class Config extends BaseAction {
     }
 
     def jobConfig() {
+        def result = [:]
         if (context.jobs) {
             def job = getJobConfigByName(context.env.JOB_NAME)
             if (job) {
                 utils.jsonDump(context, job, 'JOB')
-                context.job = job
+                result.job = job
                 if (job.context) {
-                    context = utils.merge(context, job.context)
+                    result = utils.merge(result, job.context)
                 }
             }
-            job
         }
-        else {
-            [:]
-        }
+        result
     }
 
     def getJobConfigByName(String name) {
