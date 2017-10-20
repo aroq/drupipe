@@ -105,21 +105,18 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                     if (block_config.containsKey('nodeName')) {
                                         def node_name = block_config['nodeName']
                                         println "Default nodeName for ${pipeline_block}: ${node_name}"
-                                        activeChoiceParam(pipeline_block + '_' + 'node_name') {
+                                        activeChoiceParam(pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name') {
                                             description('Allows to select node to run pipeline block')
                                             choiceType('SINGLE_SELECT')
-                                            groovyScript {
-                                                def choices_script = '['
+                                            scriptlerScript ('choices.groovy') {
+                                                def choices = []
                                                 for (label in labels) {
-                                                    def select_item = label.toString()
-                                                    if (select_item == node_name) {
-                                                        select_item = select_item + ':selected'
-                                                    }
-                                                    choices_script = choices_script + '"' + select_item + '", '
+                                                    choices << label.toString()
                                                 }
-                                                choices_script = choices_script + ']'
-                                                println "SELECT NODE FOR PIPELINE BLOCK ${pipeline_block} CHOICES: ${choices_script}"
-                                                script(choices_script)
+                                                def choices_param = choices.join('|')
+                                                println "NODE SELECT CHOICES: ${choices_param}"
+                                                parameter('defaultChoice', node_name)
+                                                parameter('choices', choices_param)
                                             }
                                         }
                                     }
@@ -127,32 +124,34 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             }
                         }
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
-                          activeChoiceParam('disable_block') {
-                              description('Allows to disable pipeline blocks')
-                              choiceType('CHECKBOX')
-                              groovyScript {
-                                  def choices_script = '['
-                                  for (pipeline_block in job.value.pipeline.blocks) {
-                                      choices_script = choices_script + '"' + pipeline_block + '", '
-                                  }
-                                  choices_script = choices_script + ']'
-                                  println "DISABLE PIPELINE BLOCK CHOICES: ${choices_script}"
-                                  script(choices_script)
-                              }
-                          }
+                            activeChoiceParam('disable_block') {
+                                description('Allows to disable pipeline blocks')
+                                choiceType('CHECKBOX')
+                                scriptlerScript ('choices.groovy') {
+                                    def choices = []
+                                    for (pipeline_block in job.value.pipeline.blocks) {
+                                        choices << pipeline_block
+                                    }
+                                    def choices_param = choices.join('|')
+                                    println "DISABLE PIPELINE BLOCK CHOICES: ${choices_param}"
+                                    parameter('defaultChoice', '')
+                                    parameter('choices', choices_param)
+                                }
+                            }
                         }
                         if (job.value.containsKey('notify')) {
                             activeChoiceParam('mute_notification') {
                                 description('Allows to mute notifications in selected channels')
                                 choiceType('CHECKBOX')
-                                groovyScript {
-                                    def choices_script = '['
+                                scriptlerScript ('choices.groovy') {
+                                    def choices = []
                                     for (channel in job.value.notify) {
-                                        choices_script = choices_script + '"' + channel + '", '
+                                        choices << channel
                                     }
-                                    choices_script = choices_script + ']'
-                                    println "MUTE NOTIFICATION CHOICES: ${choices_script}"
-                                    script(choices_script)
+                                    def choices_param = choices.join('|')
+                                    println "MUTE NOTIFICATION CHOICES: ${choices_param}"
+                                    parameter('defaultChoice', '')
+                                    parameter('choices', choices_param)
                                 }
                             }
                         }
@@ -160,14 +159,15 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             activeChoiceParam('disable_trigger') {
                                 description('Allows to disable post build job trigger')
                                 choiceType('CHECKBOX')
-                                groovyScript {
-                                    def choices_script = '['
+                                scriptlerScript ('choices.groovy') {
+                                    def choices = []
                                     for (trigger_job in job.value.trigger) {
-                                        choices_script = choices_script + '"' + trigger_job.name + '", '
+                                        choices << trigger_job.name
                                     }
-                                    choices_script = choices_script + ']'
-                                    println "DISABLE TRIGGER CHOICES: ${choices_script}"
-                                    script(choices_script)
+                                    def choices_param = choices.join('|')
+                                    println "DISABLE TRIGGER CHOICES: ${choices_param}"
+                                    parameter('defaultChoice', '')
+                                    parameter('choices', choices_param)
                                 }
                             }
                             for (trigger_job in job.value.trigger) {
@@ -206,6 +206,10 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     buildEnvironment = config.docmanConfig.getEnvironmentByState(state)
                     branch = config.docmanConfig.getVersionBranch('', state)
                 }
+                else if (config.tags && config.tags.contains('single') && config.components && config.states && config.states.containsKey(state) && config.components.containsKey('master') && config.components.master.containsKey('states') && config.components.master.states.containsKey(state) && config.components.master.states[state].containsKey('version')) {
+                    buildEnvironment = config.states[state]
+                    branch = config.components.master.states[state].version
+                }
                 else {
                     // TODO: Check it.
                     buildEnvironment = job.value.env
@@ -234,21 +238,18 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                     if (block_config.containsKey('nodeName')) {
                                         def node_name = block_config['nodeName']
                                         println "Default nodeName for ${pipeline_block}: ${node_name}"
-                                        activeChoiceParam(pipeline_block + '_' + 'node_name') {
+                                        activeChoiceParam(pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name') {
                                             description('Allows to select node to run pipeline block')
                                             choiceType('SINGLE_SELECT')
-                                            groovyScript {
-                                                def choices_script = '['
+                                            scriptlerScript ('choices.groovy') {
+                                                def choices = []
                                                 for (label in labels) {
-                                                    def select_item = label.toString()
-                                                    if (select_item == node_name) {
-                                                        select_item = select_item + ':selected'
-                                                    }
-                                                    choices_script = choices_script + '"' + select_item + '", '
+                                                    choices << label.toString()
                                                 }
-                                                choices_script = choices_script + ']'
-                                                println "SELECT NODE FOR PIPELINE BLOCK ${pipeline_block} CHOICES: ${choices_script}"
-                                                script(choices_script)
+                                                def choices_param = choices.join('|')
+                                                println "NODE SELECT CHOICES: ${choices_param}"
+                                                parameter('defaultChoice', node_name)
+                                                parameter('choices', choices_param)
                                             }
                                         }
                                     }
@@ -256,32 +257,34 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             }
                         }
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
-                          activeChoiceParam('disable_block') {
-                              description('Allows to disable pipeline blocks')
-                              choiceType('CHECKBOX')
-                              groovyScript {
-                                  def choices_script = '['
-                                  for (pipeline_block in job.value.pipeline.blocks) {
-                                      choices_script = choices_script + '"' + pipeline_block + '", '
-                                  }
-                                  choices_script = choices_script + ']'
-                                  println "DISABLE PIPELINE BLOCK CHOICES: ${choices_script}"
-                                  script(choices_script)
-                              }
-                          }
+                            activeChoiceParam('disable_block') {
+                                description('Allows to disable pipeline blocks')
+                                choiceType('CHECKBOX')
+                                scriptlerScript ('choices.groovy') {
+                                    def choices = []
+                                    for (pipeline_block in job.value.pipeline.blocks) {
+                                        choices << pipeline_block
+                                    }
+                                    def choices_param = choices.join('|')
+                                    println "DISABLE PIPELINE BLOCK CHOICES: ${choices_param}"
+                                    parameter('defaultChoice', '')
+                                    parameter('choices', choices_param)
+                                }
+                            }
                         }
                         if (job.value.containsKey('notify')) {
                             activeChoiceParam('mute_notification') {
                                 description('Allows to mute notifications in selected channels')
                                 choiceType('CHECKBOX')
-                                groovyScript {
-                                    def choices_script = '['
+                                scriptlerScript ('choices.groovy') {
+                                    def choices = []
                                     for (channel in job.value.notify) {
-                                        choices_script = choices_script + '"' + channel + '", '
+                                        choices << channel
                                     }
-                                    choices_script = choices_script + ']'
-                                    println "MUTE NOTIFICATION CHOICES: ${choices_script}"
-                                    script(choices_script)
+                                    def choices_param = choices.join('|')
+                                    println "MUTE NOTIFICATION CHOICES: ${choices_param}"
+                                    parameter('defaultChoice', '')
+                                    parameter('choices', choices_param)
                                 }
                             }
                         }
@@ -289,14 +292,15 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             activeChoiceParam('disable_trigger') {
                                 description('Allows to disable post build job trigger')
                                 choiceType('CHECKBOX')
-                                groovyScript {
-                                    def choices_script = '['
+                                scriptlerScript ('choices.groovy') {
+                                    def choices = []
                                     for (trigger_job in job.value.trigger) {
-                                        choices_script = choices_script + '"' + trigger_job.name + '", '
+                                        choices << trigger_job.name
                                     }
-                                    choices_script = choices_script + ']'
-                                    println "DISABLE TRIGGER CHOICES: ${choices_script}"
-                                    script(choices_script)
+                                    def choices_param = choices.join('|')
+                                    println "DISABLE TRIGGER CHOICES: ${choices_param}"
+                                    parameter('defaultChoice', '')
+                                    parameter('choices', choices_param)
                                 }
                             }
                             for (trigger_job in job.value.trigger) {
@@ -365,7 +369,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             println "Webhooks creation disabled by webhook_trigger configuration option"
                         }
                         else {
-                            println "Processing Gitlab webhooks"
+                            println "Processing Gitlab webhooks for Docman project type"
                             config.docmanConfig.projects?.each { project ->
                                 println "Project: ${project}"
                                 if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
@@ -397,6 +401,42 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         }
                     }
                 }
+                else if (config.tags && config.tags.contains('single') && config.components && config.states && config.states.containsKey(state) && config.components.containsKey('master') && config.components.master.containsKey('states') && config.components.master.states.containsKey(state) && config.components.master.states[state].containsKey('version')) {
+                    if (config.env.GITLAB_API_TOKEN_TEXT) {
+                        if (job.value.containsKey('webhook_trigger') && (job.value.webhook_trigger == 0 || job.value.webhook_trigger == '0' || job.value.webhook_trigger == false || job.value.webhook_trigger == 'false')) {
+                            println "Webhooks creation disabled by webhook_trigger configuration option"
+                        }
+                        else {
+                            println "Processing Gitlab webhooks for Single project type"
+                            println "Project: master"
+                            if (isGitlabRepo(config.configRepo, config)) {
+                                def webhook_tags
+                                if (config.params.webhooksEnvironments) {
+                                    webhook_tags = config.params.webhooksEnvironments
+                                }
+                                else if (config.webhooksEnvironments) {
+                                    webhook_tags = config.webhooksEnvironments
+                                }
+                                println "Webhook Tags: ${webhook_tags}"
+                                if (webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                                    def tag_servers = getServersByTags(webhook_tags, config.jenkinsServers)
+                                    config.gitlabHelper.deleteWebhook(
+                                        config.configRepo,
+                                        tag_servers,
+                                        "project/${config.jenkinsFolderName}/${currentName}"
+                                    )
+                                    for (jenkinsServer in tag_servers) {
+                                        config.gitlabHelper.addWebhook(
+                                            config.configRepo,
+                                            jenkinsServer.value.jenkinsUrl.substring(0, jenkinsServer.value.jenkinsUrl.length() - (jenkinsServer.value.jenkinsUrl.endsWith("/") ? 1 : 0)) + '/' + "project/${config.jenkinsFolderName}/${currentName}"
+                                        )
+                                    }
+                                    println "Webhook added for project master"
+                                }
+                            }
+                        }
+                    }
+                }
             }
             else if (job.value.type == 'release-deploy') {
                 pipelineJob(currentName) {
@@ -420,9 +460,11 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                 if (config.operationsModes) {
                                     activeChoiceParam('operationsMode') {
                                         description('Choose the mode for the operations')
-                                        groovyScript {
-                                            // NOTE: https://issues.jenkins-ci.org/browse/JENKINS-42655?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
-                                            script('["' + config.operationsModes.join('", "') + '"]')
+                                        scriptlerScript ('choices.groovy') {
+                                            def choices_param = config.operationsModes.join('|')
+                                            println "OPERATIONS MODES CHOICES: ${choices_param}"
+                                            parameter('defaultChoice', '')
+                                            parameter('choices', choices_param)
                                         }
                                     }
                                 }
@@ -439,21 +481,18 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                     if (block_config.containsKey('nodeName')) {
                                         def node_name = block_config['nodeName']
                                         println "Default nodeName for ${pipeline_block}: ${node_name}"
-                                        activeChoiceParam(pipeline_block + '_' + 'node_name') {
+                                        activeChoiceParam(pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name') {
                                             description('Allows to select node to run pipeline block')
                                             choiceType('SINGLE_SELECT')
-                                            groovyScript {
-                                                def choices_script = '['
+                                            scriptlerScript ('choices.groovy') {
+                                                def choices = []
                                                 for (label in labels) {
-                                                    def select_item = label.toString()
-                                                    if (select_item == node_name) {
-                                                        select_item = select_item + ':selected'
-                                                    }
-                                                    choices_script = choices_script + '"' + select_item + '", '
+                                                    choices << label.toString()
                                                 }
-                                                choices_script = choices_script + ']'
-                                                println "SELECT NODE FOR PIPELINE BLOCK ${pipeline_block} CHOICES: ${choices_script}"
-                                                script(choices_script)
+                                                def choices_param = choices.join('|')
+                                                println "NODE SELECT CHOICES: ${choices_param}"
+                                                parameter('defaultChoice', node_name)
+                                                parameter('choices', choices_param)
                                             }
                                         }
                                     }
@@ -461,32 +500,34 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             }
                         }
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
-                          activeChoiceParam('disable_block') {
-                              description('Allows to disable pipeline blocks')
-                              choiceType('CHECKBOX')
-                              groovyScript {
-                                  def choices_script = '['
-                                  for (pipeline_block in job.value.pipeline.blocks) {
-                                      choices_script = choices_script + '"' + pipeline_block + '", '
-                                  }
-                                  choices_script = choices_script + ']'
-                                  println "DISABLE PIPELINE BLOCK CHOICES: ${choices_script}"
-                                  script(choices_script)
-                              }
-                          }
+                            activeChoiceParam('disable_block') {
+                                description('Allows to disable pipeline blocks')
+                                choiceType('CHECKBOX')
+                                scriptlerScript ('choices.groovy') {
+                                    def choices = []
+                                    for (pipeline_block in job.value.pipeline.blocks) {
+                                        choices << pipeline_block
+                                    }
+                                    def choices_param = choices.join('|')
+                                    println "DISABLE PIPELINE BLOCK CHOICES: ${choices_param}"
+                                    parameter('defaultChoice', '')
+                                    parameter('choices', choices_param)
+                                }
+                            }
                         }
                         if (job.value.containsKey('notify')) {
                             activeChoiceParam('mute_notification') {
                                 description('Allows to mute notifications in selected channels')
                                 choiceType('CHECKBOX')
-                                groovyScript {
-                                    def choices_script = '['
+                                scriptlerScript ('choices.groovy') {
+                                    def choices = []
                                     for (channel in job.value.notify) {
-                                        choices_script = choices_script + '"' + channel + '", '
+                                        choices << channel
                                     }
-                                    choices_script = choices_script + ']'
-                                    println "MUTE NOTIFICATION CHOICES: ${choices_script}"
-                                    script(choices_script)
+                                    def choices_param = choices.join('|')
+                                    println "MUTE NOTIFICATION CHOICES: ${choices_param}"
+                                    parameter('defaultChoice', '')
+                                    parameter('choices', choices_param)
                                 }
                             }
                         }
@@ -494,14 +535,15 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             activeChoiceParam('disable_trigger') {
                                 description('Allows to disable post build job trigger')
                                 choiceType('CHECKBOX')
-                                groovyScript {
-                                    def choices_script = '['
+                                scriptlerScript ('choices.groovy') {
+                                    def choices = []
                                     for (trigger_job in job.value.trigger) {
-                                        choices_script = choices_script + '"' + trigger_job.name + '", '
+                                        choices << trigger_job.name
                                     }
-                                    choices_script = choices_script + ']'
-                                    println "DISABLE TRIGGER CHOICES: ${choices_script}"
-                                    script(choices_script)
+                                    def choices_param = choices.join('|')
+                                    println "DISABLE TRIGGER CHOICES: ${choices_param}"
+                                    parameter('defaultChoice', '')
+                                    parameter('choices', choices_param)
                                 }
                             }
                             for (trigger_job in job.value.trigger) {
@@ -557,21 +599,18 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                     if (block_config.containsKey('nodeName')) {
                                         def node_name = block_config['nodeName']
                                         println "Default nodeName for ${pipeline_block}: ${node_name}"
-                                        activeChoiceParam(pipeline_block + '_' + 'node_name') {
+                                        activeChoiceParam(pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name') {
                                             description('Allows to select node to run pipeline block')
                                             choiceType('SINGLE_SELECT')
-                                            groovyScript {
-                                                def choices_script = '['
+                                            scriptlerScript ('choices.groovy') {
+                                                def choices = []
                                                 for (label in labels) {
-                                                    def select_item = label.toString()
-                                                    if (select_item == node_name) {
-                                                        select_item = select_item + ':selected'
-                                                    }
-                                                    choices_script = choices_script + '"' + select_item + '", '
+                                                    choices << label.toString()
                                                 }
-                                                choices_script = choices_script + ']'
-                                                println "SELECT NODE FOR PIPELINE BLOCK ${pipeline_block} CHOICES: ${choices_script}"
-                                                script(choices_script)
+                                                def choices_param = choices.join('|')
+                                                println "NODE SELECT CHOICES: ${choices_param}"
+                                                parameter('defaultChoice', node_name)
+                                                parameter('choices', choices_param)
                                             }
                                         }
                                     }
@@ -579,32 +618,34 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             }
                         }
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
-                          activeChoiceParam('disable_block') {
-                              description('Allows to disable pipeline blocks')
-                              choiceType('CHECKBOX')
-                              groovyScript {
-                                  def choices_script = '['
-                                  for (pipeline_block in job.value.pipeline.blocks) {
-                                      choices_script = choices_script + '"' + pipeline_block + '", '
-                                  }
-                                  choices_script = choices_script + ']'
-                                  println "DISABLE PIPELINE BLOCK CHOICES: ${choices_script}"
-                                  script(choices_script)
-                              }
-                          }
+                            activeChoiceParam('disable_block') {
+                                description('Allows to disable pipeline blocks')
+                                choiceType('CHECKBOX')
+                                scriptlerScript ('choices.groovy') {
+                                    def choices = []
+                                    for (pipeline_block in job.value.pipeline.blocks) {
+                                        choices << pipeline_block
+                                    }
+                                    def choices_param = choices.join('|')
+                                    println "DISABLE PIPELINE BLOCK CHOICES: ${choices_param}"
+                                    parameter('defaultChoice', '')
+                                    parameter('choices', choices_param)
+                                }
+                            }
                         }
                         if (job.value.containsKey('notify')) {
                             activeChoiceParam('mute_notification') {
                                 description('Allows to mute notifications in selected channels')
                                 choiceType('CHECKBOX')
-                                groovyScript {
-                                    def choices_script = '['
+                                scriptlerScript ('choices.groovy') {
+                                    def choices = []
                                     for (channel in job.value.notify) {
-                                        choices_script = choices_script + '"' + channel + '", '
+                                        choices << channel
                                     }
-                                    choices_script = choices_script + ']'
-                                    println "MUTE NOTIFICATION CHOICES: ${choices_script}"
-                                    script(choices_script)
+                                    def choices_param = choices.join('|')
+                                    println "MUTE NOTIFICATION CHOICES: ${choices_param}"
+                                    parameter('defaultChoice', '')
+                                    parameter('choices', choices_param)
                                 }
                             }
                         }
@@ -612,14 +653,15 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             activeChoiceParam('disable_trigger') {
                                 description('Allows to disable post build job trigger')
                                 choiceType('CHECKBOX')
-                                groovyScript {
-                                    def choices_script = '['
+                                scriptlerScript ('choices.groovy') {
+                                    def choices = []
                                     for (trigger_job in job.value.trigger) {
-                                        choices_script = choices_script + '"' + trigger_job.name + '", '
+                                        choices << trigger_job.name
                                     }
-                                    choices_script = choices_script + ']'
-                                    println "DISABLE TRIGGER CHOICES: ${choices_script}"
-                                    script(choices_script)
+                                    def choices_param = choices.join('|')
+                                    println "DISABLE TRIGGER CHOICES: ${choices_param}"
+                                    parameter('defaultChoice', '')
+                                    parameter('choices', choices_param)
                                 }
                             }
                             for (trigger_job in job.value.trigger) {
@@ -755,9 +797,11 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             description('Select one or more suites. If you see the empty list - please re-save the job (related to bug: https://issues.jenkins-ci.org/browse/JENKINS-42655)')
                             filterable()
                             choiceType('MULTI_SELECT')
-                            groovyScript {
-                                // NOTE: https://issues.jenkins-ci.org/browse/JENKINS-42655?page=com.atlassian.jira.plugin.system.issuetabpanels%3Aall-tabpanel
-                                script('["' + job.value.suites.collect{ it += ':selected' }.join('", "') + '"]')
+                            scriptlerScript ('choices.groovy') {
+                                def choices_param = job.value.suites.join('|')
+                                println "SUITES CHOICES: ${choices_param}"
+                                parameter('defaultChoice', choices_param)
+                                parameter('choices', choices_param)
                             }
                         }
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
@@ -768,21 +812,18 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                     if (block_config.containsKey('nodeName')) {
                                         def node_name = block_config['nodeName']
                                         println "Default nodeName for ${pipeline_block}: ${node_name}"
-                                        activeChoiceParam(pipeline_block + '_' + 'node_name') {
+                                        activeChoiceParam(pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name') {
                                             description('Allows to select node to run pipeline block')
                                             choiceType('SINGLE_SELECT')
-                                            groovyScript {
-                                                def choices_script = '['
+                                            scriptlerScript ('choices.groovy') {
+                                                def choices = []
                                                 for (label in labels) {
-                                                    def select_item = label.toString()
-                                                    if (select_item == node_name) {
-                                                        select_item = select_item + ':selected'
-                                                    }
-                                                    choices_script = choices_script + '"' + select_item + '", '
+                                                    choices << label.toString()
                                                 }
-                                                choices_script = choices_script + ']'
-                                                println "SELECT NODE FOR PIPELINE BLOCK ${pipeline_block} CHOICES: ${choices_script}"
-                                                script(choices_script)
+                                                def choices_param = choices.join('|')
+                                                println "NODE SELECT CHOICES: ${choices_param}"
+                                                parameter('defaultChoice', node_name)
+                                                parameter('choices', choices_param)
                                             }
                                         }
                                     }
@@ -790,32 +831,34 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             }
                         }
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
-                          activeChoiceParam('disable_block') {
-                              description('Allows to disable pipeline blocks')
-                              choiceType('CHECKBOX')
-                              groovyScript {
-                                  def choices_script = '['
-                                  for (pipeline_block in job.value.pipeline.blocks) {
-                                      choices_script = choices_script + '"' + pipeline_block + '", '
-                                  }
-                                  choices_script = choices_script + ']'
-                                  println "DISABLE PIPELINE BLOCK CHOICES: ${choices_script}"
-                                  script(choices_script)
-                              }
-                          }
+                            activeChoiceParam('disable_block') {
+                                description('Allows to disable pipeline blocks')
+                                choiceType('CHECKBOX')
+                                scriptlerScript ('choices.groovy') {
+                                    def choices = []
+                                    for (pipeline_block in job.value.pipeline.blocks) {
+                                        choices << pipeline_block
+                                    }
+                                    def choices_param = choices.join('|')
+                                    println "DISABLE PIPELINE BLOCK CHOICES: ${choices_param}"
+                                    parameter('defaultChoice', '')
+                                    parameter('choices', choices_param)
+                                }
+                            }
                         }
                         if (job.value.containsKey('notify')) {
                             activeChoiceParam('mute_notification') {
                                 description('Allows to mute notifications in selected channels')
                                 choiceType('CHECKBOX')
-                                groovyScript {
-                                    def choices_script = '['
+                                scriptlerScript ('choices.groovy') {
+                                    def choices = []
                                     for (channel in job.value.notify) {
-                                        choices_script = choices_script + '"' + channel + '", '
+                                        choices << channel
                                     }
-                                    choices_script = choices_script + ']'
-                                    println "MUTE NOTIFICATION CHOICES: ${choices_script}"
-                                    script(choices_script)
+                                    def choices_param = choices.join('|')
+                                    println "MUTE NOTIFICATION CHOICES: ${choices_param}"
+                                    parameter('defaultChoice', '')
+                                    parameter('choices', choices_param)
                                 }
                             }
                         }
@@ -823,14 +866,15 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             activeChoiceParam('disable_trigger') {
                                 description('Allows to disable post build job trigger')
                                 choiceType('CHECKBOX')
-                                groovyScript {
-                                    def choices_script = '['
+                                scriptlerScript ('choices.groovy') {
+                                    def choices = []
                                     for (trigger_job in job.value.trigger) {
-                                        choices_script = choices_script + '"' + trigger_job.name + '", '
+                                        choices << trigger_job.name
                                     }
-                                    choices_script = choices_script + ']'
-                                    println "DISABLE TRIGGER CHOICES: ${choices_script}"
-                                    script(choices_script)
+                                    def choices_param = choices.join('|')
+                                    println "DISABLE TRIGGER CHOICES: ${choices_param}"
+                                    parameter('defaultChoice', '')
+                                    parameter('choices', choices_param)
                                 }
                             }
                             for (trigger_job in job.value.trigger) {

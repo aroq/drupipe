@@ -12,7 +12,7 @@ class YamlFileHandler extends BaseAction {
 
     def DrupipeAction action
 
-    def build() {
+    def init() {
         def repo_url
         if (context.components && context.components['master'] && context.components['master'].repo) {
             repo_url = context.components['master'].repo
@@ -21,14 +21,24 @@ class YamlFileHandler extends BaseAction {
             repo_url = context.configRepo
         }
 
+        def branch
+        if (context.environmentParams.git_reference) {
+            branch = context.environmentParams.git_reference
+        }
+        else {
+            branch = context.job.branch
+        }
+
         def repoParams = [
             repoAddress: repo_url,
-            reference: context.environmentParams.git_reference,
+            reference: branch,
             dir: 'docroot',
             repoDirName: 'master',
         ]
         script.drupipeAction([action: "Git.clone", params: repoParams << action.params], context)
+    }
 
+    def build() {
         process('build')
     }
 
@@ -46,6 +56,9 @@ class YamlFileHandler extends BaseAction {
 
     def process(String stage) {
         String deployDir = 'docroot/master'
+        if (!script.fileExists(deployDir)) {
+            init()
+        }
         context['builder']['artifactParams'] = [:]
         context['builder']['artifactParams']['dir'] = '../../' + deployDir
         String deployFile = deployDir + '/' + action.params.deployFile
