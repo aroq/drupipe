@@ -55,7 +55,7 @@ class Config extends BaseAction {
 
         // For compatibility:
         if (context.defaultActionParams) {
-            context.parameters.action << context.defaultActionParams
+            context.params.action << context.defaultActionParams
         }
 
         context.environmentParams = [:]
@@ -70,9 +70,9 @@ class Config extends BaseAction {
                     context.environmentParams = environment
                 }
                 // For compatibility:
-                context.parameters.action = utils.merge(context.parameters.action, context.environmentParams.defaultActionParams)
+                context.params.action = utils.merge(context.params.action, context.environmentParams.defaultActionParams)
 
-                context.parameters.action = utils.merge(context.parameters.action, context.parameters.action)
+                context.params.action = utils.merge(context.params.action, context.params.action)
 
                 utils.jsonDump(context.environmentParams, 'ENVIRONMENT PARAMS')
             }

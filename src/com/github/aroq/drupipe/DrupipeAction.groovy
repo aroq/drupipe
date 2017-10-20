@@ -51,8 +51,8 @@ class DrupipeAction implements Serializable {
             actionParams << ['action': this]
             def tempDefaultActionParams = [:]
             for (actionName in [this.name, this.name + '_' + this.methodName]) {
-                if (context && context.params && context.parameters.action && actionName in context.parameters.action) {
-                    tempDefaultActionParams = utils.merge(tempDefaultActionParams, context.parameters.action[actionName])
+                if (context && context.params && context.params.action && actionName in context.params.action) {
+                    tempDefaultActionParams = utils.merge(tempDefaultActionParams, context.params.action[actionName])
                 }
             }
             if (!this.params) {
