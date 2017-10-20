@@ -55,7 +55,7 @@ class Config extends BaseAction {
 
         // For compatibility:
         if (context.defaultActionParams) {
-            context.params.action << context.defaultActionParams
+            context.params.action = utils.merge(context.params.action, context.defaultActionParams)
         }
 
         context.environmentParams = [:]
