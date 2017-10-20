@@ -26,12 +26,12 @@ class DrupipePipeline implements Serializable {
         notification.name = 'Build'
         notification.level = 'build'
 
-        if (!context.parameters) {
-            context.parameters = [:]
-        }
-        if (!context.parameters.action) {
-            context.parameters.action = [:]
-        }
+//        if (!context.parameters) {
+//            context.parameters = [:]
+//        }
+//        if (!context.parameters.action) {
+//            context.parameters.action = [:]
+//        }
 
         try {
             script.timestamps {
@@ -42,6 +42,7 @@ class DrupipePipeline implements Serializable {
                     params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 
                     def configParams = script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params, interpolate: 0]], context.clone() << params)
+//                    utils.dump(context, 'PIPELINE-CONTEXT AFTER CONFIG ACTION IN DRUPIPE PIPELINE')
                     context << (configParams << config << context)
                     utils.dump(context, 'PIPELINE-CONTEXT')
                     // Secret option for emergency remove workspace.
