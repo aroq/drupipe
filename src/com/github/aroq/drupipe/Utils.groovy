@@ -393,7 +393,7 @@ def sourceDir(params, sourceName) {
 
 def debugLog(params, value, dumpName = '', debugParams = [:], force = false) {
     if (debugEnabled(params) || force) {
-        if (value instanceof java.lang.String) {
+        if (value instanceof CharSequence) {
             echo "${dumpName}: ${value}"
         }
         else {
