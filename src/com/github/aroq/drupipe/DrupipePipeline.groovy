@@ -26,6 +26,13 @@ class DrupipePipeline implements Serializable {
         notification.name = 'Build'
         notification.level = 'build'
 
+        if (!context.params) {
+            context.params = [:]
+        }
+        if (!context.params.action) {
+            context.params.action = [:]
+        }
+
         try {
             script.timestamps {
                 script.node('master') {
