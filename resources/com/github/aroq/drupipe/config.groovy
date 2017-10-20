@@ -12,6 +12,8 @@ containerMode = 'docker'
 
 configSeedType = 'docman'
 
+defaultDocmanImage = 'michaeltigr/zebra-build-php-drush-docman:latest'
+
 logRotatorNumToKeep = 5
 
 // Environments section.
