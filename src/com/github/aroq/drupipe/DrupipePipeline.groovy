@@ -29,8 +29,8 @@ class DrupipePipeline implements Serializable {
         if (!context.params) {
             context.params = [:]
         }
-        if (!context.params.action) {
-            context.params.action = [:]
+        if (!context.parameters.action) {
+            context.parameters.action = [:]
         }
 
         try {

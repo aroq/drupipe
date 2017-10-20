@@ -19,7 +19,7 @@ def call(LinkedHashMap p = [:]) {
 
             unstash 'config'
             if (fileExists("${context.projectConfigPath}/pipelines/jobdsl")) {
-                context.params.action.JobDslSeed_perform.jobsPattern << "${context.projectConfigPath}/pipelines/jobdsl/*.groovy"
+                context.parameters.action.JobDslSeed_perform.jobsPattern << "${context.projectConfigPath}/pipelines/jobdsl/*.groovy"
             }
             drupipeAction(action: 'JobDslSeed.perform', context)
         }

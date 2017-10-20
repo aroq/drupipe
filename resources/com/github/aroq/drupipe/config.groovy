@@ -29,7 +29,7 @@ environments {
     }
 }
 
-params = [
+parameters = [
     block = [
 
     ],
