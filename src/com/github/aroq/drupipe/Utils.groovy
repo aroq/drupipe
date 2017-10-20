@@ -407,8 +407,8 @@ def debugLog(params, value, dumpName = '', debugParams = [:], force = false) {
     }
 }
 
-def dump(params, String dumpName = '', force = false) {
-    if (params.debugEnabled || force) {
+def dump(context, params, String dumpName = '', force = false) {
+    if (context.debugEnabled || force) {
         colorEcho "Dumping ${dumpName}:"
         colorEcho collectParams(params)
     }
