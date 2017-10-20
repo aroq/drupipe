@@ -29,7 +29,7 @@ environments {
     }
 }
 
-parameters: [
+parameters = [
     block: [
 
     ],
@@ -54,9 +54,6 @@ parameters: [
         ],
         drupipeWithDocker: [
             drupipeDockerArgs: '--user root:root --net=host',
-        ],
-        drupipeWithKubernetes: [
-            containerName: 'drudock',
         ],
         Terraform: [
             infraSourceName: 'infra-config',
