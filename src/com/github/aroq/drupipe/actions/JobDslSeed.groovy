@@ -15,7 +15,7 @@ class JobDslSeed extends BaseAction {
     def perform() {
         utils.dumpConfigFile(context)
         utils.loadLibrary(script, context)
-        utils.dump(action.params, 'ACTION PARAMS')
+        utils.dump(context, action.params, 'ACTION PARAMS')
 
         script.jobDsl targets: action.params.jobsPattern.join('\n'),
             removedJobAction: action.params.removedJobAction,

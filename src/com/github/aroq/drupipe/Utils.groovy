@@ -391,25 +391,27 @@ def sourceDir(params, sourceName) {
     }
 }
 
-def debugLog(params, value, dumpName = '', debugParams = [:]) {
-    if (params.debugEnabled) {
+def debugLog(params, value, dumpName = '', debugParams = [:], force = false) {
+    if (params.debugEnabled || force) {
         if (value instanceof java.lang.String) {
             echo "${dumpName}: ${value}"
         }
         else {
             if (debugParams?.debugMode == 'json' || params.debugMode == 'json') {
-                jsonDump(value, dumpName)
+                jsonDump(params, value, dumpName)
             }
             else {
-                dump(value, dumpName)
+                dump(params, value, dumpName)
             }
         }
     }
 }
 
-def dump(params, String dumpName = '') {
-    colorEcho "Dumping ${dumpName}:"
-    colorEcho collectParams(params)
+def dump(params, String dumpName = '', force = false) {
+    if (params.debugEnabled || force) {
+        colorEcho "Dumping ${dumpName}:"
+        colorEcho collectParams(params)
+    }
 }
 
 @NonCPS
@@ -432,11 +434,13 @@ def echoDelimiter(String message) {
     }
 }
 
-def jsonDump(value, String dumpName = '') {
-    if (dumpName) {
-        echo "Dumping ${dumpName}:"
+def jsonDump(params, value, String dumpName = '', force = false) {
+    if (params.debugEnabled || force) {
+        if (dumpName) {
+            echo "Dumping ${dumpName}:"
+        }
+        echo JsonOutput.prettyPrint(JsonOutput.toJson(value))
     }
-    echo JsonOutput.prettyPrint(JsonOutput.toJson(value))
 }
 
 @NonCPS

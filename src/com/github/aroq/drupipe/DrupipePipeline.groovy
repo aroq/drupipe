@@ -29,14 +29,15 @@ class DrupipePipeline implements Serializable {
         try {
             script.timestamps {
                 script.node('master') {
-                    utils.dump(params, 'PIPELINE-PARAMS')
-                    utils.dump(config, 'PIPELINE-CONFIG')
                     context.utils = utils
                     params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 
+                    utils.dump(params, params, 'PIPELINE-PARAMS')
+                    utils.dump(params, config, 'PIPELINE-CONFIG')
+
                     def configParams = script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params, interpolate: 0]], context.clone() << params)
                     context << (configParams << config << context)
-                    utils.dump(context, 'PIPELINE-CONTEXT')
+                    utils.dump(context, context, 'PIPELINE-CONTEXT')
                     // Secret option for emergency remove workspace.
                     if (context.force == '11') {
                         script.echo 'FORCE REMOVE DIR'
@@ -48,7 +49,7 @@ class DrupipePipeline implements Serializable {
                     if (context.jobs) {
                         def job = getJobConfigByName(context.env.JOB_NAME)
                         if (job) {
-                            utils.jsonDump(job, 'JOB')
+                            utils.jsonDump(context, job, 'JOB')
                             context.job = job
                             if (job.context) {
                                 context = utils.merge(context, job.context)
@@ -139,7 +140,7 @@ class DrupipePipeline implements Serializable {
                             }
                             else {
                               script.echo "Triggering trigger name ${trigger_job.name} and job name ${trigger_job.job}"
-                              this.utils.dump(trigger_job, "TRIGGER JOB ${i}")
+                              this.utils.dump(context, trigger_job, "TRIGGER JOB ${i}")
 
                               def params = []
                               def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()

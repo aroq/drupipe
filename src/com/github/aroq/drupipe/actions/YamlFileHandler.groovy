@@ -64,7 +64,7 @@ class YamlFileHandler extends BaseAction {
         String deployFile = deployDir + '/' + action.params.deployFile
         if (script.fileExists(deployFile)) {
             def deployYAML = script.readYaml(file: deployFile)
-            utils.dump(deployYAML, 'DEPLOY YAML')
+            utils.dump(context, deployYAML, 'DEPLOY YAML')
             def commands = []
             if (stage == 'operations') {
                 def root = context.environmentParams.root
