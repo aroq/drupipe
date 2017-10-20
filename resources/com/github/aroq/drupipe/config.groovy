@@ -16,6 +16,8 @@ defaultDocmanImage = 'michaeltigr/zebra-build-php-drush-docman:latest'
 
 logRotatorNumToKeep = 5
 
+drupipeDockerArgs = '--user root:root --net=host'
+
 // Environments section.
 environments {
     dev {
@@ -51,9 +53,6 @@ params = [
             pathToEnvironmentConfig: 'code/common',
             workspaceRelativePath: '../../..',
             behat_args: '--format=pretty --out=std --format=junit',
-        ],
-        drupipeWithDocker: [
-            drupipeDockerArgs: '--user root:root --net=host',
         ],
         Terraform: [
             infraSourceName: 'infra-config',
