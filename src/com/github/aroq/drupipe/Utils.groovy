@@ -434,7 +434,7 @@ def echoDelimiter(String message) {
 
 def jsonDump(value, String dumpName = '') {
     if (dumpName) {
-        echo "Dumping: ${dumpName}"
+        echo "Dumping ${dumpName}:"
     }
     echo JsonOutput.prettyPrint(JsonOutput.toJson(value))
 }
