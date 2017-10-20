@@ -520,8 +520,8 @@ def processActionParams(params, context, action, ArrayList prefixes) {
 def getActionParam(param, context, prefixes) {
     def result = param
     prefixes.each {
-        if (context.jenkinsParams?.containsKey(it)) {
-            result = context.jenkinsParams[it]
+        if (context.env && context.env?.containsKey(it)) {
+            result = context.env[it]
         }
     }
 

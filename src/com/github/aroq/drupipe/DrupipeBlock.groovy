@@ -26,8 +26,8 @@ class DrupipeBlock implements Serializable {
 
         context.pipeline.script.echo "BLOCK NAME: ${name}"
 
-        if (utils.isTriggeredByUser() && context.jenkinsParams[name + '_node_name']) {
-            nodeName = context.jenkinsParams[name + '_node_name']
+        if (utils.isTriggeredByUser() && name instanceof CharSequence && context.jenkinsParams[name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_node_name']) {
+            nodeName = context.jenkinsParams[name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_node_name']
         }
 
         if (nodeName == 'use_default') {
