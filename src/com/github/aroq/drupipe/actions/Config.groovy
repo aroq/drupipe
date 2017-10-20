@@ -35,6 +35,9 @@ class Config extends BaseAction {
             [
                 action: "Config.jenkinsConfig"
             ],
+            [
+                action: "Config.jobConfig"
+            ],
         ]
 
         if (context.configProviders) {
@@ -93,6 +96,50 @@ class Config extends BaseAction {
     def jenkinsConfig() {
         action.params.jenkinsParams
     }
+
+    def jobConfig() {
+        if (context.jobs) {
+            def job = getJobConfigByName(context.env.JOB_NAME)
+            if (job) {
+                utils.jsonDump(context, job, 'JOB')
+                context.job = job
+                if (job.context) {
+                    context = utils.merge(context, job.context)
+                }
+            }
+            job
+        }
+        else {
+            [:]
+        }
+    }
+
+    def getJobConfigByName(String name) {
+        def parts = name.split('/').drop(1)
+        getJobConfig(context.jobs, parts, 0, [:])
+    }
+
+    def getJobConfig(jobs, parts, counter = 0, r = [:]) {
+        script.echo "Counter: ${counter}"
+        def part = parts[counter]
+        script.echo "Part: ${part}"
+        def j = jobs[part] ? jobs[part] : [:]
+        if (j) {
+            def children = j.containsKey('children') ? j['children'] : [:]
+            j.remove('children')
+            r = utils.merge(r, j)
+            if (children) {
+                getJobConfig(children, parts, counter + 1, r)
+            }
+            else {
+                r
+            }
+        }
+        else {
+            [:]
+        }
+    }
+
 
     def envConfig() {
         def result = [:]
