@@ -392,7 +392,7 @@ def sourceDir(params, sourceName) {
 }
 
 def debugLog(params, value, dumpName = '', debugParams = [:], force = false) {
-    if (params.debugEnabled || force) {
+    if (debugEnabled(params) || force) {
         if (value instanceof java.lang.String) {
             echo "${dumpName}: ${value}"
         }
@@ -408,10 +408,14 @@ def debugLog(params, value, dumpName = '', debugParams = [:], force = false) {
 }
 
 def dump(context, params, String dumpName = '', force = false) {
-    if (context.debugEnabled || force) {
+    if (debugEnabled(context) || force) {
         colorEcho "Dumping ${dumpName}:"
         colorEcho collectParams(params)
     }
+}
+
+def debugEnabled(params) {
+    params.debugEnabled && params.debugEnabled != '0'
 }
 
 @NonCPS
@@ -435,7 +439,7 @@ def echoDelimiter(String message) {
 }
 
 def jsonDump(params, value, String dumpName = '', force = false) {
-    if (params.debugEnabled || force) {
+    if (debugEnabled() || force) {
         if (dumpName) {
             echo "Dumping ${dumpName}:"
         }
