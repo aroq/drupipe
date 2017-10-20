@@ -193,7 +193,7 @@ class Config extends BaseAction {
                             }
                         }
                         else {
-                            script.echo "Source: ${scenarioSourceName} already added"
+                            utils.debugLog(context, "Source: ${scenarioSourceName} already added")
                             scenario.source = context.loadedSources[scenarioSourceName]
                         }
 
@@ -218,7 +218,7 @@ class Config extends BaseAction {
 
                         // Merge scenario if exists.
                         if (fileName != null) {
-                            script.echo "Scenario file name: ${fileName} exists"
+                            utils.debugLog(context, "Scenario file name: ${fileName} exists")
                             def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSourceName)
                             utils.debugLog(context, scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
@@ -239,7 +239,7 @@ class Config extends BaseAction {
     }
 
     def projectConfig() {
-        this.script.echo("projectConfig repo: ${context.configRepo}")
+        utils.debugLog(context, "projectConfig repo: ${context.configRepo}")
         if (context.configRepo) {
             def sourceObject = [
                 name: 'project',
