@@ -779,8 +779,8 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
 
             }
             else if (job.value.type == 'selenese') {
-//                def repo = config.defaultActionParams.SeleneseTester.repoAddress
-                def b = config.defaultActionParams.SeleneseTester.reference ? config.defaultActionParams.SeleneseTester.reference : 'master'
+//                def repo = config.params.action.SeleneseTester.repoAddress
+                def b = config.params.action.SeleneseTester.reference ? config.params.action.SeleneseTester.reference : 'master'
 
                 if (config.env.GITLAB_API_TOKEN_TEXT) {
                     users = config.gitlabHelper.getUsers(repo)

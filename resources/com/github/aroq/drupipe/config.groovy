@@ -29,7 +29,11 @@ environments {
     }
 }
 
-defaultActionParams = [
+params = [
+    block = [
+
+    ],
+    action = [
     // TODO: add params subsections (that will be containerized inside common config).
     Config: [
         //projectConfigPath: 'docroot/config',
@@ -274,5 +278,5 @@ defaultActionParams = [
             '${action.params.command}',
         ],
     ],
-
+    ],
 ]

@@ -53,6 +53,11 @@ class Config extends BaseAction {
 //            throw new RuntimeException('No context.servers defined')
 //        }
 
+        // For compatibility:
+        if (context.defaultActionParams) {
+            context.params.action << context.defaultActionParams
+        }
+
         context.environmentParams = [:]
         if (context.environments) {
             if (context.environment) {
@@ -64,7 +69,11 @@ class Config extends BaseAction {
                 else {
                     context.environmentParams = environment
                 }
-                context.defaultActionParams = utils.merge(context.defaultActionParams, context.environmentParams.defaultActionParams)
+                // For compatibility:
+                context.params.action = utils.merge(context.params.action, context.environmentParams.defaultActionParams)
+
+                context.params.action = utils.merge(context.params.action, context.params.action)
+
                 utils.jsonDump(context.environmentParams, 'ENVIRONMENT PARAMS')
             }
         }
