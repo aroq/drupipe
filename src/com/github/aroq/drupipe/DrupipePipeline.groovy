@@ -47,18 +47,11 @@ class DrupipePipeline implements Serializable {
 
                 if (!blocks) {
                     if (context.job) {
-                        // Process job configs in Config action.
-//                        def job = getJobConfigByName(context.env.JOB_NAME)
                         def job = context.job
                         if (job) {
-//                            utils.jsonDump(context, job, 'JOB')
-//                            context.job = job
-//                            if (job.context) {
-//                                context = utils.merge(context, job.context)
-//                            }
                             utils.pipelineNotify(context, notification << [status: 'START'])
 
-                            def pipelineBlocks = job.pipeline && job.pipeline.blocks ? job.pipeline.blocks : []
+                            def pipelineBlocks = context.job.pipeline && context.job.pipeline.blocks ? context.job.pipeline.blocks : []
                             if (pipelineBlocks) {
                                 for (def i = 0; i < pipelineBlocks.size(); i++) {
                                     if (context.blocks && context.blocks[pipelineBlocks[i]]) {
@@ -83,7 +76,7 @@ class DrupipePipeline implements Serializable {
                             else {
                                 // TODO: to remove after updating all configs.
                                 script.node('master') {
-                                    def yamlFileName = job.pipeline.file ? job.pipeline.file : "pipelines/${context.env.JOB_BASE_NAME}.yaml"
+                                    def yamlFileName = context.job.pipeline.file ? context.job.pipeline.file : "pipelines/${context.env.JOB_BASE_NAME}.yaml"
                                     def pipelineYamlFile = "${context.projectConfigPath}/${yamlFileName}"
                                     if (script.fileExists(pipelineYamlFile)) {
                                         blocks = script.readYaml(file: pipelineYamlFile).blocks
