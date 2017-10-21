@@ -111,6 +111,7 @@ class Config extends BaseAction {
                     result = utils.merge(result, result.job.context)
                 }
             }
+            result.jobs = context.jobs
         }
         result
     }
