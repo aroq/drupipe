@@ -100,43 +100,105 @@ class Config extends BaseAction {
     def jobConfig() {
         def result = [:]
         if (context.jobs) {
-            def job = getJobConfigByName(context.env.JOB_NAME)
-            if (job) {
-                utils.jsonDump(context, job, 'JOB')
-                result.job = job
-                if (job.context) {
-                    result = utils.merge(result, job.context)
+            processJobs(context, context.jobs)
+
+            result.job = (context.env.JOB_NAME).split('/').drop(1).inject(context, { obj, prop ->
+                obj.jobs[prop]
+            })
+
+            if (result.job) {
+                if (result.job.context) {
+                    result = utils.merge(result, result.job.context)
                 }
             }
         }
         result
     }
 
-    def getJobConfigByName(String name) {
-        def parts = name.split('/').drop(1)
-        getJobConfig(context.jobs, parts, 0, [:])
+    def processJobs(jobs, prefixes = [], parentParams = [:]) {
+        if (jobs) {
+            for (job in jobs) {
+                def children = job.value.jobs ? job.value.jobs : [:]
+                job.value = utils.merge(parentParams, job.value)
+                if (children) {
+                    def jobClone = job.value.clone()
+                    jobClone.remove('jobs')
+                    processJobs(children, prefixes << job.key, jobClone)
+                }
+            }
+        }
     }
 
-    def getJobConfig(jobs, parts, counter = 0, r = [:]) {
-        script.echo "Counter: ${counter}"
-        def part = parts[counter]
-        script.echo "Part: ${part}"
-        def j = jobs[part] ? jobs[part] : [:]
-        if (j) {
-            def children = j.containsKey('children') ? j['children'] : [:]
-            j.remove('children')
-            r = utils.merge(r, j)
-            if (children) {
-                getJobConfig(children, parts, counter + 1, r)
-            }
-            else {
-                r
-            }
-        }
-        else {
-            [:]
-        }
-    }
+//    def jobConfig() {
+//        def result = [:]
+//        if (context.jobs) {
+//            def jobs = processJobs(context, context.jobs)
+//            result.jobs_processed = jobs
+//            result.job = jobs[context.env.JOB_NAME]
+//            if (result.job) {
+//                utils.jsonDump(context, result.job, 'JOB')
+//                if (result.job.context) {
+//                    result = utils.merge(result, job.context)
+//                }
+//            }
+//        }
+//        result
+//    }
+
+//    def processJobs(jobs, prefixes = []) {
+//        if (jobs) {
+//            for (i = 0; i < jobs.size(); i++) {
+//                def children = jobs[i].value.children ? jobs[i].value.children : [:]
+//                jobs[i] = getJobConfigByName([prefixes << jobs[i].key].join('/'))
+//                if (children) {
+//                    processJobs(children, [prefixes << jobs[i].key])
+//                }
+//            }
+//        }
+//    }
+
+//    def processJobs(context, jobs, prefixes = [], params = [:]) {
+//        def result = [:]
+//        if (jobs) {
+//            for (job in jobs) {
+//              println "job: ${job}"
+//                def children = job.value.children ? job.value.children : [:]
+//                def jobKey = (prefixes.clone() << job.key).join('/')
+//                result[jobKey] = merge(params, job.value)
+//                if (children) {
+//                    result << processJobs(context, children, prefixes << job.key, job.value)
+//                }
+//                job = result[jobKey]
+//            }
+//        }
+//        result
+//    }
+//
+//    def getJobConfigByName(String name) {
+//        def parts = name.split('/').drop(1)
+//        getJobConfig(context.jobs, parts, 0, [:])
+//    }
+//
+//    def getJobConfig(jobs, parts, counter = 0, r = [:]) {
+//        script.echo "Counter: ${counter}"
+//        def part = parts[counter]
+//        script.echo "Part: ${part}"
+//        def j = jobs[part] ? jobs[part] : [:]
+//        if (j) {
+//            def children = j.containsKey('children') ? j['children'] : [:]
+//            j.remove('children')
+//            r = utils.merge(r, j)
+//            if (children) {
+//                getJobConfig(children, parts, counter + 1, r)
+//            }
+//            else {
+//                r
+//            }
+//        }
+//        else {
+//            [:]
+//        }
+//    }
 
 
     def envConfig() {
