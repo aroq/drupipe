@@ -100,7 +100,7 @@ class Config extends BaseAction {
     def jobConfig() {
         def result = [:]
         if (context.jobs) {
-            processJobs(context, context.jobs)
+            processJobs(context.jobs)
 
             result.job = (context.env.JOB_NAME).split('/').drop(1).inject(context, { obj, prop ->
                 obj.jobs[prop]
