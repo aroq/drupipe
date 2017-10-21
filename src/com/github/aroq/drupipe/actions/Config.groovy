@@ -122,6 +122,9 @@ class Config extends BaseAction {
         if (jobs) {
             for (job in jobs) {
                 script.echo "CONFIG JOB: ${job.key}"
+                if (job.value.children) {
+                    job.value.jobs = job.value.remove('children')
+                }
                 def children = job.value.jobs ? job.value.jobs : [:]
                 job.value = utils.merge(parentParams, job.value)
                 if (children) {
