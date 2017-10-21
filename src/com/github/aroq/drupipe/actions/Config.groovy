@@ -102,7 +102,7 @@ class Config extends BaseAction {
         if (context.jobs) {
             processJobs(context.jobs)
 
-            util.jsonDump(context, context.jobs, 'CONFIG JOBS PROCESSED')
+            utils.jsonDump(context, context.jobs, 'CONFIG JOBS PROCESSED')
 
             result.job = (context.env.JOB_NAME).split('/').drop(1).inject(context, { obj, prop ->
                 obj.jobs[prop]
