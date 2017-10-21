@@ -915,7 +915,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         stringParam('debugEnabled', '0')
                         stringParam('configRepo', config.configRepo)
                         for (jobInFolder in jobs)  {
-                            if (jobInFolder.value.children) {
+                            if (jobInFolder.value.jobs) {
                                 println "Skip job with chilldren."
                             }
                             else if (jobInFolder.value.type == 'trigger_all') {
@@ -936,7 +936,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     publishers {
                         downstreamParameterized {
                             for (jobInFolder in jobs)  {
-                                if (jobInFolder.value.children) {
+                                if (jobInFolder.value.jobs) {
                                     println "Skip job with chilldren."
                                 }
                                 else if (jobInFolder.value.type == 'trigger_all') {
@@ -983,7 +983,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     steps {
                         downstreamParameterized {
                             for (jobInFolder in jobs)  {
-                                if (jobInFolder.value.children) {
+                                if (jobInFolder.value.jobs) {
                                     println "Skip job with chilldren."
                                 }
                                 else if (jobInFolder.value.type == 'trigger_all') {
@@ -1013,9 +1013,9 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
             }
         }
 
-        if (job.value.children) {
+        if (job.value.jobs) {
             println "Parent config params: ${parentConfigParams}"
-            processJob(job.value.children, currentName, config, parentConfigParams)
+            processJob(job.value.jobs, currentName, config, parentConfigParams)
         }
     }
 }
