@@ -576,11 +576,16 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                 }
             }
             else if (job.value.type == 'common') {
-                def repo = job.value.configRepo ? job.value.configRepo : config.configRepo
+                String repo
+                String pipelineScriptPath
                 if (config.config_version > 1 && job.value.context) {
                     repo = job.value.context.configRepo ? job.value.context.configRepo : config.configRepo
+                    pipelineScriptPath = job.value.context.configRepo ? "${pipelineScript}.groovy" : "${config.projectConfigPath}/${pipelineScript}.groovy"
                 }
-                def pipelineScriptPath = job.value.configRepo ? "${pipelineScript}.groovy" : "${config.projectConfigPath}/${pipelineScript}.groovy"
+                else {
+                    repo = job.value.configRepo ? job.value.configRepo : config.configRepo
+                    pipelineScriptPath = job.value.configRepo ? "${pipelineScript}.groovy" : "${config.projectConfigPath}/${pipelineScript}.groovy"
+                }
 
                 def br = job.value.branch ? job.value.branch : 'master'
 
