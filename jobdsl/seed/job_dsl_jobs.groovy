@@ -688,14 +688,14 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                         url(repo)
                                         credentials(config.credentialsId)
                                     }
-                                    if (!job.value.configRepo) {
-                                        extensions {
-                                            relativeTargetDirectory(config.projectConfigPath)
-                                        }
-                                    }
                                     if (job.value.repoDir) {
                                         extensions {
                                             relativeTargetDirectory(job.value.repoDir)
+                                        }
+                                    }
+                                    else if (!job.value.configRepo && config.config_version < 2) {
+                                        extensions {
+                                            relativeTargetDirectory(config.projectConfigPath)
                                         }
                                     }
                                     branch(br)
