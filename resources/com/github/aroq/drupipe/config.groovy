@@ -1,3 +1,5 @@
+config_version = 1
+
 debugEnabled = false
 docrootDir = 'docroot'
 projectConfigPath = 'docroot/config'

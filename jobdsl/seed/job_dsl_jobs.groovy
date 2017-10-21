@@ -587,7 +587,9 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     parameters {
                         stringParam('debugEnabled', '0')
                         stringParam('force', '0')
-                        stringParam('configRepo', config.configRepo)
+                        if (config.config_version < 2) {
+                            stringParam('configRepo', config.configRepo)
+                        }
                         job.value.params?.each { key, value ->
                             stringParam(key, value)
                         }
