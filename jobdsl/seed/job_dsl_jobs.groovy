@@ -576,15 +576,35 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                 }
             }
             else if (job.value.type == 'common') {
-                String repo
+                def seedRepo = config.configRepo
+                def localConfig = config.clone()
+                if (job.value.context) {
+                    localConfig << job.value.context
+                }
+                // Define repository that will be used for pipelines retrieve and execution.
+                String pipelinesRepo = localConfig.configRepo
+                // Define path to pipeline script.
                 String pipelineScriptPath
-                if (config.config_version > 1 && job.value.context) {
-                    repo = job.value.context.configRepo ? job.value.context.configRepo : config.configRepo
-                    pipelineScriptPath = job.value.context.configRepo ? "${pipelineScript}.groovy" : "${config.projectConfigPath}/${pipelineScript}.groovy"
+                final MODE_CONFIG_ONLY_REPO = 1
+                final MODE_CONFIG_AND_PROJECT_REPO = 2
+                final MODE_PROJECT_ONLY_REPO = 3
+                String configMode = MODE_CONFIG_ONLY_REPO
+
+                if (localConfig.pipelines_repo) {
+                    pipelinesRepo = config.pipelines_repo
+                    pipelineScriptPath = "${pipelineScript}.groovy"
                 }
                 else {
-                    repo = job.value.configRepo ? job.value.configRepo : config.configRepo
-                    pipelineScriptPath = job.value.configRepo ? "${pipelineScript}.groovy" : "${config.projectConfigPath}/${pipelineScript}.groovy"
+                    if (job.value.configRepo) {
+                        pipelinesRepo = job.value.configRepo
+                    }
+                }
+                if (pipelinesRepo == seedRepo) {
+                    pipelineScriptPath = "${localConfig.projectConfigPath}/${pipelineScript}.groovy"
+                }
+                else {
+                    configMode = MODE_CONFIG_AND_PROJECT_REPO
+                    pipelineScriptPath = "${pipelineScript}.groovy"
                 }
 
                 def br = job.value.branch ? job.value.branch : 'master'
@@ -596,7 +616,8 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         stringParam('debugEnabled', '0')
                         stringParam('force', '0')
                         if (config.config_version < 2) {
-                            stringParam('configRepo', config.configRepo)
+                            // TODO: check if it can be replaced by pipelinesRepo.
+                            stringParam('configRepo', pipelinesRepo)
                         }
                         job.value.params?.each { key, value ->
                             stringParam(key, value)
@@ -690,7 +711,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                 git() {
                                     remote {
                                         name('origin')
-                                        url(repo)
+                                        url(pipelinesRepo)
                                         credentials(config.credentialsId)
                                     }
                                     if (job.value.repoDir) {
@@ -749,7 +770,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         webhook_tags = config.webhooksEnvironments
                     }
                     println "Webhook Tags: ${webhook_tags}"
-                    if (job.value.webhooks && job.value.configRepo && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                    if (job.value.webhooks && configMode == MODE_CONFIG_AND_PROJECT_REPO && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
                         properties {
                             gitLabConnectionProperty {
                                 gitLabConnection('Gitlab')
@@ -766,11 +787,11 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     webhook_tags = config.webhooksEnvironments
                 }
                 println "Webhook Tags: ${webhook_tags}"
-                if (job.value.webhooks && job.value.configRepo && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                if (job.value.webhooks && configMode == MODE_CONFIG_AND_PROJECT_REPO && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
                     job.value.webhooks.each { hook ->
                         def tag_servers = getServersByTags(webhook_tags, config.jenkinsServers)
                         config.gitlabHelper.deleteWebhook(
-                            job.value.configRepo,
+                            pipelinesRepo,
                             tag_servers,
                             "project/${config.jenkinsFolderName}/${currentName}"
                         )
@@ -778,7 +799,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             config.gitlabHelper.addWebhook(
                                 // TODO: check if this is OK.
                                 //project.value.repo,
-                                job.value.configRepo,
+                                pipelinesRepo,
                                 jenkinsServer.value.jenkinsUrl.substring(0, jenkinsServer.value.jenkinsUrl.length() - (jenkinsServer.value.jenkinsUrl.endsWith("/") ? 1 : 0)) + '/' + "project/${config.jenkinsFolderName}/${currentName}",
                                 hook
                             )
