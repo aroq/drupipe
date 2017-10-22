@@ -29,14 +29,15 @@ class DrupipePipeline implements Serializable {
         try {
             script.timestamps {
                 script.node('master') {
-                    utils.dump(params, 'PIPELINE-PARAMS')
-                    utils.dump(config, 'PIPELINE-CONFIG')
                     context.utils = utils
                     params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 
+                    utils.dump(params, params, 'PIPELINE-PARAMS')
+                    utils.dump(params, config, 'PIPELINE-CONFIG')
+
                     def configParams = script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params, interpolate: 0]], context.clone() << params)
                     context << (configParams << config << context)
-                    utils.dump(context, 'PIPELINE-CONTEXT')
+                    utils.dump(context, context, 'PIPELINE-CONTEXT')
                     // Secret option for emergency remove workspace.
                     if (context.force == '11') {
                         script.echo 'FORCE REMOVE DIR'
@@ -45,14 +46,12 @@ class DrupipePipeline implements Serializable {
                 }
 
                 if (!blocks) {
-                    if (context.jobs) {
-                        def job = getJobConfigByName(context.env.JOB_NAME)
+                    if (context.job) {
+                        def job = context.job
                         if (job) {
-                            utils.jsonDump(job, 'JOB')
-                            context.job = job
                             utils.pipelineNotify(context, notification << [status: 'START'])
 
-                            def pipelineBlocks = job.pipeline && job.pipeline.blocks ? job.pipeline.blocks : []
+                            def pipelineBlocks = context.job.pipeline && context.job.pipeline.blocks ? context.job.pipeline.blocks : []
                             if (pipelineBlocks) {
                                 for (def i = 0; i < pipelineBlocks.size(); i++) {
                                     if (context.blocks && context.blocks[pipelineBlocks[i]]) {
@@ -77,7 +76,7 @@ class DrupipePipeline implements Serializable {
                             else {
                                 // TODO: to remove after updating all configs.
                                 script.node('master') {
-                                    def yamlFileName = job.pipeline.file ? job.pipeline.file : "pipelines/${context.env.JOB_BASE_NAME}.yaml"
+                                    def yamlFileName = context.job.pipeline.file ? context.job.pipeline.file : "pipelines/${context.env.JOB_BASE_NAME}.yaml"
                                     def pipelineYamlFile = "${context.projectConfigPath}/${yamlFileName}"
                                     if (script.fileExists(pipelineYamlFile)) {
                                         blocks = script.readYaml(file: pipelineYamlFile).blocks
@@ -136,7 +135,7 @@ class DrupipePipeline implements Serializable {
                             }
                             else {
                               script.echo "Triggering trigger name ${trigger_job.name} and job name ${trigger_job.job}"
-                              this.utils.dump(trigger_job, "TRIGGER JOB ${i}")
+                              this.utils.dump(context, trigger_job, "TRIGGER JOB ${i}")
 
                               def params = []
                               def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
@@ -181,32 +180,6 @@ class DrupipePipeline implements Serializable {
         }
 
         context
-    }
-
-    def getJobConfigByName(String name) {
-        def parts = name.split('/').drop(1)
-        getJobConfig(context.jobs, parts, 0, [:])
-    }
-
-    def getJobConfig(jobs, parts, counter = 0, r = [:]) {
-        script.echo "Counter: ${counter}"
-        def part = parts[counter]
-        script.echo "Part: ${part}"
-        def j = jobs[part] ? jobs[part] : [:]
-        if (j) {
-            def children = j.containsKey('children') ? j['children'] : [:]
-            j.remove('children')
-            r = utils.merge(r, j)
-            if (children) {
-                getJobConfig(children, parts, counter + 1, r)
-            }
-            else {
-                r
-            }
-        }
-        else {
-            [:]
-        }
     }
 
     def executeStages(stagesToExecute, context) {

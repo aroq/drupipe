@@ -35,6 +35,9 @@ class Config extends BaseAction {
             [
                 action: "Config.jenkinsConfig"
             ],
+            [
+                action: "Config.jobConfig"
+            ],
         ]
 
         if (context.configProviders) {
@@ -53,6 +56,11 @@ class Config extends BaseAction {
 //            throw new RuntimeException('No context.servers defined')
 //        }
 
+        // For compatibility:
+        if (context.defaultActionParams) {
+            context.params.action = utils.merge(context.params.action, context.defaultActionParams)
+        }
+
         context.environmentParams = [:]
         if (context.environments) {
             if (context.environment) {
@@ -64,8 +72,12 @@ class Config extends BaseAction {
                 else {
                     context.environmentParams = environment
                 }
-                context.defaultActionParams = utils.merge(context.defaultActionParams, context.environmentParams.defaultActionParams)
-                utils.jsonDump(context.environmentParams, 'ENVIRONMENT PARAMS')
+                // For compatibility:
+                context.params.action = utils.merge(context.params.action, context.environmentParams.defaultActionParams)
+
+                context.params.action = utils.merge(context.params.action, context.params.action)
+
+                utils.jsonDump(context, context.environmentParams, 'ENVIRONMENT PARAMS')
             }
         }
 
@@ -83,6 +95,43 @@ class Config extends BaseAction {
 
     def jenkinsConfig() {
         action.params.jenkinsParams
+    }
+
+    def jobConfig() {
+        def result = [:]
+        if (context.jobs) {
+            processJobs(context.jobs)
+            utils.jsonDump(context, context.jobs, 'CONFIG JOBS PROCESSED')
+
+            result.job = (context.env.JOB_NAME).split('/').drop(1).inject(context, { obj, prop ->
+                obj.jobs[prop]
+            })
+
+            if (result.job) {
+                if (result.job.context) {
+                    result = utils.merge(result, result.job.context)
+                }
+            }
+            result.jobs = context.jobs
+        }
+        result
+    }
+
+    def processJobs(jobs, prefixes = [], parentParams = [:]) {
+        if (jobs) {
+            for (job in jobs) {
+                if (job.value.children) {
+                    job.value.jobs = job.value.remove('children')
+                }
+                def children = job.value.jobs ? job.value.jobs : [:]
+                job.value = utils.merge(parentParams, job.value)
+                if (children) {
+                    def jobClone = job.value.clone()
+                    jobClone.remove('jobs')
+                    processJobs(children, prefixes << job.key, jobClone)
+                }
+            }
+        }
     }
 
     def envConfig() {
@@ -184,7 +233,7 @@ class Config extends BaseAction {
                             }
                         }
                         else {
-                            script.echo "Source: ${scenarioSourceName} already added"
+                            utils.debugLog(context, "Source: ${scenarioSourceName} already added")
                             scenario.source = context.loadedSources[scenarioSourceName]
                         }
 
@@ -209,7 +258,7 @@ class Config extends BaseAction {
 
                         // Merge scenario if exists.
                         if (fileName != null) {
-                            script.echo "Scenario file name: ${fileName} exists"
+                            utils.debugLog(context, "Scenario file name: ${fileName} exists")
                             def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSourceName)
                             utils.debugLog(context, scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
@@ -230,7 +279,7 @@ class Config extends BaseAction {
     }
 
     def projectConfig() {
-        this.script.echo("projectConfig repo: ${context.configRepo}")
+        utils.debugLog(context, "projectConfig repo: ${context.configRepo}")
         if (context.configRepo) {
             def sourceObject = [
                 name: 'project',

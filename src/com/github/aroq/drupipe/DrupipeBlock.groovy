@@ -53,8 +53,8 @@ class DrupipeBlock implements Serializable {
                 }
 
                 context.drupipe_working_dir = [context.pipeline.script.pwd(), '.drupipe'].join('/')
-                utils.dump(this.config, 'BLOCK-CONFIG')
-                utils.dump(this.context, 'BLOCK-CONTEXT')
+                utils.dump(context, this.config, 'BLOCK-CONFIG')
+                utils.dump(context, this.context, 'BLOCK-CONTEXT')
                 context.pipeline.script.unstash('config')
                 if (withDocker) {
                     if (context.containerMode == 'kubernetes') {
