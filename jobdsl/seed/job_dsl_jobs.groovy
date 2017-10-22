@@ -590,6 +590,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                 final MODE_PROJECT_ONLY_REPO = 3
                 String configMode = MODE_CONFIG_ONLY_REPO
 
+                println "LOCAL CONFIG pipelines_repo: ${localConfig.pipelines_repo}"
                 if (localConfig.pipelines_repo) {
                     pipelinesRepo = config.pipelines_repo
                     pipelineScriptPath = "${pipelineScript}.groovy"
@@ -606,6 +607,8 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     configMode = MODE_CONFIG_AND_PROJECT_REPO
                     pipelineScriptPath = "${pipelineScript}.groovy"
                 }
+                println "pipelinesRepo: ${pipelinesRepo}"
+                println "pipelineScriptPath: ${pipelineScriptPath}"
 
                 def br = job.value.branch ? job.value.branch : 'master'
 
