@@ -579,8 +579,9 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                 def seedRepo = config.configRepo
                 def localConfig = config.clone()
                 if (job.value.context) {
-                    localConfig << job.value.context
+                    localConfig = merge(localConfig, job.value.context)
                 }
+                println "Local config: ${localConfig}"
                 // Define repository that will be used for pipelines retrieve and execution.
                 String pipelinesRepo = localConfig.configRepo
                 // Define path to pipeline script.
