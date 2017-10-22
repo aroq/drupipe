@@ -581,7 +581,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                 if (job.value.context) {
                     localConfig = merge(localConfig, job.value.context)
                 }
-                println "Local config: ${localConfig}"
+//                println "Local config: ${localConfig}"
                 // Define repository that will be used for pipelines retrieve and execution.
                 String pipelinesRepo = localConfig.configRepo
                 // Define path to pipeline script.
@@ -593,7 +593,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
 
                 println "LOCAL CONFIG pipelines_repo: ${localConfig.pipelines_repo}"
                 if (localConfig.pipelines_repo) {
-                    pipelinesRepo = config.pipelines_repo
+                    pipelinesRepo = localConfig.pipelines_repo
                     pipelineScriptPath = "${pipelineScript}.groovy"
                 }
                 else {
