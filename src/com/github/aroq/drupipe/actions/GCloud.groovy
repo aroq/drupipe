@@ -14,11 +14,13 @@ class GCloud extends BaseAction {
 
     def auth() {
          this.script.drupipeShell("""
-              gcloud auth activate-service-account --key-file \${${action.params.access_key_file_id}}
-              gcloud config set compute/zone ${action.params.compute_zone}
-              gcloud config set project ${action.params.project_name} 
-              gcloud config set container/use_client_certificate True
-              gcloud container clusters get-credentials ${action.params.cluster_name} 
+              ${action.params.executable} auth activate-service-account --key-file \${${action.params.access_key_file_id}}
+
+              ${action.params.executable} config set compute/zone ${action.params.compute_zone}
+              ${action.params.executable} config set project ${action.params.project_name} 
+              ${action.params.executable} config set container/use_client_certificate True
+
+              ${action.params.executable} container clusters get-credentials ${action.params.cluster_name} 
         """, this.context << [shellCommandWithBashLogin: false])
     }
 

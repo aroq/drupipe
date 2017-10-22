@@ -46,9 +46,15 @@ class DrupipeBlock implements Serializable {
             //utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'START', level: 'block'])
             context.pipeline.script.echo "NODE NAME: ${nodeName}"
             context.pipeline.script.node(nodeName) {
+                // Secret option for emergency remove workspace.
+                if (context.force == '11') {
+                    context.pipeline.script.echo 'FORCE REMOVE DIR'
+                    context.pipeline.script.deleteDir()
+                }
+
                 context.drupipe_working_dir = [context.pipeline.script.pwd(), '.drupipe'].join('/')
-                utils.dump(this.config, 'BLOCK-CONFIG')
-                utils.dump(this.context, 'BLOCK-CONTEXT')
+                utils.dump(context, this.config, 'BLOCK-CONFIG')
+                utils.dump(context, this.context, 'BLOCK-CONTEXT')
                 context.pipeline.script.unstash('config')
                 if (withDocker) {
                     if (context.containerMode == 'kubernetes') {

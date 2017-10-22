@@ -29,7 +29,6 @@ class DrupipeAction implements Serializable {
         def actionResult = [:]
 
         try {
-
             // Stage name & echo.
             String drupipeStageName
             if (this.context.stage) {
@@ -48,19 +47,18 @@ class DrupipeAction implements Serializable {
             utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} start <-")
 
             // Define action params.
-            //def actionParams = this.context
             def actionParams = [:]
             actionParams << ['action': this]
-            def defaultActionParams = [:]
+            def tempDefaultActionParams = [:]
             for (actionName in [this.name, this.name + '_' + this.methodName]) {
-                if (actionName in context.defaultActionParams) {
-                    defaultActionParams = utils.merge(defaultActionParams, context.defaultActionParams[actionName])
+                if (context && context.params && context.params.action && actionName in context.params.action) {
+                    tempDefaultActionParams = utils.merge(tempDefaultActionParams, context.params.action[actionName])
                 }
             }
             if (!this.params) {
                 this.params = [:]
             }
-            this.params = utils.merge(defaultActionParams, this.params)
+            this.params = utils.merge(tempDefaultActionParams, this.params)
 
             // Interpolate action params with context variables.
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
@@ -75,7 +73,6 @@ class DrupipeAction implements Serializable {
             utils.debugLog(context, actionParams, "${this.fullName} action params")
 
             def actionFile = null
-
 
             // Process credentials.
             // TODO: Make sure only allowed credentials could be used. Control it with projects.yaml in mothership config.
