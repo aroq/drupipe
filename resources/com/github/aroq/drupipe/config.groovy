@@ -173,6 +173,12 @@ params = [
             project_name: '',
             cluster_name: '',
         ],
+        GCloud_projects_list: [
+
+        ],
+        GCloud_projects_create: [
+
+        ],
         // Examples of overriding command with jenkin params:
         // HELM_EXECUTABLE: test
         // HELM_APPLY_EXECUTABLE: test
