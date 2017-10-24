@@ -525,19 +525,19 @@ def processActionParams(context, action, ArrayList prefixes, ArrayList path = []
         params = action.params
     }
 
-    params.each { key, value ->
-        if (value instanceof CharSequence) {
-            value = getActionParam(params[key], context, prefixes.collect {
-                [it, key.toUpperCase()].join('_')
+    for (param in params) {
+        if (param.value instanceof CharSequence) {
+            param.value = getActionParam(params[param.key], context, prefixes.collect {
+                [it, param.key.toUpperCase()].join('_')
             })
-            params[key] = interpolateCommand(value, context)
-        } else if (value instanceof Map) {
+            param.value = interpolateCommand(param.value, context, action)
+        } else if (param.value instanceof Map) {
             processActionParams(context, action, prefixes.collect {
                 [it, param.key.toUpperCase()].join('_')
-            }, path += key)
-        } else if (value instanceof List) {
-            for (def i = 0; i < params.size(); i++) {
-                params[key][i] = interpolateCommand(params[key][i], context)
+            }, path += param.key)
+        } else if (param.value instanceof List) {
+            for (def i = 0; i < param.value.size(); i++) {
+                param.value[i] = interpolateCommand(param.value[i], context, action)
             }
         }
     }
