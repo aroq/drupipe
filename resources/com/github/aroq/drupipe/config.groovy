@@ -267,15 +267,13 @@ params = [
             replicas: '',
             name: '',
             flags: [
-//                '--replicas': ['${action.params.replicas}'],
+                '--replicas': ['${action.params.replicas}'],
                 '--namespace': ['${action.params.namespace}'],
             ],
-            replicas_flag: '--replicas ${action.params.replicas}',
             full_command: [
                 '${action.params.executable}',
                 '${action.params.command}',
                 '${prepareFlags(action.params.flags)}',
-                '${action.params.replicas_flag}',
                 '${action.params.name}',
             ],
         ],

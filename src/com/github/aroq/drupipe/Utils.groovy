@@ -391,8 +391,14 @@ def sourceDir(params, sourceName) {
     }
 }
 
-def debugLog(params, value, dumpName = '', debugParams = [:], force = false) {
+def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], force = false) {
     if (debugEnabled(params) || force) {
+        if (path) {
+            value = path.inject(value, { obj, prop ->
+                obj.jobs[prop]
+            })
+        }
+
         if (value instanceof CharSequence) {
             echo "${dumpName}: ${value}"
         }
