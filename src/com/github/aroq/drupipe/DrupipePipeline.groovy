@@ -255,7 +255,7 @@ class DrupipePipeline implements Serializable {
             actionMethodName = values[0]
         }
 
-        new DrupipeAction(name: actionName, methodName: actionMethodName, params: actionParams, context: context)
+        new DrupipeAction(name: actionName, methodName: actionMethodName, params: actionParams, context: context.clone())
     }
 
     def executePipelineActionList(actions, context) {
