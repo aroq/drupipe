@@ -499,30 +499,29 @@ def removeDir(dir, context) {
 }
 
 @NonCPS
-def interpolateCommand(String command, context, action) {
-
+def interpolateCommand(String command, context) {
     def prepareFlags = { flags ->
         prepareFlags(flags)
     }
 
-    def binding = [context: context, action: action, prepareFlags: prepareFlags]
+    def binding = [context: context, action: context.action, prepareFlags: prepareFlags]
     def engine = new groovy.text.SimpleTemplateEngine()
     def template = engine.createTemplate(command).make(binding)
     template.toString()
 }
 
 @NonCPS
-def processActionParams(context, action, ArrayList prefixes, ArrayList path = []) {
+def processActionParams(context, ArrayList prefixes, ArrayList path = []) {
     def params
     if (path) {
-        params = path.inject(action.params, { obj, prop ->
+        params = path.inject(context.action.params, { obj, prop ->
             if (obj && obj[prop]) {
                 obj[prop]
             }
         })
     }
     else {
-        params = action.params
+        params = context.action.params
     }
 
     for (param in params) {
@@ -530,15 +529,18 @@ def processActionParams(context, action, ArrayList prefixes, ArrayList path = []
             param.value = getActionParam(params[param.key], context, prefixes.collect {
                 [it, param.key.toUpperCase()].join('_')
             })
-            param.value = interpolateCommand(param.value, context, action)
+            param.value = interpolateCommand(param.value, context)
         } else if (param.value instanceof Map) {
-            processActionParams(context, action, prefixes.collect {
+            processActionParams(context, prefixes.collect {
                 [it, param.key.toUpperCase()].join('_')
-            }, path += param.key)
+            }, path + param.key)
         } else if (param.value instanceof List) {
             for (def i = 0; i < param.value.size(); i++) {
-                param.value[i] = interpolateCommand(param.value[i], context, action)
+                param.value[i] = interpolateCommand(param.value[i], context)
             }
+        }
+        else {
+            def stop = true
         }
     }
 }
