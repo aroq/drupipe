@@ -512,29 +512,35 @@ def interpolateCommand(String command, context) {
 }
 
 @NonCPS
-def processActionParams(context, params = [:], ArrayList prefixes) {
-    if (!params) {
-        params = context.action.params
+def processActionParams(context, action, ArrayList prefixes, ArrayList path = []) {
+    def params
+    if (path) {
+        params = path.inject(action.params, { obj, prop ->
+            if (obj && obj[prop]) {
+                obj[prop]
+            }
+        })
+    }
+    else {
+        params = action.params
     }
 
-    if (params instanceof CharSequence) {
-        params = interpolateCommand(params, context)
-    } else if (params instanceof Map) {
-        for (param in params) {
-            param.value = getActionParam(params[param.key], context, prefixes.collect {
-                [it, param.key.toUpperCase()].join('_')
+    params.each { key, value ->
+        if (value instanceof CharSequence) {
+            value = getActionParam(params[key], context, prefixes.collect {
+                [it, key.toUpperCase()].join('_')
             })
-            params[param.key] = processActionParams(context, param.value, prefixes.collect {
+            params[key] = interpolateCommand(value, context)
+        } else if (value instanceof Map) {
+            processActionParams(context, action, prefixes.collect {
                 [it, param.key.toUpperCase()].join('_')
-            })
+            }, path += key)
+        } else if (value instanceof List) {
+            for (def i = 0; i < params.size(); i++) {
+                params[key][i] = interpolateCommand(params[key][i], context)
+            }
         }
-    } else if (params instanceof List) {
-        for (def i = 0; i < params.size(); i++) {
-            params[i] = interpolateCommand(params[i], context)
-        }
-
     }
-    return params
 }
 
 @NonCPS
