@@ -270,12 +270,13 @@ params = [
             flags: [
                 '--replicas': ['${action.params.replicas}'],
                 '--namespace': ['${action.params.namespace}'],
-                '--selector': ['release=${action.params.release_name}'],
             ],
+            selector_flag: '--selector=release=${action.params.release_name}',
             full_command: [
                 '${action.params.executable}',
                 '${action.params.command}',
                 '${prepareFlags(action.params.flags)}',
+                '${action.params.selector_flag}',
             ],
         ],
         Kubectl_scale_down_up: [
