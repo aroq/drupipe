@@ -46,17 +46,18 @@ class DrupipeAction implements Serializable {
             utils.pipelineNotify(context, notification << [status: 'START'])
             utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} start <-")
 
-            def testContext = context.clone()
-            if (context && context.params && context.params.action) {
-                utils.debugLog(context, context, "TEST2 PROCESS ACTION PARAMS Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
-                testContext.params.action.Kubectl_scale_replicaset.replicas = 3
-                utils.debugLog(context, context, "TEST3 PROCESS ACTION PARAMS Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
-            }
 
             // Define action params.
             def actionParams = [:]
             actionParams << ['action': this]
             def defaultActionParams = [:]
+
+            def actionConfigFile = [utils.sourceDir(context, 'library'), 'actions', this.name, 'yaml'].join('/')
+            if (this.context.pipeline.script.fileExists(actionConfigFile)) {
+                actionConfig = this.context.pipeline.script.readYaml(file: actionConfigFile)
+                utils.debugLog(context, actionConfig, "${this.fullName} action YAML CONFIG")
+            }
+
             for (actionName in [this.name, this.name + '_' + this.methodName]) {
                 if (context && context.params && context.params.action && actionName in context.params.action) {
                     defaultActionParams = utils.merge(defaultActionParams, testContext.params.action[actionName])
@@ -67,17 +68,14 @@ class DrupipeAction implements Serializable {
             }
             this.params = utils.merge(defaultActionParams, this.params)
 
-//            testContext.action = this
-//            context.action.params = this.params.clone()
-
             // Interpolate action params with context variables.
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
                 this.context.pipeline.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
             }
             else {
-                utils.debugLog(context, context, "BEFORE PROCESS ACTION PARAMS Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
-                utils.processActionParams(this, testContext, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
-                utils.debugLog(context, context, "AFTER PROCESS ACTION PARAMS Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
+//                utils.debugLog(context, context, "BEFORE PROCESS ACTION PARAMS Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
+                utils.processActionParams(this, context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
+//                utils.debugLog(context, context, "AFTER PROCESS ACTION PARAMS Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
                 // TODO: Store processed action params in context (context.actions['action_name']) to allow use it for interpolation in other actions.
             }
 
