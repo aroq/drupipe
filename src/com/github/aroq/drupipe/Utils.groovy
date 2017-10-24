@@ -395,7 +395,10 @@ def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], force 
     if (debugEnabled(params) || force) {
         if (path) {
             value = path.inject(value, { obj, prop ->
-                obj[prop]
+                if (obj && obj[prop]) {
+                    obj[prop]
+                }
+                else ''
             })
         }
 
