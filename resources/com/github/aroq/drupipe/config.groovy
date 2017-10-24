@@ -291,7 +291,7 @@ params = [
             flags: [
                 '--namespace': ['${action.params.namespace}'],
                 '--selector': ['release=${action.params.release_name}'],
-                '-o': ['jsonpath=${action.params.jsonpath}'],
+                '-o': ['jsonpath=\'${action.params.jsonpath}\''],
             ],
             full_command: [
                 '${action.params.executable}',
