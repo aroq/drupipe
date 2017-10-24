@@ -70,9 +70,10 @@ class DrupipeAction implements Serializable {
 
             if (context.params) {
                 def contextParamsConfigFile = ['.unipipe', 'context.yaml'].join('/')
-//            if (this.context.pipeline.script.fileExists(contextParamsConfigFile)) {
+                if (this.context.pipeline.script.fileExists(contextParamsConfigFile)) {
+                    this.context.pipeline.script.sh("rm -f ${contextParamsConfigFile}")
+                }
                 this.context.pipeline.script.writeYaml(file: contextParamsConfigFile, data: context.params)
-//            }
                 this.context.pipeline.script.sh("cat ${contextParamsConfigFile}")
             }
 
