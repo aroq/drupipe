@@ -499,13 +499,13 @@ def removeDir(dir, context) {
 }
 
 @NonCPS
-def interpolateCommand(String command, context) {
+def interpolateCommand(String command, context, action) {
 
     def prepareFlags = { flags ->
         prepareFlags(flags)
     }
 
-    def binding = [context: context, action: context.action, prepareFlags: prepareFlags]
+    def binding = [context: context, action: action, prepareFlags: prepareFlags]
     def engine = new groovy.text.SimpleTemplateEngine()
     def template = engine.createTemplate(command).make(binding)
     template.toString()
