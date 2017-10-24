@@ -255,17 +255,15 @@ params = [
         ],
         Kubectl: [
             executable: 'kubectl',
-            environment: '',
-            chart_name: '',
             kubectl_config_file: '.kubeconfig',
             namespace: '${action.params.chart_name}-${action.params.environment}',
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
             ],
+            returnOutput: false,
         ],
         Kubectl_scale_replicaset: [
             command: 'scale replicaset',
-            release_name: '${action.params.chart_name}-${action.params.environment}',
             replicas: '',
             flags: [
                 '--replicas': ['${action.params.replicas}'],
@@ -282,6 +280,25 @@ params = [
         Kubectl_scale_down_up: [
             replicas_down: '0',
             replicas_up: '1',
+        ],
+        Kubectl_get_pod_name: [
+            command: 'get pod',
+            environment: '',
+            chart_name: '',
+            release_name: '${action.params.chart_name}-${action.params.environment}',
+            jsonpath: '{.items[0].metadata.name}',
+            returnOutput: true,
+            flags: [
+                '--namespace': ['${action.params.namespace}'],
+                '--selector': ['release=${action.params.release_name}'],
+                '-o': ['jsonpath=${action.params.jsonpath}'],
+            ],
+            full_command: [
+                '${action.params.executable}',
+                '${action.params.command}',
+                '${prepareFlags(action.params.flags)}',
+                '${action.params.jsonpath}',
+            ],
         ],
         Kubectl_getPods: [
             command: 'get pods',
