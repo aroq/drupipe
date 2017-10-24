@@ -17,8 +17,8 @@ class Kubectl extends BaseAction {
     }
 
     def scale_down_up() {
-        def podName = script.drupipeAction([action: "Kubectl.get_pod_name", params: action.params], context).drupipeShellResult
-        script.echo "POD NAME: ${podName}"
+        def name = script.drupipeAction([action: "Kubectl.get_replicaset_name", params: action.params], context).drupipeShellResult
+        script.echo "NAME: ${name}"
         script.drupipeAction([action: "Kubectl.scale_replicaset", params: action.params << [name: podName, replicas: action.params.replicas_down]], context)
         script.drupipeAction([action: "Kubectl.scale_replicaset", params: action.params << [name: podName, replicas: action.params.replicas_up]], context)
     }
@@ -28,6 +28,10 @@ class Kubectl extends BaseAction {
     }
 
     def get_pod_name() {
+        executeKubectlCommand()
+    }
+
+    def get_replicaset_name() {
         executeKubectlCommand()
     }
 
