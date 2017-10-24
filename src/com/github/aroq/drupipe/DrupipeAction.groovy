@@ -52,7 +52,7 @@ class DrupipeAction implements Serializable {
             actionParams << ['action': this]
             def defaultActionParams = [:]
 
-            def actionConfigFile = [utils.sourceDir(context, 'library'), 'actions', this.name, 'yaml'].join('/')
+            def actionConfigFile = [utils.sourceDir(context, 'library'), 'actions', this.name . 'yaml'].join('/')
             if (this.context.pipeline.script.fileExists(actionConfigFile)) {
                 actionConfig = this.context.pipeline.script.readYaml(file: actionConfigFile)
                 utils.debugLog(context, actionConfig, "${this.fullName} action YAML CONFIG")
@@ -67,6 +67,11 @@ class DrupipeAction implements Serializable {
                 this.params = [:]
             }
             this.params = utils.merge(defaultActionParams, this.params)
+
+            def contextParamsConfigFile = ['.unipipe', 'context.yaml'].join('/')
+            if (this.context.pipeline.script.fileExists(contextParamsConfigFile)) {
+                this.context.pipeline.script.writeYaml(file: contextParamsConfigFile, data: context.params)
+            }
 
             // Interpolate action params with context variables.
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
