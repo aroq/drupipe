@@ -275,6 +275,8 @@ params = [
             full_command: [
                 '${action.params.executable}',
                 '${action.params.command}',
+                '${prepareFlags(action.params.flags)}',
+                '${action.params.release_name}',
             ],
         ],
         Kubectl_scale_down_up: [
