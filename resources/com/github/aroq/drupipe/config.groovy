@@ -255,6 +255,8 @@ params = [
         ],
         Kubectl: [
             executable: 'kubectl',
+            environment: '',
+            chart_name: '',
             kubectl_config_file: '.kubeconfig',
             namespace: '${action.params.chart_name}-${action.params.environment}',
             env: [
@@ -263,8 +265,6 @@ params = [
         ],
         Kubectl_scale_replicaset: [
             command: 'scale replicaset',
-            environment: '',
-            chart_name: '',
             release_name: '${action.params.chart_name}-${action.params.environment}',
             replicas: '',
             flags: [
