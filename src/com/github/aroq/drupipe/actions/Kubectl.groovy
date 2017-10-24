@@ -47,7 +47,8 @@ class Kubectl extends BaseAction {
     def executeKubectlCommand() {
         script.drupipeShell(
             "${action.params.full_command.join(' ')}",
-            context.clone() << [drupipeShellReturnStdout: action.params.returnOutput, shellCommandWithBashLogin: false]
+            context,
+            action.params << [shellCommandWithBashLogin: false]
         )
     }
 

@@ -1,9 +1,11 @@
 #!groovy
 
-def call(shellCommand, context) {
-    if (context.containerMode == 'kubernetes') {
+def call(shellCommand, context, actionParams = [:]) {
+    def params = [:]
+    params << context << actionParams
+    if (params.containerMode == 'kubernetes') {
         echo "Executing ssh with SSH_AUTH_SOCK manually set"
-        if (context.shellCommandWithBashLogin) {
+        if (params.shellCommandWithBashLogin) {
             echo "With bash login session"
             shellCommand = """#!/bin/bash -l
                 export SSH_AUTH_SOCK=${env.SSH_AUTH_SOCK}
@@ -15,16 +17,16 @@ def call(shellCommand, context) {
         }
     }
     else {
-        if (context.shellCommandWithBashLogin) {
+        if (params.shellCommandWithBashLogin) {
             echo "With bash login session"
             shellCommand = """#!/bin/bash -l
                 ${shellCommand}
                 """
         }
     }
-    echo "Executing shell command: ${shellCommand} with returnStdout=${context.drupipeShellReturnStdout}"
-    context.drupipeShellResult = sh(returnStdout: context.drupipeShellReturnStdout, script: shellCommand)
-    if (context.drupipeShellReturnStdout) {
+    echo "Executing shell command: ${shellCommand} with returnStdout=${params.drupipeShellReturnStdout}"
+    context.drupipeShellResult = sh(returnStdout: params.drupipeShellReturnStdout, script: shellCommand)
+    if (params.drupipeShellReturnStdout) {
         echo "Command output: ${context.drupipeShellResult}"
         [drupipeShellResult: context.drupipeShellResult]
     }
