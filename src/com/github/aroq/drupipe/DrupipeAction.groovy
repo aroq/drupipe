@@ -60,13 +60,15 @@ class DrupipeAction implements Serializable {
             }
             this.params = utils.merge(tempDefaultActionParams, this.params)
 
+            context.action = this
+
             // Interpolate action params with context variables.
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
                 this.context.pipeline.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
             }
             else {
                 utils.debugLog(context, context, "BEFORE PROCESS ACTION PARAMS Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
-                this.params = utils.processActionParams(this.params.clone(), context, this, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
+                this.params = utils.processActionParams(context, [:] [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
                 utils.debugLog(context, context, "AFTER PROCESS ACTION PARAMS Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
                 // TODO: Store processed action params in context (context.actions['action_name']) to allow use it for interpolation in other actions.
             }

@@ -499,34 +499,38 @@ def removeDir(dir, context) {
 }
 
 @NonCPS
-def interpolateCommand(String command, context, action) {
+def interpolateCommand(String command, context) {
 
     def prepareFlags = { flags ->
         prepareFlags(flags)
     }
 
-    def binding = [context: context, action: action, prepareFlags: prepareFlags]
+    def binding = [context: context, action: context.action, prepareFlags: prepareFlags]
     def engine = new groovy.text.SimpleTemplateEngine()
     def template = engine.createTemplate(command).make(binding)
     template.toString()
 }
 
 @NonCPS
-def processActionParams(params, context, action, ArrayList prefixes) {
+def processActionParams(context, params = [:], ArrayList prefixes) {
+    if (!params) {
+        params = context.action.params
+    }
+
     if (params instanceof CharSequence) {
-        params = interpolateCommand(params, context, action)
+        params = interpolateCommand(params, context)
     } else if (params instanceof Map) {
         for (param in params) {
             param.value = getActionParam(params[param.key], context, prefixes.collect {
                 [it, param.key.toUpperCase()].join('_')
             })
-            params[param.key] = processActionParams(param.value, context, action, prefixes.collect {
+            params[param.key] = processActionParams(context, param.value, prefixes.collect {
                 [it, param.key.toUpperCase()].join('_')
             })
         }
     } else if (params instanceof List) {
         for (def i = 0; i < params.size(); i++) {
-            params[i] = interpolateCommand(params[i], context, action)
+            params[i] = interpolateCommand(params[i], context)
         }
 
     }
