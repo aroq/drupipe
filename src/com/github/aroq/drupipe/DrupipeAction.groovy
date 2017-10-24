@@ -46,13 +46,15 @@ class DrupipeAction implements Serializable {
             utils.pipelineNotify(context, notification << [status: 'START'])
             utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} start <-")
 
+            def testContext = context.clone()
+
             // Define action params.
             def actionParams = [:]
             actionParams << ['action': this]
             def defaultActionParams = [:]
             for (actionName in [this.name, this.name + '_' + this.methodName]) {
                 if (context && context.params && context.params.action && actionName in context.params.action) {
-                    defaultActionParams = utils.merge(defaultActionParams, context.params.action[actionName].clone())
+                    defaultActionParams = utils.merge(defaultActionParams, testContext.params.action[actionName])
                 }
             }
             if (!this.params) {
@@ -69,7 +71,7 @@ class DrupipeAction implements Serializable {
             }
             else {
                 utils.debugLog(context, context, "BEFORE PROCESS ACTION PARAMS Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
-                utils.processActionParams(context.clone(), [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
+                utils.processActionParams(testContext, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
                 utils.debugLog(context, context, "AFTER PROCESS ACTION PARAMS Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
                 // TODO: Store processed action params in context (context.actions['action_name']) to allow use it for interpolation in other actions.
             }
