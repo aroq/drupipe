@@ -73,7 +73,9 @@ class DrupipeAction implements Serializable {
                 // TODO: Store processed action params in context (context.actions['action_name']) to allow use it for interpolation in other actions.
             }
 
-            actionParams << this.params
+            if (this.params) {
+                actionParams << this.params
+            }
             utils.debugLog(context, actionParams, "${this.fullName} action params")
 
             def actionFile = null
