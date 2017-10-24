@@ -274,7 +274,6 @@ params = [
                 '${action.params.executable}',
                 '${action.params.command}',
                 '${prepareFlags(action.params.flags)}',
-                '${action.params.selector_flag}',
             ],
         ],
         Kubectl_scale_down_up: [
