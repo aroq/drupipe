@@ -525,9 +525,13 @@ def processActionParams(params, context, action, ArrayList prefixes) {
             })
         }
     } else if (params instanceof List) {
-        for (def i = 0; i < params.size(); i++) {
-            params[i] = interpolateCommand(params[i], context, action)
-        }
+//        for (param in params) {
+//            param = interpolateCommand(param, context, action)
+//        }
+//        for (def i = 0; i < params.size(); i++) {
+//            params[i] = interpolateCommand(params[i], context, action)
+//        }
+        params = params.collect { interpolateCommand(it, context, action) }
 
     }
     return params
