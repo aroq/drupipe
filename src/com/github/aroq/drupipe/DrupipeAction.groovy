@@ -46,7 +46,11 @@ class DrupipeAction implements Serializable {
             utils.pipelineNotify(context, notification << [status: 'START'])
             utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} start <-")
 
+            utils.debugLog(context, context, "TEST1 Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
             def testContext = context.clone()
+            utils.debugLog(context, context, "TEST2 PROCESS ACTION PARAMS Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
+            testContext.params.action.Kubectl_scale_replicaset.replicas = 3
+            utils.debugLog(context, context, "TEST3 PROCESS ACTION PARAMS Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
 
             // Define action params.
             def actionParams = [:]
