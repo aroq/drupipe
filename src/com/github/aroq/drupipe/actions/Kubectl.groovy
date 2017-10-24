@@ -14,15 +14,13 @@ class Kubectl extends BaseAction {
 
     def scale_replicaset() {
         executeKubectlCommand()
-        [:]
     }
 
     def scale_down_up() {
         def name = script.drupipeAction([action: "Kubectl.get_replicaset_name", params: action.params], context).drupipeShellResult
         script.echo "NAME: ${name}"
-        script.drupipeAction([action: "Kubectl.scale_replicaset", params: action.params << [name: name, replicas: action.params.replicas_down]], context)
-        script.drupipeAction([action: "Kubectl.scale_replicaset", params: action.params << [name: name, replicas: action.params.replicas_up]], context)
-        [:]
+        script.drupipeAction([action: "Kubectl.scale_replicaset", params: action.params.clone() << [name: name, replicas: action.params.replicas_down]], context)
+        script.drupipeAction([action: "Kubectl.scale_replicaset", params: action.params.clone() << [name: name, replicas: action.params.replicas_up]], context)
     }
 
     def get_secret() {
