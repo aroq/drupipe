@@ -74,7 +74,7 @@ class DrupipeAction implements Serializable {
                     this.context.pipeline.script.sh("rm -f ${contextParamsConfigFile}")
                 }
                 this.context.pipeline.script.writeYaml(file: contextParamsConfigFile, data: context.params)
-                this.context.pipeline.script.sh("cat ${contextParamsConfigFile}")
+//                this.context.pipeline.script.sh("cat ${contextParamsConfigFile}")
             }
 
 
