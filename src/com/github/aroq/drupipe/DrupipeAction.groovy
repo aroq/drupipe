@@ -135,9 +135,7 @@ class DrupipeAction implements Serializable {
                 actionResult << stored
             }
 
-//            if (context && context.params && context.params.action.Kubectl) {
-                utils.debugLog(context, context, "AFTER ${getFullName()} Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
-//            }
+            utils.debugLog(context, context, "AFTER ${getFullName()} Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
 
             return actionResult
 
