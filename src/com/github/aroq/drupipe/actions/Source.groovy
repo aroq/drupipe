@@ -66,7 +66,7 @@ class Source extends BaseAction {
         def result = [:]
         if (action.params.configPath) {
             def configFilePath = utils.sourcePath(context, action.params.sourceName, action.params.configPath)
-            utils.debuglog(context, context, "CONTEXT")
+            utils.debugLog(context, context, "CONTEXT")
             if (configFilePath) {
                 if (script.fileExists(configFilePath)) {
                     if (action.params.configType == 'groovy') {
