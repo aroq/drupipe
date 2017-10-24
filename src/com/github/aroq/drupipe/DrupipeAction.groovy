@@ -155,7 +155,13 @@ class DrupipeAction implements Serializable {
                 actionResult << stored
             }
 
-            utils.debugLog(context, context, "AFTER ${getFullName()} Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
+            if (context.params) {
+                def contextParamsConfigFile = ['.unipipe', 'context.yaml'].join('/')
+                if (this.context.pipeline.script.fileExists(contextParamsConfigFile)) {
+                    this.context.params = this.context.pipeline.script.readYaml(file: contextParamsConfigFile)
+                    utils.debugLog(context, context, "AFTER YAML READ ${getFullName()} Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
+                }
+            }
 
             return actionResult
 
