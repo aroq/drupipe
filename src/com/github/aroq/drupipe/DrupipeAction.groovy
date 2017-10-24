@@ -46,15 +46,15 @@ class DrupipeAction implements Serializable {
             utils.pipelineNotify(context, notification << [status: 'START'])
             utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} start <-")
 
-
             // Define action params.
             def actionParams = [:]
             actionParams << ['action': this]
             def defaultActionParams = [:]
 
+            // TODO: read action default params from YAML.
             def actionConfigFile = [utils.sourceDir(context, 'library'), 'actions', this.name + '.yaml'].join('/')
             if (this.context.pipeline.script.fileExists(actionConfigFile)) {
-                actionConfig = this.context.pipeline.script.readYaml(file: actionConfigFile)
+                def actionConfig = this.context.pipeline.script.readYaml(file: actionConfigFile)
                 utils.debugLog(context, actionConfig, "${this.fullName} action YAML CONFIG")
             }
 
@@ -68,13 +68,13 @@ class DrupipeAction implements Serializable {
             }
             this.params = utils.merge(defaultActionParams, this.params)
 
+            // Save original (unprocessed) context.params.
+            def contextParamsConfigFile = ['.unipipe', 'context.params.yaml'].join('/')
             if (context.params) {
-                def contextParamsConfigFile = ['.unipipe', 'context.yaml'].join('/')
                 if (this.context.pipeline.script.fileExists(contextParamsConfigFile)) {
                     this.context.pipeline.script.sh("rm -f ${contextParamsConfigFile}")
                 }
                 this.context.pipeline.script.writeYaml(file: contextParamsConfigFile, data: context.params)
-//                this.context.pipeline.script.sh("cat ${contextParamsConfigFile}")
             }
 
 
@@ -83,9 +83,7 @@ class DrupipeAction implements Serializable {
                 this.context.pipeline.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
             }
             else {
-//                utils.debugLog(context, context, "BEFORE PROCESS ACTION PARAMS Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
                 utils.processActionParams(this, context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
-//                utils.debugLog(context, context, "AFTER PROCESS ACTION PARAMS Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
                 // TODO: Store processed action params in context (context.actions['action_name']) to allow use it for interpolation in other actions.
             }
 
@@ -155,11 +153,10 @@ class DrupipeAction implements Serializable {
                 actionResult << stored
             }
 
+            // Restore original (unprocessed) context.params.
             if (context.params) {
-                def contextParamsConfigFile = ['.unipipe', 'context.yaml'].join('/')
                 if (this.context.pipeline.script.fileExists(contextParamsConfigFile)) {
                     this.context.params = this.context.pipeline.script.readYaml(file: contextParamsConfigFile)
-                    utils.debugLog(context, context, "AFTER YAML READ ${getFullName()} Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
                 }
             }
 
