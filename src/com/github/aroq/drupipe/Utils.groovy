@@ -470,10 +470,10 @@ Map merge(Map[] sources) {
                 if (result[k] instanceof Map && v instanceof Map ) {
                     if (v.containsKey('override') && v['override']) {
                         v.remove('override')
-                        result[k] = deepcopy(v)
+                        result[k] = v
                     }
                     else {
-                        result[k] = merge(result[k], deepcopy(v))
+                        result[k] = merge(result[k], v)
                     }
                 }
                 else if (result[k] instanceof List && v instanceof List) {
@@ -481,22 +481,12 @@ Map merge(Map[] sources) {
                     result[k] = result[k].unique()
                 }
                 else {
-                    result[k] = deepcopy(v)
+                    result[k] = v
                 }
             }
         }
         result
     }
-}
-
-@NonCPS
-def deepcopy(orig) {
-    bos = new ByteArrayOutputStream()
-    oos = new ObjectOutputStream(bos)
-    oos.writeObject(orig); oos.flush()
-    bin = new ByteArrayInputStream(bos.toByteArray())
-    ois = new ObjectInputStream(bin)
-    return ois.readObject()
 }
 
 def removeDir(dir, context) {
