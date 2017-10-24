@@ -514,13 +514,13 @@ def interpolateCommand(String command, context, action) {
 @NonCPS
 def processActionParams(params, context, action, ArrayList prefixes) {
     if (params instanceof CharSequence) {
-//        if (action.getFullName() == 'Kubectl_scale_replicaset') {
-//            debugLog(context, context, "BEFORE INSIDE processActionParams Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
-//        }
+        if (action.methodName == 'scale_replicaset') {
+            debugLog(context, context, "BEFORE INSIDE processActionParams Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
+        }
         params = interpolateCommand(params, context, action)
-//        if (action.getFullName() == 'Kubectl_scale_replicaset') {
-//            debugLog(context, context, "AFTER INSIDE processActionParams Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
-//        }
+        if (action.methodName == 'scale_replicaset') {
+            debugLog(context, context, "AFTER INSIDE processActionParams Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
+        }
     } else if (params instanceof Map) {
         for (param in params) {
             param.value = getActionParam(params[param.key], context, prefixes.collect {
