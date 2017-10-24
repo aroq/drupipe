@@ -154,7 +154,7 @@ params = [
             depth: 1,
         ],
         YamlFileHandler: [
-            deployFile: '.drupipe.yml',
+            deployFile: 'unipipe.y*ml',
         ],
         GCloud: [
             executable: 'gcloud',
