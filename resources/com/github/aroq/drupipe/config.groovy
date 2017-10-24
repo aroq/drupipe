@@ -286,7 +286,7 @@ params = [
             environment: '',
             chart_name: '',
             release_name: '${action.params.chart_name}-${action.params.environment}',
-            jsonpath: '\"{.items[0].metadata.name}\"',
+            jsonpath: '\\"{.items[0].metadata.name}\\"',
             returnOutput: true,
             flags: [
                 '--namespace': ['${action.params.namespace}'],
