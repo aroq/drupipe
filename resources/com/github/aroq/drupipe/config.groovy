@@ -278,7 +278,6 @@ params = [
             ],
         ],
         Kubectl_scale_down_up: [
-            command: 'get pods',
             replicas_down: '0',
             replicas_up: '1',
         ],
