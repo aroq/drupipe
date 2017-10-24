@@ -59,7 +59,7 @@ class Source extends BaseAction {
             context.sourcesList << context.loadedSources[source.name]
             utils.debugLog(context, context.loadedSources, "Loaded sources (after Source.add)", [debugMode: 'json'])
         }
-        [:]
+        [loadedSources: context.loadedSources, sourcesList: context.sourcesList]
     }
 
     def loadConfig() {
