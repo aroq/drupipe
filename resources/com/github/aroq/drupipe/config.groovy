@@ -265,11 +265,11 @@ params = [
         Kubectl_scale_replicaset: [
             command: 'scale replicaset',
             replicas: '',
+            name: '',
             flags: [
                 '--replicas': ['${action.params.replicas}'],
                 '--namespace': ['${action.params.namespace}'],
             ],
-            selector_flag: '--selector=release=${action.params.release_name}',
             full_command: [
                 '${action.params.executable}',
                 '${action.params.command}',
