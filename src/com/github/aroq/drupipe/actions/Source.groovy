@@ -67,18 +67,24 @@ class Source extends BaseAction {
         if (action.params.configPath) {
             def configFilePath = utils.sourcePath(context, action.params.sourceName, action.params.configPath)
 
-            if (script.fileExists(configFilePath)) {
-                if (action.params.configType == 'groovy') {
-                    result = this.script.drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], context)
+            if (configFilePath) {
+                if (script.fileExists(configFilePath)) {
+                    if (action.params.configType == 'groovy') {
+                        result = this.script.drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], context)
+                    }
+                    else if (action.params.configType == 'yaml') {
+                        result = this.script.drupipeAction([action: 'YamlFileConfig.load', params: [configFileName: configFilePath]], context)
+                    }
                 }
-                else if (action.params.configType == 'yaml') {
-                    result = this.script.drupipeAction([action: 'YamlFileConfig.load', params: [configFileName: configFilePath]], context)
-                }
+
+                result.remove('sourceName')
+                result.remove('configPath')
+                result.remove('configType')
+            }
+            else {
+                 script.echo "Config file doesn't exists: ${configFilePath}"
             }
 
-            result.remove('sourceName')
-            result.remove('configPath')
-            result.remove('configType')
         }
         result
     }
