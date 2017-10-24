@@ -297,7 +297,6 @@ params = [
                 '${action.params.executable}',
                 '${action.params.command}',
                 '${prepareFlags(action.params.flags)}',
-                '${action.params.jsonpath}',
             ],
         ],
         Kubectl_getPods: [
