@@ -529,12 +529,21 @@ def processActionParams(params, context, action, ArrayList prefixes) {
             params[param.key] = processActionParams(param.value, context, action, prefixes.collect {
                 [it, param.key.toUpperCase()].join('_')
             })
+            if (action.methodName == 'scale_replicaset') {
+                debugLog(context, context, "AFTER INSIDE2 processActionParams Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
+            }
         }
     } else if (params instanceof List) {
         for (def i = 0; i < params.size(); i++) {
             params[i] = interpolateCommand(params[i], context, action)
         }
+        if (action.methodName == 'scale_replicaset') {
+            debugLog(context, context, "AFTER INSIDE3 processActionParams Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
+        }
 
+    }
+    if (action.methodName == 'scale_replicaset') {
+        debugLog(context, context, "AFTER INSIDE4 processActionParams Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
     }
     return params
 }
