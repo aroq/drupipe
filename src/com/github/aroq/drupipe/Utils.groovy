@@ -499,29 +499,29 @@ def removeDir(dir, context) {
 }
 
 @NonCPS
-def interpolateCommand(String command, context) {
+def interpolateCommand(String command, action, context) {
     def prepareFlags = { flags ->
         prepareFlags(flags)
     }
 
-    def binding = [context: context, action: context.action, prepareFlags: prepareFlags]
+    def binding = [context: context, action: action, prepareFlags: prepareFlags]
     def engine = new groovy.text.SimpleTemplateEngine()
     def template = engine.createTemplate(command).make(binding)
     template.toString()
 }
 
 @NonCPS
-def processActionParams(context, ArrayList prefixes, ArrayList path = []) {
+def processActionParams(action, context, ArrayList prefixes, ArrayList path = []) {
     def params
     if (path) {
-        params = path.inject(context.action.params, { obj, prop ->
+        params = path.inject(action.params, { obj, prop ->
             if (obj && obj[prop]) {
                 obj[prop]
             }
         })
     }
     else {
-        params = context.action.params
+        params = action.params
     }
 
     for (param in params) {
@@ -529,14 +529,14 @@ def processActionParams(context, ArrayList prefixes, ArrayList path = []) {
             param.value = getActionParam(params[param.key], context, prefixes.collect {
                 [it, param.key.toUpperCase()].join('_')
             })
-            param.value = interpolateCommand(param.value, context)
+            param.value = interpolateCommand(param.value, action, context)
         } else if (param.value instanceof Map) {
-            processActionParams(context, prefixes.collect {
+            processActionParams(action, context, prefixes.collect {
                 [it, param.key.toUpperCase()].join('_')
             }, path + param.key)
         } else if (param.value instanceof List) {
             for (def i = 0; i < param.value.size(); i++) {
-                param.value[i] = interpolateCommand(param.value[i], context)
+                param.value[i] = interpolateCommand(param.value[i], action, context)
             }
         }
         else {

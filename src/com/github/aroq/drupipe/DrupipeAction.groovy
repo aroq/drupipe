@@ -62,8 +62,8 @@ class DrupipeAction implements Serializable {
             }
             this.params = utils.merge(defaultActionParams, this.params)
 
-            context.action = this
-            context.action.params = this.params.clone()
+//            testContext.action = this
+//            context.action.params = this.params.clone()
 
             // Interpolate action params with context variables.
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
@@ -71,7 +71,7 @@ class DrupipeAction implements Serializable {
             }
             else {
                 utils.debugLog(context, context, "BEFORE PROCESS ACTION PARAMS Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
-                utils.processActionParams(testContext, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
+                utils.processActionParams(this, testContext, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
                 utils.debugLog(context, context, "AFTER PROCESS ACTION PARAMS Kubectl Action params: ", [:], ['params', 'action', 'Kubectl_scale_replicaset'], true)
                 // TODO: Store processed action params in context (context.actions['action_name']) to allow use it for interpolation in other actions.
             }
