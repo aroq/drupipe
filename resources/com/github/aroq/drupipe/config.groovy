@@ -173,13 +173,7 @@ params = [
             project_name: '',
             cluster_name: '',
         ],
-        GCloud_projects_list: [
-
-        ],
-        GCloud_projects_create: [
-
-        ],
-        // Examples of overriding command with jenkin params:
+        // Examples of overriding command with jenkins params:
         // HELM_EXECUTABLE: test
         // HELM_APPLY_EXECUTABLE: test
         // HELM_APPLY_HELM_COMMAND: test
@@ -262,22 +256,53 @@ params = [
         Kubectl: [
             executable: 'kubectl',
             kubectl_config_file: '.kubeconfig',
+            namespace: '${action.params.chart_name}-${action.params.environment}',
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
             ],
         ],
-        Kubectl_scale: [
-            command: 'scale',
+        Kubectl_scale_replicaset: [
+            command: 'scale replicaset',
+            environment: '',
+            chart_name: '',
+            release_name: '${action.params.chart_name}-${action.params.environment}',
+            replicas: '',
+            flags: [
+                '--replicas': ['${action.params.replicas}'],
+                '--namespace': ['${action.params.namespace}'],
+                '--selector': ['release=${action.params.release_name}'],
+            ],
             full_command: [
                 '${action.params.executable}',
                 '${action.params.command}',
             ],
+        ],
+        Kubectl_scale_down_up: [
+            command: 'get pods',
+            replicas_down: '0',
+            replicas_up: '1',
         ],
         Kubectl_getPods: [
             command: 'get pods',
             full_command: [
                 '${action.params.executable}',
                 '${action.params.command}',
+            ],
+        ],
+        Kubectl_get_secret: [
+            command: 'get secret',
+            full_command: [
+                '${action.params.executable}',
+                '${action.params.command}',
+                '${action.params.secret_name}',
+            ],
+        ],
+        Kubectl_create_secret: [
+            command: 'get secret',
+            full_command: [
+                '${action.params.executable}',
+                '${action.params.command}',
+                '${action.params.secret_name}',
             ],
         ],
     ],

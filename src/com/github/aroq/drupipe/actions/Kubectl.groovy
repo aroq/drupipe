@@ -12,8 +12,26 @@ class Kubectl extends BaseAction {
 
     DrupipeAction action
 
-    def scale() {
+    def scale_replicaset() {
         executeKubectlCommand()
+    }
+
+    def scale_down_up() {
+        drupipeAction([action: "Kubectl.scale_replicaset", params: action.params << ['replicas': action.params.replicas_down]], context)
+        drupipeAction([action: "Kubectl.scale_replicaset", params: action.params << ['replicas': action.params.replicas_up]], context)
+    }
+
+    def get_secret() {
+        executeKubectlCommand()
+    }
+
+    def create_secret() {
+        try {
+            drupipeAction([action: "Kubectl.get_secret", params: action.params], context)
+        }
+        catch (e) {
+            executeKubectlCommand()
+        }
     }
 
     def getPods() {
