@@ -16,6 +16,8 @@ class DrupipeAction implements Serializable {
 
     LinkedHashMap context = [:]
 
+    def script
+
     String getFullName() {
         "${this.name}.${this.methodName}"
     }
@@ -24,6 +26,8 @@ class DrupipeAction implements Serializable {
         if (c) {
             this.context << c
         }
+
+        this.script = this.context.pipeline.script
 
         def utils = new com.github.aroq.drupipe.Utils()
         def actionResult = [:]
@@ -53,8 +57,8 @@ class DrupipeAction implements Serializable {
 
             // TODO: read action default params from YAML.
             def actionConfigFile = [utils.sourceDir(context, 'library'), 'actions', this.name + '.yaml'].join('/')
-            if (this.context.pipeline.script.fileExists(actionConfigFile)) {
-                def actionConfig = this.context.pipeline.script.readYaml(file: actionConfigFile)
+            if (this.script.fileExists(actionConfigFile)) {
+                def actionConfig = this.script.readYaml(file: actionConfigFile)
                 utils.debugLog(context, actionConfig, "${this.fullName} action YAML CONFIG")
             }
 
@@ -72,16 +76,16 @@ class DrupipeAction implements Serializable {
             // TODO: save only needed actions.
             def contextParamsConfigFile = ['.unipipe', 'context.params.yaml'].join('/')
             if (context.params) {
-                if (this.context.pipeline.script.fileExists(contextParamsConfigFile)) {
-                    this.context.pipeline.script.sh("rm -f ${contextParamsConfigFile}")
+                if (this.script.fileExists(contextParamsConfigFile)) {
+                    this.script.sh("rm -f ${contextParamsConfigFile}")
                 }
-                this.context.pipeline.script.writeYaml(file: contextParamsConfigFile, data: context.params)
+                this.script.writeYaml(file: contextParamsConfigFile, data: context.params)
             }
 
 
             // Interpolate action params with context variables.
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
-                this.context.pipeline.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
+                this.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
             }
             else {
                 utils.processActionParams(this, context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
@@ -100,14 +104,14 @@ class DrupipeAction implements Serializable {
                 actionParams.credentials.each { k, v ->
                     if (v.type == 'file') {
                         v.variable_name = v.variable_name ? v.variable_name : v.id
-                        credentials << this.context.pipeline.script.file(credentialsId: v.id, variable: v.variable_name)
+                        credentials << this.script.file(credentialsId: v.id, variable: v.variable_name)
                     }
                 }
             }
 
-            this.context.pipeline.script.withCredentials(credentials) {
+            this.script.withCredentials(credentials) {
                 def envParams = actionParams.env ? actionParams.env.collect{ k, v -> "$k=$v"} : []
-                this.context.pipeline.script.withEnv(envParams) {
+                script.withEnv(envParams) {
                     // Execute action from file if exist in sources...
                     if (context.sourcesList) {
                         for (def i = 0; i < context.sourcesList.size(); i++) {
@@ -115,8 +119,8 @@ class DrupipeAction implements Serializable {
                             def fileName = utils.sourcePath(context, source.name, 'pipelines/actions/' + this.name + '.groovy')
                             utils.debugLog(actionParams, fileName, "DrupipeAction file name to check")
                             // To make sure we only check fileExists in Heavyweight executor mode.
-                            if (context.block?.nodeName && this.context.pipeline.script.fileExists(fileName)) {
-                                actionFile = this.context.pipeline.script.load(fileName)
+                            if (context.block?.nodeName && this.script.fileExists(fileName)) {
+                                actionFile = this.script.load(fileName)
                                 actionResult = actionFile."${this.methodName}"(actionParams)
                             }
                         }
@@ -127,11 +131,16 @@ class DrupipeAction implements Serializable {
                             def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance(
                                 context: context.clone(),
                                 action: this,
-                                script: context.pipeline.script,
+                                script: this.script,
                                 utils: utils,
                             )
 
-                            actionResult = actionInstance."${this.methodName}"()
+                            // TODO: Move context action timeout into default action (common for all actions) params.
+                            def action_timeout = this.params.action_timeout ? this.params.action_timeout : context.action_timeout
+                            this.script.timeout(action_timeout) {
+                                actionResult = actionInstance."${this.methodName}"()
+                            }
+
                         }
                         catch (err) {
                             this.context.pipeline.script.echo err.toString()

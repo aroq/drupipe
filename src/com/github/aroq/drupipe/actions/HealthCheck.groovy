@@ -12,7 +12,12 @@ class HealthCheck extends BaseAction {
 
     DrupipeAction action
 
-    def test_http_ok() {
+    def wait_http_ok() {
+        script.drupipeShell(
+            "${action.params.full_command.join(' ')}",
+            context,
+            action.params
+        )
     }
 
 }

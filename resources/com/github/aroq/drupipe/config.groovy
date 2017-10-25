@@ -33,6 +33,8 @@ environments {
     }
 }
 
+action_timeout: 120
+
 params = [
     block: [
 
@@ -358,6 +360,16 @@ params = [
                 '${action.params.command}',
                 '${action.params.source}',
                 '${action.params.destination}',
+            ],
+        ],
+        HealthCheck_wait_http_ok: [
+            action_timeout: '',
+            url: '',
+            http_code: '200',
+            interval: '5',
+            command: '''bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' ${action.params.url})" != "${action.params.http_code}" ]]; do sleep ${action.params.interval}; done' ''',
+            full_command: [
+                '${action.params.command}',
             ],
         ],
     ],
