@@ -334,6 +334,9 @@ params = [
         Kubectl_get_lb_address: [
             command: 'get service',
             drupipeShellReturnStdout: true,
+            environment: '',
+            chart_name: '',
+            release_name: '${action.params.chart_name}-${action.params.environment}',
             jsonpath: '{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}',
             flags: [
                 '--namespace': ['${action.params.namespace}'],
