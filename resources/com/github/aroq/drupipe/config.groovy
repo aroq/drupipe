@@ -317,11 +317,15 @@ params = [
                 '${prepareFlags(action.params.flags)}',
             ],
         ],
-        Kubectl_getPods: [
+        Kubectl_get_pods: [
             command: 'get pods',
+            flags: [
+                '--namespace': ['${action.params.namespace}'],
+            ],
             full_command: [
                 '${action.params.executable}',
                 '${action.params.command}',
+                '${prepareFlags(action.params.flags)}',
             ],
         ],
         Kubectl_get_secret: [

@@ -69,6 +69,7 @@ class DrupipeAction implements Serializable {
             this.params = utils.merge(defaultActionParams, this.params)
 
             // Save original (unprocessed) context.params.
+            // TODO: save only needed actions.
             def contextParamsConfigFile = ['.unipipe', 'context.params.yaml'].join('/')
             if (context.params) {
                 if (this.context.pipeline.script.fileExists(contextParamsConfigFile)) {
@@ -154,6 +155,7 @@ class DrupipeAction implements Serializable {
             }
 
             // Restore original (unprocessed) context.params.
+            // TODO: restore only needed actions.
             if (context.params) {
                 if (this.context.pipeline.script.fileExists(contextParamsConfigFile)) {
                     this.context.params = this.context.pipeline.script.readYaml(file: contextParamsConfigFile)
@@ -186,15 +188,15 @@ class DrupipeAction implements Serializable {
     }
 
     def contextStoreResult(path, stored, result) {
-        def path_element = path.get(0)
-        def subpath = path.subList(1, path.size())
-        if (!stored.containsKey(path_element)) {
-          stored[path_element] = [:]
+        def pathElement = path.get(0)
+        def subPath = path.subList(1, path.size())
+        if (!stored.containsKey(pathElement)) {
+            stored[pathElement] = [:]
         }
-        if (subpath.size() > 0) {
-          contextStoreResult(subpath, stored[path_element], result)
+        if (subPath.size() > 0) {
+            contextStoreResult(subPath, stored[pathElement], result)
         } else {
-          stored[path_element]= result
+            stored[pathElement]= result
         }
     }
 

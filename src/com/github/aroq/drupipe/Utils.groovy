@@ -539,9 +539,6 @@ def processActionParams(action, context, ArrayList prefixes, ArrayList path = []
                 param.value[i] = interpolateCommand(param.value[i], action, context)
             }
         }
-        else {
-            def stop = true
-        }
     }
 }
 
