@@ -331,8 +331,8 @@ params = [
                 '${prepareFlags(action.params.flags)}',
             ],
         ],
-        Kubectl_get_pod_name2: [
-            command: 'get pod',
+        Kubectl_get_replicaset_name2: [
+            command: 'get replicaset',
             environment: '',
             chart_name: '',
             release_name: '${action.params.chart_name}-${action.params.environment}',
