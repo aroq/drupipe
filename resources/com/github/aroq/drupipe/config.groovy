@@ -331,6 +331,21 @@ params = [
                 '${prepareFlags(action.params.flags)}',
             ],
         ],
+        Kubectl_get_lb_address: [
+            command: 'get service',
+            drupipeShellReturnStdout: true,
+            jsonpath: '{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}',
+            flags: [
+                '--namespace': ['${action.params.namespace}'],
+                '--selector': ['release=${action.params.release_name}'],
+                '-o': ['jsonpath=${action.params.jsonpath}'],
+            ],
+            full_command: [
+                '${action.params.executable}',
+                '${action.params.command}',
+                '${prepareFlags(action.params.flags)}',
+            ],
+        ],
         Kubectl_get_secret: [
             command: 'get secret',
             full_command: [

@@ -31,6 +31,10 @@ class Kubectl extends BaseAction {
         executeKubectlCommand()
     }
 
+    def get_lb_address() {
+        executeKubectlCommand()
+    }
+
     def get_replicaset_name() {
         executeKubectlCommand()
     }
