@@ -44,6 +44,10 @@ class Kubectl extends BaseAction {
         executeKubectlCommand()
     }
 
+    def get_replicaset_name2() {
+        executeKubectlCommand()
+    }
+
     def create_secret() {
         try {
             drupipeAction([action: "Kubectl.get_secret", params: action.params], context)
