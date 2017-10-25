@@ -31,7 +31,7 @@ class Kubectl extends BaseAction {
         executeKubectlCommand()
     }
 
-    def get_lb_address() {
+    def get_loadbalancer_address() {
         executeKubectlCommand()
     }
 
