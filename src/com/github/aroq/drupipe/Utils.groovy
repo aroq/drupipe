@@ -391,8 +391,17 @@ def sourceDir(params, sourceName) {
     }
 }
 
-def debugLog(params, value, dumpName = '', debugParams = [:], force = false) {
+def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], force = false) {
     if (debugEnabled(params) || force) {
+        if (path) {
+            value = path.inject(value, { obj, prop ->
+                if (obj && obj[prop]) {
+                    obj[prop]
+                }
+                else ''
+            })
+        }
+
         if (value instanceof CharSequence) {
             echo "${dumpName}: ${value}"
         }
@@ -490,8 +499,7 @@ def removeDir(dir, context) {
 }
 
 @NonCPS
-def interpolateCommand(String command, context, action) {
-
+def interpolateCommand(String command, action, context) {
     def prepareFlags = { flags ->
         prepareFlags(flags)
     }
@@ -503,25 +511,35 @@ def interpolateCommand(String command, context, action) {
 }
 
 @NonCPS
-def processActionParams(params, context, action, ArrayList prefixes) {
-    if (params instanceof CharSequence) {
-        params = interpolateCommand(params, context, action)
-    } else if (params instanceof Map) {
-        for (param in params) {
+def processActionParams(action, context, ArrayList prefixes, ArrayList path = []) {
+    def params
+    if (path) {
+        params = path.inject(action.params, { obj, prop ->
+            if (obj && obj[prop]) {
+                obj[prop]
+            }
+        })
+    }
+    else {
+        params = action.params
+    }
+
+    for (param in params) {
+        if (param.value instanceof CharSequence) {
             param.value = getActionParam(params[param.key], context, prefixes.collect {
                 [it, param.key.toUpperCase()].join('_')
             })
-            params[param.key] = processActionParams(param.value, context, action, prefixes.collect {
+            param.value = interpolateCommand(param.value, action, context)
+        } else if (param.value instanceof Map) {
+            processActionParams(action, context, prefixes.collect {
                 [it, param.key.toUpperCase()].join('_')
-            })
+            }, path + param.key)
+        } else if (param.value instanceof List) {
+            for (def i = 0; i < param.value.size(); i++) {
+                param.value[i] = interpolateCommand(param.value[i], action, context)
+            }
         }
-    } else if (params instanceof List) {
-        for (def i = 0; i < params.size(); i++) {
-            params[i] = interpolateCommand(params[i], context, action)
-        }
-
     }
-    return params
 }
 
 @NonCPS

@@ -49,23 +49,42 @@ class DrupipeAction implements Serializable {
             // Define action params.
             def actionParams = [:]
             actionParams << ['action': this]
-            def tempDefaultActionParams = [:]
+            def defaultActionParams = [:]
+
+            // TODO: read action default params from YAML.
+            def actionConfigFile = [utils.sourceDir(context, 'library'), 'actions', this.name + '.yaml'].join('/')
+            if (this.context.pipeline.script.fileExists(actionConfigFile)) {
+                def actionConfig = this.context.pipeline.script.readYaml(file: actionConfigFile)
+                utils.debugLog(context, actionConfig, "${this.fullName} action YAML CONFIG")
+            }
+
             for (actionName in [this.name, this.name + '_' + this.methodName]) {
                 if (context && context.params && context.params.action && actionName in context.params.action) {
-                    tempDefaultActionParams = utils.merge(tempDefaultActionParams, context.params.action[actionName])
+                    defaultActionParams = utils.merge(defaultActionParams, context.params.action[actionName])
                 }
             }
             if (!this.params) {
                 this.params = [:]
             }
-            this.params = utils.merge(tempDefaultActionParams, this.params)
+            this.params = utils.merge(defaultActionParams, this.params)
+
+            // Save original (unprocessed) context.params.
+            // TODO: save only needed actions.
+            def contextParamsConfigFile = ['.unipipe', 'context.params.yaml'].join('/')
+            if (context.params) {
+                if (this.context.pipeline.script.fileExists(contextParamsConfigFile)) {
+                    this.context.pipeline.script.sh("rm -f ${contextParamsConfigFile}")
+                }
+                this.context.pipeline.script.writeYaml(file: contextParamsConfigFile, data: context.params)
+            }
+
 
             // Interpolate action params with context variables.
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
                 this.context.pipeline.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
             }
             else {
-                this.params = utils.processActionParams(params, context, this, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
+                utils.processActionParams(this, context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
                 // TODO: Store processed action params in context (context.actions['action_name']) to allow use it for interpolation in other actions.
             }
 
@@ -106,7 +125,7 @@ class DrupipeAction implements Serializable {
                     if (!actionFile) {
                         try {
                             def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance(
-                                context: context,
+                                context: context.clone(),
                                 action: this,
                                 script: context.pipeline.script,
                                 utils: utils,
@@ -135,6 +154,14 @@ class DrupipeAction implements Serializable {
                 actionResult << stored
             }
 
+            // Restore original (unprocessed) context.params.
+            // TODO: restore only needed actions.
+            if (context.params) {
+                if (this.context.pipeline.script.fileExists(contextParamsConfigFile)) {
+                    this.context.params = this.context.pipeline.script.readYaml(file: contextParamsConfigFile)
+                }
+            }
+
             return actionResult
 
         }
@@ -161,15 +188,15 @@ class DrupipeAction implements Serializable {
     }
 
     def contextStoreResult(path, stored, result) {
-        def path_element = path.get(0)
-        def subpath = path.subList(1, path.size())
-        if (!stored.containsKey(path_element)) {
-          stored[path_element] = [:]
+        def pathElement = path.get(0)
+        def subPath = path.subList(1, path.size())
+        if (!stored.containsKey(pathElement)) {
+            stored[pathElement] = [:]
         }
-        if (subpath.size() > 0) {
-          contextStoreResult(subpath, stored[path_element], result)
+        if (subPath.size() > 0) {
+            contextStoreResult(subPath, stored[pathElement], result)
         } else {
-          stored[path_element]= result
+            stored[pathElement]= result
         }
     }
 

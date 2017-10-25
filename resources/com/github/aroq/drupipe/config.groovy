@@ -173,7 +173,7 @@ params = [
             project_name: '',
             cluster_name: '',
         ],
-        // Examples of overriding command with jenkin params:
+        // Examples of overriding command with jenkins params:
         // HELM_EXECUTABLE: test
         // HELM_APPLY_EXECUTABLE: test
         // HELM_APPLY_HELM_COMMAND: test
@@ -256,22 +256,108 @@ params = [
         Kubectl: [
             executable: 'kubectl',
             kubectl_config_file: '.kubeconfig',
+            namespace: '${action.params.chart_name}-${action.params.environment}',
+            shellCommandWithBashLogin: false,
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
             ],
+            returnOutput: false,
         ],
-        Kubectl_scale: [
-            command: 'scale',
+        Kubectl_scale_replicaset: [
+            command: 'scale replicaset',
+            replicas: '',
+            name: '',
+            flags: [
+                '--replicas': ['${action.params.replicas}'],
+                '--namespace': ['${action.params.namespace}'],
+            ],
             full_command: [
                 '${action.params.executable}',
                 '${action.params.command}',
+                '${prepareFlags(action.params.flags)}',
+                '${action.params.name}',
             ],
         ],
-        Kubectl_getPods: [
-            command: 'get pods',
+        Kubectl_scale_down_up: [
+            replicas_down: '0',
+            replicas_up: '1',
+        ],
+        Kubectl_get_pod_name: [
+            command: 'get pod',
+            environment: '',
+            chart_name: '',
+            release_name: '${action.params.chart_name}-${action.params.environment}',
+            jsonpath: '\'{.items[0].metadata.name}\'',
+            drupipeShellReturnStdout: true,
+            flags: [
+                '--namespace': ['${action.params.namespace}'],
+                '--selector': ['release=${action.params.release_name}'],
+                '-o': ['jsonpath=${action.params.jsonpath}'],
+            ],
             full_command: [
                 '${action.params.executable}',
                 '${action.params.command}',
+                '${prepareFlags(action.params.flags)}',
+            ],
+        ],
+        Kubectl_get_replicaset_name: [
+            command: 'get replicaset',
+            environment: '',
+            chart_name: '',
+            release_name: '${action.params.chart_name}-${action.params.environment}',
+            jsonpath: '\'{.items[0].metadata.name}\'',
+            drupipeShellReturnStdout: true,
+            flags: [
+                '--namespace': ['${action.params.namespace}'],
+                '--selector': ['release=${action.params.release_name}'],
+                '-o': ['jsonpath=${action.params.jsonpath}'],
+            ],
+            full_command: [
+                '${action.params.executable}',
+                '${action.params.command}',
+                '${prepareFlags(action.params.flags)}',
+            ],
+        ],
+        Kubectl_get_pods: [
+            command: 'get pods',
+            flags: [
+                '--namespace': ['${action.params.namespace}'],
+            ],
+            full_command: [
+                '${action.params.executable}',
+                '${action.params.command}',
+                '${prepareFlags(action.params.flags)}',
+            ],
+        ],
+        Kubectl_get_secret: [
+            command: 'get secret',
+            full_command: [
+                '${action.params.executable}',
+                '${action.params.command}',
+                '${action.params.secret_name}',
+            ],
+        ],
+        Kubectl_create_secret: [
+            command: 'get secret',
+            full_command: [
+                '${action.params.executable}',
+                '${action.params.command}',
+                '${action.params.secret_name}',
+            ],
+        ],
+        Kubectl_copy_from_pod: [
+            command: 'cp',
+            name: '',
+            source_file_name: '',
+            source: '${action.params.namespace}/${action.params.name}:${action.params.source_file_name}',
+            destination_file_name: '',
+            destination: '${action.params.destination_file_name}',
+            drupipeShellReturnStdout: true,
+            full_command: [
+                '${action.params.executable}',
+                '${action.params.command}',
+                '${action.params.source}',
+                '${action.params.destination}',
             ],
         ],
     ],

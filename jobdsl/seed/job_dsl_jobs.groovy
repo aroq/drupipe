@@ -602,7 +602,8 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     }
                 }
                 if (pipelinesRepo == seedRepo) {
-                    pipelineScriptPath = "${localConfig.projectConfigPath}/${pipelineScript}.groovy"
+//                    pipelineScriptPath = "${localConfig.projectConfigPath}/${pipelineScript}.groovy"
+                    pipelineScriptPath = "${pipelineScript}.groovy"
                 }
                 else {
                     configMode = MODE_CONFIG_AND_PROJECT_REPO
