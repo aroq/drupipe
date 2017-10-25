@@ -242,6 +242,8 @@ class Config extends BaseAction {
                         def sourceDir = utils.sourceDir(context, scenarioSourceName)
 
                         def filesToCheck = [
+                            "/.unipipe/scenarios/${scenario.name}/config.yaml",
+                            "/.unipipe/scenarios/${scenario.name}/config.yml",
                             "/.drupipe/scenarios/${scenario.name}/config.yaml",
                             "/.drupipe/scenarios/${scenario.name}/config.yml",
                             "/scenarios/${scenario.name}/config.yaml",
@@ -310,6 +312,8 @@ class Config extends BaseAction {
             this.script.echo("PROJECTS SOURCE DIR: ${sourceDir}")
 
             def filesToCheck = [
+                ".unipipe/config.yaml",
+                ".unipipe/config.yml",
                 ".drupipe/config.yaml",
                 ".drupipe/config.yml",
                 "config.yaml",
