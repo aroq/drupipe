@@ -332,11 +332,11 @@ params = [
             ],
         ],
         Kubectl_get_loadbalancer_address: [
-            command: 'get service',
+            command: 'get pod',
             environment: '',
             chart_name: '',
             release_name: '${action.params.chart_name}-${action.params.environment}',
-            jsonpath: '\'{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}\'',
+            jsonpath: '\'{.items[0].metadata.name}\'',
             drupipeShellReturnStdout: true,
             flags: [
                 '--namespace': ['${action.params.namespace}'],
@@ -348,6 +348,22 @@ params = [
                 '${action.params.command}',
                 '${prepareFlags(action.params.flags)}',
             ],
+//            command: 'get service',
+//            environment: '',
+//            chart_name: '',
+//            release_name: '${action.params.chart_name}-${action.params.environment}',
+//            jsonpath: '\'{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}\'',
+//            drupipeShellReturnStdout: true,
+//            flags: [
+//                '--namespace': ['${action.params.namespace}'],
+//                '--selector': ['release=${action.params.release_name}'],
+//                '-o': ['jsonpath=${action.params.jsonpath}'],
+//            ],
+//            full_command: [
+//                '${action.params.executable}',
+//                '${action.params.command}',
+//                '${prepareFlags(action.params.flags)}',
+//            ],
         ],
         Kubectl_get_secret: [
             command: 'get secret',
