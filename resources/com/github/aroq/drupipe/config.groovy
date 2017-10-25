@@ -257,6 +257,7 @@ params = [
             executable: 'kubectl',
             kubectl_config_file: '.kubeconfig',
             namespace: '${action.params.chart_name}-${action.params.environment}',
+            shellCommandWithBashLogin: false,
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
             ],
@@ -342,6 +343,21 @@ params = [
                 '${action.params.executable}',
                 '${action.params.command}',
                 '${action.params.secret_name}',
+            ],
+        ],
+        Kubectl_copy_from_pod: [
+            command: 'cp',
+            name: '',
+            source_file_name: '',
+            source: '${action.params.namespace}/${action.params.name}:${action.params.source_file_name}',
+            destination_file_name: '',
+            destination: '${action.params.destination_file_name}',
+            drupipeShellReturnStdout: true,
+            full_command: [
+                '${action.params.executable}',
+                '${action.params.command}',
+                '${action.params.source}',
+                '${action.params.destination}',
             ],
         ],
     ],
