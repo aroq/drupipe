@@ -331,7 +331,7 @@ params = [
                 '${prepareFlags(action.params.flags)}',
             ],
         ],
-        Kubectl_get_loadbalancer_address: [
+        Kubectl_get_pod_name2: [
             command: 'get pod',
             environment: '',
             chart_name: '',
