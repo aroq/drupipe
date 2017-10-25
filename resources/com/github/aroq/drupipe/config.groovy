@@ -378,7 +378,7 @@ params = [
             ],
         ],
         HealthCheck_wait_http_ok: [
-            action_timeout: '',
+            action_timeout: 5,
             url: '',
             http_code: '200',
             interval: '5',

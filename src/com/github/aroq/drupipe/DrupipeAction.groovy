@@ -137,7 +137,7 @@ class DrupipeAction implements Serializable {
 
                             // TODO: Move context action timeout into default action (common for all actions) params.
                             def action_timeout = this.params.action_timeout ? this.params.action_timeout : context.action_timeout
-                            action_timeout = action_timeout ? action_timeout : '120'
+                            action_timeout = action_timeout ? action_timeout : 120
                             this.script.timeout(action_timeout) {
                                 actionResult = actionInstance."${this.methodName}"()
                             }
