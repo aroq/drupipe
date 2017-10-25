@@ -36,9 +36,10 @@ class Ansible extends BaseAction {
     def deploy() {
         init()
         script.echo(context.builder.artifactParams.dir)
+        def relativePath = utils.getRelativePath(context, action.params.playbooksDir, context.builder.artifactParams.dir)
         action.params.playbookParams << [
             ansistrano_deploy_to:   context.environmentParams.root,
-            ansistrano_deploy_from: context.builder.artifactParams.dir + '/',
+            ansistrano_deploy_from: relativePath + '/',
         ]
         deployWithAnsistrano()
     }
@@ -88,7 +89,7 @@ class Ansible extends BaseAction {
         }
         utils.loadLibrary(script, context)
         def command =
-            """ansible-playbook ${action.params.playbook} \
+            """pwd && ls -lah && ansible-playbook ${action.params.playbooksDir}/${action.params.playbook} \
             -i ${action.params.inventoryArgument} \
             --vault-password-file \${ANSIBLE_VAULT_PASS_FILE} \
             -e '${joinParams(action.params.playbookParams, 'json')}'"""

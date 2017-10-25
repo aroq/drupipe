@@ -23,7 +23,6 @@ class GitArtifact extends BaseAction {
             """, context << [shellCommandWithBashLogin: true]
         )
 
-        context.builder.artifactParams.dir = "${context.workspace}/${action.params.dir}/${action.params.repoDirName}"
+        context.builder.artifactParams.dir = "${action.params.dir}/${action.params.repoDirName}"
     }
 }
-

@@ -8,7 +8,7 @@ def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dum
 println "Config tags: ${config.tags}"
 
 if (config.tags && config.tags.contains('docman')) {
-    docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : "${config.projectConfigPath}/config.json"
+    docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : "${config.docmanDir}/config/config.json"
     docrootConfigJson = readFileFromWorkspace(docrootConfigJsonPath)
 
     // Retrieve Docman config from json file (prepared by "docman info" command).
@@ -202,18 +202,20 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
             }
             else if (job.value.type == 'state') {
                 def state = job.value.state
+                def buildEnvironment
+                def jobBranch
                 if (config.docmanConfig) {
                     buildEnvironment = config.docmanConfig.getEnvironmentByState(state)
-                    branch = config.docmanConfig.getVersionBranch('', state)
+                    jobBranch = config.docmanConfig.getVersionBranch('', state)
                 }
                 else if (config.tags && config.tags.contains('single') && config.components && config.states && config.states.containsKey(state) && config.components.containsKey('master') && config.components.master.containsKey('states') && config.components.master.states.containsKey(state) && config.components.master.states[state].containsKey('version')) {
                     buildEnvironment = config.states[state]
-                    branch = config.components.master.states[state].version
+                    jobBranch = config.components.master.states[state].version
                 }
                 else {
                     // TODO: Check it.
                     buildEnvironment = job.value.env
-                    branch = job.value.branch
+                    jobBranch = job.value.branch
                 }
                 pipelineJob(currentName) {
                     if (config.quietPeriodSeconds) {
@@ -229,7 +231,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         stringParam('docrootDir', 'docroot')
                         stringParam('type', 'branch')
                         stringParam('environment', buildEnvironment)
-                        stringParam('version', branch)
+                        stringParam('version', jobBranch)
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
                             def labels = jenkins.model.Jenkins.instance.getLabels()
                             for (pipeline_block in job.value.pipeline.blocks) {
@@ -316,7 +318,13 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     definition {
                         cpsScm {
                             scm {
-                                git() {
+                                git {
+                                    def selectedRemoteBranch = 'master'
+                                    def gitLabBranchResponse = config.gitlabHelper.getBranch(config.configRepo, jobBranch)
+                                    if (gitLabBranchResponse && gitLabBranchResponse.containsKey('name')) {
+                                        selectedRemoteBranch = gitLabBranchResponse.name
+                                    }
+                                    branch(selectedRemoteBranch)
                                     remote {
                                         name('origin')
                                         url(config.configRepo)
@@ -349,7 +357,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                         buildOnMergeRequestEvents(false)
                                         enableCiSkip()
                                         useCiFeatures()
-                                        includeBranches(branch)
+                                        includeBranches(jobBranch)
                                     }
                                 }
                             }
@@ -1202,6 +1210,25 @@ class GitlabHelper {
                     script.println "SKIP DELETE HOOK FROM ANOTHER JENKINS: ${webhook.toString()}"
                 }
             }
+        }
+    }
+
+    def getBranches(String repo) {
+        setRepoProperties(repo)
+        def url = "https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/repository/branches?private_token=${config.env.GITLAB_API_TOKEN_TEXT}"
+        def branches = new groovy.json.JsonSlurper().parseText(new URL(url).text)
+        branches
+    }
+
+    def getBranch(String repo, String branch) {
+        setRepoProperties(repo)
+        try {
+            def url = "https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/repository/branches/${branch}?private_token=${config.env.GITLAB_API_TOKEN_TEXT}"
+            def branch_obj = new groovy.json.JsonSlurper().parseText(new URL(url).text)
+            return branch_obj
+        }
+        catch (Exception e) {
+            return false
         }
     }
 

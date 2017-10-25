@@ -2,10 +2,11 @@ config_version = 1
 
 debugEnabled = false
 docrootDir = 'docroot'
-projectConfigPath = 'docroot/config'
+docmanDir = 'docman'
+projectConfigPath = '.unipipe/config'
 projectConfigFile = 'docroot.config'
 
-drupipeLibraryUrl = 'https://github.com/aroq/drupipe.git'
+drupipeLibraryUrl = 'https://github.com/michael-molchanov/drupipe.git'
 drupipeLibraryBranch = 'master'
 drupipeLibraryType = 'branch'
 dockerImage = 'aroq/drudock:1.4.0'
@@ -81,9 +82,9 @@ params = [
             removedJobAction: 'DELETE',
             removedViewAction: 'DELETE',
             lookupStrategy: 'SEED_JOB',
-            additionalClasspath: ['library/src'],
+            additionalClasspath: ['.unipipe/library/src'],
             // TODO: Need another way of providing dsl scripts.
-            jobsPattern: ['library/jobdsl/seed/*.groovy'],
+            jobsPattern: ['.unipipe/library/jobdsl/seed/*.groovy'],
         ],
         Druflow: [
             druflowDir: 'druflow',
@@ -112,19 +113,20 @@ params = [
             executeCommand: 'gitGetRepo',
         ],
         Ansible: [
-            playbook: 'library/ansible/deployWithAnsistrano.yml',
+            playbooksDir: '.unipipe/library/ansible',
+            playbook: 'deployWithAnsistrano.yml',
             playbookParams: [
                 ansistrano_deploy_via: 'rsync',
             ],
         ],
         Ansible_deployWithGit: [
-            playbook: 'library/ansible/deployWithGit.yml',
+            playbook: 'deployWithGit.yml',
         ],
         Ansible_deployWithAnsistrano: [
-            playbook: 'library/ansible/deployWithAnsistrano.yml',
+            playbook: 'deployWithAnsistrano.yml',
             playbookParams: [
                 ansistrano_deploy_via: 'rsync',
-                ansistrano_deploy_from: '../../docroot/master/',
+                ansistrano_deploy_from: 'docroot/master',
             ],
         ],
         Common_confirm: [

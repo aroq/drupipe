@@ -62,23 +62,21 @@ class Config extends BaseAction {
         }
 
         context.environmentParams = [:]
-        if (context.environments) {
-            if (context.environment) {
-                def environment = context.environments[context.environment]
-                if (context.servers) {
-                    def server = context.servers[environment['server']]
-                    context.environmentParams = utils.merge(server, environment)
-                }
-                else {
-                    context.environmentParams = environment
-                }
-                // For compatibility:
-                context.params.action = utils.merge(context.params.action, context.environmentParams.defaultActionParams)
-
-                context.params.action = utils.merge(context.params.action, context.params.action)
-
-                utils.jsonDump(context, context.environmentParams, 'ENVIRONMENT PARAMS')
+        if (context.environments && context.environment) {
+            def environment = context.environments[context.environment]
+            if (context.servers) {
+                def server = context.servers[environment['server']]
+                context.environmentParams = utils.merge(server, environment)
             }
+            else {
+                context.environmentParams = environment
+            }
+            // For compatibility:
+            context.params.action = utils.merge(context.params.action, context.environmentParams.defaultActionParams)
+
+            context.params.action = utils.merge(context.params.action, context.params.action)
+
+            utils.jsonDump(context, context.environmentParams, 'ENVIRONMENT PARAMS')
         }
 
         utils.debugLog(context, context, 'CONFIG CONTEXT')
@@ -158,19 +156,14 @@ class Config extends BaseAction {
             def sourceObject = [
                 name:   'mothership',
                 type:   'git',
-                path:   'mothership',
+                path:   '.unipipe/mothership',
                 url:    script.env.MOTHERSHIP_REPO,
                 branch: 'master',
             ]
 
+            this.script.drupipeAction([action: "Source.add", params: [credentialsId: this.script.env.credentialsId, source: sourceObject]], context)
+
             def providers = [
-                [
-                    action: 'Source.add',
-                    params: [
-                        source: sourceObject,
-                        credentialsId: context.env.credentialsId,
-                    ],
-                ],
                 [
                     action: 'Source.loadConfig',
                     params: [
@@ -180,6 +173,7 @@ class Config extends BaseAction {
                     ]
                 ]
             ]
+
             result = context.pipeline.executePipelineActionList(providers, context)
             def mothershipConfig = this.utils.getMothershipConfigFile(context)
             def mothershipServers = this.utils.getMothershipServersFile(context)
@@ -214,6 +208,8 @@ class Config extends BaseAction {
                         scenario.name = values[0]
                     }
                     utils.debugLog(context, tempContext.scenarioSources, 'Scenario sources')
+                    utils.debugLog(context, context.loadedSources, 'context.loadedSources')
+                    utils.debugLog(context, tempContext, 'tempContext')
                     if ((tempContext.scenarioSources && tempContext.scenarioSources.containsKey(scenarioSourceName)) || context.loadedSources.containsKey(scenarioSourceName)) {
                         if (!context.loadedSources[scenarioSourceName]) {
                             script.echo "Adding source: ${scenarioSourceName}"
@@ -223,7 +219,7 @@ class Config extends BaseAction {
                                 def sourceObject = [
                                     name: scenarioSourceName,
                                     type: 'git',
-                                    path: "scenarios/${scenarioSourceName}",
+                                    path: ".unipipe/scenarios/${scenarioSourceName}",
                                     url: scenario.source.repo,
                                     branch: scenario.source.ref ? scenario.source.ref : 'master',
                                     mode: 'shell',
@@ -241,6 +237,7 @@ class Config extends BaseAction {
 
                         def sourceDir = utils.sourceDir(context, scenarioSourceName)
 
+
                         def filesToCheck = [
                             "/.unipipe/scenarios/${scenario.name}/config.yaml",
                             "/.unipipe/scenarios/${scenario.name}/config.yml",
@@ -249,6 +246,17 @@ class Config extends BaseAction {
                             "/scenarios/${scenario.name}/config.yaml",
                             "/scenarios/${scenario.name}/config.yml"
                         ]
+
+                        if (scenario.name == 'main') {
+                            filesToCheck = [
+                                "/.unipipe/config.yaml",
+                                "/.unipipe/config.yml",
+                                "/.drupipe/config.yaml",
+                                "/.drupipe/config.yml",
+                                "/config.yaml",
+                                "/config.yml"
+                            ]
+                        }
 
                         for (def ifc = 0; ifc < filesToCheck.size(); ifc++) {
                             def fileToCheck = filesToCheck[ifc]
@@ -285,11 +293,8 @@ class Config extends BaseAction {
         if (context.configRepo) {
             def sourceObject = [
                 name: 'project',
-                path: 'sources/project',
-                type: 'git',
-                url: context.configRepo,
-                branch: 'master',
-                mode: 'shell',
+                path: context.projectConfigPath,
+                type: 'dir',
             ]
 
             script.sshagent([context.credentialsId]) {

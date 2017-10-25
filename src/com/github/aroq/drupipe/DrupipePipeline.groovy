@@ -29,6 +29,10 @@ class DrupipePipeline implements Serializable {
         try {
             script.timestamps {
                 script.node('master') {
+                    if (params.force == '11') {
+                        script.echo 'FORCE REMOVE DIR'
+                        script.deleteDir()
+                    }
                     context.utils = utils
                     params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 
@@ -39,10 +43,7 @@ class DrupipePipeline implements Serializable {
                     context << (configParams << config << context)
                     utils.dump(context, context, 'PIPELINE-CONTEXT')
                     // Secret option for emergency remove workspace.
-                    if (context.force == '11') {
-                        script.echo 'FORCE REMOVE DIR'
-                        script.deleteDir()
-                    }
+
                 }
 
                 if (!blocks) {

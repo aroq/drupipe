@@ -6,7 +6,10 @@ def call(LinkedHashMap p = [:]) {
         drupipeBlock(withDocker: true, nodeName: 'default', dockerImage: context.defaultDocmanImage, context) {
             checkout scm
             drupipeAction(action: 'Docman.info', context)
-            stash name: 'config', includes: "${context.projectConfigPath}/**, library/**, mothership/**', excludes: '.git, .git/**"
+            def stashes = context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
+            stashes = stashes + ", ${context.docmanDir}/config/**"
+            println "Stashes: ${stashes}"
+            stash name: 'config', includes: "${stashes}", excludes: '.git, .git/**'
         }
 
         drupipeBlock(nodeName: 'master', context) {

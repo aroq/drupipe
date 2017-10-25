@@ -22,7 +22,7 @@ class Docman extends BaseAction {
     def jsonConfig() {
         info()
 
-        def docrootConfigJson = script.readFile("${context.projectConfigPath}/${action.params.docmanJsonConfigFile}")
+        def docrootConfigJson = script.readFile("${context.docmanDir}/config/${action.params.docmanJsonConfigFile}")
         if (context.env.gitlabSourceNamespace) {
             context.projectName = utils.projectNameByGroupAndRepoName(script, docrootConfigJson, context.env.gitlabSourceNamespace, context.env.gitlabSourceRepoName)
         }
@@ -37,7 +37,7 @@ class Docman extends BaseAction {
         prepare()
         script.drupipeShell(
             """
-        cd ${context.docrootDir}
+        cd ${context.docmanDir}
         docman info full config.json
         """, context << [shellCommandWithBashLogin: true]
         )
@@ -57,14 +57,22 @@ class Docman extends BaseAction {
 
         script.drupipeShell(
             """
-            cd docroot
+            cd ${context.docmanDir}
             docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(context)}
             """, context << [shellCommandWithBashLogin: true]
         )
         if (!context['builder']) {
             context['builder'] = [:]
         }
-        context.builder['buildDir'] = "${context.docrootDir}/master"
+        if (script.fileExists("${context.docmanDir}/master")) {
+            context.builder['buildDir'] = "${context.docmanDir}/master"
+        }
+        else if (script.fileExists("${context.docmanDir}/.docman/master")) {
+            context.builder['buildDir'] = "${context.docmanDir}/.docman/master"
+        }
+        else {
+            context.builder['buildDir'] = "${context.docrootDir}/master"
+        }
         context.builder['buildName'] = context.jenkinsFolderName
         context.builder['version'] = (new Date()).format('yyyy-MM-dd--hh-mm-ss')
         context
@@ -78,7 +86,7 @@ class Docman extends BaseAction {
 
         script.drupipeShell(
             """
-            cd docroot
+            cd ${context.docmanDir}
             docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(context)}
             """, context << [shellCommandWithBashLogin: true]
         )
@@ -88,7 +96,7 @@ class Docman extends BaseAction {
     def deploy() {
         script.drupipeShell(
             """
-            cd docroot
+            cd ${context.docmanDir}
             docman deploy git_target ${context.projectName} branch ${context.version} ${forceFlag(context)}
             """, context << [shellCommandWithBashLogin: true]
         )
@@ -104,24 +112,19 @@ class Docman extends BaseAction {
 
     def prepare() {
         script.echo "FORCE MODE: ${context.force}"
+
+        def configBranch = 'master'
+        if (context.tags.contains('single') && context.version) {
+            configBranch = context.version
+        }
+
         script.drupipeShell(
-            """
-        if [ "${context.force}" == "1" ]; then
-          rm -fR ${context.docrootDir}
-        fi
+        """
+        rm -fR ${context.docmanDir}
+        docman init ${context.docmanDir} ${context.configRepo} -s --branch=${configBranch}
         """, context << [shellCommandWithBashLogin: true]
         )
-        if (context.configRepo && !script.fileExists(context.docrootDir)) {
-            script.drupipeShell(
-                """
-            if [ "${context.force}" == "1" ]; then
-              rm -fR ${context.docrootDir}
-            fi
-            docman init ${context.docrootDir} ${context.configRepo} -s
-            """, context << [shellCommandWithBashLogin: true]
-            )
-            context.dir
-        }
+        context.dir
     }
 
     @NonCPS
@@ -178,4 +181,3 @@ class Docman extends BaseAction {
         this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
     }
 }
-

@@ -83,4 +83,3 @@ class Source extends BaseAction {
         result
     }
 }
-

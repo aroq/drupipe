@@ -66,11 +66,11 @@ class DrupipeBlock implements Serializable {
                     else if (context.containerMode == 'docker') {
                         context.pipeline.script.drupipeWithDocker(context) {
                             // Fix for scm checkout after docman commands.
-                            if (context.pipeline.script.fileExists(context.projectConfigPath)) {
-                                context.pipeline.script.dir(context.projectConfigPath) {
-                                    context.pipeline.script.deleteDir()
-                                }
-                            }
+                            //if (context.pipeline.script.fileExists(context.projectConfigPath)) {
+                            //    context.pipeline.script.dir(context.projectConfigPath) {
+                            //        context.pipeline.script.deleteDir()
+                            //    }
+                            //}
                             context.pipeline.script.checkout context.pipeline.script.scm
                             result = _execute(body)
                         }

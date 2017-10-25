@@ -2,6 +2,8 @@ package com.github.aroq.drupipe
 
 import groovy.json.JsonSlurperClassic
 import groovy.json.JsonOutput
+import java.nio.file.Path
+import java.nio.file.Paths
 
 def colorEcho(message, color = null) {
     if (!color) {
@@ -31,6 +33,17 @@ def colorEcho(message, color = null) {
     wrap([$class: 'AnsiColorBuildWrapper']) {
         echo "\u001B[${color}m${message}\u001B[0m"
     }
+}
+
+@NonCPS
+def getRelativePath(context, source, target) {
+  Path sourceFile = Paths.get(context.env.WORKSPACE, source)
+  Path targetFile = Paths.get(context.env.WORKSPACE, target)
+  String relativePath = sourceFile.relativize(targetFile).toString()
+  echo "sourceFile: ${sourceFile}"
+  echo "targetFile: ${targetFile}"
+  echo "relativePath: ${relativePath}"
+  return relativePath
 }
 
 @NonCPS
@@ -179,7 +192,7 @@ def loadLibrary(script, context) {
                 source: [
                     name: 'library',
                     type: 'git',
-                    path: 'library',
+                    path: '.unipipe/library',
                     url: context.drupipeLibraryUrl,
                     branch: context.drupipeLibraryBranch,
                     refType: context.drupipeLibraryType,

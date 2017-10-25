@@ -43,19 +43,19 @@ class YamlFileHandler extends BaseAction {
     def findDeployYaml() {
         def file
         def files
-        files = script.findFiles(glob: "**/.unipipe/${action.params.deployFile}")
+        files = script.findFiles(glob: "**/${context.projectConfigPath}/.unipipe/${action.params.deployFile}")
         if (files.size() > 0) {
             script.echo files[0].path
             return files[0].path
         }
 
-        files = script.findFiles(glob: "**/.drupipe/${action.params.deployFile}")
+        files = script.findFiles(glob: "**/${context.projectConfigPath}/.drupipe/${action.params.deployFile}")
         if (files.size() > 0) {
             script.echo files[0].path
             return files[0].path
         }
 
-        files = script.findFiles(glob: "**/${action.params.deployFile}")
+        files = script.findFiles(glob: "**/${context.projectConfigPath}/${action.params.deployFile}")
         if (files.size() > 0) {
             script.echo files[0].path
             return files[0].path
@@ -79,12 +79,11 @@ class YamlFileHandler extends BaseAction {
     }
 
     def process(String stage) {
+        init()
         String deployDir = 'docroot/master'
-        if (!script.fileExists(deployDir)) {
-            init()
-        }
         context['builder']['artifactParams'] = [:]
-        context['builder']['artifactParams']['dir'] = '../../' + deployDir
+        context['builder']['artifactParams']['dir'] = deployDir
+        context.builder['buildDir'] = "${context.docrootDir}/master"
         def deployYamlFile = findDeployYaml()
         if (deployYamlFile && script.fileExists(deployYamlFile)) {
             def deployYAML = script.readYaml(file: deployYamlFile)
