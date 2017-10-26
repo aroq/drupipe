@@ -258,7 +258,7 @@ params = [
         Kubectl: [
             executable: 'kubectl',
             kubectl_config_file: '.kubeconfig',
-            namespace: '${actions.Helm_apply.namespace}',
+            namespace: '${actions.Helm_apply.params.namespace}',
             shellCommandWithBashLogin: false,
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
