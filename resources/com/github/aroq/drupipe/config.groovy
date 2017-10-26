@@ -1,5 +1,8 @@
 config_version = 1
 
+// Default params.
+environment = ''
+
 debugEnabled = false
 docrootDir = 'docroot'
 projectConfigPath = 'docroot/config'
@@ -203,7 +206,6 @@ params = [
         ],
         Helm: [
             executable: 'helm',
-            environment: '',
             chart_name: '', // HELM_CHART_NAME in Jenkins params.
             charts_dir: 'charts',
             kubectl_config_file: '.kubeconfig',
@@ -224,10 +226,10 @@ params = [
             command: 'upgrade',
             value_suffix: 'values.yaml',
             timeout: '120',
-            release_name: '${action.params.chart_name}-${action.params.environment}',
-            namespace: '${action.params.chart_name}-${action.params.environment}',
+            release_name: '${action.params.chart_name}-${context.environment}',
+            namespace: '${action.params.chart_name}-${context.environment}',
             values_file: '${action.params.chart_name}.${action.params.value_suffix}',
-            env_values_file: '${action.params.environment}.${action.params.values_file}',
+            env_values_file: '${context.environment}.${action.params.values_file}',
             secret_values_file_id: '',
             chart_dir: '${action.params.charts_dir}/${action.params.chart_name}',
             credentials: [
@@ -258,7 +260,7 @@ params = [
         ],
         Helm_status: [
             command: 'status',
-            release_name: '${action.params.chart_name}-${action.params.environment}',
+            release_name: '${action.params.chart_name}-${context.environment}',
             flags: [:],
             full_command: [
                 '${action.params.executable}',
@@ -268,7 +270,7 @@ params = [
         ],
         Helm_delete: [
             command: 'delete',
-            release_name: '${action.params.chart_name}-${action.params.environment}',
+            release_name: '${action.params.chart_name}-${context.environment}',
             flags: [
                 '--purge': [''],
             ],
