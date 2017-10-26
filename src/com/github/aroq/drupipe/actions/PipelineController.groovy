@@ -36,7 +36,7 @@ class PipelineController extends BaseAction {
             """
                 rm -fR ${sourceDir}/.git
                 tar -czf ${fileName} ${sourceDir}
-            """, context << [shellCommandWithBashLogin: true]
+            """, action.params
         )
         context
     }
