@@ -407,10 +407,10 @@ def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], force 
         }
         else {
             if (debugParams?.debugMode == 'json' || params.debugMode == 'json') {
-                jsonDump(params, value, dumpName)
+                jsonDump(params, value, dumpName, force)
             }
             else {
-                dump(params, value, dumpName)
+                dump(params, value, dumpName, force)
             }
         }
     }

@@ -85,7 +85,7 @@ class DrupipeAction implements Serializable {
 
             if (this.methodName == 'get_replicaset_name2') {
                 script.echo "INSIDE get_replicaset_name2"
-                utils.debugLog(context, context, "Kubectl.get_replicaset_name2 BEFORE PROCESSING", [:], ['params', 'action'], true)
+                utils.debugLog(context, context, "Kubectl.get_replicaset_name2 BEFORE PROCESSING", [:], ['params', 'action', 'Kubectl_get_replicaset_name2'], true)
             }
 
             // Interpolate action params with context variables.
