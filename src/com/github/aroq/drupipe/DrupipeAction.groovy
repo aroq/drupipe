@@ -176,19 +176,20 @@ class DrupipeAction implements Serializable {
                             throw err
                         }
                     }
-//                    if (!context.results) {
-//                        context.results = [:]
-//                    }
-//                    if (!context.actions) {
-//                        context.actions = [:]
-//                    }
+
+                    // Results processing.
                     if (this.params.store_action_params) {
-                        contextStoreResult(this.params.store_action_params_key.tokenize('.'), this, this.params)
-//                        context.actions[this.params.store_action_params_key] = this.params
+                        contextStoreResult(this.params.store_action_params_key.tokenize('.'), context, this.params)
                     }
                     if (this.params.store_result) {
-//                        context.results[this.params.store_result_key] = actionResult
-                        contextStoreResult(this.params.store_result_key.tokenize('.'), this, actionResult)
+                        contextStoreResult(this.params.store_result_key.tokenize('.'), context, actionResult)
+                        if (this.params.results) {
+                            for (result in this.params.results) {
+                                if (result.value.type == 'param') {
+                                    contextStoreResult(result.value.destination.tokenize('.'), context, utils.deepGet(this.params, result.value.source))
+                                }
+                            }
+                        }
                     }
 
                     if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {

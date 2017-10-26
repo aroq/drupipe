@@ -539,6 +539,14 @@ def processActionParams(action, context, ArrayList prefixes, ArrayList path = []
     }
 }
 
+def deepGet(object, path) {
+    path.inject(object, { obj, prop ->
+        if (obj && obj[prop]) {
+            obj[prop]
+        }
+    })
+}
+
 @NonCPS
 def getActionParam(param, context, prefixes) {
     def result = param

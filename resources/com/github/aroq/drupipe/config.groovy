@@ -28,8 +28,8 @@ params = [
             // TODO: Check when & why storeResult is used.
             store_result: true,
             store_action_params: true,
-            store_result_key: 'context.results.${action.name}_${action.methodName}',
-            store_action_params_key: 'context.actions.${action.name}_${action.methodName}',
+            store_result_key: 'results.${action.name}_${action.methodName}',
+            store_action_params_key: 'actions.${action.name}_${action.methodName}',
             shell_bash_login: true,
             return_stdout: false,
         ],
@@ -191,14 +191,15 @@ params = [
             charts_dir: 'charts',
             kubectl_config_file: '.kubeconfig',
             shell_bash_login: false,
+            namespace: '${action.params.chart_name}-${context.environment}',
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
             ],
             results: [
                 namespace: [
                     type: 'param',
-                    source: 'context.actions.${action.name}_${action.methodName}.namespace',
-                    destination: 'context.k8s_namespace',
+                    source: 'namespace', // From action params.
+                    destination: 'k8s_namespace',  // To "context".
                 ],
             ],
         ],
@@ -215,7 +216,6 @@ params = [
             value_suffix: 'values.yaml',
             timeout: '120',
             release_name: '${action.params.chart_name}-${context.environment}',
-            namespace: '${action.params.chart_name}-${context.environment}',
             values_file: '${action.params.chart_name}.${action.params.value_suffix}',
             env_values_file: '${context.environment}.${action.params.values_file}',
             secret_values_file_id: '',
@@ -273,6 +273,7 @@ params = [
             executable: 'kubectl',
             kubectl_config_file: '.kubeconfig',
             shell_bash_login: false,
+            namespace: '${context.k8s_namespace}',
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
             ],
@@ -282,7 +283,6 @@ params = [
             command: 'scale replicaset',
             replicas: '',
             name: '',
-            namespace: '${actions.Helm_apply.namespace}',
             flags: [
                 '--replicas': ['${action.params.replicas}'],
                 '--namespace': ['${action.params.namespace}'],
@@ -301,7 +301,6 @@ params = [
         Kubectl_get_replicaset_name: [
             debugEnabled: true,
             command: 'get replicaset',
-            namespace: '${actions.Helm_apply.namespace}',
             release_name: '${actions.Helm_apply.release_name}',
             jsonpath: '\'{.items[0].metadata.name}\'',
             return_stdout: true,
@@ -318,7 +317,6 @@ params = [
         ],
         Kubectl_get_pod_name: [
             command: 'get pod',
-            namespace: '${actions.Helm_apply.namespace}',
             release_name: '${actions.Helm_apply.release_name}',
             jsonpath: '\'{.items[0].metadata.name}\'',
             return_stdout: true,
@@ -335,7 +333,6 @@ params = [
         ],
         Kubectl_get_pods: [
             command: 'get pods',
-            namespace: '${actions.Helm_apply.namespace}',
             flags: [
                 '--namespace': ['${action.params.namespace}'],
             ],
@@ -347,7 +344,6 @@ params = [
         ],
         Kubectl_get_loadbalancer_address: [
             command: 'get service',
-            namespace: '${actions.Helm_apply.namespace}',
             release_name: '${actions.Helm_apply.release_name}',
             jsonpath: '\'{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}\'',
             return_stdout: true,
