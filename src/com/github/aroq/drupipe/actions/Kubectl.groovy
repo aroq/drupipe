@@ -17,7 +17,7 @@ class Kubectl extends BaseAction {
     }
 
     def scale_down_up() {
-        def name = script.drupipeAction([action: "Kubectl.get_replicaset_name"], context).drupipeShellResult
+        def name = script.drupipeAction([action: "Kubectl.get_replicaset_name"], context).stdout
         script.echo "Replicaset name: ${name}"
         script.drupipeAction([action: "Kubectl.scale_replicaset", params: [name: name, replicas: action.params.replicas_down]], context)
         script.drupipeAction([action: "Kubectl.scale_replicaset", params: [name: name, replicas: action.params.replicas_up]], context)
@@ -29,7 +29,7 @@ class Kubectl extends BaseAction {
 
     def get_loadbalancer_address() {
         [
-            url: executeKubectlCommand().drupipeShellResult,
+            url: executeKubectlCommand().stdout,
         ]
     }
 

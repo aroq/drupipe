@@ -66,8 +66,8 @@ class Drush extends BaseAction {
 
         if (context.drushOutputReturn || this.context.job.notify) {
             this.script.echo "Return Drush output."
-            def result = this.script.drupipeShell("${drushString}", [drupipeShellReturnStdout: true])
-            result.drupipeShellResult = result.drupipeShellResult.replaceAll(/(?m)^(PHP )?Deprecated.*$/, '').trim()
+            def result = this.script.drupipeShell("${drushString}", [return_stdout: true])
+            result.stdout = result.stdout.replaceAll(/(?m)^(PHP )?Deprecated.*$/, '').trim()
             result.result = drushString
             return result
         }

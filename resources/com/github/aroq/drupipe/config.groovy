@@ -43,8 +43,8 @@ params = [
             action_timeout: 120,
             // TODO: Check when & why storeResult is used.
             store_result: true,
-            shellCommandWithBashLogin: true,
-            drupipeShellReturnStdout: false,
+            shell_bash_login: true,
+            return_stdout: false,
         ],
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
@@ -74,7 +74,7 @@ params = [
         ],
         Terraform: [
             infraSourceName: 'infra-config',
-            shellCommandWithBashLogin: false,
+            shell_bash_login: false,
         ],
         Docman: [
             docmanJsonConfigFile: 'config.json',
@@ -180,7 +180,7 @@ params = [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
             ],
             access_key_file_id: '',
-            shellCommandWithBashLogin: false,
+            shell_bash_login: false,
             credentials: [
                 secret_values_file: [
                     type: 'file',
@@ -196,7 +196,7 @@ params = [
         // HELM_APPLY_EXECUTABLE: test
         // HELM_APPLY_HELM_COMMAND: test
         Jenkins: [
-            shellCommandWithBashLogin: false,
+            shell_bash_login: false,
         ],
         Helm: [
             executable: 'helm',
@@ -204,7 +204,7 @@ params = [
             chart_name: '', // HELM_CHART_NAME in Jenkins params.
             charts_dir: 'charts',
             kubectl_config_file: '.kubeconfig',
-            shellCommandWithBashLogin: false,
+            shell_bash_login: false,
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
             ],
@@ -279,7 +279,7 @@ params = [
         Kubectl: [
             executable: 'kubectl',
             kubectl_config_file: '.kubeconfig',
-            shellCommandWithBashLogin: false,
+            shell_bash_login: false,
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
             ],
@@ -311,7 +311,7 @@ params = [
             namespace: '${actions.Helm_apply.params.namespace}',
             release_name: '${actions.Helm_apply.params.release_name}',
             jsonpath: '\'{.items[0].metadata.name}\'',
-            drupipeShellReturnStdout: true,
+            return_stdout: true,
             flags: [
                 '--namespace': ['${action.params.namespace}'],
                 '--selector': ['release=${action.params.release_name}'],
@@ -328,7 +328,7 @@ params = [
             namespace: '${actions.Helm_apply.params.namespace}',
             release_name: '${actions.Helm_apply.params.release_name}',
             jsonpath: '\'{.items[0].metadata.name}\'',
-            drupipeShellReturnStdout: true,
+            return_stdout: true,
             flags: [
                 '--namespace': ['${action.params.namespace}'],
                 '--selector': ['release=${action.params.release_name}'],
@@ -357,7 +357,7 @@ params = [
             namespace: '${actions.Helm_apply.params.namespace}',
             release_name: '${actions.Helm_apply.params.release_name}',
             jsonpath: '\'{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}\'',
-            drupipeShellReturnStdout: true,
+            return_stdout: true,
             flags: [
                 '--namespace': ['${action.params.namespace}'],
                 '--selector': ['release=${action.params.release_name}'],
@@ -376,7 +376,7 @@ params = [
             source: '${action.params.namespace}/${action.params.name}:${action.params.source_file_name}',
             destination_file_name: '',
             destination: '${action.params.destination_file_name}',
-            drupipeShellReturnStdout: true,
+            return_stdout: true,
             full_command: [
                 '${action.params.executable}',
                 '${action.params.command}',

@@ -19,9 +19,9 @@ class Jenkins extends BaseAction {
         def result = script.withCredentials(creds) {
             this.script.drupipeShell("""
                 curl http://\${TF_VAR_consul_address}/v1/kv/zebra/jenkins/${terraformEnv}/address?raw&token=\${CONSUL_ACCESS_TOKEN}
-            """, this.context.clone() << [drupipeShellReturnStdout: true])
+            """, this.context.clone() << [return_stdout: true])
         }
-        result.drupipeShellResult
+        result.stdout
     }
 
     def getJenkinsSlaveAddress() {
@@ -30,9 +30,9 @@ class Jenkins extends BaseAction {
         def result = script.withCredentials(creds) {
             this.script.drupipeShell("""
                 curl http://\${TF_VAR_consul_address}/v1/kv/zebra/jenkins/${terraformEnv}/slave/address?raw&token=\${CONSUL_ACCESS_TOKEN}
-            """, this.context.clone() << [drupipeShellReturnStdout: true])
+            """, this.context.clone() << [return_stdout: true])
         }
-        result.drupipeShellResult
+        result.stdout
     }
 
 
@@ -58,7 +58,7 @@ class Jenkins extends BaseAction {
                 this.script.drupipeShell("""
                 java -version
                 /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${this.action.params.command}
-                """, this.context << [shellCommandWithBashLogin: false])
+                """, this.context << [shell_bash_login: false])
             }
         }
         else {
@@ -70,7 +70,7 @@ class Jenkins extends BaseAction {
                     this.script.drupipeShell("""
                 java -version
                 /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${this.action.params.command}
-                """, this.context << [shellCommandWithBashLogin: false])
+                """, this.context << [shell_bash_login: false])
                 }
             }
         }
@@ -85,11 +85,11 @@ class Jenkins extends BaseAction {
             def envvars = ["JENKINS_URL=http://${getJenkinsAddress()}:${this.action.params.port}", "JENKINS_API_TOKEN=${action.params.jenkinsUserToken}"]
             this.script.withEnv(envvars) {
                 def result = this.script.drupipeShell("""
-         """, this.context.clone() << [drupipeShellReturnStdout: true])
+         """, this.context.clone() << [return_stdout: true])
             }
         }
 
-       result.drupipeShellResult
+       result.stdout
     }
 
     def build() {

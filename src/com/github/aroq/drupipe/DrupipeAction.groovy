@@ -199,10 +199,10 @@ class DrupipeAction implements Serializable {
             actionResult = actionResult ? actionResult : [:]
 
             // Refactor it.
-            if (this.storeResult && this.storeResult != '' && actionResult.drupipeShellResult) {
+            if (this.storeResult && this.storeResult != '' && actionResult.stdout) {
                 def path = storeResult.tokenize('.')
                 def stored = [:]
-                contextStoreResult(path, stored, actionResult.drupipeShellResult)
+                contextStoreResult(path, stored, actionResult.stdout)
                 this.context.pipeline.script.echo("STORED-RESULT: ${stored}")
 
                 actionResult << stored
@@ -233,9 +233,9 @@ class DrupipeAction implements Serializable {
                 notification.message = notification.message ? notification.message : ''
                 notification.message = notification.message + "\n\n" + actionResult.result
             }
-            if (actionResult.drupipeShellResult) {
+            if (actionResult.stdout) {
                 notification.message = notification.message ? notification.message : ''
-                notification.message = notification.message + "\n\n" + actionResult.drupipeShellResult
+                notification.message = notification.message + "\n\n" + actionResult.stdout
             }
             utils.pipelineNotify(context, notification)
         }
