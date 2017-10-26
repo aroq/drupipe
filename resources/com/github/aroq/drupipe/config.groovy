@@ -59,6 +59,9 @@ params = [
         YamlFileConfig: [
             store_result: false,
         ],
+        GroovyFileConfig: [
+            store_result: false,
+        ],
         Behat: [
             masterPath: 'docroot/master',
             masterRelativePath: '..',
