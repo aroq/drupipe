@@ -179,26 +179,22 @@ class DrupipeAction implements Serializable {
 
                     // Results processing.
                     if (this.params.store_action_params) {
-                        contextStoreResult(this.params.store_action_params_key.tokenize('.'), context, this.params)
+                        contextStoreResult(this.params.store_action_params_key.tokenize('.'), actionResult, this.params)
                     }
                     if (this.params.store_result) {
-                        contextStoreResult(this.params.store_result_key.tokenize('.'), context, actionResult)
+                        contextStoreResult(this.params.store_result_key.tokenize('.'), actionResult, actionResult)
                         if (this.params.results) {
-                            script.echo "RESULTS PROCESSING"
                             for (result in this.params.results) {
                                 if (result.value.type == 'param') {
                                     def deepValue = utils.deepGet(this.params, result.value.source.tokenize('.'))
-                                    script.echo "VALUE: ${deepValue}"
                                     contextStoreResult(result.value.destination.tokenize('.'), actionResult, deepValue)
-                                    def context_result = utils.deepGet(actionResult, result.value.destination.tokenize('.'))
-                                    script.echo "CONTEXT VALUE: ${context_result}"
                                 }
                             }
                         }
                     }
 
                     if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
-                        utils.debugLog(context, context.results, "context results", [debugMode: 'json'], [this.params.store_result_key], true)
+                        utils.debugLog(context, actionResult, "context results", [debugMode: 'json'], [this.params.store_result_key], true)
                     }
                 }
             }
