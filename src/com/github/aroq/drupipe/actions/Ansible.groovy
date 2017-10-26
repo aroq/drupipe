@@ -101,7 +101,7 @@ class Ansible extends BaseAction {
             this.script.drupipeShell("""
                 cd ${this.action.params.workingDir}
                 ${command}
-            """, action.params
+            """, this.action.params
             )
         }
 
