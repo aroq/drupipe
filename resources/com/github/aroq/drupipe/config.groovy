@@ -57,7 +57,7 @@ params = [
             store_result: true,
         ],
         YamlFileConfig: [
-            store_result: true,
+            store_result: false,
         ],
         Behat: [
             masterPath: 'docroot/master',
