@@ -65,7 +65,7 @@ class Config extends BaseAction {
         if (context.environments) {
             if (context.environment) {
                 def environment = context.environments[context.environment]
-                if (context.servers) {
+                if (context.servers && environment['server'] && context.servers[environment['server']]) {
                     def server = context.servers[environment['server']]
                     context.environmentParams = utils.merge(server, environment)
                 }
@@ -73,7 +73,9 @@ class Config extends BaseAction {
                     context.environmentParams = environment
                 }
                 // For compatibility:
-                context.params.action = utils.merge(context.params.action, context.environmentParams.defaultActionParams)
+                if (context.environmentParams) {
+                    context.params.action = utils.merge(context.params.action, context.environmentParams.defaultActionParams)
+                }
 
                 context.params.action = utils.merge(context.params.action, context.params.action)
 

@@ -24,17 +24,14 @@ logRotatorNumToKeep = 5
 drupipeDockerArgs = '--user root:root --net=host'
 
 // Environments section.
-environments {
-    dev {
-//        dockerImage = 'aroq/drudock:dev'
-    }
-    stage {
-//        dockerImage = 'aroq/drudock:dev'
-    }
-    prod {
-//        dockerImage = 'aroq/drudock:dev'
-    }
-}
+//environments {
+//    dev {
+//    }
+//    stage {
+//    }
+//    prod {
+//    }
+//}
 
 params = [
     block: [
