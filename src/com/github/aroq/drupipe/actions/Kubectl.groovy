@@ -31,20 +31,11 @@ class Kubectl extends BaseAction {
         executeKubectlCommand()
     }
 
-    def test() {
-        def name = script.drupipeAction([action: "Kubectl.get_replicaset_name", params: action.params], context).drupipeShellResult
-        script.echo "Test name: ${name}"
-    }
-
     def get_loadbalancer_address() {
         executeKubectlCommand()
     }
 
     def get_replicaset_name() {
-        executeKubectlCommand()
-    }
-
-    def get_replicaset_name2() {
         executeKubectlCommand()
     }
 

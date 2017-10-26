@@ -259,7 +259,6 @@ params = [
         Kubectl: [
             executable: 'kubectl',
             kubectl_config_file: '.kubeconfig',
-            namespace: '${actions.Helm_apply.params.namespace}',
             shellCommandWithBashLogin: false,
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
@@ -270,6 +269,7 @@ params = [
             command: 'scale replicaset',
             replicas: '',
             name: '',
+            namespace: '${actions.Helm_apply.params.namespace}',
             flags: [
                 '--replicas': ['${action.params.replicas}'],
                 '--namespace': ['${action.params.namespace}'],
@@ -288,26 +288,8 @@ params = [
         Kubectl_get_replicaset_name: [
             debugEnabled: true,
             command: 'get replicaset',
-            release_name: '${action.params.chart_name}-${action.params.environment}',
-            jsonpath: '\'{.items[0].metadata.name}\'',
-            drupipeShellReturnStdout: true,
-            flags: [
-                '--namespace': ['${action.params.namespace}'],
-                '--selector': ['release=${action.params.release_name}'],
-                '-o': ['jsonpath=${action.params.jsonpath}'],
-            ],
-            full_command: [
-                '${action.params.executable}',
-                '${action.params.command}',
-                '${prepareFlags(action.params.flags)}',
-            ],
-        ],
-        Kubectl_get_replicaset_name2: [
-            debugEnabled: true,
-            command: 'get replicaset',
-            environment: '',
-            chart_name: '',
-            release_name: '${action.params.chart_name}-${action.params.environment}',
+            namespace: '${actions.Helm_apply.params.namespace}',
+            release_name: '${actions.Helm_apply.params.release_name}',
             jsonpath: '\'{.items[0].metadata.name}\'',
             drupipeShellReturnStdout: true,
             flags: [
@@ -323,9 +305,8 @@ params = [
         ],
         Kubectl_get_pod_name: [
             command: 'get pod',
-            environment: '',
-            chart_name: '',
-            release_name: '${action.params.chart_name}-${action.params.environment}',
+            namespace: '${actions.Helm_apply.params.namespace}',
+            release_name: '${actions.Helm_apply.params.release_name}',
             jsonpath: '\'{.items[0].metadata.name}\'',
             drupipeShellReturnStdout: true,
             flags: [
@@ -341,6 +322,7 @@ params = [
         ],
         Kubectl_get_pods: [
             command: 'get pods',
+            namespace: '${actions.Helm_apply.params.namespace}',
             flags: [
                 '--namespace': ['${action.params.namespace}'],
             ],
@@ -350,12 +332,11 @@ params = [
                 '${prepareFlags(action.params.flags)}',
             ],
         ],
-        Kubectl_get_replicaset_name2: [
-            command: 'get replicaset',
-            environment: '',
-            chart_name: '',
-            release_name: '${action.params.chart_name}-${action.params.environment}',
-            jsonpath: '\'{.items[0].metadata.name}\'',
+        Kubectl_get_loadbalancer_address: [
+            command: 'get service',
+            namespace: '${actions.Helm_apply.params.namespace}',
+            release_name: '${actions.Helm_apply.params.release_name}',
+            jsonpath: '\'{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}\'',
             drupipeShellReturnStdout: true,
             flags: [
                 '--namespace': ['${action.params.namespace}'],
@@ -367,22 +348,6 @@ params = [
                 '${action.params.command}',
                 '${prepareFlags(action.params.flags)}',
             ],
-//            command: 'get service',
-//            environment: '',
-//            chart_name: '',
-//            release_name: '${action.params.chart_name}-${action.params.environment}',
-//            jsonpath: '\'{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}\'',
-//            drupipeShellReturnStdout: true,
-//            flags: [
-//                '--namespace': ['${action.params.namespace}'],
-//                '--selector': ['release=${action.params.release_name}'],
-//                '-o': ['jsonpath=${action.params.jsonpath}'],
-//            ],
-//            full_command: [
-//                '${action.params.executable}',
-//                '${action.params.command}',
-//                '${prepareFlags(action.params.flags)}',
-//            ],
         ],
         Kubectl_get_secret: [
             command: 'get secret',
