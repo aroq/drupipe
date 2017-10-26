@@ -54,14 +54,14 @@ class Druflow extends BaseAction {
 
         druflowGet()
 
-        script.drupipeShell(druflowCommand, context)
+        script.drupipeShell(druflowCommand, action.params)
     }
 
     def druflowGet() {
         if (script.fileExists(action.params.druflowDir)) {
             utils.removeDir(action.params.druflowDir, context)
         }
-        script.drupipeShell("git clone ${action.params.druflowRepo} --branch ${action.params.druflowGitReference} --depth 1 ${action.params.druflowDir}", context)
+        script.drupipeShell("git clone ${action.params.druflowRepo} --branch ${action.params.druflowGitReference} --depth 1 ${action.params.druflowDir}", action.params)
     }
 
     def copySite() {

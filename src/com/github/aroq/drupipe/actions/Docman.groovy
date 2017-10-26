@@ -32,14 +32,14 @@ class Docman extends BaseAction {
     }
 
     def info() {
-        script.drupipeShell("git config --global user.email 'drupipe@github.com'; git config --global user.name 'Drupipe'", context)
+        script.drupipeShell("git config --global user.email 'drupipe@github.com'; git config --global user.name 'Drupipe'", action.params)
         script.echo "Config repo: ${context.configRepo}"
         prepare()
         script.drupipeShell(
             """
         cd ${context.docrootDir}
         docman info full config.json
-        """, context << [shellCommandWithBashLogin: true]
+        """, action,params
         )
     }
 
@@ -59,7 +59,7 @@ class Docman extends BaseAction {
             """
             cd docroot
             docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(context)}
-            """, context << [shellCommandWithBashLogin: true]
+            """, action.params
         )
         if (!context['builder']) {
             context['builder'] = [:]
@@ -80,7 +80,7 @@ class Docman extends BaseAction {
             """
             cd docroot
             docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(context)}
-            """, context << [shellCommandWithBashLogin: true]
+            """, action.params
         )
         context
     }
@@ -90,7 +90,7 @@ class Docman extends BaseAction {
             """
             cd docroot
             docman deploy git_target ${context.projectName} branch ${context.version} ${forceFlag(context)}
-            """, context << [shellCommandWithBashLogin: true]
+            """, action.params
         )
     }
 
@@ -109,7 +109,7 @@ class Docman extends BaseAction {
         if [ "${context.force}" == "1" ]; then
           rm -fR ${context.docrootDir}
         fi
-        """, context << [shellCommandWithBashLogin: true]
+        """, action.params
         )
         if (context.configRepo && !script.fileExists(context.docrootDir)) {
             script.drupipeShell(
@@ -118,7 +118,7 @@ class Docman extends BaseAction {
               rm -fR ${context.docrootDir}
             fi
             docman init ${context.docrootDir} ${context.configRepo} -s
-            """, context << [shellCommandWithBashLogin: true]
+            """, action.params
             )
             context.dir
         }
@@ -156,7 +156,7 @@ class Docman extends BaseAction {
 
     def bumpStable() {
         script.drupipeShell(
-            """docman bump stable -n""", context << [shellCommandWithBashLogin: true]
+            """docman bump stable -n""", action.params
         )
     }
 

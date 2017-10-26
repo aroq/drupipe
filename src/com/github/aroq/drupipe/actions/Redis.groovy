@@ -31,14 +31,14 @@ class Redis extends BaseAction {
 -p ${host_port[1]} \
 ${command}"""
                     this.script.echo "Execute Redis command: ${redisString}"
-                    this.script.drupipeShell("${redisString}", context)
+                    this.script.drupipeShell("${redisString}", action.params)
                 }
                 else {
                     def redisString = """redis-cli \
 -s ${dsn} \
 ${command}"""
                     this.script.echo "Execute Redis command: ${redisString}"
-                    this.script.drupipeShell("${redisString}", context)
+                    this.script.drupipeShell("${redisString}", action.params)
                 }
             }
         }
@@ -51,7 +51,7 @@ ${command}"""
 ${socket} \
 ${command}"""
             this.script.echo "Execute Redis command: ${redisString}"
-            this.script.drupipeShell("${redisString}", context)
+            this.script.drupipeShell("${redisString}", action.params)
         }
         else {
             def redisString = """redis-cli \
@@ -59,7 +59,7 @@ ${host} \
 ${port} \
 ${command}"""
             this.script.echo "Execute Redis command: ${redisString}"
-            this.script.drupipeShell("${redisString}", context)
+            this.script.drupipeShell("${redisString}", action.params)
         }
 
     }

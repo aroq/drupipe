@@ -116,7 +116,7 @@ class YamlFileHandler extends BaseAction {
                     executeCommand(joinedCommands)
                 }
                 else {
-                    script.drupipeShell(joinedCommands, context)
+                    script.drupipeShell(joinedCommands, action.params)
                 }
             }
         }
@@ -137,7 +137,7 @@ class YamlFileHandler extends BaseAction {
         script.drupipeShell(
             """
             ssh ${context.environmentParams.user}@${context.environmentParams.host} "${command}"
-            """, context
+            """, action.params
         )
     }
 }

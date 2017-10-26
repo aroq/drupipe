@@ -74,6 +74,7 @@ params = [
         ],
         Terraform: [
             infraSourceName: 'infra-config',
+            shellCommandWithBashLogin: false,
         ],
         Docman: [
             docmanJsonConfigFile: 'config.json',

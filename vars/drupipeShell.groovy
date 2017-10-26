@@ -1,6 +1,6 @@
 #!groovy
 
-def call(shellCommand, actionParams = [:]) {
+def call(shellCommand, actionParams = [shellCommandWithBashLogin:true, drupipeShellReturnStdout: false]) {
     if (env.KUBERNETES_PORT) {
         echo "Executing ssh with SSH_AUTH_SOCK manually set"
         if (actionParams.shellCommandWithBashLogin) {

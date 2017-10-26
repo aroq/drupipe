@@ -41,7 +41,7 @@ class Nexus extends BaseAction {
 
             // Remove artifact.
             script.drupipeShell(
-                "rm -f ${fileName}", context
+                "rm -f ${fileName}", action.params
             )
         }
 

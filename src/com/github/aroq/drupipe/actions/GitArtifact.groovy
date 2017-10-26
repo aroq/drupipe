@@ -20,7 +20,7 @@ class GitArtifact extends BaseAction {
         script.drupipeShell(
             """
                 rm -fR ${repoDir}/.git
-            """, context << [shellCommandWithBashLogin: true]
+            """, action.params
         )
 
         context.builder.artifactParams.dir = "${context.workspace}/${action.params.dir}/${action.params.repoDirName}"

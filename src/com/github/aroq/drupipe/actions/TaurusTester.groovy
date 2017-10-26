@@ -37,12 +37,6 @@ ${this.context.taurus_args}"""
 
         this.script.echo "Execute BZT: ${bztString}"
 
-        script.drupipeShell("""
-            ls -al
-            pwd
-            """, context << [shellCommandWithBashLogin: true]
-        )
-
         this.script.bzt "${bztString}"
 
         this.script.archiveArtifacts artifacts: 'logs/**'

@@ -60,7 +60,7 @@ class Ansible extends BaseAction {
 
     def installAnsistranoRole() {
         // TODO: Install role in docker image.
-        script.drupipeShell("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback", context)
+        script.drupipeShell("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback", action.params)
     }
 
     def deployWithAnsistrano() {
@@ -101,7 +101,7 @@ class Ansible extends BaseAction {
             this.script.drupipeShell("""
                 cd ${this.action.params.workingDir}
                 ${command}
-            """, this.context << [shellCommandWithBashLogin: true]
+            """, action.params
             )
         }
 

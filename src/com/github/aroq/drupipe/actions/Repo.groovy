@@ -47,7 +47,7 @@ class Repo extends BaseAction {
                 """
             rm -fR ${context.builder['buildDir']}
             git clone --depth 1 -b ${context.builder['version']} ${context.builder['repoUrl']} ${context.builder['buildDir']}
-            """, context << [shellCommandWithBashLogin: true]
+            """, action.params
             )
 
             def buildScript = null
@@ -68,7 +68,7 @@ class Repo extends BaseAction {
                         """
                         cd ${context.builder['buildDir']}
                         ${cmd}
-                        """, context << [shellCommandWithBashLogin: true]
+                        """, action.params
                     )
                 }
             }

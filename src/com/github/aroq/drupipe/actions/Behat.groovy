@@ -32,7 +32,7 @@ class Behat extends BaseAction {
                 cd ${action.params.masterPath}/${context.docrootDir}
                 mkdir -p ${action.params.workspaceRelativePath}/reports
                 ${action.params.masterRelativePath}/${action.params.behatExecutable} --config=${action.params.masterRelativePath}/${action.params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml ${action.params.behat_args} --out=${action.params.workspaceRelativePath}/reports ${tags} ${features}
-            """, context << [shellCommandWithBashLogin: true]
+            """, action.params
                 )
             }
             else {

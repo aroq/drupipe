@@ -29,10 +29,9 @@ class Terraform extends BaseAction {
         this.script.withCredentials([creds]) {
             this.script.drupipeShell("""
             cd ${this.action.params.workingDir}
-            ls -al
             ${terraformExecutable} init -input=false -backend-config="address=${this.context.env.TF_VAR_consul_address}" -backend-config="access_token=\${CONSUL_ACCESS_TOKEN}"
 
-            """, this.context << [shellCommandWithBashLogin: false])
+            """, this.action.params)
         }
     }
 
@@ -41,7 +40,7 @@ class Terraform extends BaseAction {
         script.drupipeShell("""
             cd ${this.action.params.workingDir}
             /usr/bin/terraform-inventory --list > ${action.params.stateFile}
-            """, this.context << [shellCommandWithBashLogin: false])
+            """, this.action.params)
         this.script.stash name: 'terraform-state}', includes: "${action.params.stateFile}"
     }
 
@@ -56,7 +55,7 @@ class Terraform extends BaseAction {
             this.script.drupipeShell("""
             cd ${this.action.params.workingDir}
             TF_WORKSPACE=${terraformWorkspace} TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} ${terraformCommand} -var-file=terraform/${terraformEnv}/terraform.tfvars -var-file=terraform/${terraformEnv}/secrets.tfvars
-            """, this.context << [shellCommandWithBashLogin: false])
+            """, this.action.params)
         }
     }
 
@@ -80,7 +79,7 @@ class Terraform extends BaseAction {
             this.script.drupipeShell("""
             cd ${this.action.params.workingDir}
             TF_WORKSPACE=${terraformWorkspace} TF_VAR_consul_access_token=\$CONSUL_ACCESS_TOKEN ${this.terraformExecutable} destroy -force=true -input=false -var-file=terraform/${terraformEnv}/terraform.tfvars -var-file=terraform/${terraformEnv}/secrets.tfvars
-            """, this.context << [shellCommandWithBashLogin: false])
+            """, this.action.params)
         }
     }
 

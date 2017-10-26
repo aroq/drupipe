@@ -15,12 +15,12 @@ class Shell extends BaseAction {
     def execute() {
         if (context.shellOutputReturn || action.storeResult) {
             this.script.echo "Return Shell output."
-            def result = script.drupipeShell(action.params.shellCommand, this.context.clone() << [drupipeShellReturnStdout: true])
+            def result = script.drupipeShell(action.params.shellCommand, [drupipeShellReturnStdout: true])
             result.result = action.params.shellCommand
             return result
         }
         else {
-            script.drupipeShell(action.params.shellCommand, this.context.clone())
+            script.drupipeShell(action.params.shellCommand, action.params)
         }
     }
 }
