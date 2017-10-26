@@ -175,7 +175,7 @@ class DrupipeAction implements Serializable {
                             if (!context.actions) {
                                 context.actions = [:]
                             }
-                            context.actions[${name}_${methodName}] = [
+                            context.actions["${name}_${methodName}"] = [
                                     params: this.params,
                                     result: actionResult,
                             ]
