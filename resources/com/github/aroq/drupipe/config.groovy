@@ -328,8 +328,8 @@ params = [
         ],
         Kubectl_get_pod_name: [
             command: 'get pod',
-            namespace: '${actions.Helm_apply.params.namespace}',
-            release_name: '${actions.Helm_apply.params.release_name}',
+            namespace: '${actions.Helm_apply.namespace}',
+            release_name: '${actions.Helm_apply.release_name}',
             jsonpath: '\'{.items[0].metadata.name}\'',
             return_stdout: true,
             flags: [
@@ -345,7 +345,7 @@ params = [
         ],
         Kubectl_get_pods: [
             command: 'get pods',
-            namespace: '${actions.Helm_apply.params.namespace}',
+            namespace: '${actions.Helm_apply.namespace}',
             flags: [
                 '--namespace': ['${action.params.namespace}'],
             ],
