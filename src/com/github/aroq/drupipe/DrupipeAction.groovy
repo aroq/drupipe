@@ -151,6 +151,7 @@ class DrupipeAction implements Serializable {
                             // To make sure we only check fileExists in Heavyweight executor mode.
                             if (context.block?.nodeName && this.script.fileExists(fileName)) {
                                 actionFile = this.script.load(fileName)
+                                // TODO: Add timeout.
                                 actionResult = actionFile."${this.methodName}"(actionParams)
                             }
                         }
@@ -171,24 +172,24 @@ class DrupipeAction implements Serializable {
                             this.script.timeout(action_timeout) {
                                 actionResult = actionInstance."${this.methodName}"()
                             }
-
-                            if (!context.actions) {
-                                context.actions = [:]
-                            }
-                            context.actions["${name}_${methodName}"] = [
-                                    params: this.params,
-//                                    result: actionResult,
-                            ]
-
-                            if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
-                                utils.debugLog(context, context.actions, "context actions", [debugMode: 'json'], ["${name}_${methodName}"], true)
-                            }
-
                         }
                         catch (err) {
                             this.context.pipeline.script.echo err.toString()
                             throw err
                         }
+                    }
+                    if (!context.actions) {
+                        context.actions = [:]
+                    }
+                    context.actions["${name}_${methodName}"] = [
+                        params: this.params,
+                    ]
+                    if (this.params.store_result) {
+                        context.actions["${name}_${methodName}"].result = actionResult
+                    }
+
+                    if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
+                        utils.debugLog(context, context.actions, "context actions", [debugMode: 'json'], ["${name}_${methodName}"], true)
                     }
                 }
             }
@@ -197,6 +198,7 @@ class DrupipeAction implements Serializable {
 
             actionResult = actionResult ? actionResult : [:]
 
+            // Refactor it.
             if (this.storeResult && this.storeResult != '' && actionResult.drupipeShellResult) {
                 def path = storeResult.tokenize('.')
                 def stored = [:]

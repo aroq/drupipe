@@ -40,7 +40,9 @@ params = [
     action: [
         // Default action params (merged to all actions params).
         ACTION: [
-            action_timeout: 120
+            action_timeout: 120,
+            // TODO: Check when & why storeResult is used.
+            store_result: true,
         ],
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
@@ -48,6 +50,7 @@ params = [
             //projectConfigFile: 'docroot.config',
             mothershipConfigFile: 'mothership.config',
             interpolate: 0,
+            store_result: false,
         ],
         Source: [
             interpolate: 0,
