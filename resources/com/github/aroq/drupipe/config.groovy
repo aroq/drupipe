@@ -43,6 +43,7 @@ params = [
             action_timeout: 120,
             // TODO: Check when & why storeResult is used.
             store_result: true,
+            shellCommandWithBashLogin: true,
         ],
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
@@ -177,6 +178,7 @@ params = [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
             ],
             access_key_file_id: '',
+            shellCommandWithBashLogin: false,
             credentials: [
                 secret_values_file: [
                     type: 'file',
@@ -191,12 +193,16 @@ params = [
         // HELM_EXECUTABLE: test
         // HELM_APPLY_EXECUTABLE: test
         // HELM_APPLY_HELM_COMMAND: test
+        Jenkins: [
+            shellCommandWithBashLogin: false,
+        ],
         Helm: [
             executable: 'helm',
             environment: '',
             chart_name: '', // HELM_CHART_NAME in Jenkins params.
             charts_dir: 'charts',
             kubectl_config_file: '.kubeconfig',
+            shellCommandWithBashLogin: false,
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
             ],

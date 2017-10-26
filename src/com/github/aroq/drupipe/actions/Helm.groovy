@@ -29,7 +29,7 @@ class Helm extends BaseAction {
     }
 
     def executeHelmCommand() {
-        script.drupipeShell("${action.params.full_command.join(' ')}", context << [shellCommandWithBashLogin: false])
+        script.drupipeShell("${action.params.full_command.join(' ')}", context, action.params)
     }
 
 }
