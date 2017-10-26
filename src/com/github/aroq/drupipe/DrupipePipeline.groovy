@@ -254,15 +254,15 @@ class DrupipePipeline implements Serializable {
             actionName = 'PipelineController'
             actionMethodName = values[0]
         }
-        if (context.params && context.params.action && context.params.action["${actionName}_${actionMethodName}"] && context.params.action["${actionName}_${actionMethodName}"].debugEnabled) {
-            utils.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'], [], true)
-            script.echo actionName
-            script.echo actionMethodName
-            utils.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'], [], true)
-        }
-
-        script.echo actionName
-        script.echo actionMethodName
+//        if (context.params && context.params.action && context.params.action["${actionName}_${actionMethodName}"] && context.params.action["${actionName}_${actionMethodName}"].debugEnabled) {
+//            utils.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'], [], true)
+//            script.echo actionName
+//            script.echo actionMethodName
+//            utils.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'], [], true)
+//        }
+//
+//        script.echo actionName
+//        script.echo actionMethodName
         new DrupipeAction(name: actionName, methodName: actionMethodName, params: actionParams, context: context)
     }
 
