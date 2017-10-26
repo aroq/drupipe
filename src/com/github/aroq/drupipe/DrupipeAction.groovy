@@ -73,13 +73,13 @@ class DrupipeAction implements Serializable {
             for (actionName in [this.name, this.name + '_' + this.methodName]) {
                 if (context && context.params && context.params.action && actionName in context.params.action) {
                     defaultActionParams = utils.merge(defaultActionParams, context.params.action[actionName])
+                    if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
+                        utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT AFTER MERGE FROM context.params.action: ${actionName}", [debugMode: 'json'], [], true)
+                        utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} context.params.action: ${actionName}", [debugMode: 'json'], [], true)
+                    }
                 }
             }
 
-            if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
-                utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT AFTER CONTEXT MERGE", [debugMode: 'json'], [], true)
-                utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} AFTER CONTEXT MERGE", [debugMode: 'json'], [], true)
-            }
 
             if (!this.params) {
                 this.params = [:]
