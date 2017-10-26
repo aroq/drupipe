@@ -83,6 +83,10 @@ class DrupipeAction implements Serializable {
             }
 
 
+            if (this.methodName == 'get_replicaset_name2') {
+                utils.debugLog(context, context, "Kubectl.get_replicaset_name2 BEFORE PROCESSING", [:], ['params', 'action', 'Kubectl_get_replicaset_name2'], true)
+            }
+
             // Interpolate action params with context variables.
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
                 this.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
@@ -90,6 +94,10 @@ class DrupipeAction implements Serializable {
             else {
                 utils.processActionParams(this, context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
                 // TODO: Store processed action params in context (context.actions['action_name']) to allow use it for interpolation in other actions.
+            }
+
+            if (this.methodName == 'get_replicaset_name2') {
+                utils.debugLog(context, context, "Kubectl.get_replicaset_name2 AFTER PROCESSING", [:], ['params', 'action', 'Kubectl_get_replicaset_name2'], true)
             }
 
             actionParams << this.params
