@@ -179,10 +179,10 @@ class DrupipeAction implements Serializable {
 
                     // Results processing.
                     if (this.params.store_action_params) {
-                        contextStoreResult(this.params.store_action_params_key.tokenize('.'), actionResult, this.params)
+                        contextStoreResult(this.params.store_action_params_key.tokenize('.'), context, this.params)
                     }
                     if (this.params.store_result) {
-                        contextStoreResult(this.params.store_result_key.tokenize('.'), actionResult, actionResult)
+                        contextStoreResult(this.params.store_result_key.tokenize('.'), context, actionResult)
                         if (this.params.results) {
                             for (result in this.params.results) {
                                 if (result.value.type == 'param') {
