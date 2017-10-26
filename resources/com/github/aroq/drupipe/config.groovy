@@ -44,8 +44,8 @@ params = [
             // TODO: Check when & why storeResult is used.
             store_result: true,
             store_action_params: true,
-            store_result_keys: '${action.name}_${action.methodName}',
-            store_action_params_keys: '${action.name}_${action.methodName}',
+            store_result_key: 'results.${action.name}_${action.methodName}',
+            store_action_params_key: 'actions.${action.name}_${action.methodName}',
             shell_bash_login: true,
             return_stdout: false,
         ],

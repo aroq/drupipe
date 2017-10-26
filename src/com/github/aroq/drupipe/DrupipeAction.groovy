@@ -176,17 +176,19 @@ class DrupipeAction implements Serializable {
                             throw err
                         }
                     }
-                    if (!context.results) {
-                        context.results = [:]
-                    }
-                    if (!context.actions) {
-                        context.actions = [:]
-                    }
+//                    if (!context.results) {
+//                        context.results = [:]
+//                    }
+//                    if (!context.actions) {
+//                        context.actions = [:]
+//                    }
                     if (this.params.store_action_params) {
-                        context.actions[this.params.store_action_params_key] = this.params
+                        contextStoreResult(this.params.store_action_params_key, context, this.params)
+//                        context.actions[this.params.store_action_params_key] = this.params
                     }
                     if (this.params.store_result) {
-                        context.results[this.params.store_result_key] = actionResult
+//                        context.results[this.params.store_result_key] = actionResult
+                        contextStoreResult(this.params.store_result_key, context, actionResult)
                     }
 
                     if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
@@ -242,16 +244,16 @@ class DrupipeAction implements Serializable {
         }
     }
 
-    def contextStoreResult(path, stored, result) {
+    def contextStoreResult(path, storeContainer, result) {
         def pathElement = path.get(0)
         def subPath = path.subList(1, path.size())
-        if (!stored.containsKey(pathElement)) {
-            stored[pathElement] = [:]
+        if (!storeContainer.containsKey(pathElement)) {
+            storeContainer[pathElement] = [:]
         }
         if (subPath.size() > 0) {
-            contextStoreResult(subPath, stored[pathElement], result)
+            contextStoreResult(subPath, storeContainer[pathElement], result)
         } else {
-            stored[pathElement]= result
+            storeContainer[pathElement] = result
         }
     }
 
