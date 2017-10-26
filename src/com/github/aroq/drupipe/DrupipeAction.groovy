@@ -62,7 +62,7 @@ class DrupipeAction implements Serializable {
 //                utils.debugLog(context, actionConfig, "${this.fullName} action YAML CONFIG", [:], [], true)
 //            }
 
-            if (context.params && context.params.action["${name}_${methodName}"].debugEnabled) {
+            if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
                 utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT", [:], [], true)
                 utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} INIT", [:], [], true)
             }
@@ -73,7 +73,7 @@ class DrupipeAction implements Serializable {
                 }
             }
 
-            if (context.params && context.params.action["${name}_${methodName}"].debugEnabled) {
+            if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
                 utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT AFTER CONTEXT MERGE", [:], [], true)
                 utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} AFTER CONTEXT MERGE", [:], [], true)
             }
