@@ -44,6 +44,7 @@ params = [
             // TODO: Check when & why storeResult is used.
             store_result: true,
             shellCommandWithBashLogin: true,
+            drupipeShellReturnStdout: false,
         ],
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
