@@ -368,22 +368,6 @@ params = [
                 '${prepareFlags(action.params.flags)}',
             ],
         ],
-        Kubectl_get_secret: [
-            command: 'get secret',
-            full_command: [
-                '${action.params.executable}',
-                '${action.params.command}',
-                '${action.params.secret_name}',
-            ],
-        ],
-        Kubectl_create_secret: [
-            command: 'get secret',
-            full_command: [
-                '${action.params.executable}',
-                '${action.params.command}',
-                '${action.params.secret_name}',
-            ],
-        ],
         Kubectl_copy_from_pod: [
             command: 'cp',
             name: '',

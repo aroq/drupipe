@@ -1,7 +1,7 @@
 #!groovy
 
-def call(shellCommand, context, actionParams = [:]) {
-    if (context.containerMode == 'kubernetes') {
+def call(shellCommand, actionParams = [:]) {
+    if (env.KUBERNETES_PORT) {
         echo "Executing ssh with SSH_AUTH_SOCK manually set"
         if (actionParams.shellCommandWithBashLogin) {
             echo "With bash login session"
@@ -23,12 +23,12 @@ def call(shellCommand, context, actionParams = [:]) {
         }
     }
     echo "Executing shell command: ${shellCommand} with returnStdout=${actionParams.drupipeShellReturnStdout}"
-    context.drupipeShellResult = sh(returnStdout: actionParams.drupipeShellReturnStdout, script: shellCommand)
+    def result = sh(returnStdout: actionParams.drupipeShellReturnStdout, script: shellCommand)
     if (actionParams.drupipeShellReturnStdout) {
-        echo "Command output: ${context.drupipeShellResult}"
-        [drupipeShellResult: context.drupipeShellResult]
+        echo "Command output: ${result}"
+        [drupipeShellResult: result]
     }
     else {
-        []
+        [:]
     }
 }

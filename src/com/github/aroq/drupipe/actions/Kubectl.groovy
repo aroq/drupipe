@@ -23,10 +23,6 @@ class Kubectl extends BaseAction {
         script.drupipeAction([action: "Kubectl.scale_replicaset", params: [name: name, replicas: action.params.replicas_up]], context)
     }
 
-    def get_secret() {
-        executeKubectlCommand()
-    }
-
     def get_pod_name() {
         executeKubectlCommand()
     }
@@ -41,15 +37,6 @@ class Kubectl extends BaseAction {
         executeKubectlCommand()
     }
 
-    def create_secret() {
-        try {
-            drupipeAction([action: "Kubectl.get_secret", params: action.params], context)
-        }
-        catch (e) {
-            executeKubectlCommand()
-        }
-    }
-
     def get_pods() {
         executeKubectlCommand()
     }
@@ -59,11 +46,7 @@ class Kubectl extends BaseAction {
     }
 
     def executeKubectlCommand() {
-        script.drupipeShell(
-            "${action.params.full_command.join(' ')}",
-            context,
-            action.params
-        )
+        script.drupipeShell("${action.params.full_command.join(' ')}", action.params)
     }
 
 }

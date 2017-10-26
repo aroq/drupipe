@@ -21,7 +21,7 @@ class GCloud extends BaseAction {
               ${action.params.executable} config set container/use_client_certificate True
 
               ${action.params.executable} container clusters get-credentials ${action.params.cluster_name} 
-        """, this.context, action.params)
+        """, action.params)
     }
 
 }
