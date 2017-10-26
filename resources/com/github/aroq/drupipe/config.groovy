@@ -42,7 +42,7 @@ params = [
         ACTION: [
             action_timeout: 120,
             // TODO: Check when & why storeResult is used.
-            store_result: false,
+            store_result: true,
         ],
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
@@ -54,6 +54,7 @@ params = [
         ],
         Source: [
             interpolate: 0,
+            store_result: true,
         ],
         Behat: [
             masterPath: 'docroot/master',
