@@ -30,7 +30,7 @@ class Config extends BaseAction {
                 action: "Config.mothershipConfig"
             ],
             [
-                action: "Config.projectConfig"
+//                action: "Config.projectConfig"
             ],
             [
                 action: "Config.jenkinsConfig"
