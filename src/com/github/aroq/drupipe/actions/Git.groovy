@@ -20,7 +20,7 @@ class Git extends BaseAction {
         if (script.fileExists(repoDir)) {
             script.drupipeShell("""
             rm -fR ${repoDir}
-            """, context
+            """, action.params
             )
         }
 
@@ -35,7 +35,7 @@ class Git extends BaseAction {
             mkdir -p ${action.params.dir}
             cd ${action.params.dir}
             git clone ${options} ${action.params.repoAddress} ${action.params.repoDirName}
-            """, context
+            """, action.params
         )
 
         context
