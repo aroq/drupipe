@@ -189,8 +189,8 @@ class DrupipeAction implements Serializable {
                                 if (result.value.type == 'param') {
                                     def deepValue = utils.deepGet(this.params, result.value.source.tokenize('.'))
                                     script.echo "VALUE: ${deepValue}"
-                                    contextStoreResult(result.value.destination.tokenize('.'), context, deepValue)
-                                    def context_result = utils.deepGet(context, result.value.destination.tokenize('.'))
+                                    contextStoreResult(result.value.destination.tokenize('.'), actionResult, deepValue)
+                                    def context_result = utils.deepGet(actionResult, result.value.destination.tokenize('.'))
                                     script.echo "CONTEXT VALUE: ${context_result}"
                                 }
                             }
