@@ -56,6 +56,9 @@ params = [
             interpolate: 0,
             store_result: true,
         ],
+        YamlFileConfig: [
+            store_result: true,
+        ],
         Behat: [
             masterPath: 'docroot/master',
             masterRelativePath: '..',
