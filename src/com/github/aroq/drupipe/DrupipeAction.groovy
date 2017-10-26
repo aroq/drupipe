@@ -82,12 +82,11 @@ class DrupipeAction implements Serializable {
                 this.script.writeYaml(file: contextParamsConfigFile, data: context.params)
             }
 
-
-            if (this.methodName == 'get_replicaset_name' || this.methodName == 'get_replicaset_name2') {
+            if (this.params.debugEnabled) {
                 script.echo "INSIDE ${methodName}"
-                utils.debugLog(context, this.params, "ACTION Kubectl.${methodName} BEFORE PROCESSING", [:], [], true)
-                utils.debugLog(context, context, "Kubectl.${methodName} BEFORE PROCESSING", [:], ['params', 'action', "Kubectl_${methodName}"], true)
-                utils.debugLog(context, context, "Kubectl BEFORE PROCESSING", [:], ['params', 'action', "Kubectl"], true)
+                utils.debugLog(context, this.params, "ACTION ${name}.${methodName} BEFORE PROCESSING", [:], [], true)
+                utils.debugLog(context, context, "${name}.${methodName} BEFORE PROCESSING", [:], ['params', 'action', "${name}_${methodName}"], true)
+                utils.debugLog(context, context, "${name} BEFORE PROCESSING", [:], ['params', 'action', "${name}"], true)
             }
 
             // Interpolate action params with context variables.
@@ -99,11 +98,11 @@ class DrupipeAction implements Serializable {
                 // TODO: Store processed action params in context (context.actions['action_name']) to allow use it for interpolation in other actions.
             }
 
-            if (this.methodName == 'get_replicaset_name' || this.methodName == 'get_replicaset_name2') {
+            if (this.params.debugEnabled) {
                 script.echo "INSIDE ${methodName}"
-                utils.debugLog(context, this.params, "ACTION Kubectl.${methodName} AFTER PROCESSING", [:], [], true)
-                utils.debugLog(context, context, "Kubectl.${methodName} AFTER PROCESSING", [:], ['params', 'action', "Kubectl_${methodName}"], true)
-                utils.debugLog(context, context, "Kubectl AFTER PROCESSING", [:], ['params', 'action', "Kubectl"], true)
+                utils.debugLog(context, this.params, "ACTION ${name}.${methodName} AFTER PROCESSING", [:], [], true)
+                utils.debugLog(context, context, "${name}.${methodName} AFTER PROCESSING", [:], ['params', 'action', "${name}_${methodName}"], true)
+                utils.debugLog(context, context, "${name} AFTER PROCESSING", [:], ['params', 'action', "${name}"], true)
             }
 
             actionParams << this.params

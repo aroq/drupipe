@@ -285,6 +285,7 @@ params = [
             replicas_up: '1',
         ],
         Kubectl_get_replicaset_name: [
+            debugEnabled: true,
             command: 'get replicaset',
             environment: '',
             chart_name: '',
@@ -303,6 +304,7 @@ params = [
             ],
         ],
         Kubectl_get_replicaset_name2: [
+            debugEnabled: true,
             command: 'get replicaset',
             environment: '',
             chart_name: '',
