@@ -2,36 +2,20 @@ config_version = 1
 
 // Default params.
 environment = ''
-
 debugEnabled = false
 docrootDir = 'docroot'
 projectConfigPath = 'docroot/config'
 projectConfigFile = 'docroot.config'
-
 drupipeLibraryUrl = 'https://github.com/aroq/drupipe.git'
 drupipeLibraryBranch = 'master'
 drupipeLibraryType = 'branch'
 dockerImage = 'aroq/drudock:1.4.0'
 nodeName = 'default'
 containerMode = 'docker'
-
 configSeedType = 'docman'
-
 defaultDocmanImage = 'michaeltigr/zebra-build-php-drush-docman:latest'
-
 logRotatorNumToKeep = 5
-
 drupipeDockerArgs = '--user root:root --net=host'
-
-// Environments section.
-//environments {
-//    dev {
-//    }
-//    stage {
-//    }
-//    prod {
-//    }
-//}
 
 params = [
     block: [
@@ -44,8 +28,8 @@ params = [
             // TODO: Check when & why storeResult is used.
             store_result: true,
             store_action_params: true,
-            store_result_key: 'results.${action.name}_${action.methodName}',
-            store_action_params_key: 'actions.${action.name}_${action.methodName}',
+            store_result_key: 'context.results.${action.name}_${action.methodName}',
+            store_action_params_key: 'context.actions.${action.name}_${action.methodName}',
             shell_bash_login: true,
             return_stdout: false,
         ],
@@ -209,6 +193,13 @@ params = [
             shell_bash_login: false,
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
+            ],
+            results: [
+                namespace: [
+                    type: 'param',
+                    source: 'context.actions.${action.name}_${action.methodName}.namespace',
+                    destination: 'context.k8s_namespace',
+                ],
             ],
         ],
         Helm_init: [
