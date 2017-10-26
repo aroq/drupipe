@@ -76,9 +76,9 @@ class Source extends BaseAction {
                     }
                 }
 
-                result.remove('sourceName')
-                result.remove('configPath')
-                result.remove('configType')
+//                result.remove('sourceName')
+//                result.remove('configPath')
+//                result.remove('configType')
             }
             else {
                  script.echo "Config file doesn't exists: ${configFilePath}"

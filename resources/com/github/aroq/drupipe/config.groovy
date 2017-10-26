@@ -42,7 +42,7 @@ params = [
         ACTION: [
             action_timeout: 120,
             // TODO: Check when & why storeResult is used.
-            store_result: true,
+            store_result: false,
         ],
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
