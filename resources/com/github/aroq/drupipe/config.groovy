@@ -43,20 +43,20 @@ params = [
             action_timeout: 120,
             // TODO: Check when & why storeResult is used.
             store_result: true,
+            store_action_params: true,
+            store_result_keys: '${action.name}_${action.methodName}',
+            store_action_params_keys: '${action.name}_${action.methodName}',
             shell_bash_login: true,
             return_stdout: false,
         ],
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
-            //projectConfigPath: 'docroot/config',
-            //projectConfigFile: 'docroot.config',
             mothershipConfigFile: 'mothership.config',
             interpolate: 0,
             store_result: false,
         ],
         Source: [
             interpolate: 0,
-//            store_result: true,
         ],
         YamlFileConfig: [
             store_result: false,
@@ -75,6 +75,9 @@ params = [
         Terraform: [
             infraSourceName: 'infra-config',
             shell_bash_login: false,
+        ],
+        DrushFeaturesList: [
+            return_stdout: true,
         ],
         Docman: [
             docmanJsonConfigFile: 'config.json',
@@ -289,7 +292,7 @@ params = [
             command: 'scale replicaset',
             replicas: '',
             name: '',
-            namespace: '${actions.Helm_apply.params.namespace}',
+            namespace: '${actions.Helm_apply.namespace}',
             flags: [
                 '--replicas': ['${action.params.replicas}'],
                 '--namespace': ['${action.params.namespace}'],
@@ -308,8 +311,8 @@ params = [
         Kubectl_get_replicaset_name: [
             debugEnabled: true,
             command: 'get replicaset',
-            namespace: '${actions.Helm_apply.params.namespace}',
-            release_name: '${actions.Helm_apply.params.release_name}',
+            namespace: '${actions.Helm_apply.namespace}',
+            release_name: '${actions.Helm_apply.release_name}',
             jsonpath: '\'{.items[0].metadata.name}\'',
             return_stdout: true,
             flags: [

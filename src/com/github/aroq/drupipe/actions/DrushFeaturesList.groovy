@@ -19,7 +19,7 @@ class DrushFeaturesList extends BaseAction {
         def features = []
 
         this.context.drush_command = 'fl --format=json'
-        def fl_result = this.script.drupipeAction("Drush.runCommand", this.context.clone() << [drushOutputReturn: 1])
+        def fl_result = this.script.drupipeAction([action: "Drush.runCommand", params: [store_result: true]], this.context)
 
         def jsonOutput = this.script.readJSON(text: fl_result.stdout)
         jsonOutput.each { key, feature->
@@ -34,7 +34,7 @@ class DrushFeaturesList extends BaseAction {
                 exception_table = exception_table + "|${feature['name']}|${feature['feature']}|\n"
 
                 this.context.drush_command = 'fd ' + feature['feature']
-                this.script.drupipeAction("Drush.runCommand", this.context.clone())
+                this.script.drupipeAction("Drush.runCommand", this.context)
             }
 
             throw new Exception("OVERRIDEN FEATURES:\n\n${exception_table}")

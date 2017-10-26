@@ -166,10 +166,7 @@ class DrupipeAction implements Serializable {
                                 utils: utils,
                             )
 
-                            // TODO: Move context action timeout into default action (common for all actions) params.
-                            def action_timeout = this.params.action_timeout ? this.params.action_timeout : context.action_timeout
-                            action_timeout = action_timeout ? action_timeout : 120
-                            this.script.timeout(action_timeout) {
+                            this.script.timeout(this.params.action_timeout) {
                                 actionResult = actionInstance."${this.methodName}"()
                             }
                         }
@@ -178,18 +175,21 @@ class DrupipeAction implements Serializable {
                             throw err
                         }
                     }
+                    if (!context.results) {
+                        context.results = [:]
+                    }
                     if (!context.actions) {
                         context.actions = [:]
                     }
-                    context.actions["${name}_${methodName}"] = [
-                        params: this.params,
-                    ]
+                    if (this.params.store_action_params) {
+                        context.actions[this.params.store_action_params_key] = this.params
+                    }
                     if (this.params.store_result) {
-                        context.actions["${name}_${methodName}"].result = actionResult
+                        context.results[this.params.store_result_key] = actionResult
                     }
 
                     if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
-                        utils.debugLog(context, context.actions, "context actions", [debugMode: 'json'], ["${name}_${methodName}"], true)
+                        utils.debugLog(context, context.results, "context results", [debugMode: 'json'], [this.params.store_result_key], true)
                     }
                 }
             }
