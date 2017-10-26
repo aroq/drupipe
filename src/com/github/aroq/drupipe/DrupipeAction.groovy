@@ -180,6 +180,8 @@ class DrupipeAction implements Serializable {
                                     result: actionResult,
                             ]
 
+                            utils.debugLog(context, context.actions, "context actions", [debugMode: 'json'], [], true)
+
                         }
                         catch (err) {
                             this.context.pipeline.script.echo err.toString()
