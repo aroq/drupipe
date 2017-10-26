@@ -50,14 +50,14 @@ params = [
             //projectConfigFile: 'docroot.config',
             mothershipConfigFile: 'mothership.config',
             interpolate: 0,
-            store_result: true,
+            store_result: false,
         ],
         Source: [
             interpolate: 0,
-            store_result: true,
+//            store_result: true,
         ],
         YamlFileConfig: [
-            store_result: true,
+            store_result: false,
         ],
         GroovyFileConfig: [
             store_result: false,

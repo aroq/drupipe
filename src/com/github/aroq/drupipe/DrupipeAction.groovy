@@ -189,7 +189,7 @@ class DrupipeAction implements Serializable {
                     }
 
                     if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
-//                        utils.debugLog(context, context.actions, "context actions", [debugMode: 'json'], ["${name}_${methodName}"], true)
+                        utils.debugLog(context, context.actions, "context actions", [debugMode: 'json'], ["${name}_${methodName}"], true)
                     }
                 }
             }
