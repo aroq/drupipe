@@ -56,11 +56,11 @@ class DrupipeAction implements Serializable {
             def defaultActionParams = [:]
 
             // TODO: read action default params from YAML.
-            def actionConfigFile = [utils.sourceDir(context, 'library'), 'actions', this.name + '.yaml'].join('/')
-            if (this.script.fileExists(actionConfigFile)) {
-                def actionConfig = this.script.readYaml(file: actionConfigFile)
-                utils.debugLog(context, actionConfig, "${this.fullName} action YAML CONFIG")
-            }
+//            def actionConfigFile = [utils.sourceDir(context, 'library'), 'actions', this.name + '.yaml'].join('/')
+//            if (this.script.fileExists(actionConfigFile)) {
+//                def actionConfig = this.script.readYaml(file: actionConfigFile)
+//                utils.debugLog(context, actionConfig, "${this.fullName} action YAML CONFIG", [:], [], true)
+//            }
 
             for (actionName in [this.name, this.name + '_' + this.methodName]) {
                 if (context && context.params && context.params.action && actionName in context.params.action) {
