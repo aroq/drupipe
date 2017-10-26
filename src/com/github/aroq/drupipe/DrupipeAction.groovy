@@ -87,6 +87,7 @@ class DrupipeAction implements Serializable {
                 script.echo "INSIDE ${methodName}"
                 utils.debugLog(context, this.params, "ACTION Kubectl.${methodName} BEFORE PROCESSING", [:], [], true)
                 utils.debugLog(context, context, "Kubectl.${methodName} BEFORE PROCESSING", [:], ['params', 'action', "Kubectl_${methodName}"], true)
+                utils.debugLog(context, context, "Kubectl BEFORE PROCESSING", [:], ['params', 'action', "Kubectl"], true)
             }
 
             // Interpolate action params with context variables.
@@ -102,6 +103,7 @@ class DrupipeAction implements Serializable {
                 script.echo "INSIDE ${methodName}"
                 utils.debugLog(context, this.params, "ACTION Kubectl.${methodName} AFTER PROCESSING", [:], [], true)
                 utils.debugLog(context, context, "Kubectl.${methodName} AFTER PROCESSING", [:], ['params', 'action', "Kubectl_${methodName}"], true)
+                utils.debugLog(context, context, "Kubectl AFTER PROCESSING", [:], ['params', 'action', "Kubectl"], true)
             }
 
             actionParams << this.params
