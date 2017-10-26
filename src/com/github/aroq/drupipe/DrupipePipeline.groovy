@@ -259,8 +259,8 @@ class DrupipePipeline implements Serializable {
             utils.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'], [], true)
         }
 
-        scrip.echo actionName
-        scrip.echo actionMethodName
+        script.echo actionName
+        script.echo actionMethodName
         new DrupipeAction(name: actionName, methodName: actionMethodName, params: actionParams, context: context)
     }
 
