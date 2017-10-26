@@ -83,10 +83,10 @@ class DrupipeAction implements Serializable {
             }
 
 
-            if (this.methodName == 'get_replicaset_name2') {
-                script.echo "INSIDE get_replicaset_name2"
-                utils.debugLog(context, this.params, "ACTION Kubectl.get_replicaset_name2 BEFORE PROCESSING", [:], [], true)
-                utils.debugLog(context, context, "Kubectl.get_replicaset_name2 BEFORE PROCESSING", [:], ['params', 'action', 'Kubectl_get_replicaset_name2'], true)
+            if (this.methodName == 'get_replicaset_name' || this.methodName == 'get_replicaset_name2') {
+                script.echo "INSIDE ${methodName}"
+                utils.debugLog(context, this.params, "ACTION Kubectl.${methodName} BEFORE PROCESSING", [:], [], true)
+                utils.debugLog(context, context, "Kubectl.${methodName} BEFORE PROCESSING", [:], ['params', 'action', "Kubectl_${methodName}"], true)
             }
 
             // Interpolate action params with context variables.
@@ -98,9 +98,10 @@ class DrupipeAction implements Serializable {
                 // TODO: Store processed action params in context (context.actions['action_name']) to allow use it for interpolation in other actions.
             }
 
-            if (this.methodName == 'get_replicaset_name2') {
-                utils.debugLog(context, this.params, "ACTION Kubectl.get_replicaset_name2 AFTER PROCESSING", [:], [], true)
-                utils.debugLog(context, context, "Kubectl.get_replicaset_name2 AFTER PROCESSING", [:], ['params', 'action', 'Kubectl_get_replicaset_name2'], true)
+            if (this.methodName == 'get_replicaset_name' || this.methodName == 'get_replicaset_name2') {
+                script.echo "INSIDE ${methodName}"
+                utils.debugLog(context, this.params, "ACTION Kubectl.${methodName} AFTER PROCESSING", [:], [], true)
+                utils.debugLog(context, context, "Kubectl.${methodName} AFTER PROCESSING", [:], ['params', 'action', "Kubectl_${methodName}"], true)
             }
 
             actionParams << this.params
