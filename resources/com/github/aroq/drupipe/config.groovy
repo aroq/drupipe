@@ -33,13 +33,15 @@ environments {
     }
 }
 
-action_timeout: 120
-
 params = [
     block: [
 
     ],
     action: [
+        // Default action params (merged to all actions params).
+        ACTION: [
+            action_timeout: 120
+        ],
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
             //projectConfigPath: 'docroot/config',

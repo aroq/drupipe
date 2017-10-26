@@ -70,7 +70,7 @@ class DrupipeAction implements Serializable {
                 utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} INIT", [debugMode: 'json'], [], true)
             }
 
-            for (actionName in [this.name, this.name + '_' + this.methodName]) {
+            for (actionName in ['ACTION',this.name, this.name + '_' + this.methodName]) {
                 if (context && context.params && context.params.action && actionName in context.params.action) {
                     defaultActionParams = utils.merge(defaultActionParams, context.params.action[actionName])
                     if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
