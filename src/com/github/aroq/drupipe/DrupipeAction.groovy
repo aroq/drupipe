@@ -166,7 +166,8 @@ class DrupipeAction implements Serializable {
                                 utils: utils,
                             )
 
-                            this.script.timeout(this.params.action_timeout) {
+                            def action_timeout = this.params.action_timeout ? this.params.action_timeout : 120
+                            this.script.timeout(action_timeout) {
                                 actionResult = actionInstance."${this.methodName}"()
                             }
                         }
