@@ -357,8 +357,8 @@ params = [
         ],
         Kubectl_get_loadbalancer_address: [
             command: 'get service',
-            namespace: '${actions.Helm_apply.params.namespace}',
-            release_name: '${actions.Helm_apply.params.release_name}',
+            namespace: '${actions.Helm_apply.namespace}',
+            release_name: '${actions.Helm_apply.release_name}',
             jsonpath: '\'{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}\'',
             return_stdout: true,
             flags: [
