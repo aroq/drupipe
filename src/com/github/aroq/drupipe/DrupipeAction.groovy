@@ -182,11 +182,15 @@ class DrupipeAction implements Serializable {
                         contextStoreResult(this.params.store_action_params_key.tokenize('.'), context, this.params)
                     }
                     if (this.params.store_result) {
-                        contextStoreResult(this.params.store_result_key.tokenize('.'), context, actionResult)
+//                        contextStoreResult(this.params.store_result_key.tokenize('.'), context, actionResult)
                         if (this.params.results) {
                             for (result in this.params.results) {
                                 if (result.value.type == 'param') {
                                     def deepValue = utils.deepGet(this.params, result.value.source.tokenize('.'))
+                                    contextStoreResult(result.value.destination.tokenize('.'), actionResult, deepValue)
+                                }
+                                if (result.value.type == 'result') {
+                                    def deepValue = utils.deepGet(actionResult, result.value.source.tokenize('.'))
                                     contextStoreResult(result.value.destination.tokenize('.'), actionResult, deepValue)
                                 }
                             }

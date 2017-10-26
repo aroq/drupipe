@@ -29,6 +29,13 @@ params = [
             store_result: true,
             store_action_params: true,
             store_result_key: 'results.${action.name}_${action.methodName}',
+            results: [
+                result: [
+                    type: 'result',
+                    source: '',
+                    destination: '${action.params.store_result_key}',
+                ],
+            ],
             store_action_params_key: 'actions.${action.name}_${action.methodName}',
             shell_bash_login: true,
             return_stdout: false,

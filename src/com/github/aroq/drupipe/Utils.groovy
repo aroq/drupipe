@@ -540,6 +540,9 @@ def processActionParams(action, context, ArrayList prefixes, ArrayList path = []
 }
 
 def deepGet(object, path) {
+    if (!path) {
+        return object
+    }
     path.inject(object, { obj, prop ->
         if (obj && obj[prop]) {
             obj[prop]
