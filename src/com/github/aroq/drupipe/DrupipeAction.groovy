@@ -85,6 +85,7 @@ class DrupipeAction implements Serializable {
 
             if (this.methodName == 'get_replicaset_name2') {
                 script.echo "INSIDE get_replicaset_name2"
+                utils.debugLog(context, this.params, "ACTION Kubectl.get_replicaset_name2 BEFORE PROCESSING", [:], [], true)
                 utils.debugLog(context, context, "Kubectl.get_replicaset_name2 BEFORE PROCESSING", [:], ['params', 'action', 'Kubectl_get_replicaset_name2'], true)
             }
 
@@ -98,6 +99,7 @@ class DrupipeAction implements Serializable {
             }
 
             if (this.methodName == 'get_replicaset_name2') {
+                utils.debugLog(context, this.params, "ACTION Kubectl.get_replicaset_name2 AFTER PROCESSING", [:], [], true)
                 utils.debugLog(context, context, "Kubectl.get_replicaset_name2 AFTER PROCESSING", [:], ['params', 'action', 'Kubectl_get_replicaset_name2'], true)
             }
 
