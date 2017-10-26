@@ -504,7 +504,7 @@ def interpolateCommand(String command, action, context) {
         prepareFlags(flags)
     }
 
-    def binding = [context: context, action: action, prepareFlags: prepareFlags]
+    def binding = [context: context, actions: context.actions ? context.actions : [:], action: action, prepareFlags: prepareFlags]
     def engine = new groovy.text.SimpleTemplateEngine()
     def template = engine.createTemplate(command).make(binding)
     template.toString()

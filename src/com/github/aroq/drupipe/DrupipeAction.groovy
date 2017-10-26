@@ -172,6 +172,14 @@ class DrupipeAction implements Serializable {
                                 actionResult = actionInstance."${this.methodName}"()
                             }
 
+                            if (!context.actions) {
+                                context.actions = [:]
+                            }
+                            context.actions[${name}_${methodName}] = [
+                                    params: this.params,
+                                    result: actionResult,
+                            ]
+
                         }
                         catch (err) {
                             this.context.pipeline.script.echo err.toString()

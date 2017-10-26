@@ -258,7 +258,7 @@ params = [
         Kubectl: [
             executable: 'kubectl',
             kubectl_config_file: '.kubeconfig',
-            namespace: '${action.params.chart_name}-${action.params.environment}',
+            namespace: '${actions.Helm_apply.namespace}',
             shellCommandWithBashLogin: false,
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
@@ -287,8 +287,6 @@ params = [
         Kubectl_get_replicaset_name: [
             debugEnabled: true,
             command: 'get replicaset',
-            environment: '',
-            chart_name: '',
             release_name: '${action.params.chart_name}-${action.params.environment}',
             jsonpath: '\'{.items[0].metadata.name}\'',
             drupipeShellReturnStdout: true,
