@@ -32,7 +32,9 @@ class Kubectl extends BaseAction {
     }
 
     def get_loadbalancer_address() {
-        executeKubectlCommand()
+        [
+            url: executeKubectlCommand().drupipeShellResult,
+        ]
     }
 
     def get_replicaset_name() {
