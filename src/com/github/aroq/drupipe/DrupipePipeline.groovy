@@ -255,7 +255,7 @@ class DrupipePipeline implements Serializable {
             actionMethodName = values[0]
         }
         if (context.params && context.params.action && context.params.action["${actionName}_${actionMethodName}"] && context.params.action["${actionName}_${actionMethodName}"].debugEnabled) {
-            debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [:], [], true)
+            utils.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [:], [], true)
         }
 
         new DrupipeAction(name: actionName, methodName: actionMethodName, params: actionParams, context: context)
