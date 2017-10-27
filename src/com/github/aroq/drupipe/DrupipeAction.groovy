@@ -206,7 +206,7 @@ class DrupipeAction implements Serializable {
                                         script.echo "DESTINATION: ${result.value.destination}"
                                         contextStoreResult(result.value.destination.tokenize('.'), this.result, deepValue)
                                         if (this.params.dump_result) {
-                                            utils.debugLog(context, this.result.action_result, "action_result after result save", [debugMode: 'json'], [], true)
+//                                            utils.debugLog(context, this.result.action_result, "action_result after result save", [debugMode: 'json'], [], true)
                                         }
                                     }
                                 }
