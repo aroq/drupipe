@@ -187,7 +187,7 @@ class DrupipePipeline implements Serializable {
         stages += processStages(context.stages, context)
 
         for (int i = 0; i < stages.size(); i++) {
-            context << stages[i].execute(context)
+            context << stages[i].execute()
         }
         context
     }
@@ -205,6 +205,7 @@ class DrupipePipeline implements Serializable {
     DrupipeStage processStage(s, context) {
         if (!(s instanceof DrupipeStage)) {
             //new DrupipeStage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context))
+            s.context = context
             s = new DrupipeStage(s)
         }
         if (s instanceof DrupipeStage) {
@@ -254,15 +255,13 @@ class DrupipePipeline implements Serializable {
             actionName = 'PipelineController'
             actionMethodName = values[0]
         }
-//        if (context.params && context.params.action && context.params.action["${actionName}_${actionMethodName}"] && context.params.action["${actionName}_${actionMethodName}"].debugEnabled) {
-//            utils.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'], [], true)
-//            script.echo actionName
-//            script.echo actionMethodName
-//            utils.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'], [], true)
-//        }
-//
-//        script.echo actionName
-//        script.echo actionMethodName
+        if (context.params && context.params.action && context.params.action["${actionName}_${actionMethodName}"] && context.params.action["${actionName}_${actionMethodName}"].debugEnabled) {
+            utils.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'], [], true)
+            utils.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'], [], true)
+        }
+
+        script.echo actionName
+        scrip.echo actionMethodName
         new DrupipeAction(name: actionName, methodName: actionMethodName, params: actionParams, context: context)
     }
 

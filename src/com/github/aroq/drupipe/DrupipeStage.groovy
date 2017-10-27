@@ -6,42 +6,42 @@ class DrupipeStage implements Serializable {
 
     ArrayList<DrupipeAction> actions = []
 
-    HashMap params = [:]
+    HashMap context = [:]
 
-    def execute(params, body = null) {
+    def execute(body = null) {
         def utils = new com.github.aroq.drupipe.Utils()
-        this.params = params
-        utils.dump(params, this.params, 'DrupipeStage this.params BEFORE', true)
-        this.params.pipeline.script.stage(name) {
-            this.params.pipeline.script.gitlabCommitStatus(name) {
+//        this.context = c
+        utils.dump(context, this.context, 'DrupipeStage this.context BEFORE', true)
+        this.context.pipeline.script.stage(name) {
+            this.context.pipeline.script.gitlabCommitStatus(name) {
                 if (body) {
-                    this.params << body()
+                    this.context << body()
                 }
-                this.params << ['stage': this]
+                this.context << ['stage': this]
                 if (actions) {
                     try {
                         for (a in this.actions) {
-                            if (params && params.action && params.action["${a.name}_${a.methodName}"] && params.action["${name}_${a.methodName}"].debugEnabled) {
-                                utils.debugLog(params, this.params, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() BEFORE EXECUTE", [:], [], true)
+                            if (context && context.action && context.action["${a.name}_${a.methodName}"] && context.action["${name}_${a.methodName}"].debugEnabled) {
+                                utils.debugLog(context, this.context, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() BEFORE EXECUTE", [:], [], true)
                             }
-                            utils.dump(params, a, 'DrupipeStage a BEFORE EXECUTE', true)
+                            utils.dump(context, a, 'DrupipeStage a BEFORE EXECUTE', true)
                             def action = new DrupipeAction(a)
-                            this.params << action.execute(this.params)
-                            utils.dump(params, this.params, 'DrupipeStage this.params AFTER', true)
-                            if (params && params.action && params.action["${a.name}_${a.methodName}"] && params.action["${name}_${a.methodName}"].debugEnabled) {
-                                utils.debugLog(params, this.params, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() AFTER EXECUTE", [:], [], true)
+                            this.context << action.execute(this.context)
+                            utils.dump(context, this.context, 'DrupipeStage this.context AFTER', true)
+                            if (context && context.action && context.action["${a.name}_${a.methodName}"] && context.action["${name}_${a.methodName}"].debugEnabled) {
+                                utils.debugLog(context, this.context, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() AFTER EXECUTE", [:], [], true)
                             }
                         }
-                        this.params
+                        this.context
                     }
                     catch (e) {
-                        this.params.pipeline.script.echo e.toString()
+                        this.context.pipeline.script.echo e.toString()
                         throw e
                     }
                 }
             }
         }
-        this.params
+        this.context
     }
 
 }
