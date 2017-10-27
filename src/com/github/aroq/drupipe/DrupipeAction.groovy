@@ -31,7 +31,7 @@ class DrupipeAction implements Serializable {
 
         this.script = pipeline.script
 
-//        def actionResult = [:]
+//        def action_result = [:]
 
         try {
 //            if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
@@ -156,7 +156,7 @@ class DrupipeAction implements Serializable {
                             if (context.block?.nodeName && this.script.fileExists(fileName)) {
                                 actionFile = this.script.load(fileName)
                                 // TODO: Add timeout.
-                                this.result.actionResult = actionFile."${this.methodName}"(actionParams)
+                                this.result.action_result = actionFile."${this.methodName}"(actionParams)
                             }
                         }
                     }
@@ -172,7 +172,7 @@ class DrupipeAction implements Serializable {
 
                             def action_timeout = this.params.action_timeout ? this.params.action_timeout : 120
                             this.script.timeout(action_timeout) {
-                                this.result.actionResult = actionInstance."${this.methodName}"()
+                                this.result.action_result = actionInstance."${this.methodName}"()
                             }
                         }
                         catch (err) {
@@ -190,20 +190,20 @@ class DrupipeAction implements Serializable {
                             for (result in this.params.post_process) {
                                 if (result.value.type == 'param') {
                                     def deepValue = utils.deepGet(this.params, result.value.source.tokenize('.'))
-                                    contextStoreResult(result.value.destination.tokenize('.'), this.result.actionResult, deepValue)
+                                    contextStoreResult(result.value.destination.tokenize('.'), this.result.action_result, deepValue)
                                 }
                                 if (result.value.type == 'result') {
                                     if (this.params.dump_result) {
-                                        utils.debugLog(context, this.result.actionResult, "actionResult", [debugMode: 'json'], [], true)
+                                        utils.debugLog(context, this.result.action_result, "action_result", [debugMode: 'json'], [], true)
                                     }
                                     script.echo "SOURCE: ${result.value.source}"
-                                    def deepValue = utils.deepGet(this.result.actionResult, result.value.source.tokenize('.'))
+                                    def deepValue = utils.deepGet(this.result.action_result, result.value.source.tokenize('.'))
                                     script.echo "deepValue: ${deepValue}"
                                     if (deepValue) {
                                         script.echo "DESTINATION: ${result.value.destination}"
                                         contextStoreResult(result.value.destination.tokenize('.'), this.result, deepValue)
                                         if (this.params.dump_result) {
-                                            utils.debugLog(context, this.result, "actionResult after result save", [debugMode: 'json'], [], true)
+                                            utils.debugLog(context, this.result, "action_result after result save", [debugMode: 'json'], [], true)
                                         }
                                     }
                                 }
@@ -219,28 +219,28 @@ class DrupipeAction implements Serializable {
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} end <-"
 
-            this.result.actionResult = this.result.actionResult ? this.result.actionResult : [:]
+            this.result.action_result = this.result.action_result ? this.result.action_result : [:]
 
             // Refactor it.
-//            if (this.storeResult && this.storeResult != '' && this.result.actionResult.stdout) {
+//            if (this.storeResult && this.storeResult != '' && this.result.action_result.stdout) {
 //                def path = storeResult.tokenize('.')
 //                def stored = [:]
-//                contextStoreResult(path, stored, this.result.actionResult.stdout)
+//                contextStoreResult(path, stored, this.result.action_result.stdout)
 //                this.context.pipeline.script.echo("STORED-RESULT: ${stored}")
 //
-//                actionResult << stored
+//                action_result << stored
 //            }
 
             // Restore original (unprocessed) context.params.
             // TODO: restore only needed actions.
             if (context.params) {
-                if (this.context.pipeline.script.fileExists(contextParamsConfigFile)) {
-                    this.context.params = this.context.pipeline.script.readYaml(file: contextParamsConfigFile)
+                if (script.fileExists(contextParamsConfigFile)) {
+                    this.context.params = script.readYaml(file: contextParamsConfigFile)
                 }
                 utils.debugLog(context, context, "CONTEXT PARAMS result results AFTER RESTORE", [debugMode: 'json'], ['params', 'action', 'ACTION', 'results'], true)
             }
 
-//            this.result.action_result = actionResult
+//            this.result.action_result = action_result
             this.result
         }
         catch (err) {
@@ -253,13 +253,13 @@ class DrupipeAction implements Serializable {
             if (notification.status != 'FAILED') {
                 notification.status = 'SUCCESSFUL'
             }
-            if (this && this.result && this.result.actionResult && this.result.actionResult.result) {
+            if (this && this.result && this.result.action_result && this.result.action_result.result) {
                 notification.message = notification.message ? notification.message : ''
-                notification.message = notification.message + "\n\n" + this.result.actionResult.result
+                notification.message = notification.message + "\n\n" + this.result.action_result.result
             }
-            if (this && this.result && this.result.actionResult && this.result.actionResult.stdout) {
+            if (this && this.result && this.result.action_result && this.result.action_result.stdout) {
                 notification.message = notification.message ? notification.message : ''
-                notification.message = notification.message + "\n\n" + this.result.actionResult.stdout
+                notification.message = notification.message + "\n\n" + this.result.action_result.stdout
             }
             utils.pipelineNotify(context, notification)
         }
