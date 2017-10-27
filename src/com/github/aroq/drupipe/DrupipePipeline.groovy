@@ -261,7 +261,7 @@ class DrupipePipeline implements Serializable {
 
         script.echo actionName
         script.echo actionMethodName
-        new DrupipeAction(name: actionName, methodName: actionMethodName, params: actionParams, context: context)
+        new DrupipeAction(pipeline: this, name: actionName, methodName: actionMethodName, params: actionParams, context: context)
     }
 
     def executePipelineActionList(actions, context) {
@@ -276,7 +276,7 @@ class DrupipePipeline implements Serializable {
                     context = context ? utils.merge(context, actionResult.context) : actionResult.context
 //                    context = utils.serializeAndDeserialize(context)
                 }
-                utils.debugLog(context, utils.stripContext(context), 'executePipelineActionList CONTEXT', [debugMode: 'json'], [], true)
+                utils.debugLog(context, context, 'executePipelineActionList CONTEXT', [debugMode: 'json'], [], true)
             }
             context
         }

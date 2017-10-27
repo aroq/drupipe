@@ -16,6 +16,8 @@ class DrupipeAction implements Serializable {
 
     LinkedHashMap context = [:]
 
+    def pipeline
+
     def script
 
     def result = [context: [:], action_result: [:]]
