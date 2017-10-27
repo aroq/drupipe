@@ -79,7 +79,7 @@ params = [
                 context: [
                     type: 'result',
                     source: '',
-                    destination: '',
+                    destination: 'context',
                 ],
             ],
         ],
