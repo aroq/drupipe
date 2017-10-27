@@ -582,7 +582,7 @@ def serializeAndDeserialize(params) {
         if (fileExists(yamlFilePath)) {
             result = readYaml(file: yamlFilePath)
         }
-        debugLog(result, result, "serializeAndDeserialize.RESULT", [debugMode: 'json'], [], true)
+        debugLog(result, result, "serializeAndDeserialize.RESULT", [debugMode: 'json'], [])
     }
     result
 

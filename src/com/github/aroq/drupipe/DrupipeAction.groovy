@@ -38,9 +38,9 @@ class DrupipeAction implements Serializable {
         def actionResult = [:]
 
         try {
-            if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
-                utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT ZERO", [debugMode: 'json'], [], true)
-            }
+//            if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
+//                utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT ZERO", [debugMode: 'json'], [], true)
+//            }
             // Stage name & echo.
             String drupipeStageName
             if (this.context.stage) {
@@ -70,19 +70,19 @@ class DrupipeAction implements Serializable {
 //                utils.debugLog(context, actionConfig, "${this.fullName} action YAML CONFIG", [:], [], true)
 //            }
 
-            if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
-                utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT", [debugMode: 'json'], [], true)
-                utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} INIT", [debugMode: 'json'], [], true)
-            }
+//            if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
+//                utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT", [debugMode: 'json'], [], true)
+//                utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} INIT", [debugMode: 'json'], [], true)
+//            }
 //            utils.debugLog(context, context, "CONTEXT PARAMS result results 2", [debugMode: 'json'], ['params', 'action', 'ACTION', 'results'], true)
 
             for (actionName in ['ACTION',this.name, this.name + '_' + this.methodName]) {
                 if (context && context.params && context.params.action && actionName in context.params.action) {
                     defaultActionParams = utils.merge(defaultActionParams, context.params.action[actionName])
-                    if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
-                        utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT AFTER MERGE FROM context.params.action: ${actionName}", [debugMode: 'json'], [], true)
-                        utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} context.params.action: ${actionName}", [debugMode: 'json'], [], true)
-                    }
+//                    if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
+//                        utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT AFTER MERGE FROM context.params.action: ${actionName}", [debugMode: 'json'], [], true)
+//                        utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} context.params.action: ${actionName}", [debugMode: 'json'], [], true)
+//                    }
                 }
             }
 
@@ -93,10 +93,10 @@ class DrupipeAction implements Serializable {
             }
             this.params = utils.merge(defaultActionParams, this.params)
 
-            if (this.params && this.params.debugEnabled) {
-                utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT AFTER THIS.PARAMS MERGE", [debugMode: 'json'], [], true)
-                utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} INIT AFTER THIS.PARAMS MERGE", [debugMode: 'json'], [], true)
-            }
+//            if (this.params && this.params.debugEnabled) {
+//                utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT AFTER THIS.PARAMS MERGE", [debugMode: 'json'], [], true)
+//                utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} INIT AFTER THIS.PARAMS MERGE", [debugMode: 'json'], [], true)
+//            }
 
             // Save original (unprocessed) context.params.
             // TODO: save only needed actions.
@@ -106,14 +106,14 @@ class DrupipeAction implements Serializable {
                     this.script.sh("rm -f ${contextParamsConfigFile}")
                 }
                 this.script.writeYaml(file: contextParamsConfigFile, data: context.params)
-                utils.debugLog(context, context, "CONTEXT PARAMS result results AFTER SAVE", [debugMode: 'json'], ['params', 'action', 'ACTION', 'results'], true)
+//                utils.debugLog(context, context, "CONTEXT PARAMS result results AFTER SAVE", [debugMode: 'json'], ['params', 'action', 'ACTION', 'results'], true)
             }
 
-            if (this.params && this.params.debugEnabled) {
-                utils.debugLog(context, this.params, "ACTION ${name}.${methodName} BEFORE PROCESSING", [debugMode: 'json'], [], true)
-                utils.debugLog(context, context, "${name}.${methodName} BEFORE PROCESSING", [debugMode: 'json'], ['params', 'action', "${name}_${methodName}"], true)
-                utils.debugLog(context, context, "${name} BEFORE PROCESSING", [debugMode: 'json'], ['params', 'action', "${name}"], true)
-            }
+//            if (this.params && this.params.debugEnabled) {
+//                utils.debugLog(context, this.params, "ACTION ${name}.${methodName} BEFORE PROCESSING", [debugMode: 'json'], [], true)
+//                utils.debugLog(context, context, "${name}.${methodName} BEFORE PROCESSING", [debugMode: 'json'], ['params', 'action', "${name}_${methodName}"], true)
+//                utils.debugLog(context, context, "${name} BEFORE PROCESSING", [debugMode: 'json'], ['params', 'action', "${name}"], true)
+//            }
 
             // Interpolate action params with context variables.
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
@@ -126,12 +126,12 @@ class DrupipeAction implements Serializable {
 
             if (this.params && this.params.debugEnabled) {
                 utils.debugLog(context, this.params, "ACTION ${name}.${methodName} AFTER PROCESSING", [debugMode: 'json'], [], true)
-                utils.debugLog(context, context, "${name}.${methodName} AFTER PROCESSING", [debugMode: 'json'], ['params', 'action', "${name}_${methodName}"], true)
-                utils.debugLog(context, context, "${name} AFTER PROCESSING", [debugMode: 'json'], ['params', 'action', "${name}"], true)
+//                utils.debugLog(context, context, "${name}.${methodName} AFTER PROCESSING", [debugMode: 'json'], ['params', 'action', "${name}_${methodName}"], true)
+//                utils.debugLog(context, context, "${name} AFTER PROCESSING", [debugMode: 'json'], ['params', 'action', "${name}"], true)
             }
 
             actionParams << this.params
-            utils.debugLog(context, actionParams, "${this.fullName} action params")
+//            utils.debugLog(context, actionParams, "${this.fullName} action params")
 
             def actionFile = null
 
