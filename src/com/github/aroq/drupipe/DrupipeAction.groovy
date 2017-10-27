@@ -27,6 +27,7 @@ class DrupipeAction implements Serializable {
     }
 
     def execute() {
+        context = pipeline.context
         def utils = new com.github.aroq.drupipe.Utils()
 
         this.script = pipeline.script

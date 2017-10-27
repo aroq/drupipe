@@ -69,10 +69,10 @@ class Source extends BaseAction {
             if (configFilePath) {
                 if (script.fileExists(configFilePath)) {
                     if (action.params.configType == 'groovy') {
-                        result = this.script.drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], context, action.pipeline)
+                        result = this.script.drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], action.pipeline)
                     }
                     else if (action.params.configType == 'yaml') {
-                        result = this.script.drupipeAction([action: 'YamlFileConfig.load', params: [configFileName: configFilePath]], context, action.pipeline)
+                        result = this.script.drupipeAction([action: 'YamlFileConfig.load', params: [configFileName: configFilePath]], action.pipeline)
                     }
                 }
 
