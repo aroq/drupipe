@@ -24,8 +24,9 @@ class DrupipeStage implements Serializable {
                                 utils.debugLog(context, this.context, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() BEFORE EXECUTE", [:], [], true)
                             }
                             utils.dump(context, a, 'DrupipeStage a BEFORE EXECUTE', true)
+                            a.context = a.context ? utils.merge(s.context, context) : context
                             def action = new DrupipeAction(a)
-                            this.context << action.execute(this.context)
+                            this.context << action.execute()
                             if (context.params) {
                                 utils.dump(context, context.params, 'DrupipeStage this.context AFTER', true)
                             }
