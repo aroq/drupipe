@@ -149,12 +149,12 @@ class Config extends BaseAction {
         def result = [:]
         result.workspace = this.script.pwd()
         result.env = this.utils.envToMap()
-        result << result.env
+//        result << result.env
 
         String jobPath = this.script.env.BUILD_URL ? this.script.env.BUILD_URL : this.script.env.JOB_DISPLAY_URL
 
-        result.jenkinsFolderName = this.utils.getJenkinsFolderName(jobPath)
-        result.jenkinsJobName = this.utils.getJenkinsJobName(jobPath)
+        result.jenkinsFolderName = utils.getJenkinsFolderName(jobPath)
+        result.jenkinsJobName = utils.getJenkinsJobName(jobPath)
 
         if (this.script.env.KUBERNETES_PORT) {
             result.containerMode = 'kubernetes'
@@ -197,7 +197,7 @@ class Config extends BaseAction {
             result = utils.merge(result, mothershipConfig[context.jenkinsFolderName])
             result = utils.merge(result, [jenkinsServers: mothershipServers])
 
-            this.configRepo = result.configRepo
+//            this.configRepo = result.configRepo
         }
         result
     }
