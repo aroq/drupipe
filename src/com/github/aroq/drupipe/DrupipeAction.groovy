@@ -201,11 +201,11 @@ class DrupipeAction implements Serializable {
                                     }
                                     script.echo "SOURCE: ${result.value.source}"
                                     def deepValue = utils.deepGet(this.result.action_result, result.value.source.tokenize('.'))
-                                    script.echo "deepValue: ${deepValue}"
                                     if (deepValue) {
                                         script.echo "DESTINATION: ${result.value.destination}"
                                         contextStoreResult(result.value.destination.tokenize('.'), this.result, deepValue)
                                         if (this.params.dump_result) {
+                                            script.echo "deepValue: ${deepValue}"
 //                                            utils.debugLog(context, this.result.action_result, "action_result after result save", [debugMode: 'json'], [], true)
                                         }
                                     }
