@@ -70,11 +70,10 @@ params = [
 //            interpolate: 0,
         ],
         YamlFileConfig: [
-            store_result: false,
+//            store_result: false,
         ],
         GroovyFileConfig: [
             debugEnabled: true,
-            store_result: true,
             results: [
                 context: [
                     type: 'result',
