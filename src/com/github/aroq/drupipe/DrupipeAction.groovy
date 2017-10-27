@@ -257,11 +257,11 @@ class DrupipeAction implements Serializable {
             if (notification.status != 'FAILED') {
                 notification.status = 'SUCCESSFUL'
             }
-            if (actionResult.result) {
+            if (this.result.actionResult.result) {
                 notification.message = notification.message ? notification.message : ''
                 notification.message = notification.message + "\n\n" + this.result.actionResult.result
             }
-            if (actionResult.stdout) {
+            if (this.result.actionResult.stdout) {
                 notification.message = notification.message ? notification.message : ''
                 notification.message = notification.message + "\n\n" + this.result.actionResult.stdout
             }
