@@ -43,7 +43,6 @@ params = [
         ],
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
-            mothershipConfigFile: 'mothership.config',
             post_process: [
                 context: [
                     type: 'result',
@@ -54,10 +53,12 @@ params = [
         ],
         Config_perform: [
             dump_result: false,
-//            interpolate: 0,
         ],
         Config_envConfig: [
             dump_result: false,
+        ],
+        Config_mothershipConfig: [
+            mothershipConfigFile: 'mothership.config',
         ],
         Config_projectConfig: [
             dump_result: false,
@@ -71,10 +72,8 @@ params = [
                     destination: 'context',
                 ],
             ],
-//            interpolate: 0,
         ],
         YamlFileConfig: [
-//            store_result: false,
         ],
         GroovyFileConfig: [
             post_process: [
