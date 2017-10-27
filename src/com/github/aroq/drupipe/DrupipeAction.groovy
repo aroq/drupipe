@@ -223,7 +223,7 @@ class DrupipeAction implements Serializable {
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} end <-"
 
-            actionResult = actionResult ? actionResult : [:]
+            this.result.actionResult = this.result.actionResult ? this.result.actionResult : [:]
 
             // Refactor it.
 //            if (this.storeResult && this.storeResult != '' && this.result.actionResult.stdout) {
