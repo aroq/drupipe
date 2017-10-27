@@ -44,15 +44,14 @@ class Config extends BaseAction {
                 debugEnabled: true,
                 params: [
                     // We need to pass params as "context" is not ready yet.
-                    store_result: true,
-                    post_process: [
-                        context: [
-                            type: 'result',
-                            source: '',
-                            destination: 'context',
-                        ],
-                    ],
-                    resource: 'com/github/aroq/drupipe/config.groovy'
+//                    store_result: true,
+//                    post_process: [
+//                        context: [
+//                            type: 'result',
+//                            source: '',
+//                            destination: 'context',
+//                        ],
+//                    ],
                 ]
             ],
             [
@@ -60,15 +59,14 @@ class Config extends BaseAction {
                 debugEnabled: true,
                 params: [
                     // We need to pass params as "context" is not ready yet.
-                    store_result: true,
-                    post_process: [
-                        context: [
-                            type: 'result',
-                            source: '',
-                            destination: 'context',
-                        ],
-                    ],
-                    resource: 'com/github/aroq/drupipe/config.groovy'
+//                    store_result: true,
+//                    post_process: [
+//                        context: [
+//                            type: 'result',
+//                            source: '',
+//                            destination: 'context',
+//                        ],
+//                    ],
                 ]
             ],
             [
