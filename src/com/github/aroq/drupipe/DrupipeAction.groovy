@@ -86,14 +86,14 @@ class DrupipeAction implements Serializable {
 
             // Save original (unprocessed) pipeline.context.params.
             // TODO: save only needed actions.
-            def contextParamsConfigFile = ['.unipipe', 'pipeline.context.params.yaml'].join('/')
-            if (pipeline.context.params) {
-                if (this.script.fileExists(contextParamsConfigFile)) {
-                    this.script.sh("rm -f ${contextParamsConfigFile}")
-                }
-                this.script.writeYaml(file: contextParamsConfigFile, data: pipeline.context.params)
-                utils.debugLog(pipeline.context, pipeline.context, "pipeline.context PARAMS ACTION AFTER SAVE", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
-            }
+//            def contextParamsConfigFile = ['.unipipe', 'pipeline.context.params.yaml'].join('/')
+//            if (pipeline.context.params) {
+//                if (this.script.fileExists(contextParamsConfigFile)) {
+//                    this.script.sh("rm -f ${contextParamsConfigFile}")
+//                }
+//                this.script.writeYaml(file: contextParamsConfigFile, data: pipeline.context.params)
+//                utils.debugLog(pipeline.context, pipeline.context, "pipeline.context PARAMS ACTION AFTER SAVE", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
+//            }
 
             if (this.params && this.params.debugEnabled) {
                 utils.debugLog(pipeline.context, this.params, "ACTION ${name}.${methodName} BEFORE PROCESSING", [debugMode: 'json'], [], true)
@@ -106,6 +106,7 @@ class DrupipeAction implements Serializable {
                 this.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
             }
             else {
+                this.params = utils.serializeAndDeserialize(this.params)
                 utils.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
                 // TODO: Store processed action params in pipeline.context (pipeline.context.actions['action_name']) to allow use it for interpolation in other actions.
             }
@@ -223,12 +224,12 @@ class DrupipeAction implements Serializable {
 
             // Restore original (unprocessed) pipeline.context.params.
             // TODO: restore only needed actions.
-            if (pipeline.context.params) {
-                if (script.fileExists(contextParamsConfigFile)) {
-                    pipeline.context.params = script.readYaml(file: contextParamsConfigFile)
-                }
-                utils.debugLog(pipeline.context, pipeline.context, "pipeline.context PARAMS ACTION AFTER RESTORE", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
-            }
+//            if (pipeline.context.params) {
+//                if (script.fileExists(contextParamsConfigFile)) {
+//                    pipeline.context.params = script.readYaml(file: contextParamsConfigFile)
+//                }
+//                utils.debugLog(pipeline.context, pipeline.context, "pipeline.context PARAMS ACTION AFTER RESTORE", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
+//            }
 
 //            this.result.action_result = action_result
             this.result
