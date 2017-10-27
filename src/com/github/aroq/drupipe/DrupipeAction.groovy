@@ -259,11 +259,11 @@ class DrupipeAction implements Serializable {
             }
             if (actionResult.result) {
                 notification.message = notification.message ? notification.message : ''
-                notification.message = notification.message + "\n\n" + actionResult.result
+                notification.message = notification.message + "\n\n" + this.result.actionResult.result
             }
             if (actionResult.stdout) {
                 notification.message = notification.message ? notification.message : ''
-                notification.message = notification.message + "\n\n" + actionResult.stdout
+                notification.message = notification.message + "\n\n" + this.result.actionResult.stdout
             }
             utils.pipelineNotify(context, notification)
         }
