@@ -270,7 +270,7 @@ class DrupipePipeline implements Serializable {
         def actionList = processPipelineActionList(actions, context)
         try {
             for (action in actionList) {
-                action.context = action.context ? utils.merge(action.context, context) : context
+                action.pipeline.context = action.pipeline.context ? utils.merge(action.pipeline.context, context) : context
                 utils.debugLog(context, context, "executePipelineActionList CONTEXT ${action.name}_${action.methodName} BEFORE", [debugMode: 'json'], ['nodeName'], true)
                 def actionResult = action.execute()
                 utils.debugLog(context, actionResult, "executePipelineActionList actionResult ${action.name}_${action.methodName}", [debugMode: 'json'], ['context', 'nodeName'], true)
