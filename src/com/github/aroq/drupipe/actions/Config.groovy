@@ -149,6 +149,7 @@ class Config extends BaseAction {
         def result = [:]
         result.workspace = this.script.pwd()
         result.env = this.utils.envToMap()
+        result.credentialsId = result.env.credentialsId
 //        result << result.env
 
         String jobPath = this.script.env.BUILD_URL ? this.script.env.BUILD_URL : this.script.env.JOB_DISPLAY_URL
@@ -302,7 +303,7 @@ class Config extends BaseAction {
                 mode: 'shell',
             ]
 
-            script.sshagent([this.pipeline.context.credentialsId]) {
+            script.sshagent([this.context.credentialsId]) {
                 this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
             }
 
