@@ -29,7 +29,7 @@ class DrupipeAction implements Serializable {
     def execute() {
         context = pipeline.context
         def utils = new com.github.aroq.drupipe.Utils()
-        utils.debugLog(context, context, "DrupipeAction ${name}_${methodName} CONTEXT", [debugMode: 'json'], [], true)
+//        utils.debugLog(context, context, "DrupipeAction ${name}_${methodName} CONTEXT", [debugMode: 'json'], [], true)
 
 
         this.script = pipeline.script
@@ -38,7 +38,7 @@ class DrupipeAction implements Serializable {
 
         try {
 //            if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
-                utils.debugLog(context, context, "ACTION ${name}.${methodName} INIT ZERO", [debugMode: 'json'], [], true)
+//                utils.debugLog(context, context, "ACTION ${name}.${methodName} INIT ZERO", [debugMode: 'json'], [], true)
 //           }
             // Stage name & echo.
             String drupipeStageName
