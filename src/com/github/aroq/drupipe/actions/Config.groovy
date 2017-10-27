@@ -48,14 +48,6 @@ class Config extends BaseAction {
 
         context << context.pipeline.executePipelineActionList(providers, context)
 
-//        if (!context.environments) {
-//            throw new RuntimeException('No context.environments defined')
-//        }
-//
-//        if (!context.servers) {
-//            throw new RuntimeException('No context.servers defined')
-//        }
-
         // For compatibility:
         if (context.defaultActionParams) {
             context.params.action = utils.merge(context.params.action, context.defaultActionParams)

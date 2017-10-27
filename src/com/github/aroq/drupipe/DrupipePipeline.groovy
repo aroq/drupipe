@@ -270,7 +270,8 @@ class DrupipePipeline implements Serializable {
         def result = [:]
         try {
             for (action in actionList) {
-                def actionResult = action.execute(result)
+                action.context = action.context ? utils.merge(action.context, result) : result
+                def actionResult = action.execute()
                 result = utils.merge(result, actionResult)
             }
             result
