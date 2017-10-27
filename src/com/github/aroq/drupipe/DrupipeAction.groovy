@@ -182,7 +182,7 @@ class DrupipeAction implements Serializable {
                             }
                         }
                         catch (err) {
-                            this.context.pipeline.script.echo err.toString()
+                            this.script.echo err.toString()
                             throw err
                         }
                     }
