@@ -588,4 +588,11 @@ def serializeAndDeserialize(params) {
 
 }
 
+def stripContext(context) {
+    context.remove('pipeline')
+    context.remove('stage')
+    context.remove('block')
+    context
+}
+
 return this
