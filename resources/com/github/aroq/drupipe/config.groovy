@@ -59,6 +59,13 @@ params = [
         ],
         Config_mothershipConfig: [
             mothershipConfigFile: 'mothership.config',
+            post_process: [
+                result: [
+                    type: 'result',
+                    source: 'configRepo',
+                    destination: 'context.configRepo',
+                ],
+            ],
         ],
         Config_projectConfig: [
             dump_result: false,
