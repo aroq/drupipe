@@ -61,7 +61,7 @@ class Config extends BaseAction {
 
         this.script.checkout this.script.scm
 
-        context << context.pipeline.executePipelineActionList(providers, context)
+        context << action.pipeline.executePipelineActionList(providers, context)
 
         // For compatibility:
         if (context.defaultActionParams) {
@@ -188,7 +188,7 @@ class Config extends BaseAction {
                     ]
                 ]
             ]
-            result = context.pipeline.executePipelineActionList(providers, context)
+            result = action.pipeline.executePipelineActionList(providers, context)
             def mothershipConfig = this.utils.getMothershipConfigFile(result)
             def mothershipServers = this.utils.getMothershipServersFile(result)
 
