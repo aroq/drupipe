@@ -328,7 +328,7 @@ class Config extends BaseAction {
             ]
 
             script.sshagent([context.credentialsId]) {
-                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
+                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
             }
 
             def providers = [
