@@ -28,12 +28,6 @@ class DrupipeAction implements Serializable {
 
     def execute() {
         def utils = new com.github.aroq.drupipe.Utils()
-//        if (context.params) {
-//            utils.debugLog(context, context, "CONTEXT PARAMS result results 1", [debugMode: 'json'], ['params', 'action', 'ACTION', 'results'], true)
-//        }
-//        if (c) {
-//            this.context << c
-//        }
 
         this.script = pipeline.script
 
@@ -62,7 +56,7 @@ class DrupipeAction implements Serializable {
 
             // Define action params.
             def actionParams = [:]
-            actionParams << ['action': this]
+//            actionParams << ['action': this]
             def defaultActionParams = [:]
 
             // TODO: read action default params from YAML.
