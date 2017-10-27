@@ -27,6 +27,7 @@ params = [
             action_timeout: 120,
             // TODO: Check when & why storeResult is used.
             store_result: true,
+            dump_result: true,
             store_action_params: true,
             store_result_key: 'results.${action.name}_${action.methodName}',
             results: [
@@ -53,6 +54,9 @@ params = [
                     destination: '',
                 ],
             ],
+        ],
+        Config_envConfig: [
+            dump_result: false,
         ],
         Source: [
             interpolate: 0,
