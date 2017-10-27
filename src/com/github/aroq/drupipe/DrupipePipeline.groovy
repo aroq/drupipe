@@ -261,7 +261,7 @@ class DrupipePipeline implements Serializable {
         }
 
         script.echo actionName
-        scrip.echo actionMethodName
+        script.echo actionMethodName
         new DrupipeAction(name: actionName, methodName: actionMethodName, params: actionParams, context: context)
     }
 
