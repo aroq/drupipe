@@ -63,7 +63,7 @@ class Config extends BaseAction {
 
         this.script.checkout this.script.scm
 
-        context << action.pipeline.executePipelineActionList(providers, context)
+        action.pipeline.executePipelineActionList(providers)
 
         // For compatibility:
         if (context.defaultActionParams) {
@@ -190,7 +190,7 @@ class Config extends BaseAction {
                     ]
                 ]
             ]
-            result = action.pipeline.executePipelineActionList(providers, context)
+            result = action.pipeline.executePipelineActionList(providers)
             def mothershipConfig = this.utils.getMothershipConfigFile(result)
             def mothershipServers = this.utils.getMothershipServersFile(result)
 
@@ -354,7 +354,7 @@ class Config extends BaseAction {
 
             def projectConfig
             script.sshagent([context.credentialsId]) {
-                projectConfig = action.pipeline.executePipelineActionList(providers, context)
+                projectConfig = action.pipeline.executePipelineActionList(providers)
                 utils.debugLog(context, projectConfig, 'Project config')
             }
 

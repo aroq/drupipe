@@ -225,16 +225,16 @@ class DrupipePipeline implements Serializable {
     }
 
     @NonCPS
-    List processPipelineActionList(actionList, context) {
+    List processPipelineActionList(actionList) {
         List actions = []
         for (action in actionList) {
-            actions << processPipelineAction(action, context)
+            actions << processPipelineAction(action)
         }
         actions
     }
 
     @NonCPS
-    DrupipeAction processPipelineAction(action, context) {
+    DrupipeAction processPipelineAction(action) {
         def actionName
         def actionMethodName
         def actionParams
@@ -265,9 +265,9 @@ class DrupipePipeline implements Serializable {
         new DrupipeAction(pipeline: this, name: actionName, methodName: actionMethodName, params: actionParams)
     }
 
-    def executePipelineActionList(actions, context) {
+    def executePipelineActionList(actions) {
         this.script.echo("executePipelineActionList actions: ${actions}")
-        def actionList = processPipelineActionList(actions, context)
+        def actionList = processPipelineActionList(actions)
         try {
             for (action in actionList) {
                 action.pipeline.context = action.pipeline.context ? utils.merge(action.pipeline.context, context) : context
