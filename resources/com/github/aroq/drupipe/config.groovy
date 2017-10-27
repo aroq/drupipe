@@ -55,6 +55,13 @@ params = [
         ],
         GroovyFileConfig: [
             store_result: true,
+            results: [
+                context: [
+                    type: 'result',
+                    source: '',
+                    destination: '',
+                ],
+            ],
         ],
         Behat: [
             masterPath: 'docroot/master',

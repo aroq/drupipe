@@ -19,6 +19,9 @@ class Config extends BaseAction {
             return context
         }
 
+        this.script.sh("mkdir -p .unipipe")
+        this.script.sh("mkdir -p .unipipe/temp")
+
         def providers = [
             [
                 action: 'GroovyFileConfig.groovyConfigFromLibraryResource', params: [resource: 'com/github/aroq/drupipe/config.groovy']

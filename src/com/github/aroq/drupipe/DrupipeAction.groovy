@@ -202,7 +202,7 @@ class DrupipeAction implements Serializable {
                                     script.echo "deepValue: ${deepValue}"
                                     if (deepValue) {
                                         script.echo "DESTINATION: ${result.value.destination}"
-//                                        contextStoreResult(result.value.destination.tokenize('.'), actionResult, deepValue)
+                                        contextStoreResult(result.value.destination.tokenize('.'), actionResult, deepValue)
                                         utils.debugLog(context, actionResult, "actionResult after result save", [debugMode: 'json'], [], true)
                                     }
                                 }
@@ -265,6 +265,9 @@ class DrupipeAction implements Serializable {
     }
 
     def contextStoreResult(path, storeContainer, result) {
+        if (!path) {
+            storeContainer = storeContainer ? utils.merge(storeContainer, result) : result
+        }
         def pathElement = path.get(0)
         def subPath = path.subList(1, path.size())
         if (!storeContainer.containsKey(pathElement)) {

@@ -22,11 +22,10 @@ class GroovyFileConfig extends BaseAction {
 
     def groovyConfigFromLibraryResource() {
         def result = [:]
-        def configFileYamlPath = '.unipipe/groovy.file.config.yaml'
+        def configFileYamlPath = '.unipipe/temp/groovy.file.config.yaml'
         def config = groovyConfig(script.libraryResource(action.params.resource))
         if (config) {
             if (this.script.fileExists(configFileYamlPath)) {
-                this.script.sh("mkdir -p .unipipe")
                 this.script.sh("rm -f ${configFileYamlPath}")
             }
             this.script.writeYaml(file: configFileYamlPath, data: config)
