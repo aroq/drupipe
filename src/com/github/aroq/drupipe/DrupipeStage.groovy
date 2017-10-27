@@ -11,7 +11,7 @@ class DrupipeStage implements Serializable {
     def execute(body = null) {
         def utils = new com.github.aroq.drupipe.Utils()
 //        this.context = c
-        utils.dump(context, this.context, 'DrupipeStage this.context BEFORE', true)
+        utils.dump(context, this.context.params, 'DrupipeStage this.context params BEFORE', true)
         this.context.pipeline.script.stage(name) {
             this.context.pipeline.script.gitlabCommitStatus(name) {
                 if (body) {
@@ -27,7 +27,7 @@ class DrupipeStage implements Serializable {
                             utils.dump(context, a, 'DrupipeStage a BEFORE EXECUTE', true)
                             def action = new DrupipeAction(a)
                             this.context << action.execute(this.context)
-                            utils.dump(context, this.context, 'DrupipeStage this.context AFTER', true)
+                            utils.dump(context, this.context,params, 'DrupipeStage this.context AFTER', true)
                             if (context && context.action && context.action["${a.name}_${a.methodName}"] && context.action["${name}_${a.methodName}"].debugEnabled) {
                                 utils.debugLog(context, this.context, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() AFTER EXECUTE", [:], [], true)
                             }
