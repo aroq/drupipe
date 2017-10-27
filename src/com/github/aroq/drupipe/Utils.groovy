@@ -393,6 +393,7 @@ def sourceDir(params, sourceName) {
 
 def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], force = false) {
     if (debugEnabled(params) || force) {
+        force = true
         if (path) {
             value = path.inject(value, { obj, prop ->
                 if (obj && obj[prop]) {

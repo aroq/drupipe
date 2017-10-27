@@ -62,6 +62,7 @@ class DrupipeAction implements Serializable {
             for (actionName in ['ACTION',this.name, this.name + '_' + this.methodName]) {
                 if (pipeline.context && pipeline.context.params && pipeline.context.params.action && actionName in pipeline.context.params.action) {
                     defaultActionParams = utils.merge(defaultActionParams, pipeline.context.params.action[actionName])
+                    utils.debugLog(defaultActionParams, defaultActionParams, "defaultActionParams after merge from ${actionName} action CONFIG", [:], [], true)
                 }
             }
 
@@ -69,6 +70,7 @@ class DrupipeAction implements Serializable {
                 this.params = [:]
             }
             this.params = utils.merge(defaultActionParams, this.params)
+            utils.debugLog(this.params, this.params, "this.params after merge defaultActionParams with this.params", [:], [], true)
 
             // Interpolate action params with pipeline.context variables.
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
