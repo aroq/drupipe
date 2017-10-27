@@ -148,9 +148,6 @@ class DrupipeAction implements Serializable {
 //                                    contextStoreResult(result.value.destination.tokenize('.'), this.result.action_result, deepValue)
                                 }
                                 if (result.value.type == 'result') {
-                                    if (this.params.dump_result) {
-                                        utils.debugLog(pipeline.context, this.result.action_result, "action_result", [debugMode: 'json'], [], true)
-                                    }
                                     script.echo "SOURCE: ${result.value.source}"
                                     def deepValue = utils.deepGet(this.result.action_result, result.value.source.tokenize('.'))
                                     if (deepValue) {
@@ -166,14 +163,17 @@ class DrupipeAction implements Serializable {
                         }
                     }
 
-                    if (pipeline.context.params && pipeline.context.params.action && pipeline.context.params.action["${name}_${methodName}"] && pipeline.context.params.action["${name}_${methodName}"].debugEnabled) {
-                        utils.debugLog(pipeline.context, pipeline.context, "pipeline.context results", [debugMode: 'json'], [this.params.store_result_key], true)
-                    }
+//                    if (pipeline.context.params && pipeline.context.params.action && pipeline.context.params.action["${name}_${methodName}"] && pipeline.context.params.action["${name}_${methodName}"].debugEnabled) {
+//                        utils.debugLog(pipeline.context, pipeline.context, "pipeline.context results", [debugMode: 'json'], [this.params.store_result_key], true)
+//                    }
                 }
             }
 
 
             this.result.action_result = this.result.action_result ? this.result.action_result : [:]
+            if (this.params.dump_result) {
+                utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], true)
+            }
 
             // Refactor it.
 //            if (this.storeResult && this.storeResult != '' && this.result.action_result.stdout) {
