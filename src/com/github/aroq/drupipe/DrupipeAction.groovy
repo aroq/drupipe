@@ -35,7 +35,7 @@ class DrupipeAction implements Serializable {
 //            this.context << c
 //        }
 
-        this.script = this.context.pipeline.script
+        this.script = pipeline.script
 
 //        def actionResult = [:]
 
