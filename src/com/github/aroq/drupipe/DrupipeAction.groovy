@@ -38,8 +38,8 @@ class DrupipeAction implements Serializable {
 
         try {
 //            if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
-//                utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT ZERO", [debugMode: 'json'], [], true)
-//            }
+                utils.debugLog(context, context, "ACTION ${name}.${methodName} INIT ZERO", [debugMode: 'json'], [], true)
+//           }
             // Stage name & echo.
             String drupipeStageName
             if (this.context.stage) {
