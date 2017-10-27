@@ -266,6 +266,7 @@ class DrupipePipeline implements Serializable {
     }
 
     def executePipelineActionList(actions) {
+        def result = [:]
         this.script.echo("executePipelineActionList actions: ${actions}")
         def actionList = processPipelineActionList(actions)
         try {
@@ -273,13 +274,14 @@ class DrupipePipeline implements Serializable {
                 action.pipeline.context = action.pipeline.context ? utils.merge(action.pipeline.context, context) : context
 //                utils.debugLog(context, context, "executePipelineActionList CONTEXT ${action.name}_${action.methodName} BEFORE", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
                 def actionResult = action.execute()
+                result = utils.merge(result, actionResult.action_result)
 //                utils.debugLog(context, actionResult, "executePipelineActionList actionResult ${action.name}_${action.methodName}", [debugMode: 'json'], [], true)
                 if (actionResult.context) {
                     context = context ? utils.merge(context, actionResult.context) : actionResult.context
                 }
 //                utils.debugLog(context, context, "executePipelineActionList CONTEXT ${action.name}_${action.methodName} AFTER", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
             }
-            context
+            result
         }
         catch (err) {
             script.echo err.toString()

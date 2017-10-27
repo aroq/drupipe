@@ -16,7 +16,7 @@ class DrupipeAction implements Serializable {
 
 //    LinkedHashMap pipeline.context = [:]
 
-    def pipeline
+    DrupipePipeline pipeline
 
     def script
 
@@ -170,7 +170,6 @@ class DrupipeAction implements Serializable {
                 }
             }
 
-            utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} end <-"
 
             this.result.action_result = this.result.action_result ? this.result.action_result : [:]
 
@@ -184,6 +183,7 @@ class DrupipeAction implements Serializable {
 //                action_result << stored
 //            }
 
+            utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} end <-"
             this.result
         }
         catch (err) {
