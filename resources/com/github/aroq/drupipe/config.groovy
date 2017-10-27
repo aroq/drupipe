@@ -195,6 +195,7 @@ params = [
             shell_bash_login: false,
         ],
         Helm: [
+            debugEnabled: true,
             executable: 'helm',
             chart_name: '', // HELM_CHART_NAME in Jenkins params.
             charts_dir: 'charts',
@@ -220,7 +221,6 @@ params = [
             ],
         ],
         Helm_apply: [
-            debugEnabled: true,
             command: 'upgrade',
             value_suffix: 'values.yaml',
             timeout: '120',
@@ -308,7 +308,6 @@ params = [
             replicas_up: '1',
         ],
         Kubectl_get_replicaset_name: [
-            debugEnabled: true,
             command: 'get replicaset',
             release_name: '${actions.Helm_apply.release_name}',
             jsonpath: '\'{.items[0].metadata.name}\'',

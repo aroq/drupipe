@@ -23,6 +23,9 @@ class DrupipeAction implements Serializable {
     }
 
     def execute(c = null) {
+        if (context.params) {
+            utils.debugLog(context, context, "CONTEXT PARAMS result results 1", [debugMode: 'json'], ['params', 'action', 'ACTION', 'results'], true)
+        }
         if (c) {
             this.context << c
         }
@@ -69,6 +72,7 @@ class DrupipeAction implements Serializable {
                 utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT", [debugMode: 'json'], [], true)
                 utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} INIT", [debugMode: 'json'], [], true)
             }
+            utils.debugLog(context, context, "CONTEXT PARAMS result results 2", [debugMode: 'json'], ['params', 'action', 'ACTION', 'results'], true)
 
             for (actionName in ['ACTION',this.name, this.name + '_' + this.methodName]) {
                 if (context && context.params && context.params.action && actionName in context.params.action) {
@@ -80,6 +84,7 @@ class DrupipeAction implements Serializable {
                 }
             }
 
+            utils.debugLog(context, context, "CONTEXT PARAMS result results 3", [debugMode: 'json'], ['params', 'action', 'ACTION', 'results'], true)
 
             if (!this.params) {
                 this.params = [:]
