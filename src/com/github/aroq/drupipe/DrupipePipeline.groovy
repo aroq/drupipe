@@ -19,7 +19,7 @@ class DrupipePipeline implements Serializable {
     def scm
 
     def execute(body = null) {
-        context.pipeline = this
+//        context.pipeline = this
         context.jenkinsParams = params
         utils = new com.github.aroq.drupipe.Utils()
 
