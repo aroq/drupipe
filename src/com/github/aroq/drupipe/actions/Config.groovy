@@ -291,8 +291,7 @@ class Config extends BaseAction {
     }
 
     def projectConfig() {
-        script.echo "Project config execute"
-        utils.debugLog(context, "projectConfig repo: ${context.configRepo}")
+        utils.debugLog(context, "projectConfig repo: ${context.configRepo}", [:], [], true)
         if (context.configRepo) {
             def sourceObject = [
                 name: 'project',
