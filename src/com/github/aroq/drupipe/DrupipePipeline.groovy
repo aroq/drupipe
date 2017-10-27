@@ -35,7 +35,7 @@ class DrupipePipeline implements Serializable {
                     utils.dump(params, params, 'PIPELINE-PARAMS')
                     utils.dump(params, config, 'PIPELINE-CONFIG')
 
-                    def configParams = script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params, interpolate: 0]], context.clone() << params, this)
+                    def configParams = script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params, interpolate: 0]], this)
                     context << (configParams << config << context)
                     utils.dump(context, context, 'PIPELINE-CONTEXT')
                     // Secret option for emergency remove workspace.
@@ -117,6 +117,7 @@ class DrupipePipeline implements Serializable {
                     def result = body(context)
                     if (result) {
                         context << result
+                        pipeline << this
                     }
                 }
 
