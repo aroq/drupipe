@@ -43,7 +43,6 @@ params = [
         ],
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
-            debugEnabled: true,
             mothershipConfigFile: 'mothership.config',
             post_process: [
                 context: [
@@ -74,7 +73,6 @@ params = [
 //            store_result: false,
         ],
         GroovyFileConfig: [
-            debugEnabled: true,
             post_process: [
                 context: [
                     type: 'result',
