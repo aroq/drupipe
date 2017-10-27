@@ -59,6 +59,10 @@ params = [
         Config_envConfig: [
             dump_result: false,
         ],
+        Config_projectConfig: [
+            dump_result: false,
+            debugEnabled: true,
+        ],
         Source: [
             post_process: [
                 context: [
