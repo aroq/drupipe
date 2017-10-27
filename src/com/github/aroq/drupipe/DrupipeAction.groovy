@@ -29,7 +29,7 @@ class DrupipeAction implements Serializable {
     def execute() {
         context = pipeline.context
         def utils = new com.github.aroq.drupipe.Utils()
-        utils.debugLog(context, context, 'DrupipeAction CONTEXT', [debugMode: 'json'], [], true)
+        utils.debugLog(context, context, "DrupipeAction ${name}_${methodName} CONTEXT", [debugMode: 'json'], [], true)
 
 
         this.script = pipeline.script
