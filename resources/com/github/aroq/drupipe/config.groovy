@@ -29,7 +29,7 @@ params = [
             store_result: true,
             dump_result: true,
             store_action_params: true,
-            store_result_key: 'results.${action.name}_${action.methodName}',
+            store_result_key: 'context.results.${action.name}_${action.methodName}',
             results: [
                 result: [
                     type: 'result',
