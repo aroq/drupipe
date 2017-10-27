@@ -152,7 +152,7 @@ class DrupipeAction implements Serializable {
                     if (!actionFile) {
                         try {
                             def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance(
-                                pipeline.context: pipeline.context.clone(),
+                                context: pipeline.context,
                                 action: this,
                                 script: this.script,
                                 utils: utils,
