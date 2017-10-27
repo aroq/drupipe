@@ -6,7 +6,7 @@ class DrupipeAction implements Serializable {
 
     String name
 
-    String storeResult
+//    String storeResult
 
     String methodName
 
@@ -29,17 +29,10 @@ class DrupipeAction implements Serializable {
     def execute() {
         context = pipeline.context
         def utils = new com.github.aroq.drupipe.Utils()
-//        utils.debugLog(context, context, "DrupipeAction ${name}_${methodName} CONTEXT", [debugMode: 'json'], [], true)
-
 
         this.script = pipeline.script
 
-//        def action_result = [:]
-
         try {
-//            if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
-//                utils.debugLog(context, context, "ACTION ${name}.${methodName} INIT ZERO", [debugMode: 'json'], [], true)
-//           }
             // Stage name & echo.
             String drupipeStageName
             if (this.context.stage) {
@@ -48,9 +41,7 @@ class DrupipeAction implements Serializable {
             else {
                 drupipeStageName = 'config'
             }
-
             this.context.drupipeStageName = drupipeStageName
-
             notification.name = "Action ${name}"
             notification.level = "action:${drupipeStageName}"
 
@@ -70,31 +61,26 @@ class DrupipeAction implements Serializable {
 //            }
 
             if (this.params) {
-                utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT", [debugMode: 'json'], [], true)
-                utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} INIT", [debugMode: 'json'], [], true)
+                utils.debugLog(context, this.params, "ACTION INIT 1 ${name}.${methodName}", [debugMode: 'json'], [], true)
+                utils.debugLog(context, defaultActionParams, "defaultActionParams INIT 1 ${name}.${methodName}", [debugMode: 'json'], [], true)
             }
-//            utils.debugLog(context, context, "CONTEXT PARAMS result results 2", [debugMode: 'json'], ['params', 'action', 'ACTION', 'results'], true)
 
             for (actionName in ['ACTION',this.name, this.name + '_' + this.methodName]) {
                 if (context && context.params && context.params.action && actionName in context.params.action) {
+                    script.echo "Merging params from: ${actionName}"
                     defaultActionParams = utils.merge(defaultActionParams, context.params.action[actionName])
-                    if (this.params) {
-                        utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT AFTER MERGE FROM context.params.action: ${actionName}", [debugMode: 'json'], [], true)
-                        utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} context.params.action: ${actionName}", [debugMode: 'json'], [], true)
-                    }
+                    utils.debugLog(context, defaultActionParams, "defaultActionParams init 2 ${name}.${methodName}: ${actionName}", [debugMode: 'json'], [], true)
                 }
             }
-
-//            utils.debugLog(context, context, "CONTEXT PARAMS result results 3", [debugMode: 'json'], ['params', 'action', 'ACTION', 'results'], true)
 
             if (!this.params) {
                 this.params = [:]
             }
             this.params = utils.merge(defaultActionParams, this.params)
 
-            if (this.params && this.params.debugEnabled) {
-                utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT AFTER THIS.PARAMS MERGE", [debugMode: 'json'], [], true)
-                utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} INIT AFTER THIS.PARAMS MERGE", [debugMode: 'json'], [], true)
+            if (this.params) {
+                utils.debugLog(context, this.params, "ACTION INIT 3 ${name}.${methodName} AFTER THIS.PARAMS MERGE", [debugMode: 'json'], [], true)
+                utils.debugLog(context, defaultActionParams, "defaultActionParams INIT 4 ${name}.${methodName} AFTER THIS.PARAMS MERGE", [debugMode: 'json'], [], true)
             }
 
             // Save original (unprocessed) context.params.
