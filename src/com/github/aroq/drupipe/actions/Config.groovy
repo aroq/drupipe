@@ -86,7 +86,7 @@ class Config extends BaseAction {
                     context.params.action = utils.merge(context.params.action, context.environmentParams.defaultActionParams)
                 }
 
-                context.params.action = utils.merge(context.params.action, context.params.action)
+//                context.params.action = utils.merge(context.params.action, context.params.action)
 
                 utils.jsonDump(context, context.environmentParams, 'ENVIRONMENT PARAMS')
             }

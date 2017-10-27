@@ -50,16 +50,17 @@ class Source extends BaseAction {
                 result = source.path
                 break
         }
-        if (!context.loadedSources) {
-            context.loadedSources = [:]
-            context.sourcesList = []
+        if (!result.loadedSources) {
+            result.loadedSources = [:]
+            result.sourcesList = []
         }
         if (result) {
-            context.loadedSources[source.name] = new com.github.aroq.drupipe.DrupipeSource(name: source.name, type: source.type, path: source.path)
-            context.sourcesList << context.loadedSources[source.name]
-            utils.debugLog(context, context.loadedSources, "Loaded sources (after Source.add)", [debugMode: 'json'])
+            result.loadedSources[source.name] = new com.github.aroq.drupipe.DrupipeSource(name: source.name, type: source.type, path: source.path)
+            result.sourcesList << result.loadedSources[source.name]
+//            utils.debugLog(context, context.loadedSources, "Loaded sources (after Source.add)", [debugMode: 'json'])
         }
-        [loadedSources: context.loadedSources, sourcesList: context.sourcesList]
+        result
+//        [loadedSources: context.loadedSources, sourcesList: context.sourcesList]
     }
 
     def loadConfig() {
@@ -75,10 +76,6 @@ class Source extends BaseAction {
                         result = this.script.drupipeAction([action: 'YamlFileConfig.load', params: [configFileName: configFilePath]], action.pipeline)
                     }
                 }
-
-//                result.remove('sourceName')
-//                result.remove('configPath')
-//                result.remove('configType')
             }
             else {
                  script.echo "Config file doesn't exists: ${configFilePath}"
