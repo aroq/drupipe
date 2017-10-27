@@ -252,7 +252,7 @@ class DrupipeAction implements Serializable {
         catch (err) {
             notification.status = 'FAILED'
             notification.message = err.getMessage()
-            this.context.pipeline.script.echo notification.message
+            this.script.echo notification.message
             throw err
         }
         finally {
