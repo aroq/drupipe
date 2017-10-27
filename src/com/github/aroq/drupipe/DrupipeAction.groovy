@@ -59,18 +59,9 @@ class DrupipeAction implements Serializable {
 //                utils.debugLog(pipeline.context, actionConfig, "${this.fullName} action YAML CONFIG", [:], [], true)
 //            }
 
-            if (this.params) {
-                utils.debugLog(pipeline.context, this.params, "ACTION INIT 1 ${name}.${methodName}", [debugMode: 'json'], [], true)
-            }
-            utils.debugLog(pipeline.context, defaultActionParams, "defaultActionParams INIT 1 ${name}.${methodName}", [debugMode: 'json'], [], true)
-
             for (actionName in ['ACTION',this.name, this.name + '_' + this.methodName]) {
                 if (pipeline.context && pipeline.context.params && pipeline.context.params.action && actionName in pipeline.context.params.action) {
-                    script.echo "Merging params from: ${actionName}"
-                    utils.debugLog(pipeline.context, pipeline.context, "pipeline.context PARAMS ACTION BEFORE MERGE", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
                     defaultActionParams = utils.merge(defaultActionParams, pipeline.context.params.action[actionName])
-                    utils.debugLog(pipeline.context, pipeline.context, "pipeline.context PARAMS ACTION AFTER MERGE", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
-                    utils.debugLog(pipeline.context, defaultActionParams, "defaultActionParams init 2 ${name}.${methodName}: ${actionName}", [debugMode: 'json'], [], true)
                 }
             }
 
@@ -78,28 +69,6 @@ class DrupipeAction implements Serializable {
                 this.params = [:]
             }
             this.params = utils.merge(defaultActionParams, this.params)
-
-            if (this.params) {
-                utils.debugLog(pipeline.context, this.params, "ACTION INIT 3 ${name}.${methodName} AFTER THIS.PARAMS MERGE", [debugMode: 'json'], [], true)
-                utils.debugLog(pipeline.context, defaultActionParams, "defaultActionParams INIT 4 ${name}.${methodName} AFTER THIS.PARAMS MERGE", [debugMode: 'json'], [], true)
-            }
-
-            // Save original (unprocessed) pipeline.context.params.
-            // TODO: save only needed actions.
-//            def contextParamsConfigFile = ['.unipipe', 'pipeline.context.params.yaml'].join('/')
-//            if (pipeline.context.params) {
-//                if (this.script.fileExists(contextParamsConfigFile)) {
-//                    this.script.sh("rm -f ${contextParamsConfigFile}")
-//                }
-//                this.script.writeYaml(file: contextParamsConfigFile, data: pipeline.context.params)
-//                utils.debugLog(pipeline.context, pipeline.context, "pipeline.context PARAMS ACTION AFTER SAVE", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
-//            }
-
-            if (this.params && this.params.debugEnabled) {
-                utils.debugLog(pipeline.context, this.params, "ACTION ${name}.${methodName} BEFORE PROCESSING", [debugMode: 'json'], [], true)
-                utils.debugLog(pipeline.context, pipeline.context, "${name}.${methodName} BEFORE PROCESSING", [debugMode: 'json'], ['params', 'action', "${name}_${methodName}"], true)
-                utils.debugLog(pipeline.context, pipeline.context, "${name} BEFORE PROCESSING", [debugMode: 'json'], ['params', 'action', "${name}"], true)
-            }
 
             // Interpolate action params with pipeline.context variables.
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
@@ -111,14 +80,7 @@ class DrupipeAction implements Serializable {
                 // TODO: Store processed action params in pipeline.context (pipeline.context.actions['action_name']) to allow use it for interpolation in other actions.
             }
 
-            if (this.params && this.params.debugEnabled) {
-                utils.debugLog(pipeline.context, this.params, "ACTION ${name}.${methodName} AFTER PROCESSING", [debugMode: 'json'], [], true)
-                utils.debugLog(pipeline.context, pipeline.context, "${name}.${methodName} AFTER PROCESSING", [debugMode: 'json'], ['params', 'action', "${name}_${methodName}"], true)
-//                utils.debugLog(pipeline.context, pipeline.context, "${name} AFTER PROCESSING", [debugMode: 'json'], ['params', 'action', "${name}"], true)
-            }
-
             actionParams << this.params
-//            utils.debugLog(pipeline.context, actionParams, "${this.fullName} action params")
 
             def actionFile = null
 
@@ -222,16 +184,6 @@ class DrupipeAction implements Serializable {
 //                action_result << stored
 //            }
 
-            // Restore original (unprocessed) pipeline.context.params.
-            // TODO: restore only needed actions.
-//            if (pipeline.context.params) {
-//                if (script.fileExists(contextParamsConfigFile)) {
-//                    pipeline.context.params = script.readYaml(file: contextParamsConfigFile)
-//                }
-//                utils.debugLog(pipeline.context, pipeline.context, "pipeline.context PARAMS ACTION AFTER RESTORE", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
-//            }
-
-//            this.result.action_result = action_result
             this.result
         }
         catch (err) {
