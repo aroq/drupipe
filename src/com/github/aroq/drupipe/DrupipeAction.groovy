@@ -35,7 +35,7 @@ class DrupipeAction implements Serializable {
 
         this.script = this.context.pipeline.script
 
-        def actionResult = [:]
+//        def actionResult = [:]
 
         try {
 //            if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
@@ -126,7 +126,7 @@ class DrupipeAction implements Serializable {
 
             if (this.params && this.params.debugEnabled) {
                 utils.debugLog(context, this.params, "ACTION ${name}.${methodName} AFTER PROCESSING", [debugMode: 'json'], [], true)
-//                utils.debugLog(context, context, "${name}.${methodName} AFTER PROCESSING", [debugMode: 'json'], ['params', 'action', "${name}_${methodName}"], true)
+                utils.debugLog(context, context, "${name}.${methodName} AFTER PROCESSING", [debugMode: 'json'], ['params', 'action', "${name}_${methodName}"], true)
 //                utils.debugLog(context, context, "${name} AFTER PROCESSING", [debugMode: 'json'], ['params', 'action', "${name}"], true)
             }
 
@@ -160,7 +160,7 @@ class DrupipeAction implements Serializable {
                             if (context.block?.nodeName && this.script.fileExists(fileName)) {
                                 actionFile = this.script.load(fileName)
                                 // TODO: Add timeout.
-                                actionResult = actionFile."${this.methodName}"(actionParams)
+                                this.result.actionResult = actionFile."${this.methodName}"(actionParams)
                             }
                         }
                     }
@@ -176,7 +176,7 @@ class DrupipeAction implements Serializable {
 
                             def action_timeout = this.params.action_timeout ? this.params.action_timeout : 120
                             this.script.timeout(action_timeout) {
-                                actionResult = actionInstance."${this.methodName}"()
+                                this.result.actionResult = actionInstance."${this.methodName}"()
                             }
                         }
                         catch (err) {
@@ -190,19 +190,18 @@ class DrupipeAction implements Serializable {
                         contextStoreResult(this.params.store_action_params_key.tokenize('.'), context, this.params)
                     }
                     if (this.params.store_result) {
-//                        contextStoreResult(this.params.store_result_key.tokenize('.'), context, actionResult)
                         if (this.params.post_processing) {
                             for (result in this.params.post_processing) {
                                 if (result.value.type == 'param') {
                                     def deepValue = utils.deepGet(this.params, result.value.source.tokenize('.'))
-                                    contextStoreResult(result.value.destination.tokenize('.'), actionResult, deepValue)
+                                    contextStoreResult(result.value.destination.tokenize('.'), this.result.actionResult, deepValue)
                                 }
                                 if (result.value.type == 'result') {
                                     if (this.params.dump_result) {
-                                        utils.debugLog(context, actionResult, "actionResult", [debugMode: 'json'], [], true)
+                                        utils.debugLog(context, this.result.actionResult, "actionResult", [debugMode: 'json'], [], true)
                                     }
                                     script.echo "SOURCE: ${result.value.source}"
-                                    def deepValue = utils.deepGet(actionResult, result.value.source.tokenize('.'))
+                                    def deepValue = utils.deepGet(this.result.actionResult, result.value.source.tokenize('.'))
                                     script.echo "deepValue: ${deepValue}"
                                     if (deepValue) {
                                         script.echo "DESTINATION: ${result.value.destination}"
@@ -227,14 +226,14 @@ class DrupipeAction implements Serializable {
             actionResult = actionResult ? actionResult : [:]
 
             // Refactor it.
-            if (this.storeResult && this.storeResult != '' && actionResult.stdout) {
-                def path = storeResult.tokenize('.')
-                def stored = [:]
-                contextStoreResult(path, stored, actionResult.stdout)
-                this.context.pipeline.script.echo("STORED-RESULT: ${stored}")
-
-                actionResult << stored
-            }
+//            if (this.storeResult && this.storeResult != '' && this.result.actionResult.stdout) {
+//                def path = storeResult.tokenize('.')
+//                def stored = [:]
+//                contextStoreResult(path, stored, this.result.actionResult.stdout)
+//                this.context.pipeline.script.echo("STORED-RESULT: ${stored}")
+//
+//                actionResult << stored
+//            }
 
             // Restore original (unprocessed) context.params.
             // TODO: restore only needed actions.
@@ -245,7 +244,7 @@ class DrupipeAction implements Serializable {
                 utils.debugLog(context, context, "CONTEXT PARAMS result results AFTER RESTORE", [debugMode: 'json'], ['params', 'action', 'ACTION', 'results'], true)
             }
 
-            this.result.action_result = actionResult
+//            this.result.action_result = actionResult
             this.result
         }
         catch (err) {
