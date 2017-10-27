@@ -48,6 +48,7 @@ params = [
         ],
         Source: [
             interpolate: 0,
+            store_result: false,
         ],
         YamlFileConfig: [
             store_result: false,
