@@ -40,6 +40,7 @@ class Config extends BaseAction {
             ],
             [
                 action: "Config.envConfig",
+                debugEnabled: true,
                 params: [
                     // We need to pass params as "context" is not ready yet.
                     store_result: true,
@@ -54,7 +55,20 @@ class Config extends BaseAction {
                 ]
             ],
             [
-                action: "Config.mothershipConfig"
+                action: "Config.mothershipConfig",
+                debugEnabled: true,
+                params: [
+                    // We need to pass params as "context" is not ready yet.
+                    store_result: true,
+                    post_process: [
+                        context: [
+                            type: 'result',
+                            source: '',
+                            destination: 'context',
+                        ],
+                    ],
+                    resource: 'com/github/aroq/drupipe/config.groovy'
+                ]
             ],
             [
                 action: "Config.projectConfig"
