@@ -15,6 +15,7 @@ class Source extends BaseAction {
     def add() {
         def source = this.action.params.source
         def result = [:]
+        def path
         switch (source.type) {
             case 'git':
                 if (!source.refType) {
@@ -37,24 +38,21 @@ class Source extends BaseAction {
                         }
                     }
                 }
-//                else if (source.refType == 'branch' && source.mode == 'shell') {
-//                    this.script.sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
-//                }
                 else {
                     this.script.sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
                 }
-                result = source.path
+                path = source.path
                 break
 
             case 'dir':
-                result = source.path
+                path = source.path
                 break
         }
         if (!result.loadedSources) {
             result.loadedSources = [:]
             result.sourcesList = []
         }
-        if (result) {
+        if (path) {
             result.loadedSources[source.name] = new com.github.aroq.drupipe.DrupipeSource(name: source.name, type: source.type, path: source.path)
             result.sourcesList << result.loadedSources[source.name]
 //            utils.debugLog(context, context.loadedSources, "Loaded sources (after Source.add)", [debugMode: 'json'])
