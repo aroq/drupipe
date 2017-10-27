@@ -92,10 +92,10 @@ class DrupipeAction implements Serializable {
             }
             this.params = utils.merge(defaultActionParams, this.params)
 
-//            if (this.params && this.params.debugEnabled) {
-//                utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT AFTER THIS.PARAMS MERGE", [debugMode: 'json'], [], true)
-//                utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} INIT AFTER THIS.PARAMS MERGE", [debugMode: 'json'], [], true)
-//            }
+            if (this.params && this.params.debugEnabled) {
+                utils.debugLog(context, this.params, "ACTION ${name}.${methodName} INIT AFTER THIS.PARAMS MERGE", [debugMode: 'json'], [], true)
+                utils.debugLog(context, defaultActionParams, "defaultActionParams ${name}.${methodName} INIT AFTER THIS.PARAMS MERGE", [debugMode: 'json'], [], true)
+            }
 
             // Save original (unprocessed) context.params.
             // TODO: save only needed actions.
