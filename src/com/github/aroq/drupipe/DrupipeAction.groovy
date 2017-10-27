@@ -265,6 +265,7 @@ class DrupipeAction implements Serializable {
     }
 
     def contextStoreResult(path, storeContainer, result) {
+        def utils = new com.github.aroq.drupipe.Utils()
         if (!path) {
             storeContainer = storeContainer ? utils.merge(storeContainer, result) : result
         }
