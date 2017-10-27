@@ -24,7 +24,7 @@ class DrupipeStage implements Serializable {
                             if (params && params.action && params.action["${a.name}_${a.methodName}"] && params.action["${name}_${a.methodName}"].debugEnabled) {
                                 utils.debugLog(params, this.params, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() BEFORE EXECUTE", [:], [], true)
                             }
-                            utils.dump(params, this.params, 'DrupipeStage a BEFORE EXECUTE', true)
+                            utils.dump(params, a, 'DrupipeStage a BEFORE EXECUTE', true)
                             def action = new DrupipeAction(a)
                             this.params << action.execute(this.params)
                             utils.dump(params, this.params, 'DrupipeStage this.params AFTER', true)
