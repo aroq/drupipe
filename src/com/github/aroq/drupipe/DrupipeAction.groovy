@@ -67,7 +67,9 @@ class DrupipeAction implements Serializable {
             for (actionName in ['ACTION',this.name, this.name + '_' + this.methodName]) {
                 if (pipeline.context && pipeline.context.params && pipeline.context.params.action && actionName in pipeline.context.params.action) {
                     script.echo "Merging params from: ${actionName}"
+                    utils.debugLog(pipeline.context, pipeline.context, "pipeline.context PARAMS ACTION BEFORE MERGE", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
                     defaultActionParams = utils.merge(defaultActionParams, pipeline.context.params.action[actionName])
+                    utils.debugLog(pipeline.context, pipeline.context, "pipeline.context PARAMS ACTION AFTER MERGE", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
                     utils.debugLog(pipeline.context, defaultActionParams, "defaultActionParams init 2 ${name}.${methodName}: ${actionName}", [debugMode: 'json'], [], true)
                 }
             }
@@ -90,7 +92,7 @@ class DrupipeAction implements Serializable {
                     this.script.sh("rm -f ${contextParamsConfigFile}")
                 }
                 this.script.writeYaml(file: contextParamsConfigFile, data: pipeline.context.params)
-                utils.debugLog(pipeline.context, pipeline.context, "pipeline.context PARAMS rAFTER SAVE", [debugMode: 'json'], ['params', 'action', 'Config'], true)
+                utils.debugLog(pipeline.context, pipeline.context, "pipeline.context PARAMS ACTION AFTER SAVE", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
             }
 
             if (this.params && this.params.debugEnabled) {
@@ -225,7 +227,7 @@ class DrupipeAction implements Serializable {
                 if (script.fileExists(contextParamsConfigFile)) {
                     pipeline.context.params = script.readYaml(file: contextParamsConfigFile)
                 }
-                utils.debugLog(pipeline.context, pipeline.context, "pipeline.context PARAMS result results AFTER RESTORE", [debugMode: 'json'], ['params', 'action', 'ACTION', 'results'], true)
+                utils.debugLog(pipeline.context, pipeline.context, "pipeline.context PARAMS ACTION AFTER RESTORE", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
             }
 
 //            this.result.action_result = action_result
