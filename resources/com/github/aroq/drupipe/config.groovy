@@ -45,20 +45,16 @@ params = [
             mothershipConfigFile: 'mothership.config',
             interpolate: 0,
             store_result: false,
-            debugEnabled: true,
         ],
         Source: [
             interpolate: 0,
             store_result: false,
-            debugEnabled: true,
         ],
         YamlFileConfig: [
             store_result: false,
-            debugEnabled: true,
         ],
         GroovyFileConfig: [
             store_result: false,
-            debugEnabled: true,
         ],
         Behat: [
             masterPath: 'docroot/master',
@@ -173,6 +169,7 @@ params = [
             deployFile: 'unipipe.y*ml',
         ],
         GCloud: [
+            debugEnabled: true,
             executable: 'gcloud',
             kubectl_config_file: '.kubeconfig',
             env: [
