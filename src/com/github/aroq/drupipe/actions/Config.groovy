@@ -10,7 +10,7 @@ class Config extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    DrupipeAction action
 
     def configRepo
 
@@ -32,7 +32,7 @@ class Config extends BaseAction {
                         context: [
                             type: 'result',
                             source: '',
-                            destination: '',
+                            destination: 'context',
                         ],
                     ],
                     resource: 'com/github/aroq/drupipe/config.groovy'

@@ -18,6 +18,8 @@ class DrupipeAction implements Serializable {
 
     def script
 
+    def result = [context: [:], action_result: [:]]
+
     String getFullName() {
         "${this.name}.${this.methodName}"
     }
@@ -204,9 +206,9 @@ class DrupipeAction implements Serializable {
                                     script.echo "deepValue: ${deepValue}"
                                     if (deepValue) {
                                         script.echo "DESTINATION: ${result.value.destination}"
-                                        contextStoreResult(result.value.destination.tokenize('.'), actionResult, deepValue)
+                                        contextStoreResult(result.value.destination.tokenize('.'), this.result, deepValue)
                                         if (this.params.dump_result) {
-                                            utils.debugLog(context, actionResult, "actionResult after result save", [debugMode: 'json'], [], true)
+                                            utils.debugLog(context, this.result, "actionResult after result save", [debugMode: 'json'], [], true)
                                         }
                                     }
                                 }
@@ -243,8 +245,8 @@ class DrupipeAction implements Serializable {
                 utils.debugLog(context, context, "CONTEXT PARAMS result results AFTER RESTORE", [debugMode: 'json'], ['params', 'action', 'ACTION', 'results'], true)
             }
 
-            return actionResult
-
+            this.result.action_result = actionResult
+            this.result
         }
         catch (err) {
             notification.status = 'FAILED'
