@@ -24,8 +24,8 @@ class Config extends BaseAction {
 
         def providers = [
             [
-                action: 'GroovyFileConfig.groovyConfigFromLibraryResource', params:
-                [
+                action: 'GroovyFileConfig.groovyConfigFromLibraryResource',
+                params: [
                     // We need to pass params as "context" is not ready yet.
                     store_result: true,
                     post_process: [
@@ -39,7 +39,19 @@ class Config extends BaseAction {
                 ]
             ],
             [
-                action: "Config.envConfig"
+                action: "Config.envConfig",
+                params: [
+                    // We need to pass params as "context" is not ready yet.
+                    store_result: true,
+                    post_process: [
+                        context: [
+                            type: 'result',
+                            source: '',
+                            destination: 'context',
+                        ],
+                    ],
+                    resource: 'com/github/aroq/drupipe/config.groovy'
+                ]
             ],
             [
                 action: "Config.mothershipConfig"
