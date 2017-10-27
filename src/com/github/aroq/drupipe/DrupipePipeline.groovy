@@ -271,13 +271,13 @@ class DrupipePipeline implements Serializable {
         try {
             for (action in actionList) {
                 action.pipeline.context = action.pipeline.context ? utils.merge(action.pipeline.context, context) : context
-//                utils.debugLog(context, context, "executePipelineActionList CONTEXT ${action.name}_${action.methodName} BEFORE", [debugMode: 'json'], ['nodeName'], true)
+                utils.debugLog(context, context, "executePipelineActionList CONTEXT ${action.name}_${action.methodName} BEFORE", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
                 def actionResult = action.execute()
-//                utils.debugLog(context, actionResult, "executePipelineActionList actionResult ${action.name}_${action.methodName}", [debugMode: 'json'], ['context', 'nodeName'], true)
+//                utils.debugLog(context, actionResult, "executePipelineActionList actionResult ${action.name}_${action.methodName}", [debugMode: 'json'], [], true)
                 if (actionResult.context) {
                     context = context ? utils.merge(context, actionResult.context) : actionResult.context
                 }
-//                utils.debugLog(context, context, "executePipelineActionList CONTEXT ${action.name}_${action.methodName} AFTER", [debugMode: 'json'], ['nodeName'], true)
+                utils.debugLog(context, context, "executePipelineActionList CONTEXT ${action.name}_${action.methodName} AFTER", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
             }
             context
         }

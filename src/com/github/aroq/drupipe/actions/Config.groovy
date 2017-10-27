@@ -163,7 +163,7 @@ class Config extends BaseAction {
     }
 
     def mothershipConfig() {
-        def result
+        def result = [:]
         if (this.script.env.MOTHERSHIP_REPO) {
             def sourceObject = [
                 name:   'mothership',
