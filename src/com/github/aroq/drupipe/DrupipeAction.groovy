@@ -99,7 +99,7 @@ class DrupipeAction implements Serializable {
                     this.script.sh("rm -f ${contextParamsConfigFile}")
                 }
                 this.script.writeYaml(file: contextParamsConfigFile, data: context.params)
-                utils.debugLog(context, context, "CONTEXT PARAMS result results AFTER SAVE", [debugMode: 'json'], ['params', 'action', ['ACTION'], ['results']], true)
+                utils.debugLog(context, context, "CONTEXT PARAMS result results AFTER SAVE", [debugMode: 'json'], ['params', 'action', 'ACTION', 'results'], true)
             }
 
             if (this.params && this.params.debugEnabled) {
@@ -231,7 +231,7 @@ class DrupipeAction implements Serializable {
                 if (this.context.pipeline.script.fileExists(contextParamsConfigFile)) {
                     this.context.params = this.context.pipeline.script.readYaml(file: contextParamsConfigFile)
                 }
-                utils.debugLog(context, context, "CONTEXT PARAMS result results AFTER RESTORE", [debugMode: 'json'], ['params', 'action', ['ACTION'], ['results']], true)
+                utils.debugLog(context, context, "CONTEXT PARAMS result results AFTER RESTORE", [debugMode: 'json'], ['params', 'action', 'ACTION', 'results'], true)
             }
 
             return actionResult
