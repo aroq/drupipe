@@ -54,6 +54,7 @@ params = [
             store_result: false,
         ],
         GroovyFileConfig: [
+            debugEnabled: true,
             store_result: true,
             results: [
                 context: [
