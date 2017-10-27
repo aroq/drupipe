@@ -21,20 +21,8 @@ class GroovyFileConfig extends BaseAction {
     }
 
     def groovyConfigFromLibraryResource() {
-        def result = [:]
-        def configFileYamlPath = '.unipipe/temp/groovy.file.config.yaml'
         def config = groovyConfig(script.libraryResource(action.params.resource))
-        if (config) {
-            if (this.script.fileExists(configFileYamlPath)) {
-                this.script.sh("rm -f ${configFileYamlPath}")
-            }
-            this.script.writeYaml(file: configFileYamlPath, data: config)
-            if (this.context.pipeline.script.fileExists(configFileYamlPath)) {
-                result = this.context.pipeline.script.readYaml(file: configFileYamlPath)
-            }
-            utils.debugLog(result, result, "GroovyFileConfig.RESULT", [debugMode: 'json'], [], true)
-        }
-        result
+        utils.serializeAndDeserialize(config)
     }
 
     def readGroovyConfig(filePath) {

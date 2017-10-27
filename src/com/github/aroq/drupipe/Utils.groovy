@@ -571,4 +571,21 @@ def prepareFlags(flags) {
     }.join(' ')
 }
 
+def serializeAndDeserialize(params) {
+    def result = [:]
+    def yamlFilePath = '.unipipe/temp/serializeAndDeserialize.yaml'
+    if (params) {
+        if (fileExists(yamlFilePath)) {
+            sh("rm -f ${yamlFilePath}")
+        }
+        writeYaml(file: yamlFilePath, data: params)
+        if (fileExists(yamlFilePath)) {
+            result = readYaml(file: yamlFilePath)
+        }
+        debugLog(result, result, "serializeAndDeserialize.RESULT", [debugMode: 'json'], [], true)
+    }
+    result
+
+}
+
 return this
