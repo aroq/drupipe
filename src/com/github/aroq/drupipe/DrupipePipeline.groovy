@@ -267,19 +267,15 @@ class DrupipePipeline implements Serializable {
     def executePipelineActionList(actions, context) {
         this.script.echo("executePipelineActionList actions: ${actions}")
         def actionList = processPipelineActionList(actions, context)
-//        def result = [:]
         try {
             for (action in actionList) {
-//                action.context = action.context ? utils.merge(action.context, result) : result
-//                def actionResult = action.execute()
                 action.context = action.context ? utils.merge(action.context, context) : context
                 def actionResult = action.execute()
                 if (actionResult.context) {
                     context = context ? utils.merge(context, actionResult.context) : actionResult.context
                 }
-//                context = utils.merge(result, actionResult)
             }
-//            result
+            context
         }
         catch (err) {
             script.echo err.toString()
