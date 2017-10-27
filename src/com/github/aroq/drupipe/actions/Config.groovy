@@ -157,8 +157,7 @@ class Config extends BaseAction {
         if (this.script.env.KUBERNETES_PORT) {
             result.containerMode = 'kubernetes'
         }
-
-        result
+        utils.serializeAndDeserialize(result)
     }
 
     def mothershipConfig() {
