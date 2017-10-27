@@ -191,14 +191,16 @@ class DrupipeAction implements Serializable {
                                 }
                                 if (result.value.type == 'result') {
                                     def deepValue = utils.deepGet(actionResult, result.value.source.tokenize('.'))
-                                    contextStoreResult(result.value.destination.tokenize('.'), actionResult, deepValue)
+                                    if (deepValue) {
+//                                        contextStoreResult(result.value.destination.tokenize('.'), actionResult, deepValue)
+                                    }
                                 }
                             }
                         }
                     }
 
                     if (context.params && context.params.action && context.params.action["${name}_${methodName}"] && context.params.action["${name}_${methodName}"].debugEnabled) {
-//                        utils.debugLog(context, context, "context results", [debugMode: 'json'], [this.params.store_result_key], true)
+                        utils.debugLog(context, context, "context results", [debugMode: 'json'], [this.params.store_result_key], true)
                     }
                 }
             }
