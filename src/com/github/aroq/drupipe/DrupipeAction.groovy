@@ -174,6 +174,9 @@ class DrupipeAction implements Serializable {
             if (this.params.dump_result) {
                 utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], true)
             }
+            if (this.result.context) {
+                pipeline.context = pipeline.context ? utils.merge(pipeline.context, this.result.context) : this.result.context
+            }
 
             // Refactor it.
 //            if (this.storeResult && this.storeResult != '' && this.result.action_result.stdout) {
