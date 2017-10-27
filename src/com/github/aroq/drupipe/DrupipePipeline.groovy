@@ -204,8 +204,7 @@ class DrupipePipeline implements Serializable {
     @NonCPS
     DrupipeStage processStage(s, context) {
         if (!(s instanceof DrupipeStage)) {
-            //new DrupipeStage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context))
-            s.context = context
+            s.context = s.context ? utils.merge(s.context, context) : context
             s = new DrupipeStage(s)
         }
         if (s instanceof DrupipeStage) {

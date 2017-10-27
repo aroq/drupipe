@@ -10,7 +10,6 @@ class DrupipeStage implements Serializable {
 
     def execute(body = null) {
         def utils = new com.github.aroq.drupipe.Utils()
-//        this.context = c
         utils.dump(context, this.context.params, 'DrupipeStage this.context params BEFORE', true)
         this.context.pipeline.script.stage(name) {
             this.context.pipeline.script.gitlabCommitStatus(name) {
