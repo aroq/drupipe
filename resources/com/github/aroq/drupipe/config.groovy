@@ -30,7 +30,7 @@ params = [
             dump_result: true,
             store_action_params: true,
             store_result_key: 'context.results.${action.name}_${action.methodName}',
-            results: [
+            post_processing: [
                 result: [
                     type: 'result',
                     source: '',
