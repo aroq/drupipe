@@ -42,6 +42,7 @@ params = [
         ],
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
+            debugEnabled: true,
             mothershipConfigFile: 'mothership.config',
             interpolate: 0,
             store_result: true,
