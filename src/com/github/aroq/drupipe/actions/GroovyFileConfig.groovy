@@ -21,21 +21,12 @@ class GroovyFileConfig extends BaseAction {
     }
 
     def groovyConfigFromLibraryResource() {
-        groovyConfig(script.libraryResource(action.params.resource))
-    }
-
-    def readGroovyConfig(filePath) {
-        def text = script.readFile(filePath)
-        groovyConfig(text)
-    }
-
-    @NonCPS
-    def groovyConfig(text) {
         def result = [:]
-        def configFileYamlPath = '.unipipe.groovy.file.config.yaml'
-        def config = new HashMap<>(ConfigSlurper.newInstance(script.env.drupipeEnvironment).parse(text))
+        def configFileYamlPath = '.unipipe/groovy.file.config.yaml'
+        def config = groovyConfig(script.libraryResource(action.params.resource))
         if (config) {
             if (this.script.fileExists(configFileYamlPath)) {
+                this.script.sh("mkdir -p .unipipe")
                 this.script.sh("rm -f ${configFileYamlPath}")
             }
             this.script.writeYaml(file: configFileYamlPath, data: config)
@@ -45,6 +36,16 @@ class GroovyFileConfig extends BaseAction {
             utils.debugLog(result, result, "GroovyFileConfig.RESULT", [debugMode: 'json'], [], true)
         }
         result
+    }
+
+    def readGroovyConfig(filePath) {
+        def text = script.readFile(filePath)
+        groovyConfig(text)
+    }
+
+    @NonCPS
+    def groovyConfig(text) {
+        new HashMap<>(ConfigSlurper.newInstance(script.env.drupipeEnvironment).parse(text))
     }
 
 }
