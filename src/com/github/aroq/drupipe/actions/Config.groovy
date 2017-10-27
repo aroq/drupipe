@@ -189,10 +189,10 @@ class Config extends BaseAction {
                 ]
             ]
             result = context.pipeline.executePipelineActionList(providers, context)
-            def mothershipConfig = this.utils.getMothershipConfigFile(context)
-            def mothershipServers = this.utils.getMothershipServersFile(context)
+            def mothershipConfig = this.utils.getMothershipConfigFile(result)
+            def mothershipServers = this.utils.getMothershipServersFile(result)
 
-            result = utils.merge(result, mothershipConfig[context.jenkinsFolderName])
+            result = utils.merge(result, mothershipConfig[result.jenkinsFolderName])
             result = utils.merge(result, [jenkinsServers: mothershipServers])
 
             this.configRepo = result.configRepo
