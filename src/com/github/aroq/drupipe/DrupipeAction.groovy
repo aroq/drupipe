@@ -23,6 +23,7 @@ class DrupipeAction implements Serializable {
     }
 
     def execute(c = null) {
+        def utils = new com.github.aroq.drupipe.Utils()
         if (context.params) {
             utils.debugLog(context, context, "CONTEXT PARAMS result results 1", [debugMode: 'json'], ['params', 'action', 'ACTION', 'results'], true)
         }
@@ -32,7 +33,6 @@ class DrupipeAction implements Serializable {
 
         this.script = this.context.pipeline.script
 
-        def utils = new com.github.aroq.drupipe.Utils()
         def actionResult = [:]
 
         try {
