@@ -273,8 +273,9 @@ class DrupipePipeline implements Serializable {
 //                action.context = action.context ? utils.merge(action.context, result) : result
 //                def actionResult = action.execute()
                 action.context = action.context ? utils.merge(action.context, context) : context
-                action.execute()
-//                result = utils.merge(result, actionResult)
+                def actionResult = action.execute()
+                context = context ? utils.merge(context, actionResult) : actionResult
+//                context = utils.merge(result, actionResult)
             }
 //            result
         }
