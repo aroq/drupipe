@@ -54,7 +54,7 @@ params = [
             store_result: false,
         ],
         GroovyFileConfig: [
-            store_result: false,
+            store_result: true,
         ],
         Behat: [
             masterPath: 'docroot/master',
