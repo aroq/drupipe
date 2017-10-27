@@ -262,7 +262,7 @@ class DrupipePipeline implements Serializable {
 
         script.echo actionName
         script.echo actionMethodName
-        new DrupipeAction(pipeline: this, name: actionName, methodName: actionMethodName, params: actionParams, context: context)
+        new DrupipeAction(pipeline: this, name: actionName, methodName: actionMethodName, params: actionParams)
     }
 
     def executePipelineActionList(actions, context) {
