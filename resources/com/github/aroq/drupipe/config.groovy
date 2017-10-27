@@ -45,8 +45,6 @@ params = [
         Config: [
             debugEnabled: true,
             mothershipConfigFile: 'mothership.config',
-            interpolate: 0,
-            store_result: true,
             results: [
                 context: [
                     type: 'result',
@@ -55,12 +53,21 @@ params = [
                 ],
             ],
         ],
+        Config_perform: [
+            interpolate: 0,
+        ],
         Config_envConfig: [
             dump_result: false,
         ],
         Source: [
-            interpolate: 0,
-            store_result: false,
+            results: [
+                context: [
+                    type: 'result',
+                    source: '',
+                    destination: 'context',
+                ],
+            ],
+//            interpolate: 0,
         ],
         YamlFileConfig: [
             store_result: false,

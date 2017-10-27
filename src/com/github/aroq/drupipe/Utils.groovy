@@ -358,7 +358,7 @@ def getMothershipConfigFile(params) {
             }
         }
     }
-    throw new Exception("getMothershipConfigFile: mothersip config file not found.")
+    throw new Exception("getMothershipConfigFile: mothership config file not found.")
 }
 
 def getMothershipServersFile(params) {
