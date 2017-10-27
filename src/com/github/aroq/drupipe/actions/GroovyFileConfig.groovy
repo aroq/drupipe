@@ -10,14 +10,14 @@ class GroovyFileConfig extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    DrupipeAction action
 
     def load() {
         def result = [:]
         if (action.params.configFileName && script.fileExists(action.params.configFileName)) {
-            result = utils.merge(context, readGroovyConfig(action.params.configFileName))
+            result = readGroovyConfig(action.params.configFileName)
         }
-        result
+        utils.serializeAndDeserialize(result)
     }
 
     def groovyConfigFromLibraryResource() {
