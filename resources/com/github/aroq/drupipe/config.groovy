@@ -44,7 +44,14 @@ params = [
         Config: [
             mothershipConfigFile: 'mothership.config',
             interpolate: 0,
-            store_result: false,
+            store_result: true,
+            results: [
+                context: [
+                    type: 'result',
+                    source: '',
+                    destination: '',
+                ],
+            ],
         ],
         Source: [
             interpolate: 0,
