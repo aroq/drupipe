@@ -45,7 +45,7 @@ params = [
         Config: [
             debugEnabled: true,
             mothershipConfigFile: 'mothership.config',
-            results: [
+            post_process: [
                 context: [
                     type: 'result',
                     source: '',
@@ -60,7 +60,7 @@ params = [
 //            dump_result: false,
         ],
         Source: [
-            results: [
+            post_process: [
                 context: [
                     type: 'result',
                     source: '',
@@ -74,7 +74,7 @@ params = [
         ],
         GroovyFileConfig: [
             debugEnabled: true,
-            results: [
+            post_process: [
                 context: [
                     type: 'result',
                     source: '',
