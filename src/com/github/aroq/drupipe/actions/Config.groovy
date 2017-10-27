@@ -28,7 +28,7 @@ class Config extends BaseAction {
                 [
                     // We need to pass params as "context" is not ready yet.
                     store_result: true,
-                    results: [
+                    post_process: [
                         context: [
                             type: 'result',
                             source: '',
