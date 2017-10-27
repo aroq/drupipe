@@ -14,7 +14,7 @@ class Source extends BaseAction {
 
     def add() {
         def source = this.action.params.source
-        def result
+        def result = [:]
         switch (source.type) {
             case 'git':
                 if (!source.refType) {
