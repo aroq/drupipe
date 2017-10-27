@@ -302,7 +302,7 @@ class Config extends BaseAction {
                 mode: 'shell',
             ]
 
-            script.sshagent([context.credentialsId]) {
+            script.sshagent([this.pipeline.context.credentialsId]) {
                 this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
             }
 
