@@ -379,7 +379,7 @@ class Config extends BaseAction {
 
             def projectConfig
             script.sshagent([context.credentialsId]) {
-                projectConfig = context.pipeline.executePipelineActionList(providers, context)
+                projectConfig = action.pipeline.executePipelineActionList(providers, context)
                 utils.debugLog(context, projectConfig, 'Project config')
             }
 
