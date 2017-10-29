@@ -4,8 +4,6 @@ import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Config extends BaseAction {
 
-    def context
-
     def script
 
     def utils
@@ -15,8 +13,8 @@ class Config extends BaseAction {
     def configRepo
 
     def perform() {
-        if (context['Config_perform']) {
-            return context
+        if (action.pipeline.context['Config_perform']) {
+            return
         }
 
         this.script.sh("mkdir -p .unipipe")
@@ -86,7 +84,7 @@ class Config extends BaseAction {
             ],
         ]
 
-        if (context.configProviders) {
+        if (action.pipeline.context.configProviders) {
             providers << context.configProviders
         }
 
