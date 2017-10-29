@@ -257,7 +257,7 @@ class Config extends BaseAction {
                             script.echo "Adding source: ${scenarioSourceName}"
                             scenario.source = tempContext.scenarioSources[scenarioSourceName]
 
-                            script.sshagent([context.credentialsId]) {
+                            script.sshagent([action.pipeline.context.credentialsId]) {
                                 def sourceObject = [
                                     name: scenarioSourceName,
                                     type: 'git',
@@ -267,17 +267,17 @@ class Config extends BaseAction {
                                     mode: 'shell',
                                 ]
 
-                                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
+                                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline.context)
                             }
                         }
                         else {
-                            utils.debugLog(context, "Source: ${scenarioSourceName} already added")
-                            scenario.source = context.loadedSources[scenarioSourceName]
+                            utils.debugLog(action.pipeline.context, "Source: ${scenarioSourceName} already added")
+                            scenario.source = action.pipeline.context.loadedSources[scenarioSourceName]
                         }
 
                         def fileName = null
 
-                        def sourceDir = utils.sourceDir(context, scenarioSourceName)
+                        def sourceDir = utils.sourceDir(action.pipeline.context, scenarioSourceName)
 
                         def filesToCheck = [
                             "/.unipipe/scenarios/${scenario.name}/config.yaml",
@@ -298,11 +298,11 @@ class Config extends BaseAction {
 
                         // Merge scenario if exists.
                         if (fileName != null) {
-                            utils.debugLog(context, "Scenario file name: ${fileName} exists")
+                            utils.debugLog(action.pipeline.context, "Scenario file name: ${fileName} exists")
                             def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSourceName)
-                            utils.debugLog(context, scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
+                            utils.debugLog(action.pipeline.context, scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
-                            utils.debugLog(context, scenariosConfig, "Scenarios config")
+                            utils.debugLog(action.pipeline.context, scenariosConfig, "Scenarios config")
                         }
                     }
                     else {
@@ -319,7 +319,7 @@ class Config extends BaseAction {
     }
 
     def projectConfig() {
-        utils.debugLog(action.pipeline.context, "projectConfig repo: ${context.configRepo}", [:], [], true)
+        utils.debugLog(action.pipeline.context, "projectConfig repo: ${action.pipeline.context.configRepo}", [:], [], true)
         if (action.pipeline.context.configRepo) {
             def sourceObject = [
                 name: 'project',
