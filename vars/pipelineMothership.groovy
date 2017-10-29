@@ -1,5 +1,5 @@
 def call() {
-    drupipe { context, pipeline ->
+    drupipe { pipeline ->
         drupipeBlock(nodeName: 'master', pipeline) {
             drupipeStage('seed', pipeline) {
                 drupipeAction(
