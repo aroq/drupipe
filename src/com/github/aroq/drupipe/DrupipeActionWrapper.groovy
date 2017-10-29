@@ -148,26 +148,26 @@ class DrupipeActionWrapper implements Serializable {
                     if (this.params.store_result) {
                         if (this.params.post_process) {
                             for (result in this.params.post_process) {
+                                def deepValue
                                 if (result.value.type == 'param') {
-                                    def deepValue = utils.deepGet(this, result.value.source.tokenize('.'))
-                                    contextStoreResult(result.value.destination.tokenize('.'), tempContext, deepValue)
+                                    deepValue = utils.deepGet(this, result.value.source.tokenize('.'))
                                 }
-                                if (result.value.type == 'result') {
-                                    def deepValue = utils.deepGet(this, result.value.source.tokenize('.'))
-                                    if (deepValue) {
-                                        // TODO: check it again.
-                                        if (result.value.destination) {
-                                            contextStoreResult(result.value.destination.tokenize('.'), tempContext, deepValue)
-                                        }
-                                        else {
-                                            tempContext = utils.merge(tempContext, deepValue)
-                                        }
-                                        if (this.params.dump_result) {
-//                                            script.echo "SOURCE: ${result.value.source}"
-//                                            script.echo "DESTINATION: ${result.value.destination}"
-//                                            script.echo "deepValue: ${deepValue}"
-                                            utils.debugLog(pipeline.context, tempContext, "Temp context", [debugMode: 'json'], [], this.params.debugEnabled)
-                                        }
+                                else if (result.value.type == 'result') {
+                                    deepValue = utils.deepGet(this, result.value.source.tokenize('.'))
+                                }
+                                if (deepValue) {
+                                    // TODO: check it again.
+                                    if (result.value.destination) {
+                                        contextStoreResult(result.value.destination.tokenize('.'), tempContext, deepValue)
+                                    }
+                                    else {
+                                        tempContext = utils.merge(tempContext, deepValue)
+                                    }
+                                    if (this.params.dump_result) {
+                                        script.echo "SOURCE: ${result.value.source}"
+                                        script.echo "DESTINATION: ${result.value.destination}"
+                                        script.echo "deepValue: ${deepValue}"
+                                        utils.debugLog(pipeline.context, tempContext, "Temp context", [debugMode: 'json'], [], this.params.debugEnabled)
                                     }
                                 }
                             }

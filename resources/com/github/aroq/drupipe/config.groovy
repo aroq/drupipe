@@ -43,6 +43,7 @@ params = [
         ],
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
+            debugEnabled: true,
             post_process: [
                 context: [
                     type: 'result',
