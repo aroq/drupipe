@@ -7,6 +7,10 @@ class Kubectl extends BaseAction {
 
     def script
 
+    def utils
+
+    DrupipeActionWrapper action
+
     def scale_replicaset() {
         executeKubectlCommand()
     }
