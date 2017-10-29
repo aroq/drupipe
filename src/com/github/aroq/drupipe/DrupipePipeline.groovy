@@ -118,7 +118,7 @@ class DrupipePipeline implements Serializable {
 //                        context << result
                         // TODO: check it.
 //                        pipeline << this
-                    }
+//                    }
                 }
 
                 script.node('master') {
