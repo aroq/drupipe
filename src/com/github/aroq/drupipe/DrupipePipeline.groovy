@@ -21,7 +21,6 @@ class DrupipePipeline implements Serializable {
     def scm
 
     def execute(body = null) {
-//        context.pipeline = this
         context.jenkinsParams = params
         utils = new com.github.aroq.drupipe.Utils()
 
@@ -31,7 +30,6 @@ class DrupipePipeline implements Serializable {
         try {
             script.timestamps {
                 script.node('master') {
-//                    context.utils = utils
                     params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 
                     utils.dump(params, params, 'PIPELINE-PARAMS')
@@ -106,10 +104,7 @@ class DrupipePipeline implements Serializable {
                 if (blocks) {
                     for (def i = 0; i < blocks.size(); i++) {
                         blocks[i].pipeline = this
-                        def block = new DrupipeBlock(blocks[i]).execute()
-//                        script.echo 'BLOCK EXECUTE START'
-//                        block.execute(context)
-//                        script.echo 'BLOCK EXECUTE END'
+                        (new DrupipeBlock(blocks[i])).execute()
                     }
                 }
                 else {

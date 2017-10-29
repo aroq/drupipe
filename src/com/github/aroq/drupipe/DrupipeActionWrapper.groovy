@@ -176,24 +176,12 @@ class DrupipeActionWrapper implements Serializable {
                 }
             }
 
-
-//            this.result = this.result ? this.result : [:]
             if (this.params.dump_result) {
                 utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], this.params.debugEnabled)
             }
             if (tempContext) {
                 pipeline.context = pipeline.context ? utils.merge(pipeline.context, tempContext) : tempContext
             }
-
-            // Refactor it.
-//            if (this.storeResult && this.storeResult != '' && this.result.stdout) {
-//                def path = storeResult.tokenize('.')
-//                def stored = [:]
-//                contextStoreResult(path, stored, this.result.stdout)
-//                pipeline.context.pipeline.script.echo("STORED-RESULT: ${stored}")
-//
-//                action_result << stored
-//            }
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
             this.result

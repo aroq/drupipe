@@ -239,7 +239,7 @@ params = [
             ],
             results: [
                 namespace: [
-                    type: 'param',
+                    type: 'context',
                     source: 'namespace', // From action params.
                     destination: 'k8s_namespace',  // To "context".
                 ],
