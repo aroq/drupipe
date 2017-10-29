@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionConroller
+import com.github.aroq.drupipe.DrupipeActionWrapper
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurperClassic
 
@@ -12,7 +12,7 @@ class Docman extends BaseAction {
 
     def utils
 
-    def DrupipeActionConroller action
+    def DrupipeActionWrapper action
 
     def init() {
         jsonConfig()

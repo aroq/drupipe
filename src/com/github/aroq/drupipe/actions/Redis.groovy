@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionConroller
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Redis extends BaseAction {
 
@@ -10,7 +10,7 @@ class Redis extends BaseAction {
 
     def utils
 
-    def DrupipeActionConroller action
+    def DrupipeActionWrapper action
 
     def runCommand() {
         def dsns = (this.context.redis_dsn.length() != 0) ? "${this.context.redis_dsn}" : ''

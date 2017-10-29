@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionConroller
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Config extends BaseAction {
 
@@ -10,7 +10,7 @@ class Config extends BaseAction {
 
     def utils
 
-    DrupipeActionConroller action
+    DrupipeActionWrapper action
 
     def configRepo
 

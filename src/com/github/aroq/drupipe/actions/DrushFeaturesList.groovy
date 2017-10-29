@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionConroller
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class DrushFeaturesList extends BaseAction {
 
@@ -12,7 +12,7 @@ class DrushFeaturesList extends BaseAction {
 
     String state = 'Overridden'
 
-    def DrupipeActionConroller action
+    def DrupipeActionWrapper action
 
     def runCommand() {
         def features = []

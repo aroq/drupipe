@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionConroller
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Jenkins extends BaseAction {
 
@@ -10,7 +10,7 @@ class Jenkins extends BaseAction {
 
     def utils
 
-    def DrupipeActionConroller action
+    def DrupipeActionWrapper action
 
     def getJenkinsAddress() {
         String terraformEnv = this.context.jenkinsParams.terraformEnv

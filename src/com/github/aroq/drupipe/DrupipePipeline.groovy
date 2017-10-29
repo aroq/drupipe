@@ -234,7 +234,7 @@ class DrupipePipeline implements Serializable {
     }
 
     @NonCPS
-    DrupipeActionConroller processPipelineAction(action) {
+    DrupipeActionWrapper processPipelineAction(action) {
         def actionName
         def actionMethodName
         def actionParams
@@ -262,7 +262,7 @@ class DrupipePipeline implements Serializable {
 
         script.echo actionName
         script.echo actionMethodName
-        new DrupipeActionConroller(pipeline: this, name: actionName, methodName: actionMethodName, params: actionParams)
+        new DrupipeActionWrapper(pipeline: this, name: actionName, methodName: actionMethodName, params: actionParams)
     }
 
     def executePipelineActionList(actions) {
@@ -271,7 +271,7 @@ class DrupipePipeline implements Serializable {
         def actionList = processPipelineActionList(actions)
         try {
             for (action in actionList) {
-                action.pipeline.context = action.pipeline.context ? utils.merge(action.pipeline.context, context) : context
+//                action.pipeline.context = action.pipeline.context ? utils.merge(action.pipeline.context, context) : context
 //                utils.debugLog(context, context, "executePipelineActionList CONTEXT ${action.name}_${action.methodName} BEFORE", [debugMode: 'json'], ['params', 'action', 'ACTION'], true)
                 def actionResult = action.execute()
                 result = utils.merge(result, actionResult.action_result)

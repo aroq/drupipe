@@ -4,7 +4,7 @@ class DrupipeStage implements Serializable {
 
     String name
 
-    ArrayList<DrupipeActionConroller> actions = []
+    ArrayList<DrupipeActionWrapper> actions = []
 
     HashMap context = [:]
 
@@ -25,7 +25,7 @@ class DrupipeStage implements Serializable {
                             }
                             utils.dump(context, a, 'DrupipeStage a BEFORE EXECUTE', true)
                             a.context = a.context ? utils.merge(s.context, context) : context
-                            def action = new DrupipeActionConroller(a)
+                            def action = new DrupipeActionWrapper(a)
                             def actionResult = action.execute().result
                             context = context ? utils.merge(context, actionResult) : actionResult
                             if (context.params) {

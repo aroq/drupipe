@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionConroller
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Gitlab extends BaseAction {
 
@@ -10,7 +10,7 @@ class Gitlab extends BaseAction {
 
     def utils
 
-    def DrupipeActionConroller action
+    def DrupipeActionWrapper action
 
     def acceptMR() {
         script.addGitLabMRComment comment: action.params.message

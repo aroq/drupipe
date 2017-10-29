@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionConroller
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class GitArtifact extends BaseAction {
 
@@ -10,7 +10,7 @@ class GitArtifact extends BaseAction {
 
     def utils
 
-    def DrupipeActionConroller action
+    def DrupipeActionWrapper action
 
     def retrieve() {
         script.drupipeAction([action: "Git.clone", params: context.builder.artifactParams << action.params], context)

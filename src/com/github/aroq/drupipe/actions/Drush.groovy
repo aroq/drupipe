@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionConroller
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Drush extends BaseAction {
 
@@ -10,7 +10,7 @@ class Drush extends BaseAction {
 
     def utils
 
-    def DrupipeActionConroller action
+    def DrupipeActionWrapper action
 
     def runCommand() {
         def drush_dsn = (this.context.drush_dsn && this.context.drush_dsn.length() != 0) ? "${this.context.drush_dsn}" : null

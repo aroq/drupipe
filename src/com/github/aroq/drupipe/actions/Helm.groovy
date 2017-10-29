@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionConroller
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Helm extends BaseAction {
 
@@ -10,7 +10,7 @@ class Helm extends BaseAction {
 
     def utils
 
-    DrupipeActionConroller action
+    DrupipeActionWrapper action
 
     def init() {
         executeHelmCommand()

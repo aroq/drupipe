@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionConroller
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Kubectl extends BaseAction {
 
@@ -10,7 +10,7 @@ class Kubectl extends BaseAction {
 
     def utils
 
-    DrupipeActionConroller action
+    DrupipeActionWrapper action
 
     def scale_replicaset() {
         executeKubectlCommand()
