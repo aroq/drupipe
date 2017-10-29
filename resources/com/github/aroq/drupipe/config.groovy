@@ -47,7 +47,7 @@ params = [
                 context: [
                     type: 'result',
                     source: '',
-                    destination: 'context',
+                    destination: '',
                 ],
             ],
         ],
@@ -63,7 +63,7 @@ params = [
                 result: [
                     type: 'result',
                     source: 'configRepo',
-                    destination: 'context.configRepo',
+                    destination: 'configRepo',
                 ],
             ],
         ],
@@ -76,7 +76,7 @@ params = [
                 context: [
                     type: 'result',
                     source: '',
-                    destination: 'context',
+                    destination: '',
                 ],
             ],
         ],
@@ -87,7 +87,7 @@ params = [
                 context: [
                     type: 'result',
                     source: '',
-                    destination: 'context',
+                    destination: '',
                 ],
             ],
         ],

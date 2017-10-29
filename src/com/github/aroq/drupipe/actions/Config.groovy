@@ -35,7 +35,7 @@ class Config extends BaseAction {
                         context: [
                             type: 'result',
                             source: '',
-                            destination: 'context',
+                            destination: '',
                         ],
                     ],
                     resource: 'com/github/aroq/drupipe/config.groovy'
