@@ -30,6 +30,7 @@ class Config extends BaseAction {
                     store_result: true,
                     interpolate: false,
                     debugEnabled: true,
+                    dump_result: true,
                     post_process: [
                         context: [
                             type: 'result',
