@@ -6,8 +6,6 @@ class DrupipeStage implements Serializable {
 
     ArrayList<DrupipeActionWrapper> actions = []
 
-//    HashMap pipeline.context = [:]
-
     DrupipePipeline pipeline
 
     def execute(body = null) {
@@ -28,16 +26,16 @@ class DrupipeStage implements Serializable {
                             }
                             utils.dump(pipeline.context, a, 'DrupipeStage a BEFORE EXECUTE', true)
 //                            a.pipeline.context = a.pipeline.context ? utils.merge(s.pipeline.context, pipeline.context) : pipeline.context
+                            a.pipeline = this.pipeline
                             def action = new DrupipeActionWrapper(a)
-                            a.pipeline = pipeline
-                            def actionResult = action.execute().result
+//                            def actionResult = action.execute().result
 //                            pipeline.context = pipeline.context ? utils.merge(pipeline.context, actionResult) : actionResult
-                            if (pipeline.context.params) {
-                                utils.dump(pipeline.context, pipeline.context.params, 'DrupipeStage this.pipeline.context AFTER', true)
-                            }
-                            if (pipeline.context && pipeline.context.action && pipeline.context.action["${a.name}_${a.methodName}"] && pipeline.context.action["${name}_${a.methodName}"].debugEnabled) {
-                                utils.debugLog(pipeline.context, this.pipeline.context, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() AFTER EXECUTE", [:], [], true)
-                            }
+//                            if (pipeline.context.params) {
+//                                utils.dump(pipeline.context, pipeline.context.params, 'DrupipeStage this.pipeline.context AFTER', true)
+//                            }
+//                            if (pipeline.context && pipeline.context.action && pipeline.context.action["${a.name}_${a.methodName}"] && pipeline.context.action["${name}_${a.methodName}"].debugEnabled) {
+//                                utils.debugLog(pipeline.context, this.pipeline.context, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() AFTER EXECUTE", [:], [], true)
+//                            }
                         }
 //                        this.pipeline.context
                     }
