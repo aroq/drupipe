@@ -30,8 +30,8 @@ class Config extends BaseAction {
                     dump_result: true,
                     post_process: [
                         context: [
-                            type: 'context',
-                            source: '',
+                            type: 'result',
+                            source: 'result',
                             destination: '',
                         ],
                     ],

@@ -33,7 +33,7 @@ params = [
             post_process: [
                 result: [
                     type: 'result',
-                    source: '',
+                    source: 'result',
                     destination: '${action.params.store_result_key}',
                 ],
             ],
@@ -45,8 +45,8 @@ params = [
         Config: [
             post_process: [
                 context: [
-                    type: 'context',
-                    source: '',
+                    type: 'result',
+                    source: 'result',
                     destination: '',
                 ],
             ],
@@ -60,11 +60,11 @@ params = [
         Config_mothershipConfig: [
             mothershipConfigFile: 'mothership.config',
             post_process: [
-                result: [
-                    type: 'result',
-                    source: 'configRepo',
-                    destination: 'configRepo',
-                ],
+//                result: [
+//                    type: 'result',
+//                    source: 'configRepo',
+//                    destination: 'configRepo',
+//                ],
             ],
         ],
         Config_projectConfig: [
@@ -73,8 +73,8 @@ params = [
         Source: [
             post_process: [
                 context: [
-                    type: 'context',
-                    source: '',
+                    type: 'result',
+                    source: 'result',
                     destination: '',
                 ],
             ],
@@ -82,13 +82,13 @@ params = [
         YamlFileConfig: [
         ],
         GroovyFileConfig: [
-            post_process: [
-                context: [
-                    type: 'result',
-                    source: '',
-                    destination: '',
-                ],
-            ],
+//            post_process: [
+//                context: [
+//                    type: 'result',
+//                    source: '',
+//                    destination: '',
+//                ],
+//            ],
         ],
         Behat: [
             masterPath: 'docroot/master',
@@ -240,7 +240,7 @@ params = [
             post_process: [
                 namespace: [
                     type: 'param',
-                    source: 'namespace', // From action params.
+                    source: 'params.namespace', // From action params.
                     destination: 'k8s_namespace',  // To "context".
                 ],
             ],
