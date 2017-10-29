@@ -187,29 +187,28 @@ class DrupipePipeline implements Serializable {
         context
     }
 
-    def executeStages(stagesToExecute, context) {
-        def stages = processStages(stagesToExecute, context)
-        stages += processStages(context.stages, context)
+    def executeStages(stagesToExecute) {
+        def stages = processStages(stagesToExecute)
+        stages += processStages(this.block.stages)
 
         for (int i = 0; i < stages.size(); i++) {
-            context << stages[i].execute()
+            stages[i].execute()
         }
-        context
     }
 
     @NonCPS
-    List<DrupipeStage> processStages(stages, context) {
+    List<DrupipeStage> processStages(stages) {
         List<DrupipeStage> result = []
         for (item in stages) {
-            result << processStage(item, context)
+            result << processStage(item)
         }
         result
     }
 
     @NonCPS
-    DrupipeStage processStage(s, context) {
+    DrupipeStage processStage(s) {
         if (!(s instanceof DrupipeStage)) {
-            s.context = s.context ? utils.merge(s.context, context) : context
+            s.pipeline = this
             s = new DrupipeStage(s)
         }
         if (s instanceof DrupipeStage) {

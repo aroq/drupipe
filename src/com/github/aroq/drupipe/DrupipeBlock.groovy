@@ -95,7 +95,7 @@ class DrupipeBlock implements Serializable {
 
     def _execute(body = null) {
         if (stages) {
-            pipeline.context << pipeline.context.pipeline.executeStages(stages, pipeline.context)
+            pipeline.executeStages(stages, pipeline.context)
         }
         else {
             if (body) {
