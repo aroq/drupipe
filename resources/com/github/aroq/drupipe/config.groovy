@@ -203,7 +203,6 @@ params = [
             deployFile: 'unipipe.y*ml',
         ],
         GCloud: [
-            debugEnabled: true,
             executable: 'gcloud',
             kubectl_config_file: '.kubeconfig',
             env: [
@@ -229,7 +228,6 @@ params = [
             shell_bash_login: false,
         ],
         Helm: [
-            debugEnabled: true,
             executable: 'helm',
             chart_name: '', // HELM_CHART_NAME in Jenkins params.
             charts_dir: 'charts',
@@ -313,6 +311,7 @@ params = [
             ],
         ],
         Kubectl: [
+            debugEnabled: true,
             executable: 'kubectl',
             kubectl_config_file: '.kubeconfig',
             shell_bash_login: false,
