@@ -138,6 +138,10 @@ class DrupipeActionWrapper implements Serializable {
                         }
                     }
 
+                    if (this.params.dump_result) {
+                        utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], true)
+                    }
+
                     // Results processing.
                     if (this.params.store_action_params) {
                         contextStoreResult(this.params.store_action_params_key.tokenize('.'), pipeline.context, this.params)
@@ -157,7 +161,7 @@ class DrupipeActionWrapper implements Serializable {
                                         contextStoreResult(result.value.destination.tokenize('.'), tempContext, deepValue)
                                         if (this.params.dump_result) {
                                             script.echo "deepValue: ${deepValue}"
-//                                            utils.debugLog(pipeline.context, this.result, "action_result after result save", [debugMode: 'json'], [], true)
+                                            utils.debugLog(pipeline.context, tempContext, "Temp context", [debugMode: 'json'], [], true)
                                         }
                                     }
                                 }
