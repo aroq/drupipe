@@ -27,7 +27,6 @@ class Config extends BaseAction {
                     // We need to pass params as "context" is not ready yet.
                     store_result: true,
                     interpolate: false,
-                    debugEnabled: true,
                     dump_result: true,
                     post_process: [
                         context: [
@@ -41,37 +40,9 @@ class Config extends BaseAction {
             ],
             [
                 action: "Config.envConfig",
-//                params: [
-//                    // We need to pass params as "context" is not ready yet.
-//                    store_result: true,
-//                    interpolate: false,
-//                    debugEnabled: true,
-//                    dump_result: true,
-//                    post_process: [
-//                        context: [
-//                            type: 'context',
-//                            source: '',
-//                            destination: '',
-//                        ],
-//                    ],
-//                ]
             ],
             [
                 action: "Config.mothershipConfig",
-//                params: [
-//                    // We need to pass params as "context" is not ready yet.
-//                    store_result: true,
-//                    interpolate: false,
-//                    debugEnabled: true,
-//                    dump_result: true,
-//                    post_process: [
-//                        context: [
-//                            type: 'context',
-//                            source: '',
-//                            destination: '',
-//                        ],
-//                    ],
-//                ]
             ],
             [
                 action: "Config.projectConfig"
