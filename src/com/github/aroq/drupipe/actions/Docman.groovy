@@ -37,7 +37,7 @@ class Docman extends BaseAction {
             """
         cd ${action.pipeline.context.docrootDir}
         docman info full config.json
-        """, action,params
+        """, action.params
         )
     }
 
