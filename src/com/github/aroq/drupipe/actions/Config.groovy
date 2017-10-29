@@ -251,9 +251,9 @@ class Config extends BaseAction {
                         scenarioSourceName = currentScenarioSourceName
                         scenario.name = values[0]
                     }
-                    utils.debugLog(context, tempContext.scenarioSources, 'Scenario sources')
+                    utils.debugLog(action.pipeline.context, tempContext.scenarioSources, 'Scenario sources')
                     if ((tempContext.scenarioSources && tempContext.scenarioSources.containsKey(scenarioSourceName)) || context.loadedSources.containsKey(scenarioSourceName)) {
-                        if (!context.loadedSources[scenarioSourceName]) {
+                        if (!action.pipeline.context.loadedSources[scenarioSourceName]) {
                             script.echo "Adding source: ${scenarioSourceName}"
                             scenario.source = tempContext.scenarioSources[scenarioSourceName]
 
@@ -267,7 +267,7 @@ class Config extends BaseAction {
                                     mode: 'shell',
                                 ]
 
-                                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline.context)
+                                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
                             }
                         }
                         else {
