@@ -52,10 +52,10 @@ params = [
             ],
         ],
         Config_perform: [
-            dump_result: false,
+//            dump_result: false,
         ],
         Config_envConfig: [
-            dump_result: false,
+//            dump_result: false,
         ],
         Config_mothershipConfig: [
             mothershipConfigFile: 'mothership.config',
@@ -68,12 +68,9 @@ params = [
             ],
         ],
         Config_projectConfig: [
-            dump_result: false,
-            debugEnabled: true,
+//            dump_result: false,
         ],
         Source: [
-            debugEnabled: true,
-            dump_result: true,
             post_process: [
                 context: [
                     type: 'context',
