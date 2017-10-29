@@ -18,6 +18,7 @@ class DrupipeActionWrapper implements Serializable {
 
     def result = [:]
 
+    // This param should only be used for result storage and will be merged into pipeline.context automatically.
     def context = [:]
 
     def utils
@@ -147,20 +148,13 @@ class DrupipeActionWrapper implements Serializable {
                         if (this.params.post_process) {
                             for (result in this.params.post_process) {
                                 def deepValue
-                                if (result.value.type == 'param') {
-                                    deepValue = utils.deepGet(this, result.value.source.tokenize('.'))
-                                }
-                                else if (result.value.type == 'result') {
+                                if (result.value.type == 'result') {
                                     deepValue = utils.deepGet(this, result.value.source.tokenize('.'))
                                 }
                                 if (deepValue) {
-                                    // TODO: check it again.
                                     if (result.value.destination) {
                                         contextStoreResult(result.value.destination.tokenize('.'), this, deepValue)
                                     }
-//                                    else {
-//                                        context = utils.merge(context, deepValue)
-//                                    }
                                     if (this.params.dump_result && this.params.debugEnabled) {
                                         script.echo "SOURCE: ${result.value.source}"
                                         script.echo "DESTINATION: ${result.value.destination}"

@@ -43,7 +43,6 @@ params = [
         ],
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
-            debugEnabled: true,
             post_process: [
                 context: [
                     type: 'result',
@@ -53,10 +52,8 @@ params = [
             ],
         ],
         Config_perform: [
-//            dump_result: false,
         ],
         Config_envConfig: [
-//            dump_result: false,
         ],
         Config_mothershipConfig: [
             mothershipConfigFile: 'mothership.config',
@@ -69,7 +66,6 @@ params = [
             ],
         ],
         Config_projectConfig: [
-//            dump_result: false,
         ],
         Source: [
             post_process: [
@@ -233,7 +229,7 @@ params = [
             ],
             post_process: [
                 namespace: [
-                    type: 'param',
+                    type: 'result',
                     source: 'params.namespace', // From action params.
                     destination: 'context.k8s_namespace',  // To "context".
                 ],
@@ -247,8 +243,6 @@ params = [
             ],
         ],
         Helm_apply: [
-            debugEnabled: true,
-            dump_result: true,
             command: 'upgrade',
             value_suffix: 'values.yaml',
             timeout: '120',
@@ -307,7 +301,6 @@ params = [
             ],
         ],
         Kubectl: [
-            debugEnabled: true,
             executable: 'kubectl',
             kubectl_config_file: '.kubeconfig',
             shell_bash_login: false,
@@ -315,7 +308,6 @@ params = [
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
             ],
-            returnOutput: false,
         ],
         Kubectl_scale_replicaset: [
             command: 'scale replicaset',
