@@ -233,7 +233,7 @@ class Config extends BaseAction {
     def mergeScenariosConfigs(config, tempContext = [:], currentScenarioSourceName = null) {
         def scenariosConfig = [:]
         if (!tempContext) {
-            tempContext << context
+            tempContext << action.pipeline.context
         }
         tempContext = utils.merge(tempContext, config)
         if (config.scenarios) {
@@ -252,7 +252,7 @@ class Config extends BaseAction {
                         scenario.name = values[0]
                     }
                     utils.debugLog(action.pipeline.context, tempContext.scenarioSources, 'Scenario sources')
-                    if ((tempContext.scenarioSources && tempContext.scenarioSources.containsKey(scenarioSourceName)) || context.loadedSources.containsKey(scenarioSourceName)) {
+                    if ((tempContext.scenarioSources && tempContext.scenarioSources.containsKey(scenarioSourceName)) || action.pipeline.context.loadedSources.containsKey(scenarioSourceName)) {
                         if (!action.pipeline.context.loadedSources[scenarioSourceName]) {
                             script.echo "Adding source: ${scenarioSourceName}"
                             scenario.source = tempContext.scenarioSources[scenarioSourceName]

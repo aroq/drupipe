@@ -4,8 +4,6 @@ import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class BaseAction implements Serializable {
 
-    def context
-
     def script
 
     def utils
