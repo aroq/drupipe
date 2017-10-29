@@ -12,19 +12,16 @@ class DrupipeBlock implements Serializable {
 
     String dockerImage = 'use_default'
 
-//    LinkedHashMap pipeline.context = [:]
-
     LinkedHashMap config = [:]
 
     DrupipePipeline pipeline
 
     DrupipeStage stage
 
+    def utils
+
     def execute(body = null) {
-        def utils = new com.github.aroq.drupipe.Utils()
-//        if (c) {
-//            pipeline.context = c
-//        }
+        utils = pipeline.utils
 
         pipeline.context = utils.merge(pipeline.context, this.config)
 

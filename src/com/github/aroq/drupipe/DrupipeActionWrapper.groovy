@@ -20,12 +20,14 @@ class DrupipeActionWrapper implements Serializable {
 
     def context = [:]
 
+    def utils
+
     String getFullName() {
         "${this.name}.${this.methodName}"
     }
 
     def execute() {
-        def utils = new com.github.aroq.drupipe.Utils()
+        utils = pipeline.utils
 
         this.script = pipeline.script
 
@@ -33,7 +35,7 @@ class DrupipeActionWrapper implements Serializable {
             // Stage name & echo.
             String drupipeStageName
             if (pipeline.stage) {
-                drupipeStageName = "${pipeline.stage.name}"
+                drupipeStageName = "${pipeline.block.stage.name}"
             }
             else {
                 drupipeStageName = 'config'
