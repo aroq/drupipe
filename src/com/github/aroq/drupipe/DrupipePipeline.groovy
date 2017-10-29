@@ -12,6 +12,8 @@ class DrupipePipeline implements Serializable {
 
     LinkedHashMap config = [:]
 
+    DrupipeBlock block
+
     def script
 
     def utils
