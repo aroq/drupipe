@@ -1,7 +1,6 @@
 package com.github.aroq.drupipe.actions
 
 import com.github.aroq.drupipe.DrupipeActionWrapper
-import com.github.aroq.drupipe.DrupipePipeline
 
 class Kubectl extends BaseAction {
 
