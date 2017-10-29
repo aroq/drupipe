@@ -239,7 +239,7 @@ params = [
             ],
             post_process: [
                 namespace: [
-                    type: 'context',
+                    type: 'param',
                     source: 'namespace', // From action params.
                     destination: 'k8s_namespace',  // To "context".
                 ],
