@@ -136,7 +136,7 @@ class Config extends BaseAction {
     def jobConfig() {
         def result = [:]
         if (action.pipeline.context.jobs) {
-            processJobs(context.jobs)
+            processJobs(action.pipeline.context.jobs)
             utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED')
 
             result.job = (action.pipeline.context.env.JOB_NAME).split('/').drop(1).inject(action.pipeline.context, { obj, prop ->
