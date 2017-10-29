@@ -33,7 +33,7 @@ class Config extends BaseAction {
                     dump_result: true,
                     post_process: [
                         context: [
-                            type: 'result',
+                            type: 'context',
                             source: '',
                             destination: '',
                         ],
@@ -51,7 +51,7 @@ class Config extends BaseAction {
                     dump_result: true,
                     post_process: [
                         context: [
-                            type: 'result',
+                            type: 'context',
                             source: '',
                             destination: '',
                         ],
@@ -68,7 +68,7 @@ class Config extends BaseAction {
                     dump_result: true,
                     post_process: [
                         context: [
-                            type: 'result',
+                            type: 'context',
                             source: '',
                             destination: '',
                         ],

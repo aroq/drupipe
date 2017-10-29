@@ -45,7 +45,7 @@ params = [
         Config: [
             post_process: [
                 context: [
-                    type: 'result',
+                    type: 'context',
                     source: '',
                     destination: '',
                 ],
@@ -74,7 +74,7 @@ params = [
         Source: [
             post_process: [
                 context: [
-                    type: 'result',
+                    type: 'context',
                     source: '',
                     destination: '',
                 ],
