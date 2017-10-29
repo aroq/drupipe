@@ -206,7 +206,7 @@ class Config extends BaseAction {
                     action: 'Source.add',
                     params: [
                         source: sourceObject,
-                        credentialsId: context.env.credentialsId,
+                        credentialsId: action.pipeline.context.env.credentialsId,
                     ],
                 ],
                 [
