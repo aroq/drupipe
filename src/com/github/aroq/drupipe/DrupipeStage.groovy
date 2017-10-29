@@ -6,45 +6,48 @@ class DrupipeStage implements Serializable {
 
     ArrayList<DrupipeActionWrapper> actions = []
 
-    HashMap context = [:]
+//    HashMap pipeline.context = [:]
+
+    DrupipePipeline pipeline
 
     def execute(body = null) {
         def utils = new com.github.aroq.drupipe.Utils()
-        utils.dump(context, this.context.params, 'DrupipeStage this.context params BEFORE', true)
-        this.context.pipeline.script.stage(name) {
-            this.context.pipeline.script.gitlabCommitStatus(name) {
+        utils.dump(pipeline.context, this.pipeline.context.params, 'DrupipeStage this.pipeline.context params BEFORE', true)
+        this.pipeline.context.pipeline.script.stage(name) {
+            this.pipeline.context.pipeline.script.gitlabCommitStatus(name) {
                 if (body) {
-                    this.context << body()
+                    // TODO: recheck it.
+                    this.pipeline.context << body()
                 }
-                this.context << ['stage': this]
+                this.pipeline.context << ['stage': this]
                 if (actions) {
                     try {
                         for (a in this.actions) {
-                            if (context && context.action && context.action["${a.name}_${a.methodName}"] && context.action["${name}_${a.methodName}"].debugEnabled) {
-                                utils.debugLog(context, this.context, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() BEFORE EXECUTE", [:], [], true)
+                            if (pipeline.context && pipeline.context.action && pipeline.context.action["${a.name}_${a.methodName}"] && pipeline.context.action["${name}_${a.methodName}"].debugEnabled) {
+                                utils.debugLog(pipeline.context, this.pipeline.context, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() BEFORE EXECUTE", [:], [], true)
                             }
-                            utils.dump(context, a, 'DrupipeStage a BEFORE EXECUTE', true)
-                            a.context = a.context ? utils.merge(s.context, context) : context
+                            utils.dump(pipeline.context, a, 'DrupipeStage a BEFORE EXECUTE', true)
+                            a.pipeline.context = a.pipeline.context ? utils.merge(s.pipeline.context, pipeline.context) : pipeline.context
                             def action = new DrupipeActionWrapper(a)
                             def actionResult = action.execute().result
-                            context = context ? utils.merge(context, actionResult) : actionResult
-                            if (context.params) {
-                                utils.dump(context, context.params, 'DrupipeStage this.context AFTER', true)
+                            pipeline.context = pipeline.context ? utils.merge(pipeline.context, actionResult) : actionResult
+                            if (pipeline.context.params) {
+                                utils.dump(pipeline.context, pipeline.context.params, 'DrupipeStage this.pipeline.context AFTER', true)
                             }
-                            if (context && context.action && context.action["${a.name}_${a.methodName}"] && context.action["${name}_${a.methodName}"].debugEnabled) {
-                                utils.debugLog(context, this.context, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() AFTER EXECUTE", [:], [], true)
+                            if (pipeline.context && pipeline.context.action && pipeline.context.action["${a.name}_${a.methodName}"] && pipeline.context.action["${name}_${a.methodName}"].debugEnabled) {
+                                utils.debugLog(pipeline.context, this.pipeline.context, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() AFTER EXECUTE", [:], [], true)
                             }
                         }
-                        this.context
+                        this.pipeline.context
                     }
                     catch (e) {
-                        this.context.pipeline.script.echo e.toString()
+                        this.pipeline.context.pipeline.script.echo e.toString()
                         throw e
                     }
                 }
             }
         }
-        this.context
+        this.pipeline.context
     }
 
 }

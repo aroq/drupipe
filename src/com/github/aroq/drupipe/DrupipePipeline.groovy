@@ -103,7 +103,7 @@ class DrupipePipeline implements Serializable {
 
                 if (blocks) {
                     for (def i = 0; i < blocks.size(); i++) {
-                        def block = new DrupipeBlock(blocks[i])
+                        def block = new DrupipeBlock(blocks[i], this)
                         script.echo 'BLOCK EXECUTE START'
                         context << block.execute(context)
                         script.echo 'BLOCK EXECUTE END'
@@ -117,7 +117,8 @@ class DrupipePipeline implements Serializable {
                     def result = body(context)
                     if (result) {
                         context << result
-                        pipeline << this
+                        // TODO: check it.
+//                        pipeline << this
                     }
                 }
 

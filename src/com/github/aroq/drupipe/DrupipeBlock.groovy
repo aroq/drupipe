@@ -12,77 +12,79 @@ class DrupipeBlock implements Serializable {
 
     String dockerImage = 'use_default'
 
-    LinkedHashMap context = [:]
+//    LinkedHashMap pipeline.context = [:]
 
     LinkedHashMap config = [:]
 
-    def execute(c, body = null) {
+    DrupipePipeline pipeline
+
+    def execute(body = null) {
         def utils = new com.github.aroq.drupipe.Utils()
-        if (c) {
-            this.context = c
-        }
+//        if (c) {
+//            pipeline.context = c
+//        }
 
-        this.context = utils.merge(this.context, this.config)
+        pipeline.context = utils.merge(pipeline.context, this.config)
 
-        context.pipeline.script.echo "BLOCK NAME: ${name}"
+        pipeline.context.pipeline.script.echo "BLOCK NAME: ${name}"
 
-        if (utils.isTriggeredByUser() && name instanceof CharSequence && context.jenkinsParams[name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_node_name']) {
-            nodeName = context.jenkinsParams[name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_node_name']
+        if (utils.isTriggeredByUser() && name instanceof CharSequence && pipeline.context.jenkinsParams[name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_node_name']) {
+            nodeName = pipeline.context.jenkinsParams[name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_node_name']
         }
 
         if (nodeName == 'use_default') {
-            nodeName = context.nodeName
+            nodeName = pipeline.context.nodeName
         }
 
         if (withDocker && dockerImage == 'use_default') {
-            dockerImage = context.dockerImage
+            dockerImage = pipeline.context.dockerImage
         }
-        context.dockerImage = dockerImage
+        pipeline.context.dockerImage = dockerImage
 
         def result = [:]
-        context.block = this
+        pipeline.context.block = this
 
         if (nodeName) {
-            //utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'START', level: 'block'])
-            context.pipeline.script.echo "NODE NAME: ${nodeName}"
-            context.pipeline.script.node(nodeName) {
+            //utils.pipelineNotify(pipeline.context, [name: "Block on ${nodeName}", status: 'START', level: 'block'])
+            pipeline.context.pipeline.script.echo "NODE NAME: ${nodeName}"
+            pipeline.context.pipeline.script.node(nodeName) {
                 // Secret option for emergency remove workspace.
-                if (context.force == '11') {
-                    context.pipeline.script.echo 'FORCE REMOVE DIR'
-                    context.pipeline.script.deleteDir()
+                if (pipeline.context.force == '11') {
+                    pipeline.context.pipeline.script.echo 'FORCE REMOVE DIR'
+                    pipeline.context.pipeline.script.deleteDir()
                 }
 
-                context.drupipe_working_dir = [context.pipeline.script.pwd(), '.drupipe'].join('/')
-                utils.dump(context, this.config, 'BLOCK-CONFIG')
-                utils.dump(context, this.context, 'BLOCK-CONTEXT')
-                context.pipeline.script.unstash('config')
+                pipeline.context.drupipe_working_dir = [pipeline.context.pipeline.script.pwd(), '.drupipe'].join('/')
+                utils.dump(pipeline.context, this.config, 'BLOCK-CONFIG')
+                utils.dump(pipeline.context, pipeline.context, 'BLOCK-pipeline.context')
+                pipeline.context.pipeline.script.unstash('config')
                 if (withDocker) {
-                    if (context.containerMode == 'kubernetes') {
-                        context.pipeline.script.drupipeWithKubernetes(context) {
-//                            context.pipeline.script.checkout context.pipeline.script.scm
+                    if (pipeline.context.containerMode == 'kubernetes') {
+                        pipeline.context.pipeline.script.drupipeWithKubernetes(pipeline.context) {
+//                            pipeline.context.pipeline.script.checkout pipeline.context.pipeline.script.scm
                             result = _execute(body)
                         }
                     }
-                    else if (context.containerMode == 'docker') {
-                        context.pipeline.script.drupipeWithDocker(context) {
+                    else if (pipeline.context.containerMode == 'docker') {
+                        pipeline.context.pipeline.script.drupipeWithDocker(pipeline.context) {
                             // Fix for scm checkout after docman commands.
-                            if (context.pipeline.script.fileExists(context.projectConfigPath)) {
-                                context.pipeline.script.dir(context.projectConfigPath) {
-                                    context.pipeline.script.deleteDir()
+                            if (pipeline.context.pipeline.script.fileExists(pipeline.context.projectConfigPath)) {
+                                pipeline.context.pipeline.script.dir(pipeline.context.projectConfigPath) {
+                                    pipeline.context.pipeline.script.deleteDir()
                                 }
                             }
-                            context.pipeline.script.checkout context.pipeline.script.scm
+                            pipeline.context.pipeline.script.checkout pipeline.context.pipeline.script.scm
                             result = _execute(body)
                         }
                     }
                 }
                 else {
-                    context.pipeline.script.sshagent([context.credentialsId]) {
+                    pipeline.context.pipeline.script.sshagent([pipeline.context.credentialsId]) {
                         result = _execute(body)
                     }
                 }
             }
-            //utils.pipelineNotify(context, [name: "Block on ${nodeName}", status: 'END', level: 'block'])
+            //utils.pipelineNotify(pipeline.context, [name: "Block on ${nodeName}", status: 'END', level: 'block'])
         }
         else {
             result = _execute(body)
@@ -93,16 +95,16 @@ class DrupipeBlock implements Serializable {
 
     def _execute(body = null) {
         if (stages) {
-            context << context.pipeline.executeStages(stages, context)
+            pipeline.context << pipeline.context.pipeline.executeStages(stages, pipeline.context)
         }
         else {
             if (body) {
                 def result = body()
                 if (result) {
-                    context << body()
+                    pipeline.context << body()
                 }
             }
         }
-        context
+        pipeline.context
     }
 }
