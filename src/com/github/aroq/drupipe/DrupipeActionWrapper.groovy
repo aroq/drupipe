@@ -121,7 +121,6 @@ class DrupipeActionWrapper implements Serializable {
                     if (!actionFile) {
                         try {
                             def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance(
-                                context: pipeline.context,
                                 action: this,
                                 script: this.script,
                                 utils: utils,
