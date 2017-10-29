@@ -72,6 +72,8 @@ params = [
             debugEnabled: true,
         ],
         Source: [
+            debugEnabled: true,
+            dump_result: true,
             post_process: [
                 context: [
                     type: 'context',

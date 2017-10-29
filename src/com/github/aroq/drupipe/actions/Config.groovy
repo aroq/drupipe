@@ -332,10 +332,10 @@ class Config extends BaseAction {
                 mode: 'shell',
             ]
 
-            script.sshagent([this.context.credentialsId]) {
+            script.sshagent([action.pipeline.context.credentialsId]) {
                 this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
             }
-            utils.debugLog(this.context, this.context, "this.context", [debugMode: 'json'], [], true)
+            utils.debugLog(action.pipeline.context, action.pipeline.context, "action.pipeline.context", [debugMode: 'json'], [], true)
 
             def providers = [
                 [
