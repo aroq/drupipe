@@ -169,9 +169,9 @@ class DrupipeActionWrapper implements Serializable {
                         }
                     }
 
-//                    if (pipeline.context.params && pipeline.context.params.action && pipeline.context.params.action["${name}_${methodName}"] && pipeline.context.params.action["${name}_${methodName}"].debugEnabled) {
-//                        utils.debugLog(pipeline.context, pipeline.context, "pipeline.context results", [debugMode: 'json'], [this.params.store_result_key], true)
-//                    }
+                    if (pipeline.context.params && pipeline.context.params.action && pipeline.context.params.action["${name}_${methodName}"] && pipeline.context.params.action["${name}_${methodName}"].debugEnabled) {
+                        utils.debugLog(pipeline.context, pipeline.context, "pipeline.context results", [debugMode: 'json'], [this.params.store_result_key], true)
+                    }
                 }
             }
 
