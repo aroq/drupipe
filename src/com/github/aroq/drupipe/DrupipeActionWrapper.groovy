@@ -34,7 +34,7 @@ class DrupipeActionWrapper implements Serializable {
         try {
             // Stage name & echo.
             String drupipeStageName
-            if (pipeline.stage) {
+            if (pipeline.block && pipeline.block.stage) {
                 drupipeStageName = "${pipeline.block.stage.name}"
             }
             else {
