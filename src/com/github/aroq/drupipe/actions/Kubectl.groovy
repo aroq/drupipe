@@ -5,12 +5,6 @@ import com.github.aroq.drupipe.DrupipePipeline
 
 class Kubectl extends BaseAction {
 
-    def script
-
-    def utils
-
-    DrupipeActionWrapper action
-
     def scale_replicaset() {
         executeKubectlCommand()
     }
@@ -18,8 +12,8 @@ class Kubectl extends BaseAction {
     def scale_down_up() {
         def name = script.drupipeAction([action: "Kubectl.get_replicaset_name"], action.pipeline).stdout
         script.echo "Replicaset name: ${name}"
-        script.drupipeAction([action: "Kubectl.scale_replicaset", params: [name: name, replicas: action.pipeline.params.replicas_down]], pipeline)
-        script.drupipeAction([action: "Kubectl.scale_replicaset", params: [name: name, replicas: action.pipeline.params.replicas_up]], pipeline)
+        script.drupipeAction([action: "Kubectl.scale_replicaset", params: [name: name, replicas: action.pipeline.params.replicas_down]], action.pipeline)
+        script.drupipeAction([action: "Kubectl.scale_replicaset", params: [name: name, replicas: action.pipeline.params.replicas_up]], action.pipeline)
     }
 
     def get_pod_name() {

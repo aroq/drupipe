@@ -8,6 +8,6 @@ class BaseAction implements Serializable {
 
     def utils
 
-    def DrupipeActionWrapper action
+    DrupipeActionWrapper action
 
 }
