@@ -20,7 +20,7 @@ class DrupipeActionWrapper implements Serializable {
 
     def script
 
-    def result = [context: [:], action_result: [:]]
+    def result = [:]
 
     String getFullName() {
         "${this.name}.${this.methodName}"
@@ -111,7 +111,7 @@ class DrupipeActionWrapper implements Serializable {
                             if (pipeline.context.block?.nodeName && this.script.fileExists(fileName)) {
                                 actionFile = this.script.load(fileName)
                                 // TODO: Add timeout.
-                                this.result.action_result = actionFile."${this.methodName}"(actionParams)
+                                this.result = actionFile."${this.methodName}"(actionParams)
                             }
                         }
                     }
@@ -127,7 +127,7 @@ class DrupipeActionWrapper implements Serializable {
 
                             def action_timeout = this.params.action_timeout ? this.params.action_timeout : 120
                             this.script.timeout(action_timeout) {
-                                this.result.action_result = actionInstance."${this.methodName}"()
+                                this.result = actionInstance."${this.methodName}"()
                             }
                         }
                         catch (err) {
@@ -145,17 +145,17 @@ class DrupipeActionWrapper implements Serializable {
                             for (result in this.params.post_process) {
                                 if (result.value.type == 'param') {
 //                                    def deepValue = utils.deepGet(this.params, result.value.source.tokenize('.'))
-//                                    contextStoreResult(result.value.destination.tokenize('.'), this.result.action_result, deepValue)
+//                                    contextStoreResult(result.value.destination.tokenize('.'), this.result, deepValue)
                                 }
                                 if (result.value.type == 'result') {
                                     script.echo "SOURCE: ${result.value.source}"
-                                    def deepValue = utils.deepGet(this.result.action_result, result.value.source.tokenize('.'))
+                                    def deepValue = utils.deepGet(this.result, result.value.source.tokenize('.'))
                                     if (deepValue) {
                                         script.echo "DESTINATION: ${result.value.destination}"
                                         contextStoreResult(result.value.destination.tokenize('.'), this.result, deepValue)
                                         if (this.params.dump_result) {
                                             script.echo "deepValue: ${deepValue}"
-//                                            utils.debugLog(pipeline.context, this.result.action_result, "action_result after result save", [debugMode: 'json'], [], true)
+//                                            utils.debugLog(pipeline.context, this.result, "action_result after result save", [debugMode: 'json'], [], true)
                                         }
                                     }
                                 }
@@ -170,7 +170,7 @@ class DrupipeActionWrapper implements Serializable {
             }
 
 
-            this.result.action_result = this.result.action_result ? this.result.action_result : [:]
+            this.result = this.result ? this.result : [:]
             if (this.params.dump_result) {
                 utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], true)
             }
@@ -179,17 +179,18 @@ class DrupipeActionWrapper implements Serializable {
             }
 
             // Refactor it.
-//            if (this.storeResult && this.storeResult != '' && this.result.action_result.stdout) {
+//            if (this.storeResult && this.storeResult != '' && this.result.stdout) {
 //                def path = storeResult.tokenize('.')
 //                def stored = [:]
-//                contextStoreResult(path, stored, this.result.action_result.stdout)
+//                contextStoreResult(path, stored, this.result.stdout)
 //                pipeline.context.pipeline.script.echo("STORED-RESULT: ${stored}")
 //
 //                action_result << stored
 //            }
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
-            this.result
+//            this.result
+            [:]
         }
         catch (err) {
             notification.status = 'FAILED'
@@ -201,13 +202,13 @@ class DrupipeActionWrapper implements Serializable {
             if (notification.status != 'FAILED') {
                 notification.status = 'SUCCESSFUL'
             }
-            if (this && this.result && this.result.action_result && this.result.action_result.result) {
+            if (this && this.result && this.result && this.result.result) {
                 notification.message = notification.message ? notification.message : ''
-                notification.message = notification.message + "\n\n" + this.result.action_result.result
+                notification.message = notification.message + "\n\n" + this.result.result
             }
-            if (this && this.result && this.result.action_result && this.result.action_result.stdout) {
+            if (this && this.result && this.result && this.result.stdout) {
                 notification.message = notification.message ? notification.message : ''
-                notification.message = notification.message + "\n\n" + this.result.action_result.stdout
+                notification.message = notification.message + "\n\n" + this.result.stdout
             }
             utils.pipelineNotify(pipeline.context, notification)
         }
