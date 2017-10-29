@@ -321,13 +321,13 @@ class Config extends BaseAction {
     }
 
     def projectConfig() {
-        utils.debugLog(context, "projectConfig repo: ${context.configRepo}", [:], [], true)
-        if (context.configRepo) {
+        utils.debugLog(action.pipeline.context, "projectConfig repo: ${context.configRepo}", [:], [], true)
+        if (action.pipeline.context.configRepo) {
             def sourceObject = [
                 name: 'project',
                 path: 'sources/project',
                 type: 'git',
-                url: context.configRepo,
+                url: action.pipeline.context.configRepo,
                 branch: 'master',
                 mode: 'shell',
             ]
@@ -335,8 +335,8 @@ class Config extends BaseAction {
             script.sshagent([action.pipeline.context.credentialsId]) {
                 this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
             }
-            utils.debugLog(action.pipeline.context, action.pipeline.context, "action.pipeline.context", [debugMode: 'json'], [], true)
-            utils.debugLog(action.pipeline.context, context, "context", [debugMode: 'json'], [], true)
+//            utils.debugLog(action.pipeline.context, action.pipeline.context, "action.pipeline.context", [debugMode: 'json'], [], true)
+//            utils.debugLog(action.pipeline.context, context, "context", [debugMode: 'json'], [], true)
 
             def providers = [
                 [
@@ -344,13 +344,13 @@ class Config extends BaseAction {
                     params: [
                         sourceName: 'project',
                         configType: 'groovy',
-                        configPath: context.projectConfigFile
+                        configPath: action.pipeline.context.projectConfigFile
                     ]
                 ],
             ]
 
             def fileName = null
-            def sourceDir = utils.sourceDir(context, 'project')
+            def sourceDir = utils.sourceDir(action.pipeline.context, 'project')
             this.script.echo("PROJECTS SOURCE DIR: ${sourceDir}")
 
             def filesToCheck = [
@@ -385,9 +385,9 @@ class Config extends BaseAction {
             }
 
             def projectConfig
-            script.sshagent([context.credentialsId]) {
+            script.sshagent([action.pipeline.context.credentialsId]) {
                 projectConfig = action.pipeline.executePipelineActionList(providers)
-                utils.debugLog(context, projectConfig, 'Project config')
+                utils.debugLog(action.pipeline.context, projectConfig, 'Project config')
             }
 
             def result = mergeScenariosConfigs(projectConfig, [:], 'project')
