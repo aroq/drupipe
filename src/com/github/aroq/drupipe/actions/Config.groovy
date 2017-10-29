@@ -85,7 +85,7 @@ class Config extends BaseAction {
         ]
 
         if (action.pipeline.context.configProviders) {
-            providers << context.configProviders
+            providers << action.pipeline.context.configProviders
         }
 
         this.script.checkout this.script.scm
@@ -93,42 +93,40 @@ class Config extends BaseAction {
         action.pipeline.executePipelineActionList(providers)
 
         // For compatibility:
-        if (context.defaultActionParams) {
-            context.params.action = utils.merge(context.params.action, context.defaultActionParams)
+        if (action.pipeline.context.defaultActionParams) {
+            action.pipeline.context.params.action = utils.merge(action.pipeline.context.params.action, action.pipeline.context.defaultActionParams)
         }
 
-        context.environmentParams = [:]
-        if (context.environments) {
-            if (context.environment) {
-                def environment = context.environments[context.environment]
-                if (context.servers && environment['server'] && context.servers[environment['server']]) {
-                    def server = context.servers[environment['server']]
-                    context.environmentParams = utils.merge(server, environment)
+        action.pipeline.context.environmentParams = [:]
+        if (action.pipeline.context.environments) {
+            if (action.pipeline.context.environment) {
+                def environment = action.pipeline.context.environments[action.pipeline.context.environment]
+                if (action.pipeline.context.servers && environment['server'] && action.pipeline.context.servers[environment['server']]) {
+                    def server = action.pipeline.context.servers[environment['server']]
+                    action.pipeline.context.environmentParams = utils.merge(server, environment)
                 }
                 else {
-                    context.environmentParams = environment
+                    action.pipeline.context.environmentParams = environment
                 }
                 // For compatibility:
-                if (context.environmentParams) {
-                    context.params.action = utils.merge(context.params.action, context.environmentParams.defaultActionParams)
+                if (action.pipeline.context.environmentParams) {
+                    action.pipeline.context.params.action = utils.merge(context.params.action, context.environmentParams.defaultActionParams)
                 }
 
-//                context.params.action = utils.merge(context.params.action, context.params.action)
-
-                utils.jsonDump(context, context.environmentParams, 'ENVIRONMENT PARAMS')
+                utils.jsonDump(action.pipeline.context, action.pipeline.context.environmentParams, 'ENVIRONMENT PARAMS')
             }
         }
 
-        utils.debugLog(context, context, 'CONFIG CONTEXT')
+        utils.debugLog(action.pipeline.context, action.pipeline.context, 'CONFIG CONTEXT')
 
 //        context.return_stdout = false
 
-        def stashes = context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
+        def stashes = action.pipeline.context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
 
         script.echo "Stashes: ${stashes}"
 
         script.stash name: 'config', includes: "${stashes}", excludes: ".git, .git/**"
-        context
+       action.pipeline.context
     }
 
     def jenkinsConfig() {
@@ -137,11 +135,11 @@ class Config extends BaseAction {
 
     def jobConfig() {
         def result = [:]
-        if (context.jobs) {
+        if (action.pipeline.context.jobs) {
             processJobs(context.jobs)
-            utils.jsonDump(context, context.jobs, 'CONFIG JOBS PROCESSED')
+            utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED')
 
-            result.job = (context.env.JOB_NAME).split('/').drop(1).inject(context, { obj, prop ->
+            result.job = (action.pipeline.context.env.JOB_NAME).split('/').drop(1).inject(action.pipeline.context, { obj, prop ->
                 obj.jobs[prop]
             })
 
@@ -150,7 +148,7 @@ class Config extends BaseAction {
                     result = utils.merge(result, result.job.context)
                 }
             }
-            result.jobs = context.jobs
+            result.jobs = action.pipeline.context.jobs
         }
         result
     }
