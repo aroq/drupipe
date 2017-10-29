@@ -92,7 +92,7 @@ class Docman extends BaseAction {
         )
     }
 
-    def forceFlag(action.pipeline.context) {
+    def forceFlag() {
         def flag = ''
         if (action.pipeline.context.force == '1') {
             flag = '-f'
