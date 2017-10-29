@@ -29,6 +29,7 @@ class DrupipeStage implements Serializable {
                             utils.dump(pipeline.context, a, 'DrupipeStage a BEFORE EXECUTE', true)
 //                            a.pipeline.context = a.pipeline.context ? utils.merge(s.pipeline.context, pipeline.context) : pipeline.context
                             def action = new DrupipeActionWrapper(a)
+                            a.pipeline = pipeline
                             def actionResult = action.execute().result
 //                            pipeline.context = pipeline.context ? utils.merge(pipeline.context, actionResult) : actionResult
                             if (pipeline.context.params) {
