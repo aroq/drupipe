@@ -43,9 +43,37 @@ class Config extends BaseAction {
             ],
             [
                 action: "Config.envConfig",
+                params: [
+                    // We need to pass params as "context" is not ready yet.
+                    store_result: true,
+                    interpolate: false,
+                    debugEnabled: true,
+                    dump_result: true,
+                    post_process: [
+                        context: [
+                            type: 'result',
+                            source: '',
+                            destination: '',
+                        ],
+                    ],
+                ]
             ],
             [
                 action: "Config.mothershipConfig",
+                params: [
+                    // We need to pass params as "context" is not ready yet.
+                    store_result: true,
+                    interpolate: false,
+                    debugEnabled: true,
+                    dump_result: true,
+                    post_process: [
+                        context: [
+                            type: 'result',
+                            source: '',
+                            destination: '',
+                        ],
+                    ],
+                ]
             ],
             [
                 action: "Config.projectConfig"
