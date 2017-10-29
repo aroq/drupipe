@@ -9,7 +9,7 @@ class DrupipeStage implements Serializable {
     DrupipePipeline pipeline
 
     def execute(body = null) {
-        def script = script
+        def script = pipeline.script
         script.stage(name) {
             script.gitlabCommitStatus(name) {
                 if (body) {
