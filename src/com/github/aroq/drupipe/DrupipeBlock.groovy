@@ -18,6 +18,8 @@ class DrupipeBlock implements Serializable {
 
     DrupipePipeline pipeline
 
+    DrupipeStage stage
+
     def execute(body = null) {
         def utils = new com.github.aroq.drupipe.Utils()
 //        if (c) {

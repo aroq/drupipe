@@ -19,7 +19,7 @@ class DrupipeStage implements Serializable {
                     // TODO: recheck it.
                     this.pipeline.context << body()
                 }
-                this.pipeline.stage = this
+                this.pipeline.block.stage = this
                 if (actions) {
                     try {
                         for (a in this.actions) {
