@@ -6,15 +6,11 @@ class DrupipeActionWrapper implements Serializable {
 
     String name
 
-//    String storeResult
-
     String methodName
 
     HashMap params = [:]
 
     HashMap notification = [:]
-
-//    LinkedHashMap pipeline.context = [:]
 
     DrupipePipeline pipeline
 
@@ -22,7 +18,7 @@ class DrupipeActionWrapper implements Serializable {
 
     def result = [:]
 
-    def tempContext = [:]
+    def context = [:]
 
     String getFullName() {
         "${this.name}.${this.methodName}"
@@ -36,8 +32,8 @@ class DrupipeActionWrapper implements Serializable {
         try {
             // Stage name & echo.
             String drupipeStageName
-            if (pipeline.context.stage) {
-                drupipeStageName = "${pipeline.context.stage.name}"
+            if (pipeline.stage) {
+                drupipeStageName = "${pipeline.stage.name}"
             }
             else {
                 drupipeStageName = 'config'
@@ -158,16 +154,16 @@ class DrupipeActionWrapper implements Serializable {
                                 if (deepValue) {
                                     // TODO: check it again.
                                     if (result.value.destination) {
-                                        contextStoreResult(result.value.destination.tokenize('.'), tempContext, deepValue)
+                                        contextStoreResult(result.value.destination.tokenize('.'), context, deepValue)
                                     }
                                     else {
-                                        tempContext = utils.merge(tempContext, deepValue)
+                                        context = utils.merge(context, deepValue)
                                     }
-                                    if (this.params.dump_result) {
+                                    if (this.params.dump_result && this.params.debugEnabled) {
                                         script.echo "SOURCE: ${result.value.source}"
                                         script.echo "DESTINATION: ${result.value.destination}"
                                         script.echo "deepValue: ${deepValue}"
-                                        utils.debugLog(pipeline.context, tempContext, "Temp context", [debugMode: 'json'], [], this.params.debugEnabled)
+                                        utils.debugLog(pipeline.context, context, "Temp context", [debugMode: 'json'], [], this.params.debugEnabled)
                                     }
                                 }
                             }
@@ -183,8 +179,8 @@ class DrupipeActionWrapper implements Serializable {
             if (this.params.dump_result) {
                 utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], this.params.debugEnabled)
             }
-            if (tempContext) {
-                pipeline.context = pipeline.context ? utils.merge(pipeline.context, tempContext) : tempContext
+            if (context) {
+                pipeline.context = pipeline.context ? utils.merge(pipeline.context, context) : context
             }
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"

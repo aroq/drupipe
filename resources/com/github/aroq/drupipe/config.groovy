@@ -29,7 +29,7 @@ params = [
             store_result: true,
             dump_result: true,
             store_action_params: true,
-            store_result_key: 'results.action.${action.name}_${action.methodName}',
+            store_result_key: 'context.results.action.${action.name}_${action.methodName}',
             post_process: [
                 result: [
                     type: 'result',
@@ -48,7 +48,7 @@ params = [
                 context: [
                     type: 'result',
                     source: 'result',
-                    destination: '',
+                    destination: 'context',
                 ],
             ],
         ],
@@ -64,7 +64,7 @@ params = [
                 result: [
                     type: 'result',
                     source: 'result.configRepo',
-                    destination: 'configRepo',
+                    destination: 'context.configRepo',
                 ],
             ],
         ],
@@ -76,20 +76,13 @@ params = [
                 context: [
                     type: 'result',
                     source: 'result',
-                    destination: '',
+                    destination: 'context',
                 ],
             ],
         ],
         YamlFileConfig: [
         ],
         GroovyFileConfig: [
-//            post_process: [
-//                context: [
-//                    type: 'result',
-//                    source: '',
-//                    destination: '',
-//                ],
-//            ],
         ],
         Behat: [
             masterPath: 'docroot/master',
@@ -242,7 +235,7 @@ params = [
                 namespace: [
                     type: 'param',
                     source: 'params.namespace', // From action params.
-                    destination: 'k8s_namespace',  // To "context".
+                    destination: 'context.k8s_namespace',  // To "context".
                 ],
             ],
         ],
