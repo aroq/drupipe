@@ -9,44 +9,28 @@ class DrupipeStage implements Serializable {
     DrupipePipeline pipeline
 
     def execute(body = null) {
-        def utils = new com.github.aroq.drupipe.Utils()
-        utils.dump(pipeline.context, this.pipeline.context.params, 'DrupipeStage this.pipeline.context params BEFORE', true)
-        this.pipeline.script.stage(name) {
-            this.pipeline.script.gitlabCommitStatus(name) {
+        def script = script
+        script.stage(name) {
+            script.gitlabCommitStatus(name) {
                 if (body) {
                     // TODO: recheck it.
-                    this.pipeline.context << body()
+                    body()
                 }
-                this.pipeline.block.stage = this
+                pipeline.block.stage = this
                 if (actions) {
                     try {
                         for (a in this.actions) {
-                            if (pipeline.context && pipeline.context.action && pipeline.context.action["${a.name}_${a.methodName}"] && pipeline.context.action["${name}_${a.methodName}"].debugEnabled) {
-                                utils.debugLog(pipeline.context, this.pipeline.context, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() BEFORE EXECUTE", [:], [], true)
-                            }
-                            utils.dump(pipeline.context, a, 'DrupipeStage a BEFORE EXECUTE', true)
-//                            a.pipeline.context = a.pipeline.context ? utils.merge(s.pipeline.context, pipeline.context) : pipeline.context
-                            a.pipeline = this.pipeline
-                            def action = new DrupipeActionWrapper(a)
-                            def actionResult = action.execute().result
-//                            pipeline.context = pipeline.context ? utils.merge(pipeline.context, actionResult) : actionResult
-//                            if (pipeline.context.params) {
-//                                utils.dump(pipeline.context, pipeline.context.params, 'DrupipeStage this.pipeline.context AFTER', true)
-//                            }
-//                            if (pipeline.context && pipeline.context.action && pipeline.context.action["${a.name}_${a.methodName}"] && pipeline.context.action["${name}_${a.methodName}"].debugEnabled) {
-//                                utils.debugLog(pipeline.context, this.pipeline.context, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() AFTER EXECUTE", [:], [], true)
-//                            }
+                            a.pipeline = pipeline
+                            (new DrupipeActionWrapper(a)).execute()
                         }
-//                        this.pipeline.context
                     }
                     catch (e) {
-                        this.pipeline.script.echo e.toString()
+                        script.echo e.toString()
                         throw e
                     }
                 }
             }
         }
-        this.pipeline.context
     }
 
 }
