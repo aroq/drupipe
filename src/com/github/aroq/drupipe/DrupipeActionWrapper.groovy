@@ -175,7 +175,7 @@ class DrupipeActionWrapper implements Serializable {
                 utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], true)
             }
             if (this.result) {
-                pipeline.context = pipeline.context ? utils.merge(pipeline.context, this.result) : this.result
+//                pipeline.context = pipeline.context ? utils.merge(pipeline.context, this.result) : this.result
             }
 
             // Refactor it.
