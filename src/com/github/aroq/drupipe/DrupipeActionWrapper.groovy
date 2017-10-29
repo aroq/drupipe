@@ -22,6 +22,8 @@ class DrupipeActionWrapper implements Serializable {
 
     def result = [:]
 
+    def tempContext = [:]
+
     String getFullName() {
         "${this.name}.${this.methodName}"
     }
@@ -152,7 +154,7 @@ class DrupipeActionWrapper implements Serializable {
                                     def deepValue = utils.deepGet(this.result, result.value.source.tokenize('.'))
                                     if (deepValue) {
                                         script.echo "DESTINATION: ${result.value.destination}"
-                                        contextStoreResult(result.value.destination.tokenize('.'), this.result, deepValue)
+                                        contextStoreResult(result.value.destination.tokenize('.'), tempContext, deepValue)
                                         if (this.params.dump_result) {
                                             script.echo "deepValue: ${deepValue}"
 //                                            utils.debugLog(pipeline.context, this.result, "action_result after result save", [debugMode: 'json'], [], true)
@@ -175,7 +177,7 @@ class DrupipeActionWrapper implements Serializable {
                 utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], true)
             }
             if (this.result) {
-//                pipeline.context = pipeline.context ? utils.merge(pipeline.context, this.result) : this.result
+                pipeline.context = pipeline.context ? utils.merge(pipeline.context, tempContext) : tempContext
             }
 
             // Refactor it.
