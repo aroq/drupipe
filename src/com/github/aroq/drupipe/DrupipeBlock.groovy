@@ -42,44 +42,44 @@ class DrupipeBlock implements Serializable {
         pipeline.context.dockerImage = dockerImage
 
         def result = [:]
-        pipeline.context.block = this
+        pipeline.block = this
 
         if (nodeName) {
             //utils.pipelineNotify(pipeline.context, [name: "Block on ${nodeName}", status: 'START', level: 'block'])
-            pipeline.context.pipeline.script.echo "NODE NAME: ${nodeName}"
-            pipeline.context.pipeline.script.node(nodeName) {
+            pipeline.script.echo "NODE NAME: ${nodeName}"
+            pipeline.script.node(nodeName) {
                 // Secret option for emergency remove workspace.
                 if (pipeline.context.force == '11') {
-                    pipeline.context.pipeline.script.echo 'FORCE REMOVE DIR'
-                    pipeline.context.pipeline.script.deleteDir()
+                    pipeline.script.echo 'FORCE REMOVE DIR'
+                    pipeline.script.deleteDir()
                 }
 
-                pipeline.context.drupipe_working_dir = [pipeline.context.pipeline.script.pwd(), '.drupipe'].join('/')
+                pipeline.context.drupipe_working_dir = [pipeline.script.pwd(), '.drupipe'].join('/')
                 utils.dump(pipeline.context, this.config, 'BLOCK-CONFIG')
                 utils.dump(pipeline.context, pipeline.context, 'BLOCK-pipeline.context')
-                pipeline.context.pipeline.script.unstash('config')
+                pipeline.script.unstash('config')
                 if (withDocker) {
                     if (pipeline.context.containerMode == 'kubernetes') {
-                        pipeline.context.pipeline.script.drupipeWithKubernetes(pipeline.context) {
-//                            pipeline.context.pipeline.script.checkout pipeline.context.pipeline.script.scm
+                        pipeline.script.drupipeWithKubernetes(pipeline.context) {
+//                            pipeline.script.checkout pipeline.script.scm
                             result = _execute(body)
                         }
                     }
                     else if (pipeline.context.containerMode == 'docker') {
-                        pipeline.context.pipeline.script.drupipeWithDocker(pipeline.context) {
+                        pipeline.script.drupipeWithDocker(pipeline.context) {
                             // Fix for scm checkout after docman commands.
-                            if (pipeline.context.pipeline.script.fileExists(pipeline.context.projectConfigPath)) {
-                                pipeline.context.pipeline.script.dir(pipeline.context.projectConfigPath) {
-                                    pipeline.context.pipeline.script.deleteDir()
+                            if (pipeline.script.fileExists(pipeline.context.projectConfigPath)) {
+                                pipeline.script.dir(pipeline.context.projectConfigPath) {
+                                    pipeline.script.deleteDir()
                                 }
                             }
-                            pipeline.context.pipeline.script.checkout pipeline.context.pipeline.script.scm
+                            pipeline.script.checkout pipeline.script.scm
                             result = _execute(body)
                         }
                     }
                 }
                 else {
-                    pipeline.context.pipeline.script.sshagent([pipeline.context.credentialsId]) {
+                    pipeline.script.sshagent([pipeline.context.credentialsId]) {
                         result = _execute(body)
                     }
                 }
