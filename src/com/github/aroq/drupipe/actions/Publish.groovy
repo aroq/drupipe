@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionConroller
 
 class Publish extends BaseAction {
 
@@ -10,7 +10,7 @@ class Publish extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    def DrupipeActionConroller action
     def junit() {
         script.step([$class: 'JUnitResultArchiver', testResults: action.params.reportsPath])
     }

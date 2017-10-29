@@ -1,7 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
-
+import com.github.aroq.drupipe.DrupipeActionConroller
 @Grab('org.yaml:snakeyaml:1.17')
 
 import org.yaml.snakeyaml.Yaml
@@ -18,7 +17,7 @@ class Repo extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    def DrupipeActionConroller action
     def init() {
         context << script.drupipeAction([action: "Docman.init"], context)
         context

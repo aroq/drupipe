@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe
 
-class DrupipeAction implements Serializable {
+class DrupipeActionConroller implements Serializable {
 
     String action
 
@@ -45,7 +45,7 @@ class DrupipeAction implements Serializable {
             notification.level = "action:${drupipeStageName}"
 
             utils.pipelineNotify(pipeline.context, notification << [status: 'START'])
-            utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} start <-")
+            utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeActionConroller name: ${this.fullName} start <-")
 
             // Define action params.
             def actionParams = [:]
@@ -106,7 +106,7 @@ class DrupipeAction implements Serializable {
                         for (def i = 0; i < pipeline.context.sourcesList.size(); i++) {
                             def source = pipeline.context.sourcesList[i]
                             def fileName = utils.sourcePath(pipeline.context, source.name, 'pipelines/actions/' + this.name + '.groovy')
-                            utils.debugLog(actionParams, fileName, "DrupipeAction file name to check")
+                            utils.debugLog(actionParams, fileName, "DrupipeActionConroller file name to check")
                             // To make sure we only check fileExists in Heavyweight executor mode.
                             if (pipeline.context.block?.nodeName && this.script.fileExists(fileName)) {
                                 actionFile = this.script.load(fileName)
@@ -188,7 +188,7 @@ class DrupipeAction implements Serializable {
 //                action_result << stored
 //            }
 
-            utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeAction name: ${this.fullName} end <-"
+            utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionConroller name: ${this.fullName} end <-"
             this.result
         }
         catch (err) {

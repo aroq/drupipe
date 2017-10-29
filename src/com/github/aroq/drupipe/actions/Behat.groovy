@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionConroller
 
 class Behat extends BaseAction {
 
@@ -11,7 +11,7 @@ class Behat extends BaseAction {
     def utils
 
 
-    def DrupipeAction action
+    def DrupipeActionConroller action
 
     def perform() {
         def testEnvironment = action.params.testEnvironment ? action.params.testEnvironment : context.environment

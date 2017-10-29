@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionConroller
 
 class GCloud extends BaseAction {
 
@@ -10,7 +10,7 @@ class GCloud extends BaseAction {
 
     def utils
 
-    DrupipeAction action
+    DrupipeActionConroller action
 
     def auth() {
          this.script.drupipeShell("""

@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionConroller
 
 class JobDslSeed extends BaseAction {
 
@@ -10,7 +10,7 @@ class JobDslSeed extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    def DrupipeActionConroller action
 
     def perform() {
         utils.dumpConfigFile(context)

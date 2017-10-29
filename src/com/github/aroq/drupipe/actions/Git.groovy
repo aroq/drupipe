@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionConroller
 
 class Git extends BaseAction {
 
@@ -10,7 +10,7 @@ class Git extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    def DrupipeActionConroller action
 
     def clone() {
         context.pipeline.script.echo 'Git clone'

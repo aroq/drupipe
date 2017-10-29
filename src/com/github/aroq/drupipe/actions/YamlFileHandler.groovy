@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionConroller
 
 class YamlFileHandler extends BaseAction {
 
@@ -12,7 +12,7 @@ class YamlFileHandler extends BaseAction {
 
     def deployYaml
 
-    def DrupipeAction action
+    def DrupipeActionConroller action
 
     def init() {
         def repo_url

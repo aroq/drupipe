@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionConroller
 
 class Script extends BaseAction {
 
@@ -10,7 +10,7 @@ class Script extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    def DrupipeActionConroller action
     def execute() {
         sh "${action.params.script} ${action.params.args.join(' ')}"
     }

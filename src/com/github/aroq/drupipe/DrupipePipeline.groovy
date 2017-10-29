@@ -234,7 +234,7 @@ class DrupipePipeline implements Serializable {
     }
 
     @NonCPS
-    DrupipeAction processPipelineAction(action) {
+    DrupipeActionConroller processPipelineAction(action) {
         def actionName
         def actionMethodName
         def actionParams
@@ -262,7 +262,7 @@ class DrupipePipeline implements Serializable {
 
         script.echo actionName
         script.echo actionMethodName
-        new DrupipeAction(pipeline: this, name: actionName, methodName: actionMethodName, params: actionParams)
+        new DrupipeActionConroller(pipeline: this, name: actionName, methodName: actionMethodName, params: actionParams)
     }
 
     def executePipelineActionList(actions) {

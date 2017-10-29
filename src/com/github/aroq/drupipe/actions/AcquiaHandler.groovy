@@ -1,7 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
-import groovy.json.JsonOutput
+import com.github.aroq.drupipe.DrupipeActionConroller
 
 class AcquiaHandler extends BaseAction {
 
@@ -11,7 +10,7 @@ class AcquiaHandler extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    def DrupipeActionConroller action
 
 
     def deploy() {

@@ -1,7 +1,7 @@
 package com.github.aroq.drupipe.actions
 
 import groovy.json.JsonOutput
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionConroller
 
 class Ansible extends BaseAction {
 
@@ -11,7 +11,7 @@ class Ansible extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    def DrupipeActionConroller action
 
     def init() {
         if (!action.params.playbookParams) {

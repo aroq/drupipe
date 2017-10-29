@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionConroller
 
 class VegetaTester extends BaseAction {
 
@@ -10,7 +10,7 @@ class VegetaTester extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    def DrupipeActionConroller action
 
     def prepare() {
         if (this.context.vegeta_prepare_command && this.context.vegeta_prepare_command.length() != 0) {
