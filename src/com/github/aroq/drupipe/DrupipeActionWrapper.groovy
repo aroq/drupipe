@@ -218,13 +218,13 @@ class DrupipeActionWrapper implements Serializable {
         }
         def pathElement = path.get(0)
         def subPath = path.subList(1, path.size())
-        if (!storeContainer.containsKey(pathElement)) {
-            storeContainer[pathElement] = [:]
+        if (!storeContainer."${pathElement}") {
+            storeContainer."${pathElement}" = [:]
         }
         if (subPath.size() > 0) {
-            contextStoreResult(subPath, storeContainer[pathElement], result)
+            contextStoreResult(subPath, storeContainer."${pathElement}", result)
         } else {
-            storeContainer[pathElement] = result
+            storeContainer."${pathElement}" = result
         }
     }
 
