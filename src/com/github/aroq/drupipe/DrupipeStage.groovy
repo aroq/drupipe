@@ -13,8 +13,8 @@ class DrupipeStage implements Serializable {
     def execute(body = null) {
         def utils = new com.github.aroq.drupipe.Utils()
         utils.dump(pipeline.context, this.pipeline.context.params, 'DrupipeStage this.pipeline.context params BEFORE', true)
-        this.pipeline.context.pipeline.script.stage(name) {
-            this.pipeline.context.pipeline.script.gitlabCommitStatus(name) {
+        this.pipeline.script.stage(name) {
+            this.pipeline.script.gitlabCommitStatus(name) {
                 if (body) {
                     // TODO: recheck it.
                     this.pipeline.context << body()
@@ -41,7 +41,7 @@ class DrupipeStage implements Serializable {
                         this.pipeline.context
                     }
                     catch (e) {
-                        this.pipeline.context.pipeline.script.echo e.toString()
+                        this.pipeline.script.echo e.toString()
                         throw e
                     }
                 }
