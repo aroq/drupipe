@@ -112,7 +112,7 @@ class DrupipePipeline implements Serializable {
                 }
 
                 if (body) {
-                    body(this, this.context)
+                    body(this)
 //                    def result = body(context)
 //                    if (result) {
 //                        context << result

@@ -3,13 +3,13 @@
 // Pipeline used to create project specific pipelines.
 def call(LinkedHashMap p = [:]) {
     drupipe { context, pipeline ->
-        drupipeBlock(withDocker: true, nodeName: 'default', dockerImage: context.defaultDocmanImage, context) {
+        drupipeBlock(withDocker: true, nodeName: 'default', dockerImage: context.defaultDocmanImage) {
             checkout scm
             drupipeAction(action: 'Docman.info', pipeline)
             stash name: 'config', includes: "${context.projectConfigPath}/**, library/**, mothership/**', excludes: '.git, .git/**"
         }
 
-        drupipeBlock(nodeName: 'master', context) {
+        drupipeBlock(nodeName: 'master') {
             checkout scm
             if (fileExists(context.projectConfigPath)) {
                 dir(context.projectConfigPath) {
