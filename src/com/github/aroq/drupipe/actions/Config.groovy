@@ -336,6 +336,7 @@ class Config extends BaseAction {
                 this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
             }
             utils.debugLog(action.pipeline.context, action.pipeline.context, "action.pipeline.context", [debugMode: 'json'], [], true)
+            utils.debugLog(action.pipeline.context, context, "context", [debugMode: 'json'], [], true)
 
             def providers = [
                 [
