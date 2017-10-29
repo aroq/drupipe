@@ -253,6 +253,7 @@ params = [
             ],
         ],
         Helm_apply: [
+            dump_result: true,
             command: 'upgrade',
             value_suffix: 'values.yaml',
             timeout: '120',
