@@ -237,7 +237,7 @@ params = [
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
             ],
-            results: [
+            post_process: [
                 namespace: [
                     type: 'context',
                     source: 'namespace', // From action params.
