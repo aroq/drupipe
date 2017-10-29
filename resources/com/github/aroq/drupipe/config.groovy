@@ -61,11 +61,11 @@ params = [
         Config_mothershipConfig: [
             mothershipConfigFile: 'mothership.config',
             post_process: [
-//                result: [
-//                    type: 'result',
-//                    source: 'configRepo',
-//                    destination: 'configRepo',
-//                ],
+                result: [
+                    type: 'result',
+                    source: 'result.configRepo',
+                    destination: 'configRepo',
+                ],
             ],
         ],
         Config_projectConfig: [
