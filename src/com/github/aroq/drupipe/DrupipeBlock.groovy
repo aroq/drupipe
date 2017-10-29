@@ -12,6 +12,8 @@ class DrupipeBlock implements Serializable {
 
     String dockerImage = 'use_default'
 
+    DrupipeBlock block
+
 //    LinkedHashMap pipeline.context = [:]
 
     LinkedHashMap config = [:]
