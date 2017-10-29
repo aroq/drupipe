@@ -156,12 +156,13 @@ class DrupipeActionWrapper implements Serializable {
                                 if (result.value.type == 'context') {
                                     def deepValue = utils.deepGet(this.result, result.value.source.tokenize('.'))
                                     if (deepValue) {
+                                        // TODO: check it again.
 //                                        contextStoreResult(result.value.destination.tokenize('.'), tempContext, deepValue)
                                         tempContext = utils.merge(tempContext, deepValue)
                                         if (this.params.dump_result) {
-                                            script.echo "SOURCE: ${result.value.source}"
-                                            script.echo "DESTINATION: ${result.value.destination}"
-                                            script.echo "deepValue: ${deepValue}"
+//                                            script.echo "SOURCE: ${result.value.source}"
+//                                            script.echo "DESTINATION: ${result.value.destination}"
+//                                            script.echo "deepValue: ${deepValue}"
                                             utils.debugLog(pipeline.context, tempContext, "Temp context", [debugMode: 'json'], [], true)
                                         }
                                     }
@@ -177,7 +178,7 @@ class DrupipeActionWrapper implements Serializable {
             }
 
 
-            this.result = this.result ? this.result : [:]
+//            this.result = this.result ? this.result : [:]
             if (this.params.dump_result) {
                 utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], true)
             }
@@ -197,7 +198,6 @@ class DrupipeActionWrapper implements Serializable {
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
             this.result
-//            [:]
         }
         catch (err) {
             notification.status = 'FAILED'
