@@ -55,16 +55,16 @@ class Source extends BaseAction {
         if (path) {
             result.loadedSources[source.name] = new com.github.aroq.drupipe.DrupipeSource(name: source.name, type: source.type, path: source.path)
             result.sourcesList << result.loadedSources[source.name]
-//            utils.debugLog(context, context.loadedSources, "Loaded sources (after Source.add)", [debugMode: 'json'])
+//            utils.debugLog(action.pipeline.context, action.pipeline.context.loadedSources, "Loaded sources (after Source.add)", [debugMode: 'json'])
         }
         result
-//        [loadedSources: context.loadedSources, sourcesList: context.sourcesList]
+//        [loadedSources: context.loadedSources, sourcesList: action.pipeline.context.sourcesList]
     }
 
     def loadConfig() {
         def result = [:]
         if (action.params.configPath) {
-            def configFilePath = utils.sourcePath(context, action.params.sourceName, action.params.configPath)
+            def configFilePath = utils.sourcePath(action.pipeline.context, action.params.sourceName, action.params.configPath)
             if (configFilePath) {
                 if (script.fileExists(configFilePath)) {
                     if (action.params.configType == 'groovy') {
