@@ -19,7 +19,7 @@ class DrupipeStage implements Serializable {
                     // TODO: recheck it.
                     this.pipeline.context << body()
                 }
-                this.pipeline.context << ['stage': this]
+                this.pipeline.stage = this
                 if (actions) {
                     try {
                         for (a in this.actions) {
@@ -27,10 +27,10 @@ class DrupipeStage implements Serializable {
                                 utils.debugLog(pipeline.context, this.pipeline.context, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() BEFORE EXECUTE", [:], [], true)
                             }
                             utils.dump(pipeline.context, a, 'DrupipeStage a BEFORE EXECUTE', true)
-                            a.pipeline.context = a.pipeline.context ? utils.merge(s.pipeline.context, pipeline.context) : pipeline.context
+//                            a.pipeline.context = a.pipeline.context ? utils.merge(s.pipeline.context, pipeline.context) : pipeline.context
                             def action = new DrupipeActionWrapper(a)
                             def actionResult = action.execute().result
-                            pipeline.context = pipeline.context ? utils.merge(pipeline.context, actionResult) : actionResult
+//                            pipeline.context = pipeline.context ? utils.merge(pipeline.context, actionResult) : actionResult
                             if (pipeline.context.params) {
                                 utils.dump(pipeline.context, pipeline.context.params, 'DrupipeStage this.pipeline.context AFTER', true)
                             }
@@ -38,7 +38,7 @@ class DrupipeStage implements Serializable {
                                 utils.debugLog(pipeline.context, this.pipeline.context, "ACTION ${a.name}.${a.methodName} DrupipeStage.execute() AFTER EXECUTE", [:], [], true)
                             }
                         }
-                        this.pipeline.context
+//                        this.pipeline.context
                     }
                     catch (e) {
                         this.pipeline.script.echo e.toString()
