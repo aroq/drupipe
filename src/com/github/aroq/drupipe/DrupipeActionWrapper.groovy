@@ -156,7 +156,8 @@ class DrupipeActionWrapper implements Serializable {
                                 if (result.value.type == 'context') {
                                     def deepValue = utils.deepGet(this.result, result.value.source.tokenize('.'))
                                     if (deepValue) {
-                                        contextStoreResult(result.value.destination.tokenize('.'), tempContext, deepValue)
+//                                        contextStoreResult(result.value.destination.tokenize('.'), tempContext, deepValue)
+                                        tempContext = utils.merge(tempContext, deepValue)
                                         if (this.params.dump_result) {
                                             script.echo "SOURCE: ${result.value.source}"
                                             script.echo "DESTINATION: ${result.value.destination}"
