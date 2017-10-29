@@ -180,7 +180,7 @@ class DrupipeActionWrapper implements Serializable {
             if (this.params.dump_result) {
                 utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], true)
             }
-            if (this.result) {
+            if (tempContext) {
                 pipeline.context = pipeline.context ? utils.merge(pipeline.context, tempContext) : tempContext
             }
 
@@ -195,8 +195,8 @@ class DrupipeActionWrapper implements Serializable {
 //            }
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
-//            this.result
-            [:]
+            this.result
+//            [:]
         }
         catch (err) {
             notification.status = 'FAILED'
