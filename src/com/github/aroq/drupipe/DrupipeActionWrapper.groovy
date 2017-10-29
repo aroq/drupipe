@@ -152,7 +152,7 @@ class DrupipeActionWrapper implements Serializable {
                                     def deepValue = utils.deepGet(this.result, result.value.source.tokenize('.'))
                                     if (deepValue) {
                                         script.echo "DESTINATION: ${result.value.destination}"
-                                        contextStoreResult(result.value.destination.tokenize('.'), this.result, deepValue)
+//                                        contextStoreResult(result.value.destination.tokenize('.'), this.result, deepValue)
                                         if (this.params.dump_result) {
                                             script.echo "deepValue: ${deepValue}"
 //                                            utils.debugLog(pipeline.context, this.result, "action_result after result save", [debugMode: 'json'], [], true)
