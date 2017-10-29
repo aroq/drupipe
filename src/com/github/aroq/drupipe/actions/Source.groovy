@@ -20,7 +20,7 @@ class Source extends BaseAction {
                     source.refType = 'branch'
                 }
                 script.dir(source.path) {
-                    script.deleteDir()
+                    this.script.deleteDir()
                 }
 
                 source.mode = source.mode ? source.mode : 'pipeline'
