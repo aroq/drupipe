@@ -5,6 +5,8 @@ import com.github.aroq.drupipe.DrupipePipeline
 
 class Kubectl extends BaseAction {
 
+    def script
+
     def scale_replicaset() {
         executeKubectlCommand()
     }
