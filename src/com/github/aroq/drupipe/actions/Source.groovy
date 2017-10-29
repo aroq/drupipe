@@ -28,11 +28,11 @@ class Source extends BaseAction {
                 if (source.refType == 'branch' && source.mode == 'pipeline') {
                     script.dir(source.path) {
                         if (this.action.params.credentialsId) {
-                            script.echo "With credentials: ${this.action.params.credentialsId}"
-                            script.git credentialsId: this.action.params.credentialsId, url: source.url, branch: source.branch
+                            this.script.echo "With credentials: ${this.action.params.credentialsId}"
+                            this.script.git credentialsId: this.action.params.credentialsId, url: source.url, branch: source.branch
                         } else {
-                            script.echo "Without credentials"
-                            script.git url: source.url, branch: source.branch
+                            this.script.echo "Without credentials"
+                            this.script.git url: source.url, branch: source.branch
                         }
                     }
                 }
