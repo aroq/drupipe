@@ -64,7 +64,7 @@ class DrupipeActionWrapper implements Serializable {
             for (actionName in ['ACTION',this.name, this.name + '_' + this.methodName]) {
                 if (pipeline.context && pipeline.context.params && pipeline.context.params.action && actionName in pipeline.context.params.action) {
                     defaultActionParams = utils.merge(defaultActionParams, pipeline.context.params.action[actionName])
-                    utils.debugLog(defaultActionParams, defaultActionParams, "defaultActionParams after merge from ${actionName} action CONFIG", [:], [], true)
+                    utils.debugLog(defaultActionParams, defaultActionParams, "defaultActionParams after merge from ${actionName} action CONFIG", [:], [], this.params.debugEnabled)
                 }
             }
 
@@ -72,7 +72,7 @@ class DrupipeActionWrapper implements Serializable {
                 this.params = [:]
             }
             this.params = utils.merge(defaultActionParams, this.params)
-            utils.debugLog(this.params, this.params, "this.params after merge defaultActionParams with this.params", [:], [], true)
+            utils.debugLog(this.params, this.params, "this.params after merge defaultActionParams with this.params", [:], [], this.params.debugEnabled)
 
             // Interpolate action params with pipeline.context variables.
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
@@ -138,7 +138,7 @@ class DrupipeActionWrapper implements Serializable {
                     }
 
                     if (this.params.dump_result) {
-                        utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], true)
+                        utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], this.params.debugEnabled)
                     }
 
                     // Results processing.
@@ -162,7 +162,7 @@ class DrupipeActionWrapper implements Serializable {
 //                                            script.echo "SOURCE: ${result.value.source}"
 //                                            script.echo "DESTINATION: ${result.value.destination}"
 //                                            script.echo "deepValue: ${deepValue}"
-                                            utils.debugLog(pipeline.context, tempContext, "Temp context", [debugMode: 'json'], [], true)
+                                            utils.debugLog(pipeline.context, tempContext, "Temp context", [debugMode: 'json'], [], this.params.debugEnabled)
                                         }
                                     }
                                 }
@@ -171,7 +171,7 @@ class DrupipeActionWrapper implements Serializable {
                     }
 
                     if (pipeline.context.params && pipeline.context.params.action && pipeline.context.params.action["${name}_${methodName}"] && pipeline.context.params.action["${name}_${methodName}"].debugEnabled) {
-                        utils.debugLog(pipeline.context, pipeline.context, "pipeline.context results", [debugMode: 'json'], [this.params.store_result_key], true)
+                        utils.debugLog(pipeline.context, pipeline.context, "pipeline.context results", [debugMode: 'json'], [this.params.store_result_key], this.params.debugEnabled)
                     }
                 }
             }
@@ -179,7 +179,7 @@ class DrupipeActionWrapper implements Serializable {
 
 //            this.result = this.result ? this.result : [:]
             if (this.params.dump_result) {
-                utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], true)
+                utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], this.params.debugEnabled)
             }
             if (tempContext) {
                 pipeline.context = pipeline.context ? utils.merge(pipeline.context, tempContext) : tempContext
