@@ -54,7 +54,7 @@ class Source extends BaseAction {
             result.loadedSources[source.name] = [name: source.name, type: source.type, path: source.path]
             result.sourcesList << result.loadedSources[source.name]
         }
-//        result = utils.serializeAndDeserialize(result)
+
         result
     }
 
