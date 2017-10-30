@@ -37,16 +37,18 @@ class PipelineController extends BaseAction {
                 tar -czf ${fileName} ${sourceDir}
             """, action.params
         )
+        [:]
     }
 
     def deploy() {
         if (action.params.deployHandler && action.params.deployHandler.handler) {
             retrieveArtifact()
-            action.pipeline.context << script.drupipeAction([action: "${action.params.deployHandler.handler}.${action.params.deployHandler.method}", params: action.pipeline.context.builder.artifactParams], action.pipeline)
+            script.drupipeAction([action: "${action.params.deployHandler.handler}.${action.params.deployHandler.method}", params: action.pipeline.context.builder.artifactParams], action.pipeline)
         }
         else {
             script.echo "No deploy handler defined"
         }
+        [:]
     }
 
     def operations() {
@@ -62,15 +64,17 @@ class PipelineController extends BaseAction {
                 script.echo "No operations handler defined"
             }
         }
+        [:]
     }
 
     def test() {
         if (action.params.testHandler && action.params.testHandler.handler) {
-            action.pipeline.context << script.drupipeAction([action: "${action.params.testHandler.handler}.${action.params.testHandler.method}"], action.pipeline)
+            script.drupipeAction([action: "${action.params.testHandler.handler}.${action.params.testHandler.method}"], action.pipeline)
         }
         else {
             script.echo "No test handler defined"
         }
+        [:]
     }
 
     def retrieveArtifact() {
@@ -80,7 +84,7 @@ class PipelineController extends BaseAction {
         if (action.params.artifactHandler && action.params.artifactHandler.handler) {
             //script.drupipeAction([action: "${action.params.buildHandler.handler}.artifactParams"], action.pipeline.context)
             artifactParams()
-            action.pipeline.context << script.drupipeAction([action: "${action.params.artifactHandler.handler}.${action.params.artifactHandler.method}", params: action.pipeline.context.builder.artifactParams], action.pipeline)
+            script.drupipeAction([action: "${action.params.artifactHandler.handler}.${action.params.artifactHandler.method}", params: action.pipeline.context.builder.artifactParams], action.pipeline)
             if (!action.pipeline.context.projectName) {
                 action.pipeline.context.projectName = 'master'
             }
@@ -88,6 +92,7 @@ class PipelineController extends BaseAction {
         else {
             script.echo "No artifact handler defined"
         }
+        [:]
     }
 
     def repoParams(String configPath) {
@@ -123,6 +128,7 @@ class PipelineController extends BaseAction {
 
     def artifactParams() {
         action.pipeline.context.builder.artifactParams = repoParams('master')
+        [:]
     }
 
 }
