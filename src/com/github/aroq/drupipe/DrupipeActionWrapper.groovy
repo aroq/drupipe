@@ -45,17 +45,12 @@ class DrupipeActionWrapper implements Serializable {
             notification.name = "Action ${name}"
             notification.level = "action:${drupipeStageName}"
 
-//            utils.pipelineNotify(pipeline.context, notification << [status: 'START'])
+            utils.pipelineNotify(pipeline.context, notification << [status: 'START'])
             utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} start <-")
 
-            if (this.name == 'Docman') {
-                pipeline.context = utils.serializeAndDeserialize(pipeline.context)
-                utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName} - INIT", [debugMode: 'json'], [], true)
-            }
 
             // Define action params.
             def actionParams = [:]
-//            actionParams << ['action': this]
             def defaultActionParams = [:]
 
             // TODO: read action default params from YAML.
@@ -185,8 +180,6 @@ class DrupipeActionWrapper implements Serializable {
             }
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
-//            pipeline.context = utils.serializeAndDeserialize(pipeline.context)
-//            utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName}", [debugMode: 'json'], [], true)
             this.result
         }
         catch (err) {
@@ -196,20 +189,18 @@ class DrupipeActionWrapper implements Serializable {
             throw err
         }
         finally {
-//            if (notification.status != 'FAILED') {
-//                notification.status = 'SUCCESSFUL'
-//            }
-//            if (this && this.result && this.result && this.result.result) {
-//                notification.message = notification.message ? notification.message : ''
-//                notification.message = notification.message + "\n\n" + this.result.result
-//            }
-//            if (this && this.result && this.result && this.result.stdout) {
-//                notification.message = notification.message ? notification.message : ''
-//                notification.message = notification.message + "\n\n" + this.result.stdout
-//            }
-//            // TODO: Enable & check why it breaks context dump.
-//            utils.pipelineNotify(pipeline.contex, notification)
-//            utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName} - FINALLY", [debugMode: 'json'], [], true)
+            if (notification.status != 'FAILED') {
+                notification.status = 'SUCCESSFUL'
+            }
+            if (this && this.result && this.result && this.result.result) {
+                notification.message = notification.message ? notification.message : ''
+                notification.message = notification.message + "\n\n" + this.result.result
+            }
+            if (this && this.result && this.result && this.result.stdout) {
+                notification.message = notification.message ? notification.message : ''
+                notification.message = notification.message + "\n\n" + this.result.stdout
+            }
+            utils.pipelineNotify(pipeline.contex, notification)
         }
     }
 

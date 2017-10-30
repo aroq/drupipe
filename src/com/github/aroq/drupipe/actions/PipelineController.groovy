@@ -21,8 +21,6 @@ class PipelineController extends BaseAction {
         else {
             script.echo "No builder handler defined"
         }
-        action.pipeline.context = utils.serializeAndDeserialize(action.pipeline.context)
-        utils.debugLog(action.pipeline.context, action.pipeline.context, "CONFIG CONTEXT - ${action.fullName}", [debugMode: 'json'], [], true)
         [:]
     }
 
@@ -98,7 +96,6 @@ class PipelineController extends BaseAction {
     }
 
     def repoParams(String configPath) {
-        utils.debugLog(action.pipeline.context, action.pipeline.context, 'CONFIG CONTEXT', [debugMode: 'json'], [], true)
         def repo
         def masterInfoFile = "${action.pipeline.context.projectConfigPath}/${configPath}/info.yaml"
         if (script.fileExists(masterInfoFile)) {
