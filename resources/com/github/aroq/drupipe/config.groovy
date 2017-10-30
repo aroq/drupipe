@@ -104,8 +104,6 @@ params = [
             return_stdout: true,
         ],
         Docman: [
-            debugEnabled: true,
-            dump_result: true,
             docmanJsonConfigFile: 'config.json',
             build_type: 'git_target',
         ],
@@ -177,8 +175,6 @@ params = [
             timeToConfirm: 60,
         ],
         PipelineController: [
-            debugEnabled: true,
-            dump_result: true,
             buildHandler: [
                 method: 'build',
             ],
@@ -194,8 +190,6 @@ params = [
             ],
         ],
         GitArtifact: [
-            debugEnabled: true,
-            dump_result: true,
             dir: 'artifacts',
             repoDirName: 'master',
         ],
