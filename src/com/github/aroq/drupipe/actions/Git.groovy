@@ -35,6 +35,7 @@ class Git extends BaseAction {
             git clone ${options} ${action.params.repoAddress} ${action.params.repoDirName}
             """, action.params
         )
+        [:]
     }
 }
 

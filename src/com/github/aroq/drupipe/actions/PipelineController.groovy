@@ -58,7 +58,7 @@ class PipelineController extends BaseAction {
         else {
             if (action.params.operationsHandler && action.params.operationsHandler.handler) {
                 retrieveArtifact()
-                action.pipeline.context << script.drupipeAction([action: "${action.params.operationsHandler.handler}.${action.params.operationsHandler.method}"], action.pipeline)
+                script.drupipeAction([action: "${action.params.operationsHandler.handler}.${action.params.operationsHandler.method}"], action.pipeline)
             }
             else {
                 script.echo "No operations handler defined"

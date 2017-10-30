@@ -36,8 +36,8 @@ class DrupipePipeline implements Serializable {
                     utils.dump(params, config, 'PIPELINE-CONFIG')
 
                     script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params]], this)
-//                    context << (configParams << config << context)
                     utils.dump(context, context, 'PIPELINE-CONTEXT')
+
                     // Secret option for emergency remove workspace.
                     if (context.force == '11') {
                         script.echo 'FORCE REMOVE DIR'
