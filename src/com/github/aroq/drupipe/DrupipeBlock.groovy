@@ -40,7 +40,6 @@ class DrupipeBlock implements Serializable {
         }
         pipeline.context.dockerImage = dockerImage
 
-        def result = [:]
         pipeline.block = this
 
         if (nodeName) {
@@ -61,7 +60,7 @@ class DrupipeBlock implements Serializable {
                     if (pipeline.context.containerMode == 'kubernetes') {
                         pipeline.script.drupipeWithKubernetes(pipeline.context) {
 //                            pipeline.script.checkout pipeline.script.scm
-                            result = _execute(body)
+                            _execute(body)
                         }
                     }
                     else if (pipeline.context.containerMode == 'docker') {
@@ -73,23 +72,21 @@ class DrupipeBlock implements Serializable {
                                 }
                             }
                             pipeline.script.checkout pipeline.script.scm
-                            result = _execute(body)
+                            _execute(body)
                         }
                     }
                 }
                 else {
                     pipeline.script.sshagent([pipeline.context.credentialsId]) {
-                        result = _execute(body)
+                        _execute(body)
                     }
                 }
             }
             //utils.pipelineNotify(pipeline.context, [name: "Block on ${nodeName}", status: 'END', level: 'block'])
         }
         else {
-            result = _execute(body)
+            _execute(body)
         }
-
-        result
     }
 
     def _execute(body = null) {

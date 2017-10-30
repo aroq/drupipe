@@ -49,7 +49,7 @@ class DrupipePipeline implements Serializable {
                     if (context.job) {
                         def job = context.job
                         if (job) {
-                            utils.pipelineNotify(context, notification << [status: 'START'])
+//                            utils.pipelineNotify(context, notification << [status: 'START'])
 
                             def pipelineBlocks = context.job.pipeline && context.job.pipeline.blocks ? context.job.pipeline.blocks : []
                             if (pipelineBlocks) {
@@ -104,6 +104,9 @@ class DrupipePipeline implements Serializable {
                 if (blocks) {
                     for (def i = 0; i < blocks.size(); i++) {
                         blocks[i].pipeline = this
+                        script.echo "TRY serialize - 1-${i}"
+                        context = utils.serializeAndDeserialize(context)
+                        utils.debugLog(context, context, "CONFIG CONTEXT - DrupipePipeline - blocks[${i}]", [debugMode: 'json'], [], true)
                         (new DrupipeBlock(blocks[i])).execute()
                     }
                 }
@@ -113,12 +116,6 @@ class DrupipePipeline implements Serializable {
 
                 if (body) {
                     body(this)
-//                    def result = body(context)
-//                    if (result) {
-//                        context << result
-                        // TODO: check it.
-//                        pipeline << this
-//                    }
                 }
 
                 script.node('master') {
