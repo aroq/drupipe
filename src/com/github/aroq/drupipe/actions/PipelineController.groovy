@@ -110,7 +110,7 @@ class PipelineController extends BaseAction {
 
         String reference
         if (action.pipeline.context.release) {
-            reference = action.pipeline.context.release
+            reference = action.pipeline.context.jenkinsParams.release
         }
         else {
             reference = action.pipeline.context.environmentParams.git_reference
