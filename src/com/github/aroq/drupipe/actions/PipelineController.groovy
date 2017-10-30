@@ -21,6 +21,7 @@ class PipelineController extends BaseAction {
         else {
             script.echo "No builder handler defined"
         }
+        action.pipeline.context = utils.serializeAndDeserialize(action.pipeline.context)
         utils.debugLog(action.pipeline.context, action.pipeline.context, "CONFIG CONTEXT - ${action.fullName}", [debugMode: 'json'], [], true)
         [:]
     }
