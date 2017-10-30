@@ -200,7 +200,7 @@ class DrupipeActionWrapper implements Serializable {
                 notification.message = notification.message ? notification.message : ''
                 notification.message = notification.message + "\n\n" + this.result.stdout
             }
-            utils.pipelineNotify(pipeline.contex, notification)
+            utils.pipelineNotify(pipeline.context, notification)
         }
     }
 
