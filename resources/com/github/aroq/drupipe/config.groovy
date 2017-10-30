@@ -174,7 +174,6 @@ params = [
         ],
         PipelineController: [
             debugEnabled: true,
-            dump_result: true,
             buildHandler: [
                 method: 'build',
             ],
