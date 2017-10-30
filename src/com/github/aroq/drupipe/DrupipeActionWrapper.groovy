@@ -28,11 +28,6 @@ class DrupipeActionWrapper implements Serializable {
     }
 
     def execute() {
-        if (this.name == 'Docman') {
-            pipeline.context = utils.serializeAndDeserialize(pipeline.context)
-            utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName} - INIT", [debugMode: 'json'], [], true)
-        }
-
         utils = pipeline.utils
 
         this.script = pipeline.script
@@ -50,8 +45,13 @@ class DrupipeActionWrapper implements Serializable {
             notification.name = "Action ${name}"
             notification.level = "action:${drupipeStageName}"
 
-            utils.pipelineNotify(pipeline.context, notification << [status: 'START'])
+//            utils.pipelineNotify(pipeline.context, notification << [status: 'START'])
             utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} start <-")
+
+            if (this.name == 'Docman') {
+                pipeline.context = utils.serializeAndDeserialize(pipeline.context)
+                utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName} - INIT", [debugMode: 'json'], [], true)
+            }
 
             // Define action params.
             def actionParams = [:]
