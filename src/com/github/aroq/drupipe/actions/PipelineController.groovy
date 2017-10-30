@@ -16,7 +16,7 @@ class PipelineController extends BaseAction {
         }
         if (action.params.buildHandler && action.params.buildHandler.handler) {
             // Dispatch the action.
-            utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${action.fullName}", [debugMode: 'json'], [], true)
+            utils.debugLog(action.pipeline.context, action.pipeline.context, "CONFIG CONTEXT - ${action.fullName}", [debugMode: 'json'], [], true)
             script.drupipeAction([action: "${action.params.buildHandler.handler}.${action.params.buildHandler.method}"], action.pipeline)
         }
         else {
