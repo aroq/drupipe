@@ -77,7 +77,7 @@ class Docman extends BaseAction {
         script.drupipeShell(
             """
             cd docroot
-            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(action.pipeline.context)}
+            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag()}
             """, action.params
         )
         action.pipeline.context
@@ -87,7 +87,7 @@ class Docman extends BaseAction {
         script.drupipeShell(
             """
             cd docroot
-            docman deploy git_target ${action.pipeline.context.projectName} branch ${action.pipeline.context.version} ${forceFlag(action.pipeline.context)}
+            docman deploy git_target ${action.pipeline.context.projectName} branch ${action.pipeline.context.version} ${forceFlag()}
             """, action.params
         )
     }
