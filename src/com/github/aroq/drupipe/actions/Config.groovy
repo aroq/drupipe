@@ -90,14 +90,12 @@ class Config extends BaseAction {
 
         utils.debugLog(action.pipeline.context, action.pipeline.context, 'CONFIG CONTEXT')
 
-//        context.return_stdout = false
-
         def stashes = action.pipeline.context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
 
         script.echo "Stashes: ${stashes}"
 
         script.stash name: 'config', includes: "${stashes}", excludes: ".git, .git/**"
-       action.pipeline.context
+        [:]
     }
 
     def jenkinsConfig() {
