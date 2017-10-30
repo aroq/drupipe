@@ -55,11 +55,6 @@ class DrupipePipeline implements Serializable {
 //                            utils.pipelineNotify(context, notification << [status: 'START'])
 
                             def pipelineBlocks = context.job.pipeline && context.job.pipeline.blocks ? context.job.pipeline.blocks : []
-                            script.node('master') {
-                                script.echo "CONFIG CONTEXT - DrupipePipeline - 2"
-                                context = utils.serializeAndDeserialize(context)
-                                utils.debugLog(context, context, "CONFIG CONTEXT - DrupipePipeline - 2", [debugMode: 'json'], [], true)
-                            }
                             if (pipelineBlocks) {
                                 for (def i = 0; i < pipelineBlocks.size(); i++) {
                                     if (context.blocks && context.blocks[pipelineBlocks[i]]) {
@@ -79,6 +74,11 @@ class DrupipePipeline implements Serializable {
                                     else {
                                         script.echo "No pipeline block: ${pipelineBlocks[i]} is defined."
                                     }
+                                }
+                                script.node('master') {
+                                    script.echo "CONFIG CONTEXT - DrupipePipeline - 2"
+                                    context = utils.serializeAndDeserialize(context)
+                                    utils.debugLog(context, context, "CONFIG CONTEXT - DrupipePipeline - 2", [debugMode: 'json'], [], true)
                                 }
                             }
                             else {
