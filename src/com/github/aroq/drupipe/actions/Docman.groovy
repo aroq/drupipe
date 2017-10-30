@@ -27,8 +27,7 @@ class Docman extends BaseAction {
             action.pipeline.context.projectName = utils.projectNameByGroupAndRepoName(script, docrootConfigJson, action.pipeline.context.env.gitlabSourceNamespace, action.pipeline.context.env.gitlabSourceRepoName)
         }
         script.echo "PROJECT NAME: ${action.pipeline.context.jenkinsParams.projectName}"
-
-        action.pipeline.context
+        [:]
     }
 
     def info() {
@@ -41,12 +40,13 @@ class Docman extends BaseAction {
         docman info full config.json
         """, action.params
         )
+        [:]
     }
 
     def build() {
         init()
         deploy()
-        action.pipeline.context
+        [:]
     }
 
     def stripedBuild() {
@@ -67,7 +67,7 @@ class Docman extends BaseAction {
         action.pipeline.context.builder['buildDir'] = "${action.pipeline.context.docrootDir}/master"
         action.pipeline.context.builder['buildName'] = action.pipeline.context.jenkinsFolderName
         action.pipeline.context.builder['version'] = (new Date()).format('yyyy-MM-dd--hh-mm-ss')
-        action.pipeline.context
+        [:]
     }
 
     def releaseBuild() {
