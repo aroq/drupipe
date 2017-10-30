@@ -304,4 +304,36 @@ class DrupipePipeline implements Serializable {
         this.script.checkout this.scm
     }
 
+    def scripts_library_load() {
+        if (!context.scripts_library_loaded) {
+            def url  = context.params.pipeline.scripts_library.url
+            def ref  = context.params.pipeline.scripts_library.ref
+            def type = context.params.pipeline.scripts_library.type
+
+            // TODO: check for the version ref type)
+            if (context.env['library.global.version']) {
+                ref = context.env['library.global.version']
+                type = 'tag'
+                script.echo "Set drupipeLibraryBranch to ${ref} as library.global.version was set"
+            }
+            else {
+                script.echo "ENV variable library.global.version is not set"
+            }
+            script.drupipeAction([
+                action: 'Source.add',
+                params: [
+                    source: [
+                        name: 'library',
+                        type: 'git',
+                        path: 'library',
+                        url: url,
+                        branch: ref,
+                        refType: type,
+                    ],
+                ],
+            ], this)
+            context.scripts_library_loaded = true
+        }
+    }
+
 }

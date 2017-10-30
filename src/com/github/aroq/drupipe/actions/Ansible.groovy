@@ -86,7 +86,7 @@ class Ansible extends BaseAction {
         else {
             action.params.workingDir = '.'
         }
-        utils.loadLibrary(script, context)
+        action.pipeline.scripts_library_load()
         def command =
             """ansible-playbook ${action.params.playbook} \
             -i ${action.params.inventoryArgument} \

@@ -162,34 +162,6 @@ def getMothershipProjectParams(config, json) {
     projects[config.jenkinsFolderName] ? projects[config.jenkinsFolderName] : [:]
 }
 
-def loadLibrary(script, context) {
-    if (!context.libraryLoaded) {
-        // TODO: check for the version ref type)
-        if (context.env['library.global.version']) {
-            context.drupipeLibraryBranch = context.env['library.global.version']
-            context.drupipeLibraryType = 'tag'
-            script.echo "Set drupipeLibraryBranch to ${context.drupipeLibraryBranch } as library.global.version was set"
-        }
-        else {
-            script.echo "ENV variable library.global.version is not set"
-        }
-        script.drupipeAction([
-            action: 'Source.add',
-            params: [
-                source: [
-                    name: 'library',
-                    type: 'git',
-                    path: 'library',
-                    url: context.drupipeLibraryUrl,
-                    branch: context.drupipeLibraryBranch,
-                    refType: context.drupipeLibraryType,
-                ],
-            ],
-        ], context)
-        context.libraryLoaded = true
-    }
-}
-
 boolean isCollectionOrList(object) {
     object instanceof java.util.Collection || object instanceof java.util.List || object instanceof java.util.LinkedHashMap || object instanceof java.util.HashMap
 }

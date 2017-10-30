@@ -6,9 +6,8 @@ debugEnabled = false
 docrootDir = 'docroot'
 projectConfigPath = 'docroot/config'
 projectConfigFile = 'docroot.config'
-drupipeLibraryUrl = 'https://github.com/aroq/drupipe.git'
-drupipeLibraryBranch = 'master'
-drupipeLibraryType = 'branch'
+
+
 dockerImage = 'aroq/drudock:1.4.0'
 nodeName = 'default'
 containerMode = 'docker'
@@ -18,6 +17,13 @@ logRotatorNumToKeep = 5
 drupipeDockerArgs = '--user root:root --net=host'
 
 params = [
+    pipeline: [
+        scripts_library: [
+            url: 'https://github.com/aroq/drupipe.git',
+            ref: 'master',
+            type: 'branch',
+        ]
+    ],
     block: [
 
     ],
