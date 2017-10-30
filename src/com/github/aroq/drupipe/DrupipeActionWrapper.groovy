@@ -180,6 +180,7 @@ class DrupipeActionWrapper implements Serializable {
             }
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
+            utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName}", [debugMode: 'json'], [], true)
             this.result
         }
         catch (err) {
