@@ -173,6 +173,8 @@ params = [
             timeToConfirm: 60,
         ],
         PipelineController: [
+            debugEnabled: true,
+            dump_result: true,
             buildHandler: [
                 method: 'build',
             ],
