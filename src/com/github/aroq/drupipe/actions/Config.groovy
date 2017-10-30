@@ -149,7 +149,9 @@ class Config extends BaseAction {
         def result = [:]
         result.workspace = this.script.pwd()
         result.env = this.utils.envToMap()
+        // TODO: Use env vars pattern to ovverride.
         result.credentialsId = result.env.credentialsId
+        result.environment = result.env.environment
 //        result << result.env
 
         String jobPath = this.script.env.BUILD_URL ? this.script.env.BUILD_URL : this.script.env.JOB_DISPLAY_URL
