@@ -33,7 +33,7 @@ class Ansible extends BaseAction {
 
     def deploy() {
         init()
-        script.echo(context.builder.artifactParams.dir)
+        script.echo(action.pipeline.context.builder.artifactParams.dir)
         action.params.playbookParams << [
             ansistrano_deploy_to:   action.pipeline.context.environmentParams.root,
             ansistrano_deploy_from: action.pipeline.context.builder.artifactParams.dir + '/',
