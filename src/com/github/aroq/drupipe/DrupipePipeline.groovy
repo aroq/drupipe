@@ -104,9 +104,6 @@ class DrupipePipeline implements Serializable {
                 if (blocks) {
                     for (def i = 0; i < blocks.size(); i++) {
                         blocks[i].pipeline = this
-                        script.echo "TRY serialize - 1-${i}"
-                        context = utils.serializeAndDeserialize(context)
-                        utils.debugLog(context, context, "CONFIG CONTEXT - DrupipePipeline - blocks[${i}]", [debugMode: 'json'], [], true)
                         (new DrupipeBlock(blocks[i])).execute()
                     }
                 }

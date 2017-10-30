@@ -96,12 +96,7 @@ class DrupipeBlock implements Serializable {
         else {
             if (body) {
                 body()
-//                def result = body()
-//                if (result) {
-//                    pipeline.context << body()
-//                }
             }
         }
-//        pipeline.context
     }
 }
