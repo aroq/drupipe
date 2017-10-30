@@ -109,7 +109,7 @@ class PipelineController extends BaseAction {
         script.echo "REPO: ${repo}"
 
         String reference
-        if (action.pipeline.context.release) {
+        if (action.pipeline.context.jenkinsParams.release) {
             reference = action.pipeline.context.jenkinsParams.release
         }
         else {
