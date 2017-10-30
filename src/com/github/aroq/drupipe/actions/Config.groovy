@@ -80,12 +80,18 @@ class Config extends BaseAction {
                     action.pipeline.context.environmentParams = environment
                 }
                 // For compatibility:
-                if (action.pipeline.context.environmentParams) {
+                if (action.pipeline.context.environmentParams.defaultActionParams) {
                     action.pipeline.context.params.action = utils.merge(action.pipeline.context.params.action, action.pipeline.context.environmentParams.defaultActionParams)
                 }
 
-                utils.jsonDump(action.pipeline.context, action.pipeline.context.environmentParams, 'ENVIRONMENT PARAMS')
+                utils.debugLog(action.pipeline.context, action.pipeline.context.environmentParams, 'ENVIRONMENT PARAMS', [:], [], true)
             }
+            else {
+                script.echo "No context.environment is defined"
+            }
+        }
+        else {
+            script.echo "No context.environments are defined"
         }
 
         utils.debugLog(action.pipeline.context, action.pipeline.context, 'CONFIG CONTEXT')
