@@ -44,8 +44,11 @@ class Docman extends BaseAction {
     }
 
     def build() {
+        utils.debugLog(action.pipeline.context, action.pipeline.context, "CONFIG CONTEXT - ${action.fullName} - 1", [debugMode: 'json'], [], true)
         init()
+        utils.debugLog(action.pipeline.context, action.pipeline.context, "CONFIG CONTEXT - ${action.fullName} - 2", [debugMode: 'json'], [], true)
         deploy()
+        utils.debugLog(action.pipeline.context, action.pipeline.context, "CONFIG CONTEXT - ${action.fullName} - 3", [debugMode: 'json'], [], true)
         [:]
     }
 

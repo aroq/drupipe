@@ -180,8 +180,8 @@ class DrupipeActionWrapper implements Serializable {
             }
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
-            pipeline.context = utils.serializeAndDeserialize(pipeline.context)
-            utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName}", [debugMode: 'json'], [], true)
+//            pipeline.context = utils.serializeAndDeserialize(pipeline.context)
+//            utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName}", [debugMode: 'json'], [], true)
             this.result
         }
         catch (err) {
