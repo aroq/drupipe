@@ -182,9 +182,9 @@ class DrupipePipeline implements Serializable {
         context
     }
 
-    def executeStages(stagesToExecute) {
+    def executeStages(stagesToExecute = [:]) {
         def stages = processStages(stagesToExecute)
-        stages += processStages(this.block.stages)
+//        stages += processStages(this.block.stages)
 
 //        utils.debugLog(context, stages, 'executeStages', [debugMode: 'json'], [], true)
 
