@@ -28,6 +28,11 @@ class DrupipeActionWrapper implements Serializable {
     }
 
     def execute() {
+        if (this.name == 'Docman') {
+            pipeline.context = utils.serializeAndDeserialize(pipeline.context)
+            utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName} - INIT", [debugMode: 'json'], [], true)
+        }
+
         utils = pipeline.utils
 
         this.script = pipeline.script

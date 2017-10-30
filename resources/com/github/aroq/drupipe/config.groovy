@@ -104,6 +104,8 @@ params = [
             return_stdout: true,
         ],
         Docman: [
+            debugEnabled: true,
+            dump_result: true,
             docmanJsonConfigFile: 'config.json',
             build_type: 'git_target',
         ],
