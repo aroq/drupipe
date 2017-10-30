@@ -10,6 +10,7 @@ class DrupipeStage implements Serializable {
 
     def execute(body = null) {
         def script = pipeline.script
+        script.echo "DrupipeStage execute - ${name}"
         script.stage(name) {
             script.gitlabCommitStatus(name) {
                 if (body) {
@@ -20,6 +21,7 @@ class DrupipeStage implements Serializable {
                 if (actions) {
                     try {
                         for (a in this.actions) {
+                            script.echo "DrupipeStage -> DrupipeAction execute - ${a.name}"
                             a.pipeline = pipeline
                             (new DrupipeActionWrapper(a)).execute()
                         }
