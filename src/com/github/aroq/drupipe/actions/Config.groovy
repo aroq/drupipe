@@ -81,7 +81,7 @@ class Config extends BaseAction {
                 }
                 // For compatibility:
                 if (action.pipeline.context.environmentParams) {
-                    action.pipeline.context.params.action = utils.merge(context.params.action, context.environmentParams.defaultActionParams)
+                    action.pipeline.context.params.action = utils.merge(action.pipeline.context.params.action, action.pipeline.context.environmentParams.defaultActionParams)
                 }
 
                 utils.jsonDump(action.pipeline.context, action.pipeline.context.environmentParams, 'ENVIRONMENT PARAMS')
