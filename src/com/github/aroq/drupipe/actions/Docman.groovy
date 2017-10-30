@@ -24,7 +24,7 @@ class Docman extends BaseAction {
         if (action.pipeline.context.env.gitlabSourceNamespace) {
             action.pipeline.context.projectName = utils.projectNameByGroupAndRepoName(script, docrootConfigJson, action.pipeline.context.env.gitlabSourceNamespace, action.pipeline.context.env.gitlabSourceRepoName)
         }
-        script.echo "PROJECT NAME: ${action.pipeline.context.projectName}"
+        script.echo "PROJECT NAME: ${action.pipeline.context.jenkinsParams.projectName}"
 
         action.pipeline.context
     }
