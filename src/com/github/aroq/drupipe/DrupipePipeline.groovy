@@ -108,11 +108,6 @@ class DrupipePipeline implements Serializable {
                         }
                     }
                 }
-                script.node('master') {
-                    script.echo "CONFIG CONTEXT - DrupipePipeline - 3"
-                    context = utils.serializeAndDeserialize(context)
-                    utils.debugLog(context, context, "CONFIG CONTEXT - DrupipePipeline - 3", [debugMode: 'json'], [], true)
-                }
 
                 if (blocks) {
                     for (def i = 0; i < blocks.size(); i++) {
