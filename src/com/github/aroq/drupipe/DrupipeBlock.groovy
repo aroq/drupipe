@@ -46,6 +46,7 @@ class DrupipeBlock implements Serializable {
             //utils.pipelineNotify(pipeline.context, [name: "Block on ${nodeName}", status: 'START', level: 'block'])
             pipeline.script.echo "NODE NAME: ${nodeName}"
             pipeline.script.node(nodeName) {
+                pipeline.script.echo "CONFIG CONTEXT - DrupipeBlock - 1"
                 pipeline.context = utils.serializeAndDeserialize(pipeline.context)
                 utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - DrupipeBlock - 1", [debugMode: 'json'], [], true)
 

@@ -43,6 +43,9 @@ class DrupipePipeline implements Serializable {
                         script.echo 'FORCE REMOVE DIR'
                         script.deleteDir()
                     }
+                    script.echo "CONFIG CONTEXT - DrupipePipeline - END"
+                    context = utils.serializeAndDeserialize(context)
+                    utils.debugLog(context, context, "CONFIG CONTEXT - DrupipePipeline - END", [debugMode: 'json'], [], true)
                 }
 
                 if (!blocks) {
