@@ -4,23 +4,21 @@ import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Git extends BaseAction {
 
-    def context
-
     def script
 
     def utils
 
-    def DrupipeActionWrapper action
+    DrupipeActionWrapper action
 
     def clone() {
-        context.pipeline.script.echo 'Git clone'
+        script.echo 'Git clone'
 
         def repoDir = action.params.dir + '/' + action.params.repoDirName
 
         if (script.fileExists(repoDir)) {
             script.drupipeShell("""
-            rm -fR ${repoDir}
-            """, action.params
+                rm -fR ${repoDir}
+                """, action.params
             )
         }
 
@@ -37,8 +35,6 @@ class Git extends BaseAction {
             git clone ${options} ${action.params.repoAddress} ${action.params.repoDirName}
             """, action.params
         )
-
-        context
     }
 }
 
