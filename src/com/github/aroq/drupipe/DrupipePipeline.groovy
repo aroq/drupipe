@@ -43,9 +43,6 @@ class DrupipePipeline implements Serializable {
                         script.echo 'FORCE REMOVE DIR'
                         script.deleteDir()
                     }
-                    script.echo "CONFIG CONTEXT - DrupipePipeline - 1"
-                    context = utils.serializeAndDeserialize(context)
-                    utils.debugLog(context, context, "CONFIG CONTEXT - DrupipePipeline - 1", [debugMode: 'json'], [], true)
                 }
 
                 if (!blocks) {
@@ -75,10 +72,10 @@ class DrupipePipeline implements Serializable {
                                         script.echo "No pipeline block: ${pipelineBlocks[i]} is defined."
                                     }
                                 }
+                                // TODO: Remove this workaround.
+                                // Workaround to allow to dump context later.
                                 script.node('master') {
-                                    script.echo "CONFIG CONTEXT - DrupipePipeline - 2"
                                     context = utils.serializeAndDeserialize(context)
-                                    utils.debugLog(context, context, "CONFIG CONTEXT - DrupipePipeline - 2", [debugMode: 'json'], [], true)
                                 }
                             }
                             else {
