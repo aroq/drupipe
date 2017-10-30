@@ -16,11 +16,12 @@ class PipelineController extends BaseAction {
         }
         if (action.params.buildHandler && action.params.buildHandler.handler) {
             // Dispatch the action.
-            action.pipeline.context << script.drupipeAction([action: "${action.params.buildHandler.handler}.${action.params.buildHandler.method}"], action.pipeline)
+            script.drupipeAction([action: "${action.params.buildHandler.handler}.${action.params.buildHandler.method}"], action.pipeline)
         }
         else {
             script.echo "No builder handler defined"
         }
+        [:]
     }
 
     // TODO: move to artifact handler.
