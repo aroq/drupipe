@@ -202,6 +202,7 @@ class DrupipeActionWrapper implements Serializable {
                 notification.message = notification.message + "\n\n" + this.result.stdout
             }
             utils.pipelineNotify(pipeline.context, notification)
+            utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName} - FINALLY", [debugMode: 'json'], [], true)
         }
     }
 
