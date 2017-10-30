@@ -51,10 +51,10 @@ class Source extends BaseAction {
             result.sourcesList = []
         }
         if (path) {
-            result.loadedSources[source.name] = new com.github.aroq.drupipe.DrupipeSource(name: source.name, type: source.type, path: source.path)
+            result.loadedSources[source.name] = [name: source.name, type: source.type, path: source.path]
             result.sourcesList << result.loadedSources[source.name]
         }
-        result = utils.serializeAndDeserialize(result)
+//        result = utils.serializeAndDeserialize(result)
         result
     }
 
