@@ -180,8 +180,8 @@ class DrupipeActionWrapper implements Serializable {
             }
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
-//            pipeline.context = utils.serializeAndDeserialize(pipeline.context)
-//            utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName}", [debugMode: 'json'], [], true)
+            pipeline.context = utils.serializeAndDeserialize(pipeline.context)
+            utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName}", [debugMode: 'json'], [], true)
             this.result
         }
         catch (err) {
@@ -204,7 +204,7 @@ class DrupipeActionWrapper implements Serializable {
 //            }
 //            // TODO: Enable & check why it breaks context dump.
 //            utils.pipelineNotify(pipeline.contex, notification)
-//            utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName} - FINALLY", [debugMode: 'json'], [], true)
+            utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName} - FINALLY", [debugMode: 'json'], [], true)
         }
     }
 
