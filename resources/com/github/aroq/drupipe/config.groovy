@@ -190,6 +190,8 @@ params = [
             ],
         ],
         GitArtifact: [
+            debugEnabled: true,
+            dump_result: true,
             dir: 'artifacts',
             repoDirName: 'master',
         ],

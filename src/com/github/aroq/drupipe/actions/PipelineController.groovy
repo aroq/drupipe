@@ -92,6 +92,7 @@ class PipelineController extends BaseAction {
 
     def repoParams(String configPath) {
         //info()
+        utils.debugLog(action.pipeline.context, action.pipeline.context, 'CONFIG CONTEXT', [debugMode: 'json'], [], true)
         def repo
         def masterInfoFile = "${action.pipeline.context.projectConfigPath}/${configPath}/info.yaml"
         if (script.fileExists(masterInfoFile)) {
