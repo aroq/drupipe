@@ -513,6 +513,9 @@ def processActionParams(action, context, ArrayList prefixes, ArrayList path = []
 }
 
 def deepGet(object, path) {
+    if (path instanceof CharSequence) {
+        path = path.tokenize('.')
+    }
     if (!path) {
         return object
     }

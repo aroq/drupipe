@@ -155,9 +155,7 @@ class Docman extends BaseAction {
     }
 
     def bumpStable() {
-        script.drupipeShell(
-            """docman bump stable -n""", action.params
-        )
+        script.drupipeShell("docman bump stable -n", action.params)
     }
 
     def getStable() {
