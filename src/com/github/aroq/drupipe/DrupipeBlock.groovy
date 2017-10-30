@@ -87,6 +87,7 @@ class DrupipeBlock implements Serializable {
         else {
             _execute(body)
         }
+        [:]
     }
 
     def _execute(body = null) {

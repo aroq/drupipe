@@ -209,7 +209,7 @@ class DrupipeActionWrapper implements Serializable {
 //            }
 //            // TODO: Enable & check why it breaks context dump.
 //            utils.pipelineNotify(pipeline.contex, notification)
-            utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName} - FINALLY", [debugMode: 'json'], [], true)
+//            utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName} - FINALLY", [debugMode: 'json'], [], true)
         }
     }
 
