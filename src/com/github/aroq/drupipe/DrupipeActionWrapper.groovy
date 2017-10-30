@@ -190,18 +190,18 @@ class DrupipeActionWrapper implements Serializable {
             throw err
         }
         finally {
-            if (notification.status != 'FAILED') {
-                notification.status = 'SUCCESSFUL'
-            }
-            if (this && this.result && this.result && this.result.result) {
-                notification.message = notification.message ? notification.message : ''
-                notification.message = notification.message + "\n\n" + this.result.result
-            }
-            if (this && this.result && this.result && this.result.stdout) {
-                notification.message = notification.message ? notification.message : ''
-                notification.message = notification.message + "\n\n" + this.result.stdout
-            }
-            // TODO: Enable & check why it breaks context dump.
+//            if (notification.status != 'FAILED') {
+//                notification.status = 'SUCCESSFUL'
+//            }
+//            if (this && this.result && this.result && this.result.result) {
+//                notification.message = notification.message ? notification.message : ''
+//                notification.message = notification.message + "\n\n" + this.result.result
+//            }
+//            if (this && this.result && this.result && this.result.stdout) {
+//                notification.message = notification.message ? notification.message : ''
+//                notification.message = notification.message + "\n\n" + this.result.stdout
+//            }
+//            // TODO: Enable & check why it breaks context dump.
 //            utils.pipelineNotify(pipeline.contex, notification)
             utils.debugLog(pipeline.context, pipeline.context, "CONFIG CONTEXT - ${this.fullName} - FINALLY", [debugMode: 'json'], [], true)
         }
