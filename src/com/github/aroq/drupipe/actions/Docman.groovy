@@ -12,6 +12,8 @@ class Docman extends BaseAction {
 
     DrupipeActionWrapper action
 
+    // TODO: Refactor all.
+
     def init() {
         jsonConfig()
     }
@@ -87,21 +89,21 @@ class Docman extends BaseAction {
         script.drupipeShell(
             """
             cd docroot
-            docman deploy git_target ${action.pipeline.context.projectName} branch ${action.pipeline.context.version} ${forceFlag()}
+            docman deploy git_target ${action.pipeline.context.jenkinsParams.projectName} branch ${action.pipeline.context.jenkinsParams.version} ${forceFlag()}
             """, action.params
         )
     }
 
     def forceFlag() {
         def flag = ''
-        if (action.pipeline.context.force == '1') {
+        if (action.pipeline.context.jenkinsParams.force == '1') {
             flag = '-f'
         }
         flag
     }
 
     def prepare() {
-        script.echo "FORCE MODE: ${action.pipeline.context.force}"
+        script.echo "FORCE MODE: ${action.pipeline.context.jenkinsParams.force}"
         script.drupipeShell(
             """
         if [ "${action.pipeline.context.force}" == "1" ]; then
