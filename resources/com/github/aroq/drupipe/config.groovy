@@ -18,8 +18,8 @@ drupipeDockerArgs = '--user root:root --net=host'
 params = [
     pipeline: [
         scripts_library: [
-            url: 'https://github.com/aroq/drupipe.git',
-            ref: 'master',
+            url: 'https://github.com/michael-molchanov/drupipe.git',
+            ref: 'develop',
             type: 'branch',
         ]
     ],
