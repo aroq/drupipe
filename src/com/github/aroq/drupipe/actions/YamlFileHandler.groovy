@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class YamlFileHandler extends BaseAction {
 
@@ -12,7 +12,7 @@ class YamlFileHandler extends BaseAction {
 
     def deployYaml
 
-    def DrupipeAction action
+    def DrupipeActionWrapper action
 
     def init() {
         def repo_url
@@ -115,7 +115,7 @@ class YamlFileHandler extends BaseAction {
                     executeCommand(joinedCommands)
                 }
                 else {
-                    script.drupipeShell(joinedCommands, context)
+                    script.drupipeShell(joinedCommands, action.params)
                 }
             }
         }
@@ -136,7 +136,7 @@ class YamlFileHandler extends BaseAction {
         script.drupipeShell(
             """
             ssh ${context.environmentParams.user}@${context.environmentParams.host} "${command}"
-            """, context
+            """, action.params
         )
     }
 }

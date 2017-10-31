@@ -1,44 +1,42 @@
 package com.github.aroq.drupipe.actions
 
 import groovy.json.JsonOutput
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Ansible extends BaseAction {
-
-    def context
 
     def script
 
     def utils
 
-    def DrupipeAction action
+    DrupipeActionWrapper action
 
     def init() {
         if (!action.params.playbookParams) {
             action.params.playbookParams = [:]
         }
         action.params.playbookParams <<  [
-            user: context.environmentParams.user,
-            drupipe_environment: context.environment,
+            user: action.pipeline.context.environmentParams.user,
+            drupipe_environment: action.pipeline.context.environment,
         ]
         if (!action.params.inventoryArgument) {
-            if (action.params.inventory && context.environmentParams.default_group) {
+            if (action.params.inventory && action.pipeline.context.environmentParams.default_group) {
                 action.params.inventoryArgument = action.params.inventory.path
-                action.params.playbookParams.target = "${context.environmentParams.default_group}"
+                action.params.playbookParams.target = "${action.pipeline.context.environmentParams.default_group}"
             }
             else {
-                action.params.inventoryArgument = "${context.environmentParams.host},"
-                action.params.playbookParams.target = "${context.environmentParams.host}"
+                action.params.inventoryArgument = "${action.pipeline.context.environmentParams.host},"
+                action.params.playbookParams.target = "${action.pipeline.context.environmentParams.host}"
             }
         }
     }
 
     def deploy() {
         init()
-        script.echo(context.builder.artifactParams.dir)
-        def relativePath = utils.getRelativePath(context, action.params.playbooksDir, context.builder.artifactParams.dir)
+        script.echo(action.pipeline.context.builder.artifactParams.dir)
+        def relativePath = utils.getRelativePath(action.pipeline.context, action.params.playbooksDir, action.pipeline.context.builder.artifactParams.dir)
         action.params.playbookParams << [
-            ansistrano_deploy_to:   context.environmentParams.root,
+            ansistrano_deploy_to:   action.pipeline.context.environmentParams.root,
             ansistrano_deploy_from: relativePath + '/',
         ]
         deployWithAnsistrano()
@@ -52,16 +50,16 @@ class Ansible extends BaseAction {
     def deployWithGit() {
         init()
         action.params.playbookParams = [
-            repo:      context.builder.artifactParams.repoAddress,
-            reference: context.builder.artifactParams.reference,
-            deploy_to: context.environmentParams.root,
+            repo:      action.pipeline.context.builder.artifactParams.repoAddress,
+            reference: action.pipeline.context.builder.artifactParams.reference,
+            deploy_to: action.pipeline.context.environmentParams.root,
         ]
         executeAnsiblePlaybook()
     }
 
     def installAnsistranoRole() {
         // TODO: Install role in docker image.
-        script.drupipeShell("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback", context)
+        script.drupipeShell("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback", action.params)
     }
 
     def deployWithAnsistrano() {
@@ -81,13 +79,13 @@ class Ansible extends BaseAction {
     // TODO: Provide Ansible parameters from settings container.
     def executeAnsiblePlaybook() {
         // TODO: move workingDir logic into Config action and use it globally in sh scripts.
-        if (context.jenkinsParams.containsKey('workingDir')) {
-            action.params.workingDir = context.jenkinsParams.workingDir
+        if (action.pipeline.context.jenkinsParams.containsKey('workingDir')) {
+            action.params.workingDir = action.pipeline.context.jenkinsParams.workingDir
         }
         else {
             action.params.workingDir = '.'
         }
-        utils.loadLibrary(script, context)
+        action.pipeline.scripts_library_load()
         def command =
             """pwd && ls -lah && ansible-playbook ${action.params.playbooksDir}/${action.params.playbook} \
             -i ${action.params.inventoryArgument} \
@@ -102,7 +100,7 @@ class Ansible extends BaseAction {
             this.script.drupipeShell("""
                 cd ${this.action.params.workingDir}
                 ${command}
-            """, this.context << [shellCommandWithBashLogin: true]
+            """, this.action.params
             )
         }
 

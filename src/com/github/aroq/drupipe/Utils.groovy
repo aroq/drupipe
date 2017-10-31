@@ -175,34 +175,6 @@ def getMothershipProjectParams(config, json) {
     projects[config.jenkinsFolderName] ? projects[config.jenkinsFolderName] : [:]
 }
 
-def loadLibrary(script, context) {
-    if (!context.libraryLoaded) {
-        // TODO: check for the version ref type)
-        if (context.env['library.global.version']) {
-            context.drupipeLibraryBranch = context.env['library.global.version']
-            context.drupipeLibraryType = 'tag'
-            script.echo "Set drupipeLibraryBranch to ${context.drupipeLibraryBranch } as library.global.version was set"
-        }
-        else {
-            script.echo "ENV variable library.global.version is not set"
-        }
-        script.drupipeAction([
-            action: 'Source.add',
-            params: [
-                source: [
-                    name: 'library',
-                    type: 'git',
-                    path: '.unipipe/library',
-                    url: context.drupipeLibraryUrl,
-                    branch: context.drupipeLibraryBranch,
-                    refType: context.drupipeLibraryType,
-                ],
-            ],
-        ], context)
-        context.libraryLoaded = true
-    }
-}
-
 boolean isCollectionOrList(object) {
     object instanceof java.util.Collection || object instanceof java.util.List || object instanceof java.util.LinkedHashMap || object instanceof java.util.HashMap
 }
@@ -371,7 +343,7 @@ def getMothershipConfigFile(params) {
             }
         }
     }
-    throw new Exception("getMothershipConfigFile: mothersip config file not found.")
+    throw new Exception("getMothershipConfigFile: mothership config file not found.")
 }
 
 def getMothershipServersFile(params) {
@@ -404,17 +376,27 @@ def sourceDir(params, sourceName) {
     }
 }
 
-def debugLog(params, value, dumpName = '', debugParams = [:], force = false) {
+def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], force = false) {
     if (debugEnabled(params) || force) {
+        force = true
+        if (path) {
+            value = path.inject(value, { obj, prop ->
+                if (obj && obj[prop]) {
+                    obj[prop]
+                }
+                else ''
+            })
+        }
+
         if (value instanceof CharSequence) {
             echo "${dumpName}: ${value}"
         }
         else {
             if (debugParams?.debugMode == 'json' || params.debugMode == 'json') {
-                jsonDump(params, value, dumpName)
+                jsonDump(params, value, dumpName, force)
             }
             else {
-                dump(params, value, dumpName)
+                dump(params, value, dumpName, force)
             }
         }
     }
@@ -495,46 +477,66 @@ Map merge(Map[] sources) {
 
 def removeDir(dir, context) {
     if (fileExists(dir)) {
-        drupipeShell("""
-            rm -fR ${dir}
-            """, context
-        )
+        drupipeShell("rm -fR ${dir}")
     }
 }
 
 @NonCPS
-def interpolateCommand(String command, context, action) {
-
+def interpolateCommand(String command, action, context) {
     def prepareFlags = { flags ->
         prepareFlags(flags)
     }
 
-    def binding = [context: context, action: action, prepareFlags: prepareFlags]
+    def binding = [context: context, actions: context.actions ? context.actions : [:], action: action, prepareFlags: prepareFlags]
     def engine = new groovy.text.SimpleTemplateEngine()
     def template = engine.createTemplate(command).make(binding)
     template.toString()
 }
 
 @NonCPS
-def processActionParams(params, context, action, ArrayList prefixes) {
-    if (params instanceof CharSequence) {
-        params = interpolateCommand(params, context, action)
-    } else if (params instanceof Map) {
-        for (param in params) {
+def processActionParams(action, context, ArrayList prefixes, ArrayList path = []) {
+    def params
+    if (path) {
+        params = path.inject(action.params, { obj, prop ->
+            if (obj && obj[prop]) {
+                obj[prop]
+            }
+        })
+    }
+    else {
+        params = action.params
+    }
+
+    for (param in params) {
+        if (param.value instanceof CharSequence) {
             param.value = getActionParam(params[param.key], context, prefixes.collect {
                 [it, param.key.toUpperCase()].join('_')
             })
-            params[param.key] = processActionParams(param.value, context, action, prefixes.collect {
+            param.value = interpolateCommand(param.value, action, context)
+        } else if (param.value instanceof Map) {
+            processActionParams(action, context, prefixes.collect {
                 [it, param.key.toUpperCase()].join('_')
-            })
+            }, path + param.key)
+        } else if (param.value instanceof List) {
+            for (def i = 0; i < param.value.size(); i++) {
+                param.value[i] = interpolateCommand(param.value[i], action, context)
+            }
         }
-    } else if (params instanceof List) {
-        for (def i = 0; i < params.size(); i++) {
-            params[i] = interpolateCommand(params[i], context, action)
-        }
-
     }
-    return params
+}
+
+def deepGet(object, path) {
+    if (path instanceof CharSequence) {
+        path = path.tokenize('.')
+    }
+    if (!path) {
+        return object
+    }
+    path.inject(object, { obj, prop ->
+        if (obj && obj[prop]) {
+            obj[prop]
+        }
+    })
 }
 
 @NonCPS
@@ -556,6 +558,30 @@ def prepareFlags(flags) {
             "${k} ${subItem}".trim()
         }.join(' ').trim()
     }.join(' ')
+}
+
+def serializeAndDeserialize(params) {
+    def result = [:]
+    def yamlFilePath = '.unipipe/temp/serializeAndDeserialize.yaml'
+    if (params) {
+        if (fileExists(yamlFilePath)) {
+            sh("rm -f ${yamlFilePath}")
+        }
+        writeYaml(file: yamlFilePath, data: params)
+        if (fileExists(yamlFilePath)) {
+            result = readYaml(file: yamlFilePath)
+        }
+//        debugLog(result, result, "serializeAndDeserialize.RESULT", [debugMode: 'json'], [])
+    }
+    result
+
+}
+
+def stripContext(context) {
+    context.remove('pipeline')
+    context.remove('stage')
+    context.remove('block')
+    context
 }
 
 return this

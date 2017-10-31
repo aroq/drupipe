@@ -1,33 +1,48 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Config extends BaseAction {
-
-    def context
 
     def script
 
     def utils
 
-    def DrupipeAction action
+    DrupipeActionWrapper action
 
     def configRepo
 
     def perform() {
-        if (context['Config_perform']) {
-            return context
+        if (action.pipeline.context['Config_perform']) {
+            return
         }
+
+        this.script.sh("mkdir -p .unipipe")
+        this.script.sh("mkdir -p .unipipe/temp")
 
         def providers = [
             [
-                action: 'GroovyFileConfig.groovyConfigFromLibraryResource', params: [resource: 'com/github/aroq/drupipe/config.groovy']
+                action: 'GroovyFileConfig.groovyConfigFromLibraryResource',
+                params: [
+                    // We need to pass params as "context" is not ready yet.
+                    store_result: true,
+                    interpolate: false,
+                    dump_result: true,
+                    post_process: [
+                        context: [
+                            type: 'result',
+                            source: 'result',
+                            destination: 'context',
+                        ],
+                    ],
+                    resource: 'com/github/aroq/drupipe/config.groovy'
+                ]
             ],
             [
-                action: "Config.envConfig"
+                action: "Config.envConfig",
             ],
             [
-                action: "Config.mothershipConfig"
+                action: "Config.mothershipConfig",
             ],
             [
                 action: "Config.projectConfig"
@@ -40,55 +55,53 @@ class Config extends BaseAction {
             ],
         ]
 
-        if (context.configProviders) {
-            providers << context.configProviders
+        if (action.pipeline.context.configProviders) {
+            providers << action.pipeline.context.configProviders
         }
 
         this.script.checkout this.script.scm
 
-        context << context.pipeline.executePipelineActionList(providers, context)
-
-//        if (!context.environments) {
-//            throw new RuntimeException('No context.environments defined')
-//        }
-//
-//        if (!context.servers) {
-//            throw new RuntimeException('No context.servers defined')
-//        }
+        action.pipeline.executePipelineActionList(providers)
 
         // For compatibility:
-        if (context.defaultActionParams) {
-            context.params.action = utils.merge(context.params.action, context.defaultActionParams)
+        if (action.pipeline.context.defaultActionParams) {
+            action.pipeline.context.params.action = utils.merge(action.pipeline.context.params.action, action.pipeline.context.defaultActionParams)
         }
 
-        context.environmentParams = [:]
-        if (context.environments && context.environment) {
-            def environment = context.environments[context.environment]
-            if (context.servers) {
-                def server = context.servers[environment['server']]
-                context.environmentParams = utils.merge(server, environment)
+        action.pipeline.context.environmentParams = [:]
+        if (action.pipeline.context.environments) {
+            if (action.pipeline.context.environment) {
+                def environment = action.pipeline.context.environments[action.pipeline.context.environment]
+                if (action.pipeline.context.servers && environment['server'] && action.pipeline.context.servers[environment['server']]) {
+                    def server = action.pipeline.context.servers[environment['server']]
+                    action.pipeline.context.environmentParams = utils.merge(server, environment)
+                }
+                else {
+                    action.pipeline.context.environmentParams = environment
+                }
+                // For compatibility:
+                if (action.pipeline.context.environmentParams && action.pipeline.context.environmentParams.defaultActionParams) {
+                    action.pipeline.context.params.action = utils.merge(action.pipeline.context.params.action, action.pipeline.context.environmentParams.defaultActionParams)
+                }
+
+                utils.debugLog(action.pipeline.context, action.pipeline.context.environmentParams, 'ENVIRONMENT PARAMS', [:], [], true)
             }
             else {
-                context.environmentParams = environment
+                script.echo "No context.environment is defined"
             }
-            // For compatibility:
-            context.params.action = utils.merge(context.params.action, context.environmentParams.defaultActionParams)
-
-            context.params.action = utils.merge(context.params.action, context.params.action)
-
-            utils.jsonDump(context, context.environmentParams, 'ENVIRONMENT PARAMS')
+        }
+        else {
+            script.echo "No context.environments are defined"
         }
 
-        utils.debugLog(context, context, 'CONFIG CONTEXT')
+        utils.debugLog(action.pipeline.context, action.pipeline.context, 'CONFIG CONTEXT')
 
-        context.drupipeShellReturnStdout = false
-
-        def stashes = context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
+        def stashes = action.pipeline.context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
 
         script.echo "Stashes: ${stashes}"
 
         script.stash name: 'config', includes: "${stashes}", excludes: ".git, .git/**"
-        context
+        [:]
     }
 
     def jenkinsConfig() {
@@ -97,11 +110,11 @@ class Config extends BaseAction {
 
     def jobConfig() {
         def result = [:]
-        if (context.jobs) {
-            processJobs(context.jobs)
-            utils.jsonDump(context, context.jobs, 'CONFIG JOBS PROCESSED')
+        if (action.pipeline.context.jobs) {
+            processJobs(action.pipeline.context.jobs)
+            utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED')
 
-            result.job = (context.env.JOB_NAME).split('/').drop(1).inject(context, { obj, prop ->
+            result.job = (action.pipeline.context.env.JOB_NAME).split('/').drop(1).inject(action.pipeline.context, { obj, prop ->
                 obj.jobs[prop]
             })
 
@@ -110,7 +123,7 @@ class Config extends BaseAction {
                     result = utils.merge(result, result.job.context)
                 }
             }
-            result.jobs = context.jobs
+            result.jobs = action.pipeline.context.jobs
         }
         result
     }
@@ -136,22 +149,24 @@ class Config extends BaseAction {
         def result = [:]
         result.workspace = this.script.pwd()
         result.env = this.utils.envToMap()
-        result << result.env
+        // TODO: Use env vars pattern to ovverride.
+        result.credentialsId = result.env.credentialsId
+        result.environment = result.env.environment
+//        result << result.env
 
         String jobPath = this.script.env.BUILD_URL ? this.script.env.BUILD_URL : this.script.env.JOB_DISPLAY_URL
 
-        result.jenkinsFolderName = this.utils.getJenkinsFolderName(jobPath)
-        result.jenkinsJobName = this.utils.getJenkinsJobName(jobPath)
+        result.jenkinsFolderName = utils.getJenkinsFolderName(jobPath)
+        result.jenkinsJobName = utils.getJenkinsJobName(jobPath)
 
         if (this.script.env.KUBERNETES_PORT) {
             result.containerMode = 'kubernetes'
         }
-
-        result
+        utils.serializeAndDeserialize(result)
     }
 
     def mothershipConfig() {
-        def result
+        def result = [:]
         if (this.script.env.MOTHERSHIP_REPO) {
             def sourceObject = [
                 name:   'mothership',
@@ -165,6 +180,13 @@ class Config extends BaseAction {
 
             def providers = [
                 [
+                    action: 'Source.add',
+                    params: [
+                        source: sourceObject,
+                        credentialsId: action.pipeline.context.env.credentialsId,
+                    ],
+                ],
+                [
                     action: 'Source.loadConfig',
                     params: [
                         sourceName: 'mothership',
@@ -173,15 +195,14 @@ class Config extends BaseAction {
                     ]
                 ]
             ]
+            result = action.pipeline.executePipelineActionList(providers)
+            def mothershipConfig = this.utils.getMothershipConfigFile(result)
+            def mothershipServers = this.utils.getMothershipServersFile(result)
 
-            result = context.pipeline.executePipelineActionList(providers, context)
-            def mothershipConfig = this.utils.getMothershipConfigFile(context)
-            def mothershipServers = this.utils.getMothershipServersFile(context)
-
-            result = utils.merge(result, mothershipConfig[context.jenkinsFolderName])
+            result = utils.merge(result, mothershipConfig[action.pipeline.context.jenkinsFolderName])
             result = utils.merge(result, [jenkinsServers: mothershipServers])
 
-            this.configRepo = result.configRepo
+//            this.configRepo = result.configRepo
         }
         result
     }
@@ -189,7 +210,7 @@ class Config extends BaseAction {
     def mergeScenariosConfigs(config, tempContext = [:], currentScenarioSourceName = null) {
         def scenariosConfig = [:]
         if (!tempContext) {
-            tempContext << context
+            tempContext << action.pipeline.context
         }
         tempContext = utils.merge(tempContext, config)
         if (config.scenarios) {
@@ -207,15 +228,13 @@ class Config extends BaseAction {
                         scenarioSourceName = currentScenarioSourceName
                         scenario.name = values[0]
                     }
-                    utils.debugLog(context, tempContext.scenarioSources, 'Scenario sources')
-                    utils.debugLog(context, context.loadedSources, 'context.loadedSources')
-                    utils.debugLog(context, tempContext, 'tempContext')
-                    if ((tempContext.scenarioSources && tempContext.scenarioSources.containsKey(scenarioSourceName)) || context.loadedSources.containsKey(scenarioSourceName)) {
-                        if (!context.loadedSources[scenarioSourceName]) {
+                    utils.debugLog(action.pipeline.context, tempContext.scenarioSources, 'Scenario sources')
+                    if ((tempContext.scenarioSources && tempContext.scenarioSources.containsKey(scenarioSourceName)) || action.pipeline.context.loadedSources.containsKey(scenarioSourceName)) {
+                        if (!action.pipeline.context.loadedSources[scenarioSourceName]) {
                             script.echo "Adding source: ${scenarioSourceName}"
                             scenario.source = tempContext.scenarioSources[scenarioSourceName]
 
-                            script.sshagent([context.credentialsId]) {
+                            script.sshagent([action.pipeline.context.credentialsId]) {
                                 def sourceObject = [
                                     name: scenarioSourceName,
                                     type: 'git',
@@ -225,17 +244,17 @@ class Config extends BaseAction {
                                     mode: 'shell',
                                 ]
 
-                                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
+                                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
                             }
                         }
                         else {
-                            utils.debugLog(context, "Source: ${scenarioSourceName} already added")
-                            scenario.source = context.loadedSources[scenarioSourceName]
+                            utils.debugLog(action.pipeline.context, "Source: ${scenarioSourceName} already added")
+                            scenario.source = action.pipeline.context.loadedSources[scenarioSourceName]
                         }
 
                         def fileName = null
 
-                        def sourceDir = utils.sourceDir(context, scenarioSourceName)
+                        def sourceDir = utils.sourceDir(action.pipeline.context, scenarioSourceName)
 
 
                         def filesToCheck = [
@@ -268,11 +287,11 @@ class Config extends BaseAction {
 
                         // Merge scenario if exists.
                         if (fileName != null) {
-                            utils.debugLog(context, "Scenario file name: ${fileName} exists")
+                            utils.debugLog(action.pipeline.context, "Scenario file name: ${fileName} exists")
                             def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSourceName)
-                            utils.debugLog(context, scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
+                            utils.debugLog(action.pipeline.context, scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
-                            utils.debugLog(context, scenariosConfig, "Scenarios config")
+                            utils.debugLog(action.pipeline.context, scenariosConfig, "Scenarios config")
                         }
                     }
                     else {
@@ -289,17 +308,20 @@ class Config extends BaseAction {
     }
 
     def projectConfig() {
-        utils.debugLog(context, "projectConfig repo: ${context.configRepo}")
-        if (context.configRepo) {
+        utils.debugLog(action.pipeline.context, "projectConfig repo: ${action.pipeline.context.configRepo}", [:], [], true)
+        if (action.pipeline.context.configRepo) {
             def sourceObject = [
                 name: 'project',
-                path: context.projectConfigPath,
+                path: action.pipeline.context.projectConfigPath,
                 type: 'dir',
+                mode: 'shell',
             ]
 
-            script.sshagent([context.credentialsId]) {
-                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
+            script.sshagent([action.pipeline.context.credentialsId]) {
+                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
             }
+//            utils.debugLog(action.pipeline.context, action.pipeline.context, "action.pipeline.context", [debugMode: 'json'], [], true)
+//            utils.debugLog(action.pipeline.context, context, "context", [debugMode: 'json'], [], true)
 
             def providers = [
                 [
@@ -307,13 +329,13 @@ class Config extends BaseAction {
                     params: [
                         sourceName: 'project',
                         configType: 'groovy',
-                        configPath: context.projectConfigFile
+                        configPath: action.pipeline.context.projectConfigFile
                     ]
                 ],
             ]
 
             def fileName = null
-            def sourceDir = utils.sourceDir(context, 'project')
+            def sourceDir = utils.sourceDir(action.pipeline.context, 'project')
             this.script.echo("PROJECTS SOURCE DIR: ${sourceDir}")
 
             def filesToCheck = [
@@ -348,9 +370,9 @@ class Config extends BaseAction {
             }
 
             def projectConfig
-            script.sshagent([context.credentialsId]) {
-                projectConfig = context.pipeline.executePipelineActionList(providers, context)
-                utils.debugLog(context, projectConfig, 'Project config')
+            script.sshagent([action.pipeline.context.credentialsId]) {
+                projectConfig = action.pipeline.executePipelineActionList(providers)
+                utils.debugLog(action.pipeline.context, projectConfig, 'Project config')
             }
 
             def result = mergeScenariosConfigs(projectConfig, [:], 'project')

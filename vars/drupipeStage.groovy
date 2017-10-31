@@ -2,7 +2,7 @@
 
 import com.github.aroq.drupipe.DrupipeStage
 
-def call(name, context, body) {
-    new DrupipeStage(name: name, params: context).execute(context, body)
+def call(name, pipeline, body) {
+    new DrupipeStage(name: name, pipeline: pipeline).execute(body)
 }
 

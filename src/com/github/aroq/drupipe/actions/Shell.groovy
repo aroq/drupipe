@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Shell extends BaseAction {
 
@@ -10,17 +10,17 @@ class Shell extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    def DrupipeActionWrapper action
 
     def execute() {
-        if (context.shellOutputReturn || action.storeResult) {
+        if (action.params.store_result) {
             this.script.echo "Return Shell output."
-            def result = script.drupipeShell(action.params.shellCommand, this.context.clone() << [drupipeShellReturnStdout: true])
+            def result = script.drupipeShell(action.params.shellCommand, [return_stdout: true])
             result.result = action.params.shellCommand
             return result
         }
         else {
-            script.drupipeShell(action.params.shellCommand, this.context.clone())
+            script.drupipeShell(action.params.shellCommand, action.params)
         }
     }
 }

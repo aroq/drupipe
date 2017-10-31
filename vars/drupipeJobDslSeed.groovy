@@ -2,17 +2,16 @@
 
 // Pipeline used to create project specific pipelines.
 def call(LinkedHashMap p = [:]) {
-    drupipe { context ->
-        drupipeBlock(withDocker: true, nodeName: 'default', dockerImage: context.defaultDocmanImage, context) {
+    drupipe { context, pipeline ->
+        drupipeBlock(withDocker: true, nodeName: 'default', dockerImage: context.defaultDocmanImage, pipeline) {
             checkout scm
-            drupipeAction(action: 'Docman.info', context)
-            def stashes = context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
-            stashes = stashes + ", ${context.docmanDir}/config/**"
+            drupipeAction(action: 'Docman.info', pipeline)
+            stashes = stashes + ", ${context.docmanDir}/config/config.json"
             println "Stashes: ${stashes}"
             stash name: 'config', includes: "${stashes}", excludes: '.git, .git/**'
         }
 
-        drupipeBlock(nodeName: 'master', context) {
+        drupipeBlock(nodeName: 'master') {
             checkout scm
             if (fileExists(context.projectConfigPath)) {
                 dir(context.projectConfigPath) {

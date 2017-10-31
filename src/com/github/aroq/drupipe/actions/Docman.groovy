@@ -1,18 +1,18 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurperClassic
 
 class Docman extends BaseAction {
 
-    def context
-
     def script
 
     def utils
 
-    def DrupipeAction action
+    DrupipeActionWrapper action
+
+    // TODO: Refactor all.
 
     def init() {
         jsonConfig()
@@ -22,109 +22,109 @@ class Docman extends BaseAction {
     def jsonConfig() {
         info()
 
-        def docrootConfigJson = script.readFile("${context.docmanDir}/config/${action.params.docmanJsonConfigFile}")
-        if (context.env.gitlabSourceNamespace) {
-            context.projectName = utils.projectNameByGroupAndRepoName(script, docrootConfigJson, context.env.gitlabSourceNamespace, context.env.gitlabSourceRepoName)
+        def docrootConfigJson = script.readFile("${action.pipeline.context.docmanDir}/config/${action.params.docmanJsonConfigFile}")
+        if (action.pipeline.context.env.gitlabSourceNamespace) {
+            action.pipeline.context.projectName = utils.projectNameByGroupAndRepoName(script, docrootConfigJson, action.pipeline.context.env.gitlabSourceNamespace, action.pipeline.context.env.gitlabSourceRepoName)
         }
-        script.echo "PROJECT NAME: ${context.projectName}"
-
-        context
+        script.echo "PROJECT NAME: ${action.pipeline.context.jenkinsParams.projectName}"
+        [:]
     }
 
     def info() {
-        script.drupipeShell("git config --global user.email 'drupipe@github.com'; git config --global user.name 'Drupipe'", context)
-        script.echo "Config repo: ${context.configRepo}"
+        script.drupipeShell("git config --global user.email 'drupipe@github.com'; git config --global user.name 'Drupipe'", action.params)
+        script.echo "Config repo: ${action.pipeline.context.configRepo}"
         prepare()
         script.drupipeShell(
             """
-        cd ${context.docmanDir}
+        cd ${action.pipeline.context.docmanDir}
         docman info full config.json
-        """, context << [shellCommandWithBashLogin: true]
+        """, action.params
         )
+        [:]
     }
 
     def build() {
         init()
         deploy()
-        context
+        [:]
     }
 
     def stripedBuild() {
         info()
-        def docrootConfigJson = script.readFile("${context.projectConfigPath}/${action.params.docmanJsonConfigFile}")
+        def docrootConfigJson = script.readFile("${action.pipeline.context.projectConfigPath}/${action.params.docmanJsonConfigFile}")
         def componentVersions = component_versions(docrootConfigJson, 'nexus')
         script.echo "Component versions:${componentVersions}"
 
         script.drupipeShell(
             """
-            cd ${context.docmanDir}
-            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(context)}
-            """, context << [shellCommandWithBashLogin: true]
+            cd ${action.pipeline.context.docmanDir}
+            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(action.pipeline.context)}
+            """, action.params
         )
-        if (!context['builder']) {
-            context['builder'] = [:]
+        if (!action.pipeline.context['builder']) {
+            action.pipeline.context['builder'] = [:]
         }
-        if (script.fileExists("${context.docmanDir}/master")) {
-            context.builder['buildDir'] = "${context.docmanDir}/master"
+        if (script.fileExists("${action.pipeline.context.docmanDir}/master")) {
+            action.pipeline.context.builder['buildDir'] = "${action.pipeline.context.docmanDir}/master"
         }
-        else if (script.fileExists("${context.docmanDir}/.docman/master")) {
-            context.builder['buildDir'] = "${context.docmanDir}/.docman/master"
+        else if (script.fileExists("${action.pipeline.context.docmanDir}/.docman/master")) {
+            action.pipeline.context.builder['buildDir'] = "${action.pipeline.context.docmanDir}/.docman/master"
         }
         else {
-            context.builder['buildDir'] = "${context.docrootDir}/master"
+            action.pipeline.context.builder['buildDir'] = "${action.pipeline.context.docrootDir}/master"
         }
-        context.builder['buildName'] = context.jenkinsFolderName
-        context.builder['version'] = (new Date()).format('yyyy-MM-dd--hh-mm-ss')
-        context
+        action.pipeline.context.builder['buildName'] = action.pipeline.context.jenkinsFolderName
+        action.pipeline.context.builder['version'] = (new Date()).format('yyyy-MM-dd--hh-mm-ss')
+        [:]
     }
 
     def releaseBuild() {
         info()
-        def docrootConfigJson = script.readFile("${context.projectConfigPath}/${action.params.docmanJsonConfigFile}")
+        def docrootConfigJson = script.readFile("${action.pipeline.context.projectConfigPath}/${action.params.docmanJsonConfigFile}")
         def componentVersions = component_versions(docrootConfigJson)
         script.echo "Component versions:${componentVersions}"
 
         script.drupipeShell(
             """
-            cd ${context.docmanDir}
-            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(context)}
-            """, context << [shellCommandWithBashLogin: true]
+            cd ${action.pipeline.context.docmanDir}
+            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag()}
+            """, action.params
         )
-        context
+        action.pipeline.context
     }
 
     def deploy() {
         script.drupipeShell(
             """
-            cd ${context.docmanDir}
-            docman deploy git_target ${context.projectName} branch ${context.version} ${forceFlag(context)}
-            """, context << [shellCommandWithBashLogin: true]
+            cd ${action.pipeline.context.docmanDir}
+            docman deploy git_target ${action.pipeline.context.jenkinsParams.projectName} branch ${action.pipeline.context.jenkinsParams.version} ${forceFlag()}
+            """, action.params
         )
     }
 
-    def forceFlag(context) {
+    def forceFlag() {
         def flag = ''
-        if (context.force == '1') {
+        if (action.pipeline.context.jenkinsParams.force == '1') {
             flag = '-f'
         }
         flag
     }
 
     def prepare() {
-        script.echo "FORCE MODE: ${context.force}"
+        script.echo "FORCE MODE: ${action.pipeline.context.jenkinsParams.force}"
 
         def configBranch = 'master'
-        if (context.tags.contains('single') && context.version) {
-            configBranch = context.version
+        if (action.pipeline.context.tags.contains('single') && action.pipeline.context.version) {
+            configBranch = action.pipeline.context.version
         }
 
         script.drupipeShell(
         """
         rm -fR ${context.docmanDir}
-        docman init ${context.docmanDir} ${context.configRepo} -s --branch=${configBranch}
-        """, context << [shellCommandWithBashLogin: true]
+        docman init ${action.pipeline.context.docmanDir} ${action.pipeline.context.configRepo} -s --branch=${configBranch}
+        """, action.params
         )
-        context.dir
+        action.pipeline.context.dir
     }
 
     @NonCPS
@@ -134,8 +134,8 @@ class Docman extends BaseAction {
         if (mode == 'nexus') {
             def versions = []
             docmanConfig.projects.each { project ->
-                if (context["${project.key}_version"]) {
-                    versions << /"${project.key}": / + context["${project.key}_version"]
+                if (action.pipeline.context["${project.key}_version"]) {
+                    versions << /"${project.key}": / + action.pipeline.context["${project.key}_version"]
                 }
             }
             if (versions) {
@@ -145,8 +145,8 @@ class Docman extends BaseAction {
         else if (mode == 'default') {
             def projects = [:]
             docmanConfig.projects.each { project ->
-                if (context["${project.key}_version"]) {
-                    projects[project.key] = [states: [stable: [type: 'branch', version: context["${project.key}_version"]]]]
+                if (action.pipeline.context["${project.key}_version"]) {
+                    projects[project.key] = [states: [stable: [type: 'branch', version: action.pipeline.context["${project.key}_version"]]]]
                 }
             }
             if (projects) {
@@ -158,9 +158,7 @@ class Docman extends BaseAction {
     }
 
     def bumpStable() {
-        script.drupipeShell(
-            """docman bump stable -n""", context << [shellCommandWithBashLogin: true]
-        )
+        script.drupipeShell("docman bump stable -n", action.params)
     }
 
     def getStable() {
@@ -172,12 +170,12 @@ class Docman extends BaseAction {
         def sourceObject = [
             name: 'stable_version',
             type: 'git',
-            path: context.jenkinsParams.workingDir,
+            path: action.pipeline.context.jenkinsParams.workingDir,
             url: repo,
             branch: info.version,
             mode: 'shell',
         ]
 
-        this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], context)
+        this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline.context)
     }
 }

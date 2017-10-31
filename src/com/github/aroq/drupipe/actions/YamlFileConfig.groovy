@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class YamlFileConfig extends BaseAction {
 
@@ -10,7 +10,7 @@ class YamlFileConfig extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    def DrupipeActionWrapper action
 
     def load() {
         def result = [:]

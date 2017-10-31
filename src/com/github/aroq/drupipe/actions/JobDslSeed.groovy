@@ -1,21 +1,18 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class JobDslSeed extends BaseAction {
-
-    def context
 
     def script
 
     def utils
 
-    def DrupipeAction action
+    DrupipeActionWrapper action
 
     def perform() {
-        utils.dumpConfigFile(context)
-        utils.loadLibrary(script, context)
-        utils.dump(context, action.params, 'ACTION PARAMS')
+        utils.dumpConfigFile(action.pipeline.context)
+        action.pipeline.scripts_library_load()
 
         script.jobDsl targets: action.params.jobsPattern.join('\n'),
             removedJobAction: action.params.removedJobAction,

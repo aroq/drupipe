@@ -1,28 +1,27 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class GitArtifact extends BaseAction {
-
-    def context
 
     def script
 
     def utils
 
-    def DrupipeAction action
+    DrupipeActionWrapper action
 
     def retrieve() {
-        script.drupipeAction([action: "Git.clone", params: context.builder.artifactParams << action.params], context)
+        script.drupipeAction([action: "Git.clone", params: action.pipeline.context.builder.artifactParams << action.params], action.pipeline)
 
         def repoDir = action.params.dir + '/' + action.params.repoDirName
 
         script.drupipeShell(
             """
                 rm -fR ${repoDir}/.git
-            """, context << [shellCommandWithBashLogin: true]
+            """, action.params
         )
 
-        context.builder.artifactParams.dir = "${action.params.dir}/${action.params.repoDirName}"
+        action.pipeline.context.builder.artifactParams.dir = "${action.params.dir}/${action.params.repoDirName}"
+        [:]
     }
 }
