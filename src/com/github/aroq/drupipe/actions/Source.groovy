@@ -1,33 +1,32 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Source extends BaseAction {
-
-    def context
 
     def script
 
     def utils
 
-    def DrupipeAction action
+    DrupipeActionWrapper action
 
     def add() {
         def source = this.action.params.source
-        def result
+        def result = [:]
+        def path
         switch (source.type) {
             case 'git':
                 if (!source.refType) {
                     source.refType = 'branch'
                 }
-                this.script.dir(source.path) {
+                script.dir(source.path) {
                     this.script.deleteDir()
                 }
 
                 source.mode = source.mode ? source.mode : 'pipeline'
 
                 if (source.refType == 'branch' && source.mode == 'pipeline') {
-                    this.script.dir(source.path) {
+                    script.dir(source.path) {
                         if (this.action.params.credentialsId) {
                             this.script.echo "With credentials: ${this.action.params.credentialsId}"
                             this.script.git credentialsId: this.action.params.credentialsId, url: source.url, branch: source.branch
@@ -37,48 +36,41 @@ class Source extends BaseAction {
                         }
                     }
                 }
-//                else if (source.refType == 'branch' && source.mode == 'shell') {
-//                    this.script.sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
-//                }
                 else {
-                    this.script.sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
+                    script.sh "git clone ${source.url} --branch ${source.branch} --depth 1 ${source.path}"
                 }
-                result = source.path
+                path = source.path
                 break
 
             case 'dir':
-                result = source.path
+                path = source.path
                 break
         }
-        if (!context.loadedSources) {
-            context.loadedSources = [:]
-            context.sourcesList = []
+        if (!result.loadedSources) {
+            result.loadedSources = [:]
+            result.sourcesList = []
         }
-        if (result) {
-            context.loadedSources[source.name] = new com.github.aroq.drupipe.DrupipeSource(name: source.name, type: source.type, path: source.path)
-            context.sourcesList << context.loadedSources[source.name]
-            utils.debugLog(context, context.loadedSources, "Loaded sources (after Source.add)", [debugMode: 'json'])
+        if (path) {
+            result.loadedSources[source.name] = [name: source.name, type: source.type, path: source.path]
+            result.sourcesList << result.loadedSources[source.name]
         }
-        [loadedSources: context.loadedSources, sourcesList: context.sourcesList]
+
+        result
     }
 
     def loadConfig() {
         def result = [:]
         if (action.params.configPath) {
-            def configFilePath = utils.sourcePath(context, action.params.sourceName, action.params.configPath)
+            def configFilePath = utils.sourcePath(action.pipeline.context, action.params.sourceName, action.params.configPath)
             if (configFilePath) {
                 if (script.fileExists(configFilePath)) {
                     if (action.params.configType == 'groovy') {
-                        result = this.script.drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], context)
+                        result = script.drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], action.pipeline)
                     }
                     else if (action.params.configType == 'yaml') {
-                        result = this.script.drupipeAction([action: 'YamlFileConfig.load', params: [configFileName: configFilePath]], context)
+                        result = script.drupipeAction([action: 'YamlFileConfig.load', params: [configFileName: configFilePath]], action.pipeline)
                     }
                 }
-
-                result.remove('sourceName')
-                result.remove('configPath')
-                result.remove('configType')
             }
             else {
                  script.echo "Config file doesn't exists: ${configFilePath}"

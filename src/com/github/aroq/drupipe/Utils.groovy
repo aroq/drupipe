@@ -162,34 +162,6 @@ def getMothershipProjectParams(config, json) {
     projects[config.jenkinsFolderName] ? projects[config.jenkinsFolderName] : [:]
 }
 
-def loadLibrary(script, context) {
-    if (!context.libraryLoaded) {
-        // TODO: check for the version ref type)
-        if (context.env['library.global.version']) {
-            context.drupipeLibraryBranch = context.env['library.global.version']
-            context.drupipeLibraryType = 'tag'
-            script.echo "Set drupipeLibraryBranch to ${context.drupipeLibraryBranch } as library.global.version was set"
-        }
-        else {
-            script.echo "ENV variable library.global.version is not set"
-        }
-        script.drupipeAction([
-            action: 'Source.add',
-            params: [
-                source: [
-                    name: 'library',
-                    type: 'git',
-                    path: 'library',
-                    url: context.drupipeLibraryUrl,
-                    branch: context.drupipeLibraryBranch,
-                    refType: context.drupipeLibraryType,
-                ],
-            ],
-        ], context)
-        context.libraryLoaded = true
-    }
-}
-
 boolean isCollectionOrList(object) {
     object instanceof java.util.Collection || object instanceof java.util.List || object instanceof java.util.LinkedHashMap || object instanceof java.util.HashMap
 }
@@ -358,7 +330,7 @@ def getMothershipConfigFile(params) {
             }
         }
     }
-    throw new Exception("getMothershipConfigFile: mothersip config file not found.")
+    throw new Exception("getMothershipConfigFile: mothership config file not found.")
 }
 
 def getMothershipServersFile(params) {
@@ -393,6 +365,7 @@ def sourceDir(params, sourceName) {
 
 def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], force = false) {
     if (debugEnabled(params) || force) {
+        force = true
         if (path) {
             value = path.inject(value, { obj, prop ->
                 if (obj && obj[prop]) {
@@ -407,10 +380,10 @@ def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], force 
         }
         else {
             if (debugParams?.debugMode == 'json' || params.debugMode == 'json') {
-                jsonDump(params, value, dumpName)
+                jsonDump(params, value, dumpName, force)
             }
             else {
-                dump(params, value, dumpName)
+                dump(params, value, dumpName, force)
             }
         }
     }
@@ -491,10 +464,7 @@ Map merge(Map[] sources) {
 
 def removeDir(dir, context) {
     if (fileExists(dir)) {
-        drupipeShell("""
-            rm -fR ${dir}
-            """, context
-        )
+        drupipeShell("rm -fR ${dir}")
     }
 }
 
@@ -504,7 +474,7 @@ def interpolateCommand(String command, action, context) {
         prepareFlags(flags)
     }
 
-    def binding = [context: context, action: action, prepareFlags: prepareFlags]
+    def binding = [context: context, actions: context.actions ? context.actions : [:], action: action, prepareFlags: prepareFlags]
     def engine = new groovy.text.SimpleTemplateEngine()
     def template = engine.createTemplate(command).make(binding)
     template.toString()
@@ -542,6 +512,20 @@ def processActionParams(action, context, ArrayList prefixes, ArrayList path = []
     }
 }
 
+def deepGet(object, path) {
+    if (path instanceof CharSequence) {
+        path = path.tokenize('.')
+    }
+    if (!path) {
+        return object
+    }
+    path.inject(object, { obj, prop ->
+        if (obj && obj[prop]) {
+            obj[prop]
+        }
+    })
+}
+
 @NonCPS
 def getActionParam(param, context, prefixes) {
     def result = param
@@ -561,6 +545,30 @@ def prepareFlags(flags) {
             "${k} ${subItem}".trim()
         }.join(' ').trim()
     }.join(' ')
+}
+
+def serializeAndDeserialize(params) {
+    def result = [:]
+    def yamlFilePath = '.unipipe/temp/serializeAndDeserialize.yaml'
+    if (params) {
+        if (fileExists(yamlFilePath)) {
+            sh("rm -f ${yamlFilePath}")
+        }
+        writeYaml(file: yamlFilePath, data: params)
+        if (fileExists(yamlFilePath)) {
+            result = readYaml(file: yamlFilePath)
+        }
+//        debugLog(result, result, "serializeAndDeserialize.RESULT", [debugMode: 'json'], [])
+    }
+    result
+
+}
+
+def stripContext(context) {
+    context.remove('pipeline')
+    context.remove('stage')
+    context.remove('block')
+    context
 }
 
 return this

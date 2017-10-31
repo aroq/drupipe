@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class SeleneseTester extends BaseAction {
 
@@ -10,7 +10,7 @@ class SeleneseTester extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    def DrupipeActionWrapper action
 
     def test() {
         def workspace = script.pwd()
@@ -18,7 +18,7 @@ class SeleneseTester extends BaseAction {
 
         def suites = context.suites.split(",")
         for (def i = 0; i < suites.size(); i++) {
-            script.drupipeShell("""docker pull ${action.params.dockerImage}""", context)
+            script.drupipeShell("""docker pull ${action.params.dockerImage}""", action.params)
             try {
                 script.drupipeShell(
 """docker run --rm --user root:root -v "${workspace}:${workspace}" \
@@ -26,7 +26,7 @@ class SeleneseTester extends BaseAction {
 -e "SCREEN_WIDTH=1920" -e "SCREEN_HEIGHT=1080" -e "SCREEN_DEPTH=24" \
 --workdir "${workspace}/${sourcePath}" \
 --entrypoint "/opt/bin/entry_point.sh" --shm-size=2g ${action.params.dockerImage} "${suites[i]}"
-""", context)
+""", action.params)
             }
             catch (e) {
                 script.currentBuild.result = "UNSTABLE"

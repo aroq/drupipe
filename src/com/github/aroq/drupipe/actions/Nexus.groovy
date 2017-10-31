@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Nexus extends BaseAction {
 
@@ -10,7 +10,7 @@ class Nexus extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    def DrupipeActionWrapper action
 
     def uploadArtifact() {
         def builder = context.builder
@@ -41,7 +41,7 @@ class Nexus extends BaseAction {
 
             // Remove artifact.
             script.drupipeShell(
-                "rm -f ${fileName}", context
+                "rm -f ${fileName}", action.params
             )
         }
 

@@ -1,52 +1,92 @@
 config_version = 1
 
+// Default params.
+environment = ''
 debugEnabled = false
 docrootDir = 'docroot'
 projectConfigPath = 'docroot/config'
 projectConfigFile = 'docroot.config'
 
-drupipeLibraryUrl = 'https://github.com/aroq/drupipe.git'
-drupipeLibraryBranch = 'master'
-drupipeLibraryType = 'branch'
+
 dockerImage = 'aroq/drudock:1.4.0'
 nodeName = 'default'
 containerMode = 'docker'
-
 configSeedType = 'docman'
-
 defaultDocmanImage = 'michaeltigr/zebra-build-php-drush-docman:latest'
-
 logRotatorNumToKeep = 5
-
 drupipeDockerArgs = '--user root:root --net=host'
 
-// Environments section.
-environments {
-    dev {
-//        dockerImage = 'aroq/drudock:dev'
-    }
-    stage {
-//        dockerImage = 'aroq/drudock:dev'
-    }
-    prod {
-//        dockerImage = 'aroq/drudock:dev'
-    }
-}
-
 params = [
+    pipeline: [
+        scripts_library: [
+            url: 'https://github.com/aroq/drupipe.git',
+            ref: 'master',
+            type: 'branch',
+        ]
+    ],
     block: [
 
     ],
     action: [
+        // Default action params (merged to all actions params).
+        ACTION: [
+            action_timeout: 120,
+            // TODO: Check when & why storeResult is used.
+            store_result: true,
+            dump_result: true,
+            store_action_params: true,
+            store_result_key: 'context.results.action.${action.name}_${action.methodName}',
+            post_process: [
+                result: [
+                    type: 'result',
+                    source: 'result',
+                    destination: '${action.params.store_result_key}',
+                ],
+            ],
+            store_action_params_key: 'actions.${action.name}_${action.methodName}',
+            shell_bash_login: true,
+            return_stdout: false,
+        ],
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
-            //projectConfigPath: 'docroot/config',
-            //projectConfigFile: 'docroot.config',
+            post_process: [
+                context: [
+                    type: 'result',
+                    source: 'result',
+                    destination: 'context',
+                ],
+            ],
+        ],
+        Config_perform: [
+            post_process: [
+            ],
+        ],
+        Config_envConfig: [
+        ],
+        Config_mothershipConfig: [
             mothershipConfigFile: 'mothership.config',
-            interpolate: 0,
+            post_process: [
+                result: [
+                    type: 'result',
+                    source: 'result.configRepo',
+                    destination: 'context.configRepo',
+                ],
+            ],
+        ],
+        Config_projectConfig: [
         ],
         Source: [
-            interpolate: 0,
+            post_process: [
+                context: [
+                    type: 'result',
+                    source: 'result',
+                    destination: 'context',
+                ],
+            ],
+        ],
+        YamlFileConfig: [
+        ],
+        GroovyFileConfig: [
         ],
         Behat: [
             masterPath: 'docroot/master',
@@ -58,6 +98,10 @@ params = [
         ],
         Terraform: [
             infraSourceName: 'infra-config',
+            shell_bash_login: false,
+        ],
+        DrushFeaturesList: [
+            return_stdout: true,
         ],
         Docman: [
             docmanJsonConfigFile: 'config.json',
@@ -163,6 +207,7 @@ params = [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
             ],
             access_key_file_id: '',
+            shell_bash_login: false,
             credentials: [
                 secret_values_file: [
                     type: 'file',
@@ -177,14 +222,25 @@ params = [
         // HELM_EXECUTABLE: test
         // HELM_APPLY_EXECUTABLE: test
         // HELM_APPLY_HELM_COMMAND: test
+        Jenkins: [
+            shell_bash_login: false,
+        ],
         Helm: [
             executable: 'helm',
-            environment: '',
             chart_name: '', // HELM_CHART_NAME in Jenkins params.
             charts_dir: 'charts',
             kubectl_config_file: '.kubeconfig',
+            shell_bash_login: false,
+            namespace: '${action.params.chart_name}-${context.environment}',
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
+            ],
+            post_process: [
+                namespace: [
+                    type: 'result',
+                    source: 'params.namespace', // From action params.
+                    destination: 'context.k8s_namespace',  // To "context".
+                ],
             ],
         ],
         Helm_init: [
@@ -198,10 +254,9 @@ params = [
             command: 'upgrade',
             value_suffix: 'values.yaml',
             timeout: '120',
-            release_name: '${action.params.chart_name}-${action.params.environment}',
-            namespace: '${action.params.chart_name}-${action.params.environment}',
+            release_name: '${action.params.chart_name}-${context.environment}',
             values_file: '${action.params.chart_name}.${action.params.value_suffix}',
-            env_values_file: '${action.params.environment}.${action.params.values_file}',
+            env_values_file: '${context.environment}.${action.params.values_file}',
             secret_values_file_id: '',
             chart_dir: '${action.params.charts_dir}/${action.params.chart_name}',
             credentials: [
@@ -232,7 +287,7 @@ params = [
         ],
         Helm_status: [
             command: 'status',
-            release_name: '${action.params.chart_name}-${action.params.environment}',
+            release_name: '${action.params.chart_name}-${context.environment}',
             flags: [:],
             full_command: [
                 '${action.params.executable}',
@@ -242,7 +297,7 @@ params = [
         ],
         Helm_delete: [
             command: 'delete',
-            release_name: '${action.params.chart_name}-${action.params.environment}',
+            release_name: '${action.params.chart_name}-${context.environment}',
             flags: [
                 '--purge': [''],
             ],
@@ -256,12 +311,11 @@ params = [
         Kubectl: [
             executable: 'kubectl',
             kubectl_config_file: '.kubeconfig',
-            namespace: '${action.params.chart_name}-${action.params.environment}',
-            shellCommandWithBashLogin: false,
+            shell_bash_login: false,
+            namespace: '${context.k8s_namespace}',
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
             ],
-            returnOutput: false,
         ],
         Kubectl_scale_replicaset: [
             command: 'scale replicaset',
@@ -282,13 +336,11 @@ params = [
             replicas_down: '0',
             replicas_up: '1',
         ],
-        Kubectl_get_pod_name: [
-            command: 'get pod',
-            environment: '',
-            chart_name: '',
-            release_name: '${action.params.chart_name}-${action.params.environment}',
+        Kubectl_get_replicaset_name: [
+            command: 'get replicaset',
+            release_name: '${actions.Helm_apply.release_name}',
             jsonpath: '\'{.items[0].metadata.name}\'',
-            drupipeShellReturnStdout: true,
+            return_stdout: true,
             flags: [
                 '--namespace': ['${action.params.namespace}'],
                 '--selector': ['release=${action.params.release_name}'],
@@ -300,13 +352,11 @@ params = [
                 '${prepareFlags(action.params.flags)}',
             ],
         ],
-        Kubectl_get_replicaset_name: [
-            command: 'get replicaset',
-            environment: '',
-            chart_name: '',
-            release_name: '${action.params.chart_name}-${action.params.environment}',
+        Kubectl_get_pod_name: [
+            command: 'get pod',
+            release_name: '${actions.Helm_apply.release_name}',
             jsonpath: '\'{.items[0].metadata.name}\'',
-            drupipeShellReturnStdout: true,
+            return_stdout: true,
             flags: [
                 '--namespace': ['${action.params.namespace}'],
                 '--selector': ['release=${action.params.release_name}'],
@@ -329,20 +379,20 @@ params = [
                 '${prepareFlags(action.params.flags)}',
             ],
         ],
-        Kubectl_get_secret: [
-            command: 'get secret',
-            full_command: [
-                '${action.params.executable}',
-                '${action.params.command}',
-                '${action.params.secret_name}',
+        Kubectl_get_loadbalancer_address: [
+            command: 'get service',
+            release_name: '${actions.Helm_apply.release_name}',
+            jsonpath: '\'{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}\'',
+            return_stdout: true,
+            flags: [
+                '--namespace': ['${action.params.namespace}'],
+                '--selector': ['release=${action.params.release_name}'],
+                '-o': ['jsonpath=${action.params.jsonpath}'],
             ],
-        ],
-        Kubectl_create_secret: [
-            command: 'get secret',
             full_command: [
                 '${action.params.executable}',
                 '${action.params.command}',
-                '${action.params.secret_name}',
+                '${prepareFlags(action.params.flags)}',
             ],
         ],
         Kubectl_copy_from_pod: [
@@ -352,12 +402,22 @@ params = [
             source: '${action.params.namespace}/${action.params.name}:${action.params.source_file_name}',
             destination_file_name: '',
             destination: '${action.params.destination_file_name}',
-            drupipeShellReturnStdout: true,
+            return_stdout: true,
             full_command: [
                 '${action.params.executable}',
                 '${action.params.command}',
                 '${action.params.source}',
                 '${action.params.destination}',
+            ],
+        ],
+        HealthCheck_wait_http_ok: [
+            action_timeout: 5,
+            url: '',
+            http_code: '200',
+            interval: '5',
+            command: '''bash -c 'while [[ "\\\$(curl -s -o /dev/null -w ''%{http_code}'' ${action.params.url})" != "${action.params.http_code}" ]]; do sleep ${action.params.interval}; done' ''',
+            full_command: [
+                '${action.params.command}',
             ],
         ],
     ],

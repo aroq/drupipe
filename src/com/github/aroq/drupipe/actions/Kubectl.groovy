@@ -1,47 +1,38 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Kubectl extends BaseAction {
-
-    def context
 
     def script
 
     def utils
 
-    DrupipeAction action
+    DrupipeActionWrapper action
 
     def scale_replicaset() {
         executeKubectlCommand()
     }
 
     def scale_down_up() {
-        def name = script.drupipeAction([action: "Kubectl.get_replicaset_name", params: action.params], context).drupipeShellResult
+        def name = script.drupipeAction([action: "Kubectl.get_replicaset_name"], action.pipeline).stdout
         script.echo "Replicaset name: ${name}"
-        script.drupipeAction([action: "Kubectl.scale_replicaset", params: action.params << [name: name, replicas: action.params.replicas_down]], context)
-        script.drupipeAction([action: "Kubectl.scale_replicaset", params: action.params << [name: name, replicas: action.params.replicas_up]], context)
-    }
-
-    def get_secret() {
-        executeKubectlCommand()
+        script.drupipeAction([action: "Kubectl.scale_replicaset", params: [name: name, replicas: action.params.replicas_down]], action.pipeline)
+        script.drupipeAction([action: "Kubectl.scale_replicaset", params: [name: name, replicas: action.params.replicas_up]], action.pipeline)
     }
 
     def get_pod_name() {
         executeKubectlCommand()
     }
 
-    def get_replicaset_name() {
-        executeKubectlCommand()
+    def get_loadbalancer_address() {
+        [
+            url: executeKubectlCommand().stdout,
+        ]
     }
 
-    def create_secret() {
-        try {
-            drupipeAction([action: "Kubectl.get_secret", params: action.params], context)
-        }
-        catch (e) {
-            executeKubectlCommand()
-        }
+    def get_replicaset_name() {
+        executeKubectlCommand()
     }
 
     def get_pods() {
@@ -53,11 +44,7 @@ class Kubectl extends BaseAction {
     }
 
     def executeKubectlCommand() {
-        script.drupipeShell(
-            "${action.params.full_command.join(' ')}",
-            context,
-            action.params
-        )
+        script.drupipeShell("${action.params.full_command.join(' ')}", action.params)
     }
 
 }

@@ -1,30 +1,28 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Drush extends BaseAction {
-
-    def context
 
     def script
 
     def utils
 
-    def DrupipeAction action
+    DrupipeActionWrapper action
 
     def runCommand() {
-        def drush_dsn = (this.context.drush_dsn && this.context.drush_dsn.length() != 0) ? "${this.context.drush_dsn}" : null
-        def command = (this.context.drush_command && this.context.drush_command.length() != 0) ? "${this.context.drush_command}" : 'core-status'
-        def site = (this.context.drush_site && this.context.drush_site.length() != 0) ? "${this.context.drush_site}" : 'default'
-        def docroot = (this.context.drush_site_docroot && this.context.drush_site_docroot.length() != 0) ? "${this.context.drush_site_docroot}" : 'docroot'
-        def environment = (this.context.drush_environment && this.context.drush_environment.length() != 0) ? "${this.context.drush_environment}" : 'dev'
+        def drush_dsn = (action.pipeline.context.drush_dsn && action.pipeline.context.drush_dsn.length() != 0) ? "${action.pipeline.context.drush_dsn}" : null
+        def command = (action.pipeline.context.drush_command && action.pipeline.context.drush_command.length() != 0) ? "${action.pipeline.context.drush_command}" : 'core-status'
+        def site = (action.pipeline.context.drush_site && action.pipeline.context.drush_site.length() != 0) ? "${action.pipeline.context.drush_site}" : 'default'
+        def docroot = (action.pipeline.context.drush_site_docroot && action.pipeline.context.drush_site_docroot.length() != 0) ? "${action.pipeline.context.drush_site_docroot}" : 'docroot'
+        def environment = (action.pipeline.context.drush_environment && action.pipeline.context.drush_environment.length() != 0) ? "${action.pipeline.context.drush_environment}" : 'dev'
         def user
         def host
         def root
 
-        if(!drush_dsn) {
-            if (context.environments[environment]) {
-                def env = context.environments[environment]
+        if (!drush_dsn) {
+            if (action.pipeline.context.environments[environment]) {
+                def env = action.pipeline.context.environments[environment]
 
                 if (env.root) {
                     root = env.root
@@ -33,8 +31,8 @@ class Drush extends BaseAction {
                     throw new Exception("DRUSH ACTION: Project root not found.")
                 }
 
-                if (env.server && context.servers[env.server]) {
-                    def server = context.servers[env.server]
+                if (env.server && action.pipeline.context.servers[env.server]) {
+                    def server = action.pipeline.context.servers[env.server]
 
                     if (server.user) {
                         user = server.user
@@ -64,15 +62,15 @@ class Drush extends BaseAction {
 
         this.script.echo "Execute Drush command: ${drushString}"
 
-        if (context.drushOutputReturn || this.context.job.notify) {
+        if (action.params.store_result || action.pipeline.context.job.notify) {
             this.script.echo "Return Drush output."
-            def result = this.script.drupipeShell("${drushString}", this.context.clone() << [drupipeShellReturnStdout: true])
-            result.drupipeShellResult = result.drupipeShellResult.replaceAll(/(?m)^(PHP )?Deprecated.*$/, '').trim()
+            def result = this.script.drupipeShell("${drushString}", [return_stdout: true])
+            result.stdout = result.stdout.replaceAll(/(?m)^(PHP )?Deprecated.*$/, '').trim()
             result.result = drushString
             return result
         }
         else {
-            this.script.drupipeShell("${drushString}", this.context.clone())
+            this.script.drupipeShell("${drushString}", action.params)
         }
     }
 }

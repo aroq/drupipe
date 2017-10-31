@@ -1,118 +1,119 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class PipelineController extends BaseAction {
-
-    def context
 
     def script
 
     def utils
 
-    def DrupipeAction action
+    DrupipeActionWrapper action
 
     def build() {
-        if (!context['builder']) {
-            context['builder'] = [:]
+        if (!action.pipeline.context['builder']) {
+            action.pipeline.context['builder'] = [:]
         }
         if (action.params.buildHandler && action.params.buildHandler.handler) {
             // Dispatch the action.
-            context << script.drupipeAction([action: "${action.params.buildHandler.handler}.${action.params.buildHandler.method}"], context)
+            script.drupipeAction([action: "${action.params.buildHandler.handler}.${action.params.buildHandler.method}"], action.pipeline)
         }
         else {
             script.echo "No builder handler defined"
         }
+        [:]
     }
 
     // TODO: move to artifact handler.
     def createArtifact() {
-        def sourceDir = context.builder['buildDir']
-        def fileName = "${context.builder['buildName']}-${context.builder['version']}.tar.gz"
-        context.builder['artifactFileName'] = fileName
-        context.builder['groupId'] = context.jenkinsFolderName
+        def sourceDir = action.pipeline.context.builder['buildDir']
+        def fileName = "${action.pipeline.context.builder['buildName']}-${action.pipeline.context.builder['version']}.tar.gz"
+        action.pipeline.context.builder['artifactFileName'] = fileName
+        action.pipeline.context.builder['groupId'] = action.pipeline.context.jenkinsFolderName
 
         script.drupipeShell(
             """
                 rm -fR ${sourceDir}/.git
                 tar -czf ${fileName} ${sourceDir}
-            """, context << [shellCommandWithBashLogin: true]
+            """, action.params
         )
-        context
+        [:]
     }
 
     def deploy() {
         if (action.params.deployHandler && action.params.deployHandler.handler) {
             retrieveArtifact()
-            context << script.drupipeAction([action: "${action.params.deployHandler.handler}.${action.params.deployHandler.method}", params: context.builder.artifactParams], context)
+            script.drupipeAction([action: "${action.params.deployHandler.handler}.${action.params.deployHandler.method}", params: action.pipeline.context.builder.artifactParams], action.pipeline)
         }
         else {
             script.echo "No deploy handler defined"
         }
+        [:]
     }
 
     def operations() {
-        if (context.operationsMode == 'no-ops') {
+        if (action.pipeline.context.operationsMode == 'no-ops') {
             script.echo "No operations mode (no-ops) is selected"
         }
         else {
             if (action.params.operationsHandler && action.params.operationsHandler.handler) {
                 retrieveArtifact()
-                context << script.drupipeAction([action: "${action.params.operationsHandler.handler}.${action.params.operationsHandler.method}"], context)
+                script.drupipeAction([action: "${action.params.operationsHandler.handler}.${action.params.operationsHandler.method}"], action.pipeline)
             }
             else {
                 script.echo "No operations handler defined"
             }
         }
+        [:]
     }
 
     def test() {
         if (action.params.testHandler && action.params.testHandler.handler) {
-            context << script.drupipeAction([action: "${action.params.testHandler.handler}.${action.params.testHandler.method}"], context)
+            script.drupipeAction([action: "${action.params.testHandler.handler}.${action.params.testHandler.method}"], action.pipeline)
         }
         else {
             script.echo "No test handler defined"
         }
+        [:]
     }
 
     def retrieveArtifact() {
-        if (!context['builder']) {
-            context['builder'] = [:]
+        if (!action.pipeline.context['builder']) {
+            action.pipeline.context['builder'] = [:]
         }
         if (action.params.artifactHandler && action.params.artifactHandler.handler) {
-            //script.drupipeAction([action: "${action.params.buildHandler.handler}.artifactParams"], context)
+            //script.drupipeAction([action: "${action.params.buildHandler.handler}.artifactParams"], action.pipeline.context)
             artifactParams()
-            context << script.drupipeAction([action: "${action.params.artifactHandler.handler}.${action.params.artifactHandler.method}", params: context.builder.artifactParams], context)
-            if (!context.projectName) {
-                context.projectName = 'master'
+            script.drupipeAction([action: "${action.params.artifactHandler.handler}.${action.params.artifactHandler.method}", params: action.pipeline.context.builder.artifactParams], action.pipeline)
+            if (!action.pipeline.context.projectName) {
+                action.pipeline.context.projectName = 'master'
             }
         }
         else {
             script.echo "No artifact handler defined"
         }
-        context
+        [:]
     }
 
     def repoParams(String configPath) {
-        //info()
         def repo
-        def masterInfoFile = "${context.projectConfigPath}/${configPath}/info.yaml"
+        def masterInfoFile = "${action.pipeline.context.projectConfigPath}/${configPath}/info.yaml"
         if (script.fileExists(masterInfoFile)) {
             def masterConfig = script.readYaml(file: masterInfoFile)
             script.echo "MASTER CONFIG: ${masterConfig}"
             repo = masterConfig.type == 'root' ? masterConfig.repo : masterConfig.root_repo
         }
         else {
-            repo = context.components.master.root_repo ? context.components.master.root_repo : context.components.master.repo
+            repo = action.pipeline.context.components.master.root_repo ? action.pipeline.context.components.master.root_repo : action.pipeline.context.components.master.repo
         }
         script.echo "REPO: ${repo}"
 
         String reference
-        if (context.release) {
-            reference = context.release
+        if (action.pipeline.context.jenkinsParams.release) {
+            reference = action.pipeline.context.jenkinsParams.release
         }
         else {
-            reference = context.environmentParams.git_reference
+            reference = action.pipeline.context.environmentParams.git_reference
         }
         script.echo "reference: ${reference}"
         return [
@@ -124,9 +125,8 @@ class PipelineController extends BaseAction {
     }
 
     def artifactParams() {
-        context.builder.artifactParams = repoParams('master')
-        context
+        action.pipeline.context.builder.artifactParams = repoParams('master')
+        [:]
     }
-
 
 }
