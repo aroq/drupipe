@@ -228,6 +228,7 @@ params = [
         Helm: [
             executable: 'helm',
             chart_name: '', // HELM_CHART_NAME in Jenkins params.
+            release_name: '${action.params.chart_name}-${context.environment}',
             charts_dir: 'charts',
             kubectl_config_file: '.kubeconfig',
             shell_bash_login: false,
@@ -240,6 +241,11 @@ params = [
                     type: 'result',
                     source: 'params.namespace', // From action params.
                     destination: 'context.k8s.namespace',  // To "context".
+                ],
+                release_name: [
+                    type: 'result',
+                    source: 'params.release_name', // From action params.
+                    destination: 'context.k8s.selector',  // To "context".
                 ],
             ],
         ],
@@ -254,7 +260,6 @@ params = [
             command: 'upgrade',
             value_suffix: 'values.yaml',
             timeout: '120',
-            release_name: '${action.params.chart_name}-${context.environment}',
             values_file: '${action.params.chart_name}.${action.params.value_suffix}',
             env_values_file: '${context.environment}.${action.params.values_file}',
             secret_values_file_id: '',
@@ -287,7 +292,6 @@ params = [
         ],
         Helm_status: [
             command: 'status',
-            release_name: '${action.params.chart_name}-${context.environment}',
             flags: [:],
             full_command: [
                 '${action.params.executable}',
@@ -297,7 +301,6 @@ params = [
         ],
         Helm_delete: [
             command: 'delete',
-            release_name: '${action.params.chart_name}-${context.environment}',
             flags: [
                 '--purge': [''],
             ],
@@ -341,7 +344,7 @@ params = [
             release_name: '${actions.Helm_status.release_name}',
             jsonpath: '\'{.items[0].metadata.name}\'',
             return_stdout: true,
-            selector: 'release=${action.params.release_name}',
+            selector: 'release=${context.k8s.selector}',
             flags: [
                 '--namespace': ['${action.params.namespace}'],
                 '--selector': ['${action.params.selector}'],
@@ -358,7 +361,7 @@ params = [
             release_name: '${actions.Helm_status.release_name}',
             jsonpath: '\'{.items[0].metadata.name}\'',
             return_stdout: true,
-            selector: 'release=${action.params.release_name}',
+            selector: 'release=${context.k8s.selector}',
             flags: [
                 '--namespace': ['${action.params.namespace}'],
                 '--selector': ['${action.params.selector}'],
@@ -386,7 +389,7 @@ params = [
             release_name: '${actions.Helm_status.release_name}',
             jsonpath: '\'{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}\'',
             return_stdout: true,
-            selector: 'release=${action.params.release_name}',
+            selector: 'release=${context.k8s.selector}',
             flags: [
                 '--namespace': ['${action.params.namespace}'],
                 '--selector': ['${action.params.selector}'],
