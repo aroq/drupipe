@@ -239,7 +239,7 @@ params = [
                 namespace: [
                     type: 'result',
                     source: 'params.namespace', // From action params.
-                    destination: 'context.k8s_namespace',  // To "context".
+                    destination: 'context.k8s.namespace',  // To "context".
                 ],
             ],
         ],
@@ -312,7 +312,7 @@ params = [
             executable: 'kubectl',
             kubectl_config_file: '.kubeconfig',
             shell_bash_login: false,
-            namespace: '${context.k8s_namespace}',
+            namespace: '${context.k8s.namespace}',
             env: [
                 KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
             ],
@@ -338,12 +338,13 @@ params = [
         ],
         Kubectl_get_replicaset_name: [
             command: 'get replicaset',
-            release_name: '${actions.Helm_apply.release_name}',
+            release_name: '${actions.Helm_status.release_name}',
             jsonpath: '\'{.items[0].metadata.name}\'',
             return_stdout: true,
+            selector: 'release=${action.params.release_name}',
             flags: [
                 '--namespace': ['${action.params.namespace}'],
-                '--selector': ['release=${action.params.release_name}'],
+                '--selector': ['${action.params.selector}'],
                 '-o': ['jsonpath=${action.params.jsonpath}'],
             ],
             full_command: [
@@ -354,12 +355,13 @@ params = [
         ],
         Kubectl_get_pod_name: [
             command: 'get pod',
-            release_name: '${actions.Helm_apply.release_name}',
+            release_name: '${actions.Helm_status.release_name}',
             jsonpath: '\'{.items[0].metadata.name}\'',
             return_stdout: true,
+            selector: 'release=${action.params.release_name}',
             flags: [
                 '--namespace': ['${action.params.namespace}'],
-                '--selector': ['release=${action.params.release_name}'],
+                '--selector': ['${action.params.selector}'],
                 '-o': ['jsonpath=${action.params.jsonpath}'],
             ],
             full_command: [
@@ -381,12 +383,13 @@ params = [
         ],
         Kubectl_get_loadbalancer_address: [
             command: 'get service',
-            release_name: '${actions.Helm_apply.release_name}',
+            release_name: '${actions.Helm_status.release_name}',
             jsonpath: '\'{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}\'',
             return_stdout: true,
+            selector: 'release=${action.params.release_name}',
             flags: [
                 '--namespace': ['${action.params.namespace}'],
-                '--selector': ['release=${action.params.release_name}'],
+                '--selector': ['${action.params.selector}'],
                 '-o': ['jsonpath=${action.params.jsonpath}'],
             ],
             full_command: [
