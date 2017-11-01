@@ -50,7 +50,6 @@ class DrupipeBlock implements Serializable {
             pipeline.script.node(nodeName) {
                 pipeline.context.drupipe_working_dir = [pipeline.script.pwd(), '.drupipe'].join('/')
                 utils.dump(this.config, 'BLOCK-CONFIG')
-                utils.dump(this.context, 'BLOCK-CONTEXT')
                 // Secret option for emergency remove workspace.
                 if (pipeline.context.force == '11') {
                     pipeline.script.echo 'FORCE REMOVE DIR'
@@ -83,8 +82,8 @@ class DrupipeBlock implements Serializable {
 //            }
         }
         else {
-            context.pipeline.script.node(nodeName) {
-                context.pipeline.script.echo "Execute block in non container mode"
+            pipeline.script.node(nodeName) {
+                pipeline.script.echo "Execute block in non container mode"
                 pipeline.script.sshagent([pipeline.context.credentialsId]) {
                     _execute(body)
                 }
