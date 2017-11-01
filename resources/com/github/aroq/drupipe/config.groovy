@@ -228,6 +228,7 @@ params = [
             shell_bash_login: false,
             jenkins_user_token_file: '',
             jenkins_address: '',
+            jenkins_user_token: '',
         ],
         Helm: [
             executable: 'helm',
