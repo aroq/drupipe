@@ -49,7 +49,7 @@ class Jenkins extends BaseAction {
     def cli() {
         // TODO: Remove it after action refactor and tests.
         if (!action.params.jenkins_user_token_file) {
-            action.params.jenkins_user_token = script.readFile file: action.pipeline.context.jenkins_user_token_file
+            action.params.jenkins_user_token = script.readFile file: action.params.jenkins_user_token_file
         }
         if (!action.params.jenkins_address) {
             action.params.jenkins_address = "${getJenkinsAddress()}:${this.action.params.port}"
