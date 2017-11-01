@@ -46,6 +46,7 @@ class DrupipePipeline implements Serializable {
                 }
 
                 if (!blocks) {
+                    script.echo 'No blocks are defined, trying to get blocks from context.jobs'
                     if (context.job) {
                         def job = context.job
                         if (job) {
@@ -107,9 +108,10 @@ class DrupipePipeline implements Serializable {
                 }
 
                 if (blocks) {
-                    for (def i = 0; i < blocks.size(); i++) {
-                        blocks[i].pipeline = this
-                        (new DrupipeBlock(blocks[i])).execute()
+                    if (context.containerMode == 'kubernetes') {
+                        script.drupipeExecuteBlocksWithKubernetes(this, body)
+                    } else {
+                        executeBlocks()
                     }
                 }
                 else {
@@ -184,13 +186,19 @@ class DrupipePipeline implements Serializable {
 
     def executeStages(stagesToExecute = [:]) {
         def stages = processStages(stagesToExecute)
-//        stages += processStages(this.block.stages)
-
-//        utils.debugLog(context, stages, 'executeStages', [debugMode: 'json'], [], true)
-
         for (int i = 0; i < stages.size(); i++) {
             script.echo "executeStages -> stage: ${stages[i].name}"
             stages[i].execute()
+        }
+    }
+
+    def executeBlocks() {
+        for (def i = 0; i < blocks.size(); i++) {
+            blocks[i].name = "blocks-${i}"
+            blocks[i].pipeline = this
+            script.echo "BLOCK EXECUTE START - ${blocks[i].name}"
+            (new DrupipeBlock(blocks[i])).execute()
+            script.echo "BLOCK EXECUTE END - ${blocks[i].name}"
         }
     }
 
