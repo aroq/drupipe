@@ -60,7 +60,7 @@ class Jenkins extends BaseAction {
                 this.script.drupipeShell(
 """
 /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${this.action.params.command}
-""", action.params)
+""", this.action.params)
             }
         }
         else {
@@ -71,7 +71,7 @@ class Jenkins extends BaseAction {
                     this.script.drupipeShell(
 """
 /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${this.action.params.command}
-""", action.params)
+""", this.action.params)
                 }
             }
         }
