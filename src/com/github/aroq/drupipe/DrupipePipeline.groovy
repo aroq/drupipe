@@ -12,6 +12,8 @@ class DrupipePipeline implements Serializable {
 
     LinkedHashMap config = [:]
 
+    DrupipeBlock block
+
     def script
 
     def utils
@@ -19,7 +21,6 @@ class DrupipePipeline implements Serializable {
     def scm
 
     def execute(body = null) {
-        context.pipeline = this
         context.jenkinsParams = params
         utils = new com.github.aroq.drupipe.Utils()
 
@@ -29,14 +30,14 @@ class DrupipePipeline implements Serializable {
         try {
             script.timestamps {
                 script.node('master') {
-                    utils.dump(params, 'PIPELINE-PARAMS')
-                    utils.dump(config, 'PIPELINE-CONFIG')
-                    context.utils = utils
                     params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 
-                    def configParams = script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params, interpolate: 0]], context.clone() << params)
-                    context << (configParams << config << context)
-                    utils.dump(context, 'PIPELINE-CONTEXT')
+                    utils.dump(params, params, 'PIPELINE-PARAMS')
+                    utils.dump(params, config, 'PIPELINE-CONFIG')
+
+                    script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params]], this)
+                    utils.dump(context, context, 'PIPELINE-CONTEXT')
+
                     // Secret option for emergency remove workspace.
                     if (context.force == '11') {
                         script.echo 'FORCE REMOVE DIR'
@@ -45,14 +46,12 @@ class DrupipePipeline implements Serializable {
                 }
 
                 if (!blocks) {
-                    if (context.jobs) {
-                        def job = getJobConfigByName(context.env.JOB_NAME)
+                    if (context.job) {
+                        def job = context.job
                         if (job) {
-                            utils.jsonDump(job, 'JOB')
-                            context.job = job
-                            utils.pipelineNotify(context, notification << [status: 'START'])
+//                            utils.pipelineNotify(context, notification << [status: 'START'])
 
-                            def pipelineBlocks = job.pipeline && job.pipeline.blocks ? job.pipeline.blocks : []
+                            def pipelineBlocks = context.job.pipeline && context.job.pipeline.blocks ? context.job.pipeline.blocks : []
                             if (pipelineBlocks) {
                                 for (def i = 0; i < pipelineBlocks.size(); i++) {
                                     if (context.blocks && context.blocks[pipelineBlocks[i]]) {
@@ -73,11 +72,16 @@ class DrupipePipeline implements Serializable {
                                         script.echo "No pipeline block: ${pipelineBlocks[i]} is defined."
                                     }
                                 }
+                                // TODO: Remove this workaround.
+                                // Workaround to allow to dump context later.
+                                script.node('master') {
+                                    context = utils.serializeAndDeserialize(context)
+                                }
                             }
                             else {
                                 // TODO: to remove after updating all configs.
                                 script.node('master') {
-                                    def yamlFileName = job.pipeline.file ? job.pipeline.file : "pipelines/${context.env.JOB_BASE_NAME}.yaml"
+                                    def yamlFileName = context.job.pipeline.file ? context.job.pipeline.file : "pipelines/${context.env.JOB_BASE_NAME}.yaml"
                                     def pipelineYamlFile = "${context.projectConfigPath}/${yamlFileName}"
                                     if (script.fileExists(pipelineYamlFile)) {
                                         blocks = script.readYaml(file: pipelineYamlFile).blocks
@@ -104,10 +108,8 @@ class DrupipePipeline implements Serializable {
 
                 if (blocks) {
                     for (def i = 0; i < blocks.size(); i++) {
-                        def block = new DrupipeBlock(blocks[i])
-                        script.echo 'BLOCK EXECUTE START'
-                        context << block.execute(context)
-                        script.echo 'BLOCK EXECUTE END'
+                        blocks[i].pipeline = this
+                        (new DrupipeBlock(blocks[i])).execute()
                     }
                 }
                 else {
@@ -115,10 +117,7 @@ class DrupipePipeline implements Serializable {
                 }
 
                 if (body) {
-                    def result = body(context)
-                    if (result) {
-                        context << result
-                    }
+                    body(this)
                 }
 
                 script.node('master') {
@@ -136,7 +135,7 @@ class DrupipePipeline implements Serializable {
                             }
                             else {
                               script.echo "Triggering trigger name ${trigger_job.name} and job name ${trigger_job.job}"
-                              this.utils.dump(trigger_job, "TRIGGER JOB ${i}")
+                              this.utils.dump(context, trigger_job, "TRIGGER JOB ${i}")
 
                               def params = []
                               def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
@@ -183,55 +182,31 @@ class DrupipePipeline implements Serializable {
         context
     }
 
-    def getJobConfigByName(String name) {
-        def parts = name.split('/').drop(1)
-        getJobConfig(context.jobs, parts, 0, [:])
-    }
+    def executeStages(stagesToExecute = [:]) {
+        def stages = processStages(stagesToExecute)
+//        stages += processStages(this.block.stages)
 
-    def getJobConfig(jobs, parts, counter = 0, r = [:]) {
-        script.echo "Counter: ${counter}"
-        def part = parts[counter]
-        script.echo "Part: ${part}"
-        def j = jobs[part] ? jobs[part] : [:]
-        if (j) {
-            def children = j.containsKey('children') ? j['children'] : [:]
-            j.remove('children')
-            r = utils.merge(r, j)
-            if (children) {
-                getJobConfig(children, parts, counter + 1, r)
-            }
-            else {
-                r
-            }
-        }
-        else {
-            [:]
-        }
-    }
-
-    def executeStages(stagesToExecute, context) {
-        def stages = processStages(stagesToExecute, context)
-        stages += processStages(context.stages, context)
+//        utils.debugLog(context, stages, 'executeStages', [debugMode: 'json'], [], true)
 
         for (int i = 0; i < stages.size(); i++) {
-            context << stages[i].execute(context)
+            script.echo "executeStages -> stage: ${stages[i].name}"
+            stages[i].execute()
         }
-        context
     }
 
     @NonCPS
-    List<DrupipeStage> processStages(stages, context) {
+    List<DrupipeStage> processStages(stages) {
         List<DrupipeStage> result = []
         for (item in stages) {
-            result << processStage(item, context)
+            result << processStage(item)
         }
         result
     }
 
     @NonCPS
-    DrupipeStage processStage(s, context) {
+    DrupipeStage processStage(s) {
         if (!(s instanceof DrupipeStage)) {
-            //new DrupipeStage(name: stage.key, params: context, actions: processPipelineActionList(stage.value, context))
+            s.pipeline = this
             s = new DrupipeStage(s)
         }
         if (s instanceof DrupipeStage) {
@@ -251,16 +226,16 @@ class DrupipePipeline implements Serializable {
     }
 
     @NonCPS
-    List processPipelineActionList(actionList, context) {
+    List processPipelineActionList(actionList) {
         List actions = []
         for (action in actionList) {
-            actions << processPipelineAction(action, context)
+            actions << processPipelineAction(action)
         }
         actions
     }
 
     @NonCPS
-    DrupipeAction processPipelineAction(action, context) {
+    DrupipeActionWrapper processPipelineAction(action) {
         def actionName
         def actionMethodName
         def actionParams
@@ -281,17 +256,23 @@ class DrupipePipeline implements Serializable {
             actionName = 'PipelineController'
             actionMethodName = values[0]
         }
+        if (context.params && context.params.action && context.params.action["${actionName}_${actionMethodName}"] && context.params.action["${actionName}_${actionMethodName}"].debugEnabled) {
+            utils.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'], [], true)
+            utils.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'], [], true)
+        }
 
-        new DrupipeAction(name: actionName, methodName: actionMethodName, params: actionParams, context: context)
+        script.echo actionName
+        script.echo actionMethodName
+        new DrupipeActionWrapper(pipeline: this, name: actionName, methodName: actionMethodName, params: actionParams)
     }
 
-    def executePipelineActionList(actions, context) {
-        this.script.echo("executePipelineActionList actions: ${actions}")
-        def actionList = processPipelineActionList(actions, context)
+    def executePipelineActionList(actions) {
         def result = [:]
+        this.script.echo("executePipelineActionList actions: ${actions}")
+        def actionList = processPipelineActionList(actions)
         try {
             for (action in actionList) {
-                def actionResult = action.execute(result)
+                def actionResult = action.execute()
                 result = utils.merge(result, actionResult)
             }
             result
@@ -319,6 +300,42 @@ class DrupipePipeline implements Serializable {
             }
         }
         this.script.checkout this.scm
+    }
+
+    def scripts_library_load() {
+        if (!context.scripts_library_loaded) {
+            def url  = pipelineParam('scripts_library.url')
+            def ref  = pipelineParam('scripts_library.ref')
+            def type = pipelineParam('scripts_library.type')
+
+            // TODO: check for the version ref type)
+            if (context.env['library.global.version']) {
+                ref = context.env['library.global.version']
+                type = 'tag'
+                script.echo "Set drupipeLibraryBranch to ${ref} as library.global.version was set"
+            }
+            else {
+                script.echo "ENV variable library.global.version is not set"
+            }
+            script.drupipeAction([
+                action: 'Source.add',
+                params: [
+                    source: [
+                        name: 'library',
+                        type: 'git',
+                        path: 'library',
+                        url: url,
+                        branch: ref,
+                        refType: type,
+                    ],
+                ],
+            ], this)
+            context.scripts_library_loaded = true
+        }
+    }
+
+    def pipelineParam(String param) {
+        utils.deepGet(this, 'context.params.pipeline.' + param)
     }
 
 }

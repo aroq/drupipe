@@ -4,35 +4,35 @@ class DrupipeStage implements Serializable {
 
     String name
 
-    ArrayList<DrupipeAction> actions = []
+    ArrayList<DrupipeActionWrapper> actions = []
 
-    HashMap params = [:]
+    DrupipePipeline pipeline
 
-    def execute(params, body = null) {
-        def utils = new com.github.aroq.drupipe.Utils()
-        this.params = params
-        this.params.pipeline.script.stage(name) {
-            this.params.pipeline.script.gitlabCommitStatus(name) {
+    def execute(body = null) {
+        def script = pipeline.script
+        script.echo "DrupipeStage execute - ${name}"
+        script.stage(name) {
+            script.gitlabCommitStatus(name) {
                 if (body) {
-                    this.params << body()
+                    // TODO: recheck it.
+                    body()
                 }
-                this.params << ['stage': this]
+                pipeline.block.stage = this
                 if (actions) {
                     try {
                         for (a in this.actions) {
-                            def action = new DrupipeAction(a)
-                            this.params << action.execute(this.params)
+                            script.echo "DrupipeStage -> DrupipeAction execute - ${a.name}"
+                            a.pipeline = pipeline
+                            (new DrupipeActionWrapper(a)).execute()
                         }
-                        this.params
                     }
                     catch (e) {
-                        this.params.pipeline.script.echo e.toString()
+                        script.echo e.toString()
                         throw e
                     }
                 }
             }
         }
-        this.params
     }
 
 }

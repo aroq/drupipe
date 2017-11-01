@@ -1,4 +1,5 @@
-def call(action, context = [:]) {
-    (context.pipeline.processPipelineAction(action, context)).execute()
+def call(action, pipeline = null) {
+    def pipe = pipeline ? pipeline : action.pipeline
+    (pipe.processPipelineAction(action)).execute()
 }
 

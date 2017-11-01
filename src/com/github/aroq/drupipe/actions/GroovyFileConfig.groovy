@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class GroovyFileConfig extends BaseAction {
 
@@ -10,18 +10,19 @@ class GroovyFileConfig extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    DrupipeActionWrapper action
 
     def load() {
         def result = [:]
         if (action.params.configFileName && script.fileExists(action.params.configFileName)) {
-            result = utils.merge(context, readGroovyConfig(action.params.configFileName))
+            result = readGroovyConfig(action.params.configFileName)
         }
-        result
+        utils.serializeAndDeserialize(result)
     }
 
     def groovyConfigFromLibraryResource() {
-        groovyConfig(script.libraryResource(action.params.resource))
+        def config = groovyConfig(script.libraryResource(action.params.resource))
+        utils.serializeAndDeserialize(config)
     }
 
     def readGroovyConfig(filePath) {
@@ -31,7 +32,7 @@ class GroovyFileConfig extends BaseAction {
 
     @NonCPS
     def groovyConfig(text) {
-        return new HashMap<>(ConfigSlurper.newInstance(script.env.drupipeEnvironment).parse(text))
+        new HashMap<>(ConfigSlurper.newInstance(script.env.drupipeEnvironment).parse(text))
     }
 
 }

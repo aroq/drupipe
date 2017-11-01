@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class TaurusTester extends BaseAction {
 
@@ -10,7 +10,7 @@ class TaurusTester extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    def DrupipeActionWrapper action
 
     def test() {
         this.script.dir("logs") {
@@ -36,12 +36,6 @@ ${iterations} \
 ${this.context.taurus_args}"""
 
         this.script.echo "Execute BZT: ${bztString}"
-
-        script.drupipeShell("""
-            ls -al
-            pwd
-            """, context << [shellCommandWithBashLogin: true]
-        )
 
         this.script.bzt "${bztString}"
 

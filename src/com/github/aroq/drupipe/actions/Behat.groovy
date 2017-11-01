@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Behat extends BaseAction {
 
@@ -11,7 +11,7 @@ class Behat extends BaseAction {
     def utils
 
 
-    def DrupipeAction action
+    def DrupipeActionWrapper action
 
     def perform() {
         def testEnvironment = action.params.testEnvironment ? action.params.testEnvironment : context.environment
@@ -32,7 +32,7 @@ class Behat extends BaseAction {
                 cd ${action.params.masterPath}/${context.docrootDir}
                 mkdir -p ${action.params.workspaceRelativePath}/reports
                 ${action.params.masterRelativePath}/${action.params.behatExecutable} --config=${action.params.masterRelativePath}/${action.params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml ${action.params.behat_args} --out=${action.params.workspaceRelativePath}/reports ${tags} ${features}
-            """, context << [shellCommandWithBashLogin: true]
+            """, action.params
                 )
             }
             else {

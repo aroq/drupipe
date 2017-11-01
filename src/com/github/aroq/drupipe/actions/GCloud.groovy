@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class GCloud extends BaseAction {
 
@@ -10,7 +10,7 @@ class GCloud extends BaseAction {
 
     def utils
 
-    DrupipeAction action
+    DrupipeActionWrapper action
 
     def auth() {
          this.script.drupipeShell("""
@@ -21,7 +21,7 @@ class GCloud extends BaseAction {
               ${action.params.executable} config set container/use_client_certificate True
 
               ${action.params.executable} container clusters get-credentials ${action.params.cluster_name} 
-        """, this.context << [shellCommandWithBashLogin: false])
+        """, action.params)
     }
 
 }

@@ -576,8 +576,41 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                 }
             }
             else if (job.value.type == 'common') {
-                def repo = job.value.configRepo ? job.value.configRepo : config.configRepo
-                def pipelineScriptPath = job.value.configRepo ? "${pipelineScript}.groovy" : "${config.projectConfigPath}/${pipelineScript}.groovy"
+                def seedRepo = config.configRepo
+                def localConfig = config.clone()
+                if (job.value.context) {
+                    localConfig = merge(localConfig, job.value.context)
+                }
+//                println "Local config: ${localConfig}"
+                // Define repository that will be used for pipelines retrieve and execution.
+                String pipelinesRepo = localConfig.configRepo
+                // Define path to pipeline script.
+                String pipelineScriptPath
+                final MODE_CONFIG_ONLY_REPO = 1
+                final MODE_CONFIG_AND_PROJECT_REPO = 2
+                final MODE_PROJECT_ONLY_REPO = 3
+                String configMode = MODE_CONFIG_ONLY_REPO
+
+                println "LOCAL CONFIG pipelines_repo: ${localConfig.pipelines_repo}"
+                if (localConfig.pipelines_repo) {
+                    pipelinesRepo = localConfig.pipelines_repo
+                    pipelineScriptPath = "${pipelineScript}.groovy"
+                }
+                else {
+                    if (job.value.configRepo) {
+                        pipelinesRepo = job.value.configRepo
+                    }
+                }
+                if (pipelinesRepo == seedRepo) {
+//                    pipelineScriptPath = "${localConfig.projectConfigPath}/${pipelineScript}.groovy"
+                    pipelineScriptPath = "${pipelineScript}.groovy"
+                }
+                else {
+                    configMode = MODE_CONFIG_AND_PROJECT_REPO
+                    pipelineScriptPath = "${pipelineScript}.groovy"
+                }
+                println "pipelinesRepo: ${pipelinesRepo}"
+                println "pipelineScriptPath: ${pipelineScriptPath}"
 
                 def br = job.value.branch ? job.value.branch : 'master'
 
@@ -587,7 +620,10 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     parameters {
                         stringParam('debugEnabled', '0')
                         stringParam('force', '0')
-                        stringParam('configRepo', config.configRepo)
+                        if (config.config_version < 2) {
+                            // TODO: check if it can be replaced by pipelinesRepo.
+                            stringParam('configRepo', pipelinesRepo)
+                        }
                         job.value.params?.each { key, value ->
                             stringParam(key, value)
                         }
@@ -680,17 +716,17 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                 git() {
                                     remote {
                                         name('origin')
-                                        url(repo)
+                                        url(pipelinesRepo)
                                         credentials(config.credentialsId)
-                                    }
-                                    if (!job.value.configRepo) {
-                                        extensions {
-                                            relativeTargetDirectory(config.projectConfigPath)
-                                        }
                                     }
                                     if (job.value.repoDir) {
                                         extensions {
                                             relativeTargetDirectory(job.value.repoDir)
+                                        }
+                                    }
+                                    else if (!job.value.configRepo && config.config_version < 2) {
+                                        extensions {
+                                            relativeTargetDirectory(config.projectConfigPath)
                                         }
                                     }
                                     branch(br)
@@ -739,7 +775,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         webhook_tags = config.webhooksEnvironments
                     }
                     println "Webhook Tags: ${webhook_tags}"
-                    if (job.value.webhooks && job.value.configRepo && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                    if (job.value.webhooks && configMode == MODE_CONFIG_AND_PROJECT_REPO && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
                         properties {
                             gitLabConnectionProperty {
                                 gitLabConnection('Gitlab')
@@ -756,11 +792,11 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     webhook_tags = config.webhooksEnvironments
                 }
                 println "Webhook Tags: ${webhook_tags}"
-                if (job.value.webhooks && job.value.configRepo && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                if (job.value.webhooks && configMode == MODE_CONFIG_AND_PROJECT_REPO && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
                     job.value.webhooks.each { hook ->
                         def tag_servers = getServersByTags(webhook_tags, config.jenkinsServers)
                         config.gitlabHelper.deleteWebhook(
-                            job.value.configRepo,
+                            pipelinesRepo,
                             tag_servers,
                             "project/${config.jenkinsFolderName}/${currentName}"
                         )
@@ -768,7 +804,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             config.gitlabHelper.addWebhook(
                                 // TODO: check if this is OK.
                                 //project.value.repo,
-                                job.value.configRepo,
+                                pipelinesRepo,
                                 jenkinsServer.value.jenkinsUrl.substring(0, jenkinsServer.value.jenkinsUrl.length() - (jenkinsServer.value.jenkinsUrl.endsWith("/") ? 1 : 0)) + '/' + "project/${config.jenkinsFolderName}/${currentName}",
                                 hook
                             )
@@ -779,8 +815,8 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
 
             }
             else if (job.value.type == 'selenese') {
-//                def repo = config.defaultActionParams.SeleneseTester.repoAddress
-                def b = config.defaultActionParams.SeleneseTester.reference ? config.defaultActionParams.SeleneseTester.reference : 'master'
+//                def repo = config.params.action.SeleneseTester.repoAddress
+                def b = config.params.action.SeleneseTester.reference ? config.params.action.SeleneseTester.reference : 'master'
 
                 if (config.env.GITLAB_API_TOKEN_TEXT) {
                     users = config.gitlabHelper.getUsers(repo)
@@ -915,7 +951,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         stringParam('debugEnabled', '0')
                         stringParam('configRepo', config.configRepo)
                         for (jobInFolder in jobs)  {
-                            if (jobInFolder.value.children) {
+                            if (jobInFolder.value.jobs) {
                                 println "Skip job with chilldren."
                             }
                             else if (jobInFolder.value.type == 'trigger_all') {
@@ -936,7 +972,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     publishers {
                         downstreamParameterized {
                             for (jobInFolder in jobs)  {
-                                if (jobInFolder.value.children) {
+                                if (jobInFolder.value.jobs) {
                                     println "Skip job with chilldren."
                                 }
                                 else if (jobInFolder.value.type == 'trigger_all') {
@@ -983,7 +1019,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     steps {
                         downstreamParameterized {
                             for (jobInFolder in jobs)  {
-                                if (jobInFolder.value.children) {
+                                if (jobInFolder.value.jobs) {
                                     println "Skip job with chilldren."
                                 }
                                 else if (jobInFolder.value.type == 'trigger_all') {
@@ -1013,9 +1049,9 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
             }
         }
 
-        if (job.value.children) {
+        if (job.value.jobs) {
             println "Parent config params: ${parentConfigParams}"
-            processJob(job.value.children, currentName, config, parentConfigParams)
+            processJob(job.value.jobs, currentName, config, parentConfigParams)
         }
     }
 }

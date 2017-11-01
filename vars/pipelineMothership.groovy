@@ -1,7 +1,7 @@
 def call() {
-    drupipe { context ->
-        drupipeBlock(nodeName: 'master', context) {
-            drupipeStage('seed', context) {
+    drupipe { pipeline ->
+        drupipeBlock(nodeName: 'master', pipeline) {
+            drupipeStage('seed', pipeline) {
                 drupipeAction(
                     action: 'JobDslSeed.perform',
                     params: [
@@ -12,7 +12,7 @@ def call() {
                         removedViewAction: 'DELETE',
                         additionalClasspath: ['library/src'],
                     ],
-                    context
+                    pipeline
                 )
             }
         }

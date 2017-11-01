@@ -2,11 +2,11 @@
 
 // Pipeline used to create project specific pipelines.
 def call(LinkedHashMap p = [:]) {
-    drupipe { context ->
-        drupipeBlock(nodeName: 'master', context) {
+    drupipe { pipeline ->
+        drupipeBlock(nodeName: 'master', pipeline) {
             checkout scm
-            if (fileExists(context.projectConfigPath)) {
-                dir(context.projectConfigPath) {
+            if (fileExists(pipeline.context.projectConfigPath)) {
+                dir(pipeline.context.projectConfigPath) {
                     deleteDir()
                 }
                 dir('library') {
@@ -18,10 +18,10 @@ def call(LinkedHashMap p = [:]) {
             }
 
             unstash 'config'
-            if (fileExists("${context.projectConfigPath}/pipelines/jobdsl")) {
-                context.defaultActionParams.JobDslSeed_perform.jobsPattern << "${context.projectConfigPath}/pipelines/jobdsl/*.groovy"
+            if (fileExists("${pipeline.context.projectConfigPath}/pipelines/jobdsl")) {
+                pipeline.context.params.action.JobDslSeed_perform.jobsPattern << "${pipeline.context.projectConfigPath}/pipelines/jobdsl/*.groovy"
             }
-            drupipeAction(action: 'JobDslSeed.perform', context)
+            drupipeAction(action: 'JobDslSeed.perform', pipeline)
         }
     }
 }

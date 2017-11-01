@@ -1,42 +1,41 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Druflow extends BaseAction {
-
-    def context
 
     def script
 
     def utils
 
-    def DrupipeAction action
+    DrupipeActionWrapper action
 
     def operations() {
         deployFlow()
+        [:]
     }
 
     def deployFlow() {
-        def executeEnvironment = action.params.executeEnvironment ? action.params.executeEnvironment : context.environment
-        executeDruflowCommand([env: executeEnvironment, projectName: context.projectName])
+        def executeEnvironment = action.params.executeEnvironment ? action.params.executeEnvironment : action.pipeline.context.environment
+        executeDruflowCommand([env: executeEnvironment, projectName: action.pipeline.context.projectName])
     }
 
     def deploy() {
         def site = action.params.site ? action.params.site : 'default'
-        executeDruflowCommand([argument: "tags/${action.params.reference}", site: site, env: context.environment, projectName: context.projectName])
+        executeDruflowCommand([argument: "tags/${action.params.reference}", site: site, env: action.pipeline.context.environment, projectName: action.pipeline.context.projectName])
     }
 
     def executeDruflowCommand(overrides = [:]) {
         def defaultParams = [
             debug: debugFlag(),
             executeCommand: action.params.executeCommand,
-            workspace: context.workspace,
+            workspace: action.pipeline.context.workspace,
             // TODO: review this parameter handling.
-            docrootDir: action.params.docrootDir ? action.params.docrootDir : context.docrootDir,
+            docrootDir: action.params.docrootDir ? action.params.docrootDir : action.pipeline.context.docrootDir,
         ]
         // TODO: review it.
-        if (context.operationsMode) {
-            defaultParams['flowType'] = context.operationsMode
+        if (action.pipeline.context.operationsMode) {
+            defaultParams['flowType'] = action.pipeline.context.operationsMode
         }
         else {
             defaultParams['flowType'] = 'full'
@@ -54,14 +53,14 @@ class Druflow extends BaseAction {
 
         druflowGet()
 
-        script.drupipeShell(druflowCommand, context)
+        script.drupipeShell(druflowCommand, action.params)
     }
 
     def druflowGet() {
         if (script.fileExists(action.params.druflowDir)) {
-            utils.removeDir(action.params.druflowDir, context)
+            utils.removeDir(action.params.druflowDir, action.pipeline.context)
         }
-        script.drupipeShell("git clone ${action.params.druflowRepo} --branch ${action.params.druflowGitReference} --depth 1 ${action.params.druflowDir}", context)
+        script.drupipeShell("git clone ${action.params.druflowRepo} --branch ${action.params.druflowGitReference} --depth 1 ${action.params.druflowDir}", action.params)
     }
 
     def copySite() {
@@ -77,8 +76,8 @@ class Druflow extends BaseAction {
     }
 
     def getGitRepo() {
-        def executeEnvironment = action.params.executeEnvironment ? action.params.executeEnvironment : context.environment
-        executeDruflowCommand([env: executeEnvironment, projectName: context.projectName])
+        def executeEnvironment = action.params.executeEnvironment ? action.params.executeEnvironment : action.pipeline.context.environment
+        executeDruflowCommand([env: executeEnvironment, projectName: action.pipeline.context.projectName])
     }
 
     def getProperties() {
@@ -106,7 +105,7 @@ class Druflow extends BaseAction {
     }
 
     def debugFlag() {
-        context.debugEnabled && context.debugEnabled != '0' ? '1' : '0'
+        action.pipeline.context.debugEnabled && action.pipeline.context.debugEnabled != '0' ? '1' : '0'
     }
 }
 

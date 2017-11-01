@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Redis extends BaseAction {
 
@@ -10,7 +10,7 @@ class Redis extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    def DrupipeActionWrapper action
 
     def runCommand() {
         def dsns = (this.context.redis_dsn.length() != 0) ? "${this.context.redis_dsn}" : ''
@@ -31,14 +31,14 @@ class Redis extends BaseAction {
 -p ${host_port[1]} \
 ${command}"""
                     this.script.echo "Execute Redis command: ${redisString}"
-                    this.script.drupipeShell("${redisString}", context)
+                    this.script.drupipeShell("${redisString}", action.params)
                 }
                 else {
                     def redisString = """redis-cli \
 -s ${dsn} \
 ${command}"""
                     this.script.echo "Execute Redis command: ${redisString}"
-                    this.script.drupipeShell("${redisString}", context)
+                    this.script.drupipeShell("${redisString}", action.params)
                 }
             }
         }
@@ -51,7 +51,7 @@ ${command}"""
 ${socket} \
 ${command}"""
             this.script.echo "Execute Redis command: ${redisString}"
-            this.script.drupipeShell("${redisString}", context)
+            this.script.drupipeShell("${redisString}", action.params)
         }
         else {
             def redisString = """redis-cli \
@@ -59,7 +59,7 @@ ${host} \
 ${port} \
 ${command}"""
             this.script.echo "Execute Redis command: ${redisString}"
-            this.script.drupipeShell("${redisString}", context)
+            this.script.drupipeShell("${redisString}", action.params)
         }
 
     }

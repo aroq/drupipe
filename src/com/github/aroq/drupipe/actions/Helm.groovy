@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Helm extends BaseAction {
 
@@ -10,7 +10,7 @@ class Helm extends BaseAction {
 
     def utils
 
-    DrupipeAction action
+    DrupipeActionWrapper action
 
     def init() {
         executeHelmCommand()
@@ -29,7 +29,7 @@ class Helm extends BaseAction {
     }
 
     def executeHelmCommand() {
-        script.drupipeShell("${action.params.full_command.join(' ')}", context << [shellCommandWithBashLogin: false])
+        script.drupipeShell("${action.params.full_command.join(' ')}", action.params)
     }
 
 }

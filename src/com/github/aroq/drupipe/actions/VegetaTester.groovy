@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeAction
+import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class VegetaTester extends BaseAction {
 
@@ -10,15 +10,15 @@ class VegetaTester extends BaseAction {
 
     def utils
 
-    def DrupipeAction action
+    def DrupipeActionWrapper action
 
     def prepare() {
         if (this.context.vegeta_prepare_command && this.context.vegeta_prepare_command.length() != 0) {
-            this.script.drupipeShell("mkdir -p vegeta", context)
-            this.script.drupipeShell(this.context.vegeta_prepare_command, context)
+            this.script.drupipeShell("mkdir -p vegeta", action.params)
+            this.script.drupipeShell(this.context.vegeta_prepare_command, action.params)
             this.script.drupipeShell("""
                 cat vegeta/input.txt
-                """, context << [shellCommandWithBashLogin: true]
+                """, action.params
             )
             this.script.stash name: 'vegeta', includes: "vegeta/**"
         }
@@ -27,7 +27,7 @@ class VegetaTester extends BaseAction {
     def test() {
         this.script.unstash name: 'vegeta'
         if (this.script.fileExists("vegeta/input.txt")) {
-            this.script.drupipeShell("rm -rf vegeta/report.bin", context << [shellCommandWithBashLogin: true])
+            this.script.drupipeShell("rm -rf vegeta/report.bin", action.params)
 
             def connections = (this.context.vegeta_connections && this.context.vegeta_connections.length() != 0) ? "-connections ${this.context.vegeta_connections}" : ''
             def duration = (this.context.vegeta_duration && this.context.vegeta_duration.length() != 0) ? "-duration ${this.context.vegeta_duration}" : ''
@@ -61,12 +61,12 @@ ${this.context.vegeta_args}"""
                 pwd
                 echo 'cat vegeta/input.txt'
                 cat vegeta/input.txt
-                """, context << [shellCommandWithBashLogin: true]
+                """, action.params
             )
 
-            this.script.drupipeShell("${vegetaAttackString}", context)
+            this.script.drupipeShell("${vegetaAttackString}", action.params)
 
-            this.script.drupipeShell("vegeta report -inputs vegeta/report.bin", context)
+            this.script.drupipeShell("vegeta report -inputs vegeta/report.bin", action.params)
 
             this.script.archiveArtifacts artifacts: 'vegeta/**'
 
