@@ -31,7 +31,6 @@ params = [
         // Default action params (merged to all actions params).
         ACTION: [
             action_timeout: 120,
-            // TODO: Check when & why storeResult is used.
             store_result: true,
             dump_result: true,
             store_action_params: true,
@@ -225,6 +224,12 @@ params = [
         Jenkins: [
             shell_bash_login: false,
         ],
+        Jenkins_build: [
+            shell_bash_login: false,
+            jenkins_user_token_file: '',
+            jenkins_address: '',
+            jenkins_user_token: '',
+        ],
         Helm: [
             executable: 'helm',
             chart_name: '', // HELM_CHART_NAME in Jenkins params.
@@ -405,10 +410,8 @@ params = [
             command: 'cp',
             name: '',
             source_file_name: '',
-            source: '${action.params.namespace}/${action.params.name}:${action.params.source_file_name}',
-            destination_file_name: '',
-            destination: '${action.params.destination_file_name}',
-            return_stdout: true,
+            source: '${context.k8s.namespace}/${action.params.name}:${action.params.source_file_name}',
+            destination: '',
             full_command: [
                 '${action.params.executable}',
                 '${action.params.command}',
