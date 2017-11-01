@@ -4,19 +4,17 @@ import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Terraform extends BaseAction {
 
-    def context
-
     def script
 
     def utils
 
-    def DrupipeActionWrapper action
+    DrupipeActionWrapper action
 
     String terraformExecutable = 'terraform'
 
     def initializeAction() {
-        if (context.jenkinsParams.containsKey('workingDir')) {
-            action.params.workingDir = context.jenkinsParams.workingDir
+        if (action.pipeline.context.jenkinsParams.containsKey('workingDir')) {
+            action.params.workingDir = action.pipeline.context.jenkinsParams.workingDir
         }
         else {
             action.params.workingDir = '.'
@@ -29,7 +27,7 @@ class Terraform extends BaseAction {
         this.script.withCredentials([creds]) {
             this.script.drupipeShell("""
             cd ${this.action.params.workingDir}
-            ${terraformExecutable} init -input=false -backend-config="address=${this.context.env.TF_VAR_consul_address}" -backend-config="access_token=\${CONSUL_ACCESS_TOKEN}"
+            ${terraformExecutable} init -input=false -backend-config="address=${this.action.pipeline.context.env.TF_VAR_consul_address}" -backend-config="access_token=\${CONSUL_ACCESS_TOKEN}"
 
             """, this.action.params)
         }
@@ -45,8 +43,8 @@ class Terraform extends BaseAction {
     }
 
     def executeTerraformCommand(String terraformCommand) {
-        String terraformEnv = this.context.jenkinsParams.terraformEnv
-        String terraformWorkspace = this.context.jenkinsParams.terraformEnv ? this.context.jenkinsParams.terraformEnv : 'default'
+        String terraformEnv = this.action.pipeline.context.jenkinsParams.terraformEnv
+        String terraformWorkspace = this.action.pipeline.context.jenkinsParams.terraformEnv ? this.action.pipeline.context.jenkinsParams.terraformEnv : 'default'
 
         initializeAction()
 
@@ -69,8 +67,8 @@ class Terraform extends BaseAction {
 
     // TODO: refactor it to use executeTerraformCommand().
     def destroy() {
-        String terraformEnv = this.context.jenkinsParams.terraformEnv
-        String terraformWorkspace = this.context.jenkinsParams.terraformEnv ? this.context.jenkinsParams.terraformEnv : 'default'
+        String terraformEnv = this.action.pipeline.context.jenkinsParams.terraformEnv
+        String terraformWorkspace = this.action.pipeline.context.jenkinsParams.terraformEnv ? this.action.pipeline.context.jenkinsParams.terraformEnv : 'default'
 
         initializeAction()
 
