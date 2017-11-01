@@ -83,6 +83,8 @@ class DrupipeActionWrapper implements Serializable {
                 // TODO: Store processed action params in pipeline.context (pipeline.context.actions['action_name']) to allow use it for interpolation in other actions.
             }
 
+            utils.debugLog(this.params, this.params, "this.params PROCESSED", [debugMode: 'json'], [], this.params && this.params.debugEnabled)
+
             actionParams << this.params
 
             def actionFile = null
