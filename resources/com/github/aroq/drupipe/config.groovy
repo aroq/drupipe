@@ -31,7 +31,6 @@ params = [
         // Default action params (merged to all actions params).
         ACTION: [
             action_timeout: 120,
-            // TODO: Check when & why storeResult is used.
             store_result: true,
             dump_result: true,
             store_action_params: true,
@@ -405,10 +404,8 @@ params = [
             command: 'cp',
             name: '',
             source_file_name: '',
-            source: '${action.params.namespace}/${action.params.name}:${action.params.source_file_name}',
-            destination_file_name: '',
-            destination: '${action.params.destination_file_name}',
-            return_stdout: true,
+            source: '${context.k8s.namespace}/${action.params.name}:${action.params.source_file_name}',
+            destination: '',
             full_command: [
                 '${action.params.executable}',
                 '${action.params.command}',
