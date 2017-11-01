@@ -44,10 +44,10 @@ class DrupipeBlock implements Serializable {
 
         pipeline.block = this
 
-        if (nodeName && withDocker && context.containerMode == 'docker') {
-            context.pipeline.script.echo "Execute block in ${context.containerMode} container mode"
-            context.pipeline.script.echo "NODE NAME: ${nodeName}"
-            context.pipeline.script.node(nodeName) {
+        if (nodeName && withDocker && pipeline.context.containerMode == 'docker') {
+            pipeline.script.echo "Execute block in ${pipeline.context.containerMode} container mode"
+            pipeline.script.echo "NODE NAME: ${nodeName}"
+            pipeline.script.node(nodeName) {
                 pipeline.context.drupipe_working_dir = [pipeline.script.pwd(), '.drupipe'].join('/')
                 utils.dump(this.config, 'BLOCK-CONFIG')
                 utils.dump(this.context, 'BLOCK-CONTEXT')
@@ -57,7 +57,7 @@ class DrupipeBlock implements Serializable {
                     pipeline.script.deleteDir()
                 }
                 pipeline.script.unstash('config')
-                context.pipeline.script.drupipeWithDocker(context) {
+                pipeline.script.drupipeWithDocker(pipeline.context) {
                     // Fix for scm checkout after docman commands.
                     if (pipeline.script.fileExists(pipeline.context.projectConfigPath)) {
                         pipeline.script.dir(pipeline.context.projectConfigPath) {
