@@ -224,6 +224,11 @@ params = [
         Jenkins: [
             shell_bash_login: false,
         ],
+        Jenkins_build: [
+            shell_bash_login: false,
+            jenkins_user_token_file: '',
+            jenkins_address: '',
+        ],
         Helm: [
             executable: 'helm',
             chart_name: '', // HELM_CHART_NAME in Jenkins params.
