@@ -44,9 +44,6 @@ class DrupipeBlock implements Serializable {
 
         pipeline.block = this
 
-        if () {
-
-        }
         if (nodeName && nodeName != 'master' && withDocker && pipeline.context.containerMode == 'docker') {
             pipeline.script.echo "Execute block in ${pipeline.context.containerMode} container mode"
             pipeline.script.echo "NODE NAME: ${nodeName}"
