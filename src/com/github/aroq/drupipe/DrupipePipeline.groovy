@@ -320,7 +320,7 @@ class DrupipePipeline implements Serializable {
                     source: [
                         name: 'library',
                         type: 'git',
-                        path: 'library',
+                        path: '.unipipe/library',
                         url: url,
                         branch: ref,
                         refType: type,

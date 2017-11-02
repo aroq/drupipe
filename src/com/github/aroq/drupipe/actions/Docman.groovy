@@ -114,13 +114,18 @@ class Docman extends BaseAction {
         script.echo "FORCE MODE: ${action.pipeline.context.jenkinsParams.force}"
 
         def configBranch = 'master'
-        if (action.pipeline.context.tags.contains('single') && action.pipeline.context.version) {
-            configBranch = action.pipeline.context.version
+        if (action.pipeline.context.tags.contains('single')) {
+            if (action.pipeline.context.environmentParams && action.pipeline.context.environmentParams.containsKey('git_reference')) {
+                configBranch = action.pipeline.context.environmentParams.git_reference
+            }
+            else if (action.pipeline.context.job && action.pipeline.context.job.containsKey('branch')) {
+                configBranch = action.pipeline.context.job.branch
+            }
         }
 
         script.drupipeShell(
         """
-        rm -fR ${context.docmanDir}
+        rm -fR ${action.pipeline.context.docmanDir}
         docman init ${action.pipeline.context.docmanDir} ${action.pipeline.context.configRepo} -s --branch=${configBranch}
         """, action.params
         )
