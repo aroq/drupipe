@@ -1,15 +1,21 @@
-def call(context = [:], body) {
-    context << context.params.action['drupipeWithKubernetes'] << context
-    container(context.containerName) {
-        context.workspace = pwd()
-        sshagent([context.credentialsId]) {
-            drupipeShell("git config --global user.email 'drupipe@github.com'; git config --global user.name 'Drupipe'")
-            result = body(context)
-            if (result) {
-                context << result
+import com.github.aroq.drupipe.DrupipePipeline
+
+def call(DrupipePipeline pipeline, body) {
+    nodeName = 'drupipe'
+    containerName = 'drupipecontainer'
+
+    podTemplate(label: nodeName, containers: [
+        containerTemplate(name: containerName, image: pipeline.context.dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true),
+    ]) {
+        node(nodeName) {
+            container(containerName) {
+                unstash('config')
+                pipeline.context.workspace = pwd()
+                pipeline.scmCheckout()
+                sshagent([pipeline.context.credentialsId]) {
+                    result = body(pipeline.context)
+                }
             }
         }
     }
-
-    context
 }
