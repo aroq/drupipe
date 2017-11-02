@@ -15,51 +15,54 @@ class YamlFileHandler extends BaseAction {
     def DrupipeActionWrapper action
 
     def init() {
-        def repo_url
-        if (context.components && context.components['master'] && context.components['master'].repo) {
-            repo_url = context.components['master'].repo
-        }
-        else {
-            repo_url = context.configRepo
-        }
+        if (!action.pipeline.context.tags.contains('docman')) {
+            def repo_url
+            if (action.pipeline.context.components && action.pipeline.context.components['master'] && action.pipeline.context.components['master'].repo) {
+                repo_url = action.pipeline.context.components['master'].repo
+            }
+            else {
+                repo_url = action.pipeline.context.configRepo
+            }
 
-        def branch
-        if (context.environmentParams.git_reference) {
-            branch = context.environmentParams.git_reference
-        }
-        else {
-            branch = context.job.branch
-        }
+            def branch = 'master'
+            if (action.pipeline.context.environmentParams.git_reference) {
+                branch = action.pipeline.context.environmentParams.git_reference
+            }
+            else {
+                branch = action.pipeline.context.job.branch
+            }
 
-        def repoParams = [
-            repoAddress: repo_url,
-            reference: branch,
-            dir: 'docroot',
-            repoDirName: 'master',
-        ]
-        script.drupipeAction([action: "Git.clone", params: repoParams << action.params], context)
+            def repoParams = [
+                repoAddress: repo_url,
+                reference: branch,
+                dir: 'docroot',
+                repoDirName: 'master',
+            ]
+            script.drupipeAction([action: "Git.clone", params: repoParams << action.params], action.pipeline)
+        }
     }
 
     def findDeployYaml() {
         def file
         def files
-        files = script.findFiles(glob: "**/.unipipe/${action.params.deployFile}")
+        files = script.findFiles(glob: "**/${action.pipeline.context.projectConfigPath}/.unipipe/${action.params.deployFile}")
         if (files.size() > 0) {
             script.echo files[0].path
             return files[0].path
         }
 
-        files = script.findFiles(glob: "**/.drupipe/${action.params.deployFile}")
+        files = script.findFiles(glob: "**/${action.pipeline.context.projectConfigPath}/.drupipe/${action.params.deployFile}")
         if (files.size() > 0) {
             script.echo files[0].path
             return files[0].path
         }
 
-        files = script.findFiles(glob: "**/${action.params.deployFile}")
+        files = script.findFiles(glob: "**/${action.pipeline.context.projectConfigPath}/${action.params.deployFile}")
         if (files.size() > 0) {
             script.echo files[0].path
             return files[0].path
         }
+        return false
     }
 
     def build() {
@@ -79,19 +82,18 @@ class YamlFileHandler extends BaseAction {
     }
 
     def process(String stage) {
+        init()
         String deployDir = 'docroot/master'
-        if (!script.fileExists(deployDir)) {
-            init()
-        }
-        context['builder']['artifactParams'] = [:]
-        context['builder']['artifactParams']['dir'] = '../../' + deployDir
+        action.pipeline.context['builder']['artifactParams'] = [:]
+        action.pipeline.context['builder']['artifactParams']['dir'] = deployDir
+        action.pipeline.context.builder['buildDir'] = "${action.pipeline.context.docrootDir}/master"
         def deployYamlFile = findDeployYaml()
         if (deployYamlFile && script.fileExists(deployYamlFile)) {
             def deployYAML = script.readYaml(file: deployYamlFile)
-            utils.dump(context, deployYAML, 'DEPLOY YAML')
+            utils.dump(action.pipeline.context, deployYAML, 'DEPLOY YAML')
             def commands = []
             if (stage == 'operations') {
-                def root = context.environmentParams.root
+                def root = action.pipeline.context.environmentParams.root
                 root = root.substring(0, root.length() - (root.endsWith("/") ? 1 : 0))
                 commands << "cd ${root}"
                 commands << "pwd"
@@ -127,7 +129,7 @@ class YamlFileHandler extends BaseAction {
 
     @NonCPS
     def interpolateCommand(String command) {
-        def binding = [context: context, action: action]
+        def binding = [context: action.pipeline.context, action: action]
         def engine = new groovy.text.SimpleTemplateEngine()
         def template = engine.createTemplate(command).make(binding)
         template.toString()
@@ -136,7 +138,7 @@ class YamlFileHandler extends BaseAction {
     def executeCommand(String command) {
         script.drupipeShell(
             """
-            ssh ${context.environmentParams.user}@${context.environmentParams.host} "${command}"
+            ssh ${action.pipeline.context.environmentParams.user}@${action.pipeline.context.environmentParams.host} "${command}"
             """, action.params
         )
     }

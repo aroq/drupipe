@@ -8,7 +8,7 @@ def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dum
 println "Config tags: ${config.tags}"
 
 if (!config.tags || (!config.tags.contains('docman') && !config.tags.contains('drupipe'))) {
-    docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : "${config.projectConfigPath}/config.json"
+    docrootConfigJsonPath = config.docrootConfigJsonPath ? config.docrootConfigJsonPath : "${config.docmanDir}/config/config.json"
 
     def docrootConfigJson
     try {
@@ -312,6 +312,20 @@ class GitlabHelper {
                 }
             }
         }
+    }
+
+    def getBranches(String repo) {
+        setRepoProperties(repo)
+        def url = "https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/repository/branches?private_token=${config.env.GITLAB_API_TOKEN_TEXT}"
+        def branches = new groovy.json.JsonSlurper().parseText(new URL(url).text)
+        branches
+    }
+
+    def getBranch(String repo, String branch) {
+        setRepoProperties(repo)
+        def url = "https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/repository/branches/${branch}?private_token=${config.env.GITLAB_API_TOKEN_TEXT}"
+        def branch_obj = new groovy.json.JsonSlurper().parseText(new URL(url).text)
+        branch_obj
     }
 
     def getWebhooks(String repo) {

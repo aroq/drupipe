@@ -72,10 +72,10 @@ projects.each { project ->
         jenkins_servers = config.params.jenkinsServers
     }
     if (jenkins_servers && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && jenkins_servers.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
-        println "CONFIG mothership_job_subDir: ${config.mothership_job_subDir}"
+        println "CONFIG projectConfigPath: ${config.projectConfigPath}"
         println "CONFIG mothership_job_name: ${config.mothership_job_name}"
         println "CONFIG mothership_job_jenkinsfile: ${config.mothership_job_jenkinsfile}"
-        String subDir = config.mothership_job_subDir ? config.mothership_job_subDir.substring(0, config.mothership_job_subDir.length() - (config.mothership_job_subDir.endsWith("/") ? 1 : 0)) + '/' : ''
+        String subDir = config.projectConfigPath ? config.projectConfigPath.substring(0, config.projectConfigPath.length() - (config.projectConfigPath.endsWith("/") ? 1 : 0)) + '/' : ''
         String jenkinsfile = config.mothership_job_jenkinsfile ? config.mothership_job_jenkinsfile : 'Jenkinsfile'
         if (config.mothership_job_type == 'Jenkinsfile') {
             String jobName = config.mothership_job_name ? config.mothership_job_name : project.key
@@ -348,6 +348,20 @@ class GitlabHelper {
                 }
             }
         }
+    }
+
+    def getBranches(String repo) {
+        setRepoProperties(repo)
+        def url = "https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/repository/branches?private_token=${config.env.GITLAB_API_TOKEN_TEXT}"
+        def branches = new groovy.json.JsonSlurper().parseText(new URL(url).text)
+        branches
+    }
+
+    def getBranch(String repo, String branch) {
+        setRepoProperties(repo)
+        def url = "https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/repository/branches/${branch}?private_token=${config.env.GITLAB_API_TOKEN_TEXT}"
+        def branch_obj = new groovy.json.JsonSlurper().parseText(new URL(url).text)
+        branch_obj
     }
 
     def getWebhooks(String repo) {
