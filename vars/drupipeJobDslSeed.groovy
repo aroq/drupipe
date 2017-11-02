@@ -5,7 +5,7 @@ import com.github.aroq.drupipe.DrupipeBlock
 def call(LinkedHashMap p = [:]) {
     drupipe { pipeline ->
 
-        def body = {
+        def block1 = {
             checkout scm
             drupipeAction([action: 'Docman.info'], pipeline)
             def stashes = pipeline.context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
@@ -13,9 +13,7 @@ def call(LinkedHashMap p = [:]) {
             stash name: 'config', includes: "${stashes}", excludes: '.git, .git/**'
         }
 
-        pipeline.blocks << new DrupipeBlock(body: body, withDocker: true, nodeName: 'default', dockerImage: pipeline.context.defaultDocmanImage)
-
-        drupipeBlock([nodeName: 'master'], pipeline) {
+        def block2 = {
             checkout scm
             if (fileExists(pipeline.context.projectConfigPath)) {
                 dir(pipeline.context.projectConfigPath) {
@@ -35,5 +33,8 @@ def call(LinkedHashMap p = [:]) {
             }
             drupipeAction([action: 'JobDslSeed.perform'], pipeline)
         }
+
+        pipeline.blocks << new DrupipeBlock(body: block1, withDocker: true, nodeName: 'default', dockerImage: pipeline.context.defaultDocmanImage)
+        pipeline.blocks << new DrupipeBlock(body: block2, nodeName: 'master')
     }
 }
