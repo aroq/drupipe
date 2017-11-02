@@ -5,10 +5,9 @@ def call(LinkedHashMap p = [:]) {
     drupipe { pipeline ->
         drupipeBlock(withDocker: true, nodeName: 'default', dockerImage: pipeline.context.defaultDocmanImage, pipeline) {
             checkout scm
-            drupipeAction(action: 'Docman.info', pipeline)
+            drupipeAction([action: 'Docman.info'], pipeline)
             def stashes = pipeline.context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
             stashes = stashes + ", ${pipeline.context.docmanDir}/config/config.json"
-            println "Stashes: ${stashes}"
             stash name: 'config', includes: "${stashes}", excludes: '.git, .git/**'
         }
 
@@ -18,10 +17,10 @@ def call(LinkedHashMap p = [:]) {
                 dir(pipeline.context.projectConfigPath) {
                     deleteDir()
                 }
-                dir('library') {
+                dir('.unipipe/library') {
                     deleteDir()
                 }
-                dir('mothership') {
+                dir('.unipipe/mothership') {
                     deleteDir()
                 }
             }
