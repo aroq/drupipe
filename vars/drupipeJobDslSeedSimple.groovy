@@ -3,7 +3,7 @@
 // Pipeline used to create project specific pipelines.
 def call(LinkedHashMap p = [:]) {
     drupipe { pipeline ->
-        drupipeBlock(nodeName: 'master', pipeline) {
+        drupipeBlock(nodeName: 'master', 'name': 'clean-workspace', pipeline) {
             checkout scm
             if (fileExists(pipeline.context.projectConfigPath)) {
                 dir(pipeline.context.projectConfigPath) {

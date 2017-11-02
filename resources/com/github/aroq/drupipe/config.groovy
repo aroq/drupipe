@@ -7,8 +7,6 @@ docrootDir = 'docroot'
 docmanDir = 'docman'
 projectConfigPath = '.unipipe/config'
 projectConfigFile = 'docroot.config'
-dockerImage = 'aroq/drudock:1.4.0'
-nodeName = 'default'
 containerMode = 'docker'
 configSeedType = 'docman'
 defaultDocmanImage = 'michaeltigr/zebra-build-php-drush-docman:latest'
@@ -24,7 +22,8 @@ params = [
         ]
     ],
     block: [
-
+        nodeName: 'default',
+        dockerImage: 'aroq/drudock:1.4.0',
     ],
     action: [
         // Default action params (merged to all actions params).

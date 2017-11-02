@@ -1,7 +1,7 @@
 import com.github.aroq.drupipe.DrupipePipeline
 
 def call(DrupipePipeline pipeline, body) {
-    String nodeName = 'default'
+    String nodeName = 'drupipe'
     String containerName = 'drupipecontainer'
 
     podTemplate(label: nodeName, containers: [

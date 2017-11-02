@@ -309,9 +309,9 @@ class DrupipePipeline implements Serializable {
 
     def scripts_library_load() {
         if (!context.scripts_library_loaded) {
-            def url  = pipelineParam('scripts_library.url')
-            def ref  = pipelineParam('scripts_library.ref')
-            def type = pipelineParam('scripts_library.type')
+            def url  = getParam('scripts_library.url')
+            def ref  = getParam('scripts_library.ref')
+            def type = getParam('scripts_library.type')
 
             // TODO: check for the version ref type)
             if (context.env['library.global.version']) {
@@ -339,7 +339,7 @@ class DrupipePipeline implements Serializable {
         }
     }
 
-    def pipelineParam(String param) {
+    def getParam(String param) {
         utils.deepGet(this, 'context.params.pipeline.' + param)
     }
 
