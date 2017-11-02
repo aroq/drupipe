@@ -13,7 +13,7 @@ def call(LinkedHashMap p = [:]) {
         pipeline.blocks << [body: block1, withDocker: true, nodeName: 'default', dockerImage: pipeline.context.defaultDocmanImage]
 
         def block2 = {
-            checkout scm
+            //checkout scm
             if (fileExists(pipeline.context.projectConfigPath)) {
                 dir(pipeline.context.projectConfigPath) {
                     deleteDir()
