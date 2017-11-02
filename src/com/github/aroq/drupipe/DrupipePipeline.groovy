@@ -42,6 +42,10 @@ class DrupipePipeline implements Serializable {
 
                 }
 
+                if (body) {
+                    body(this)
+                }
+
                 if (!blocks) {
                     script.echo 'No blocks are defined, trying to get blocks from context.jobs'
                     if (context.job) {
@@ -113,10 +117,6 @@ class DrupipePipeline implements Serializable {
                 }
                 else {
                     script.echo "No pipeline blocks defined"
-                }
-
-                if (body) {
-                    body(this)
                 }
 
                 script.node('master') {
