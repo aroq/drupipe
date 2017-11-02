@@ -39,10 +39,7 @@ class DrupipePipeline implements Serializable {
                     utils.dump(context, context, 'PIPELINE-CONTEXT')
 
                     // Secret option for emergency remove workspace.
-                    if (context.force == '11') {
-                        script.echo 'FORCE REMOVE DIR'
-                        script.deleteDir()
-                    }
+
                 }
 
                 if (!blocks) {
@@ -331,7 +328,7 @@ class DrupipePipeline implements Serializable {
                     source: [
                         name: 'library',
                         type: 'git',
-                        path: 'library',
+                        path: '.unipipe/library',
                         url: url,
                         branch: ref,
                         refType: type,

@@ -154,12 +154,12 @@ class Config extends BaseAction {
         result.environment = result.env.environment
 //        result << result.env
 
-        String jobPath = this.script.env.BUILD_URL ? this.script.env.BUILD_URL : this.script.env.JOB_DISPLAY_URL
+        String jobPath = script.env.BUILD_URL ? script.env.BUILD_URL : script.env.JOB_DISPLAY_URL
 
         result.jenkinsFolderName = utils.getJenkinsFolderName(jobPath)
         result.jenkinsJobName = utils.getJenkinsJobName(jobPath)
 
-        if (this.script.env.KUBERNETES_PORT) {
+        if (script.env.KUBERNETES_PORT) {
             result.containerMode = 'kubernetes'
         }
         utils.serializeAndDeserialize(result)
@@ -167,14 +167,16 @@ class Config extends BaseAction {
 
     def mothershipConfig() {
         def result = [:]
-        if (this.script.env.MOTHERSHIP_REPO) {
+        if (action.pipeline.context.env.MOTHERSHIP_REPO) {
             def sourceObject = [
                 name:   'mothership',
                 type:   'git',
-                path:   'mothership',
+                path:   '.unipipe/mothership',
                 url:    script.env.MOTHERSHIP_REPO,
                 branch: 'master',
             ]
+
+            this.script.drupipeAction([action: "Source.add", params: [credentialsId: action.pipeline.context.env.credentialsId, source: sourceObject]], action.pipeline)
 
             def providers = [
                 [
@@ -227,16 +229,22 @@ class Config extends BaseAction {
                         scenario.name = values[0]
                     }
                     utils.debugLog(action.pipeline.context, tempContext.scenarioSources, 'Scenario sources')
-                    if ((tempContext.scenarioSources && tempContext.scenarioSources.containsKey(scenarioSourceName)) || action.pipeline.context.loadedSources.containsKey(scenarioSourceName)) {
+                    script.echo("action.pipeline.context.loadedSources: ${action.pipeline.context.loadedSources}")
+                    if ((scenariosConfig.scenarioSources && scenariosConfig.scenarioSources.containsKey(scenarioSourceName)) || (tempContext.scenarioSources && tempContext.scenarioSources.containsKey(scenarioSourceName)) || action.pipeline.context.loadedSources.containsKey(scenarioSourceName)) {
                         if (!action.pipeline.context.loadedSources[scenarioSourceName]) {
                             script.echo "Adding source: ${scenarioSourceName}"
-                            scenario.source = tempContext.scenarioSources[scenarioSourceName]
+                            if (tempContext.scenarioSources.containsKey(scenarioSourceName)) {
+                                scenario.source = tempContext.scenarioSources[scenarioSourceName]
+                            }
+                            else if (scenariosConfig.scenarioSources.containsKey(scenarioSourceName)) {
+                                scenario.source = scenariosConfig.scenarioSources[scenarioSourceName]
+                            }
 
                             script.sshagent([action.pipeline.context.credentialsId]) {
                                 def sourceObject = [
                                     name: scenarioSourceName,
                                     type: 'git',
-                                    path: "scenarios/${scenarioSourceName}",
+                                    path: ".unipipe/scenarios/${scenarioSourceName}",
                                     url: scenario.source.repo,
                                     branch: scenario.source.ref ? scenario.source.ref : 'master',
                                     mode: 'shell',
@@ -254,6 +262,7 @@ class Config extends BaseAction {
 
                         def sourceDir = utils.sourceDir(action.pipeline.context, scenarioSourceName)
 
+
                         def filesToCheck = [
                             "/.unipipe/scenarios/${scenario.name}/config.yaml",
                             "/.unipipe/scenarios/${scenario.name}/config.yml",
@@ -262,6 +271,17 @@ class Config extends BaseAction {
                             "/scenarios/${scenario.name}/config.yaml",
                             "/scenarios/${scenario.name}/config.yml"
                         ]
+
+                        if (scenario.name == 'main') {
+                            filesToCheck = [
+                                "/.unipipe/config.yaml",
+                                "/.unipipe/config.yml",
+                                "/.drupipe/config.yaml",
+                                "/.drupipe/config.yml",
+                                "/config.yaml",
+                                "/config.yml"
+                            ]
+                        }
 
                         for (def ifc = 0; ifc < filesToCheck.size(); ifc++) {
                             def fileToCheck = filesToCheck[ifc]
@@ -298,10 +318,8 @@ class Config extends BaseAction {
         if (action.pipeline.context.configRepo) {
             def sourceObject = [
                 name: 'project',
-                path: 'sources/project',
-                type: 'git',
-                url: action.pipeline.context.configRepo,
-                branch: 'master',
+                path: action.pipeline.context.projectConfigPath,
+                type: 'dir',
                 mode: 'shell',
             ]
 
