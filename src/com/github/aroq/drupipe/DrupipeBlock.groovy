@@ -20,9 +20,15 @@ class DrupipeBlock implements Serializable {
 
     Boolean blockInNode = false
 
+    def body = null
+
     def utils
 
-    def execute(body = null) {
+    def execute(b = null) {
+        if (b) {
+            this.body = b
+        }
+
         utils = pipeline.utils
 
         // TODO: check it.

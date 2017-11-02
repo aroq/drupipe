@@ -69,6 +69,4 @@ def call(pipeline, body) {
             }
         }
     }
-
-    pipeline.context
 }

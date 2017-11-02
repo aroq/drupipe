@@ -1,15 +1,19 @@
 #!groovy
+import com.github.aroq.drupipe.DrupipeBlock
 
 // Pipeline used to create project specific pipelines.
 def call(LinkedHashMap p = [:]) {
     drupipe { pipeline ->
-        drupipeBlock(withDocker: true, nodeName: 'default', dockerImage: pipeline.context.defaultDocmanImage, pipeline) {
+
+        def body = {
             checkout scm
             drupipeAction([action: 'Docman.info'], pipeline)
             def stashes = pipeline.context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
             stashes = stashes + ", ${pipeline.context.docmanDir}/config/config.json"
             stash name: 'config', includes: "${stashes}", excludes: '.git, .git/**'
         }
+
+        pipeline.blocks << new DrupipeBlock(body: body, withDocker: true, nodeName: 'default', dockerImage: pipeline.context.defaultDocmanImage)
 
         drupipeBlock([nodeName: 'master'], pipeline) {
             checkout scm
