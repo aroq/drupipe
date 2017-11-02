@@ -56,7 +56,7 @@ def call(pipeline, body) {
                         }
                     }
                     else {
-                        pipeline.context.pipeline.scmCheckout()
+                        pipeline.scmCheckout()
                         unstash('config')
                         def block = new DrupipeBlock(blocks[i])
                         echo 'BLOCK EXECUTE START'
