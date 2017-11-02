@@ -44,7 +44,10 @@ class DrupipeBlock implements Serializable {
 
         pipeline.block = this
 
-        if (nodeName && withDocker && pipeline.context.containerMode == 'docker') {
+        if () {
+
+        }
+        if (nodeName && nodeName != 'master' && withDocker && pipeline.context.containerMode == 'docker') {
             pipeline.script.echo "Execute block in ${pipeline.context.containerMode} container mode"
             pipeline.script.echo "NODE NAME: ${nodeName}"
             pipeline.script.node(nodeName) {
@@ -68,7 +71,7 @@ class DrupipeBlock implements Serializable {
                 }
             }
         }
-        else if (withDocker && pipeline.context.containerMode == 'kubernetes') {
+        else if (nodeName != 'master' && withDocker && pipeline.context.containerMode == 'kubernetes') {
             pipeline.script.echo "Execute block in ${pipeline.context.containerMode} container mode"
             if (this.blockInNode) {
                 pipeline.script.echo "Pod template is already defined"
