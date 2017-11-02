@@ -18,6 +18,8 @@ class DrupipeBlock implements Serializable {
 
     DrupipeStage stage
 
+    Boolean blockInNode = false
+
     def utils
 
     def execute(body = null) {
@@ -42,50 +44,50 @@ class DrupipeBlock implements Serializable {
 
         pipeline.block = this
 
-        if (nodeName) {
-            //utils.pipelineNotify(pipeline.context, [name: "Block on ${nodeName}", status: 'START', level: 'block'])
+        if (nodeName && withDocker && pipeline.context.containerMode == 'docker') {
+            pipeline.script.echo "Execute block in ${pipeline.context.containerMode} container mode"
             pipeline.script.echo "NODE NAME: ${nodeName}"
             pipeline.script.node(nodeName) {
+                pipeline.context.drupipe_working_dir = [pipeline.script.pwd(), '.drupipe'].join('/')
+                utils.dump(this.config, 'BLOCK-CONFIG')
                 // Secret option for emergency remove workspace.
                 if (pipeline.context.force == '11') {
                     pipeline.script.echo 'FORCE REMOVE DIR'
                     pipeline.script.deleteDir()
                 }
-
-                pipeline.context.drupipe_working_dir = [pipeline.script.pwd(), '.drupipe'].join('/')
-                utils.dump(pipeline.context, this.config, 'BLOCK-CONFIG')
-                utils.dump(pipeline.context, pipeline.context, 'BLOCK-pipeline.context')
                 pipeline.script.unstash('config')
-                if (withDocker) {
-                    if (pipeline.context.containerMode == 'kubernetes') {
-                        pipeline.script.drupipeWithKubernetes(pipeline.context) {
-//                            pipeline.script.checkout pipeline.script.scm
-                            _execute(body)
+                pipeline.script.drupipeWithDocker(pipeline.context) {
+                    // Fix for scm checkout after docman commands.
+                    if (pipeline.script.fileExists(pipeline.context.projectConfigPath)) {
+                        pipeline.script.dir(pipeline.context.projectConfigPath) {
+                            pipeline.script.deleteDir()
                         }
                     }
-                    else if (pipeline.context.containerMode == 'docker') {
-                        pipeline.script.drupipeWithDocker(pipeline.context) {
-                            // Fix for scm checkout after docman commands.
-                            //if (pipeline.script.fileExists(pipeline.context.projectConfigPath)) {
-                            //    pipeline.script.dir(pipeline.context.projectConfigPath) {
-                            //        pipeline.script.deleteDir()
-                            //    }
-                            //}
-                            pipeline.script.checkout pipeline.script.scm
-                            _execute(body)
-                        }
-                    }
-                }
-                else {
-                    pipeline.script.sshagent([pipeline.context.credentialsId]) {
-                        _execute(body)
-                    }
+                    pipeline.script.checkout pipeline.script.scm
+                    _execute(body)
                 }
             }
-            //utils.pipelineNotify(pipeline.context, [name: "Block on ${nodeName}", status: 'END', level: 'block'])
+        }
+        else if (withDocker && context.containerMode == 'kubernetes') {
+//            context.pipeline.script.echo "Execute block in ${context.containerMode} container mode"
+//            if (this.blockInNode) {
+//                context.pipeline.script.echo "Pod template is already defined"
+//                result = _execute(body)
+//            }
+//            else {
+//                context.pipeline.script.echo "Pod template is not already defined"
+//                context.pipeline.script.drupipeWithKubernetes(context) {
+//                    result = _execute(body)
+//                }
+//            }
         }
         else {
-            _execute(body)
+            pipeline.script.node(nodeName) {
+                pipeline.script.echo "Execute block in non container mode"
+                pipeline.script.sshagent([pipeline.context.credentialsId]) {
+                    _execute(body)
+                }
+            }
         }
         [:]
     }
