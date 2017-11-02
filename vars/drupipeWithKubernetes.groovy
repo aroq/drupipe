@@ -1,8 +1,8 @@
 import com.github.aroq.drupipe.DrupipePipeline
 
 def call(DrupipePipeline pipeline, body) {
-    nodeName = 'drupipe'
-    containerName = 'drupipecontainer'
+    String nodeName = 'default'
+    String containerName = 'drupipecontainer'
 
     podTemplate(label: nodeName, containers: [
         containerTemplate(name: containerName, image: pipeline.context.dockerImage, ttyEnabled: true, command: 'cat', alwaysPullImage: true),
