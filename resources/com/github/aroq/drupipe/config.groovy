@@ -23,6 +23,7 @@ params = [
     ],
     block: [
         nodeName: 'default',
+        // TODO: remove it after configs update.
         dockerImage: 'aroq/drudock:1.4.0',
     ],
     action: [

@@ -10,6 +10,10 @@ def call(pipeline, body) {
     ArrayList masterBlocks = []
 
     for (def i = 0; i < blocks.size(); i++) {
+        echo "BLOCK name: ${blocks[i].name}"
+        echo "BLOCK dockerImage: ${blocks[i].dockerImage}"
+        echo "BLOCK nodeName: ${blocks[i].nodeName}"
+
         if (blocks[i].withDocker) {
             echo "Create k8s containerTemplate for block: ${blocks[i].name}, image: ${blocks[i].dockerImage}"
             containers.add(containerTemplate(
