@@ -272,17 +272,6 @@ class Config extends BaseAction {
                             "/scenarios/${scenario.name}/config.yml"
                         ]
 
-                        if (scenario.name == 'main') {
-                            filesToCheck = [
-                                "/.unipipe/config.yaml",
-                                "/.unipipe/config.yml",
-                                "/.drupipe/config.yaml",
-                                "/.drupipe/config.yml",
-                                "/config.yaml",
-                                "/config.yml"
-                            ]
-                        }
-
                         for (def ifc = 0; ifc < filesToCheck.size(); ifc++) {
                             def fileToCheck = filesToCheck[ifc]
                             if (script.fileExists(sourceDir + fileToCheck)) {
