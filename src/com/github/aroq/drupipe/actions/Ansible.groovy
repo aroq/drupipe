@@ -92,7 +92,7 @@ class Ansible extends BaseAction {
         if (action.pipeline.context.containerMode == 'kubernetes') {
             this.script.drupipeShell("""
             echo "\${ANSIBLE_VAULT_PASS_FILE}" > .vault_pass
-            """, action.pipeline.context << [shellCommandWithBashLogin: true]
+            """, this.action.params
             )
             vaultPassFile = action.params.workingDir != '.' ? '../.vault_pass' : '.vault_pass'
         }
