@@ -86,10 +86,24 @@ class Ansible extends BaseAction {
             action.params.workingDir = '.'
         }
         action.pipeline.scripts_library_load()
+
+        String vaultPassFile
+
+        if (context.containerMode == 'kubernetes') {
+            this.script.drupipeShell("""
+            echo "\${ANSIBLE_VAULT_PASS_FILE}" > .vault_pass
+            """, this.context << [shellCommandWithBashLogin: true]
+            )
+            vaultPassFile = action.params.workingDir != '.' ? '../.vault_pass' : '.vault_pass'
+        }
+        else {
+            vaultPassFile = "\${ANSIBLE_VAULT_PASS_FILE}"
+        }
+
         def command =
             """pwd && ls -lah && ansible-playbook ${action.params.playbooksDir}/${action.params.playbook} \
             -i ${action.params.inventoryArgument} \
-            --vault-password-file \${ANSIBLE_VAULT_PASS_FILE} \
+            --vault-password-file ${vaultPassFile} \
             -e '${joinParams(action.params.playbookParams, 'json')}'"""
 
         script.echo "Ansible command: ${command}"
