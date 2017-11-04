@@ -5,7 +5,9 @@ def call(pipeline, body) {
     def nodeName = 'drupipe'
     def containers = []
 
-    def blocks = pipeline.blocks
+    ArrayList blocks = pipeline.blocks
+
+    ArrayList masterBlocks = []
 
     for (def i = 0; i < blocks.size(); i++) {
         if (blocks[i].withDocker) {
@@ -30,6 +32,9 @@ def call(pipeline, body) {
                 ],
             ))
         }
+        else {
+            masterBlocks += blocks[i]
+        }
     }
 
     def creds = [string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
@@ -46,7 +51,7 @@ def call(pipeline, body) {
                         container("block${i}") {
                             pipeline.scmCheckout()
                             unstash('config')
-                            def block = new DrupipeBlock(blocks[i])
+                            DrupipeBlock block = new DrupipeBlock(blocks[i])
                             echo 'BLOCK EXECUTE START'
                             sshagent([pipeline.context.credentialsId]) {
                                 block.blockInNode = true
@@ -55,20 +60,33 @@ def call(pipeline, body) {
                             echo 'BLOCK EXECUTE END'
                         }
                     }
-                    else {
-                        pipeline.context.pipeline.scmCheckout()
-                        unstash('config')
-                        def block = new DrupipeBlock(blocks[i])
-                        echo 'BLOCK EXECUTE START'
-                        sshagent([pipeline.context.credentialsId]) {
-                            block.execute()
-                        }
-                        echo 'BLOCK EXECUTE END'
-                    }
+//                    else {
+//                        pipeline.context.pipeline.scmCheckout()
+//                        unstash('config')
+//                        def block = new DrupipeBlock(blocks[i])
+//                        echo 'BLOCK EXECUTE START'
+//                        sshagent([pipeline.context.credentialsId]) {
+//                            block.execute()
+//                        }
+//                        echo 'BLOCK EXECUTE END'
+//                    }
                 }
             }
         }
     }
 
-    pipeline.context
-}
+    node("master") {
+        for (def i = 0; i < masterBlocks.size(); i++) {
+
+//        blocks[i].name = "block${i}"
+            masterBlocks[i].pipeline = pipeline
+            pipeline.scmCheckout()
+            unstash('config')
+            def block = new DrupipeBlock(masterBlocks[i])
+            echo 'BLOCK EXECUTE START'
+            sshagent([pipeline.context.credentialsId]) {
+                block.execute()
+            }
+            echo 'BLOCK EXECUTE END'
+        }
+    }
