@@ -25,6 +25,10 @@ class Kubectl extends BaseAction {
         executeKubectlCommand()
     }
 
+    def get_pod_logs() {
+        executeKubectlCommand()
+    }
+
     def get_loadbalancer_address() {
         [
             url: executeKubectlCommand().stdout,
