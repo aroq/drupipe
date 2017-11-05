@@ -672,7 +672,13 @@ ArrayList getNodeParams(job, config) {
 }
 
 def drupipeParamsDefault(context, job, config) {
-    drupipeParameterSeparator(context, 'default_params', 'DEFAULT PARAMETERS', 'margin-top:10px; margin-bottom:10px; color: green;', 'font-size: 14px; color: green;')
+    drupipeParameterSeparator(
+        context,
+        'default_params',
+        'GENERAL PARAMETERS',
+        'margin-top:10px; margin-bottom:10px; color: green; background-color: green; border: 0 none; height: 2px',
+        'font-size: 14px; color: green;'
+    )
     context.stringParam('debugEnabled', '0')
     context.stringParam('force', '0')
     drupipeParamNodeNameSelects(context, job, config)
