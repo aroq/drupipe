@@ -234,29 +234,9 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         for (nodeParam in getNodeParams(job, config)) {
                             drupipeParamNodeNameSelect(delegate, nodeParam)
                         }
+                        drupipeParamDisableBlocksCheckboxes(delegate, job)
 
-                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
-                            choiceParameter() {
-                                name('disable_block')
-                                choiceType('PT_CHECKBOX')
-                                description('Allows to disable pipeline blocks')
-                                script {
-                                    groovyScript {
-                                        script {
-                                            sandbox(true)
-                                            script(activeChoiceGetChoicesScript(job.value.pipeline.blocks.collect { it }, ''))
-                                        }
-                                        fallbackScript {
-                                            script('')
-                                            sandbox(true)
-                                        }
-                                    }
-                                }
-                                randomName('disable_block')
-                                filterable(false)
-                                filterLength(0)
-                            }
-                        }
+//                        }
 //                        if (job.value.containsKey('notify')) {
 //                            activeChoiceParam('mute_notification') {
 //                                description('Allows to mute notifications in selected channels')
@@ -1068,7 +1048,7 @@ ArrayList getNodeParams(job, config) {
     result
 }
 
-def drupipeParamSingleSelect(context, paramName, paramDescription, paramType, paramScript, sandboxMode = true, paramFilterable = false, paramFilterLength = 0) {
+def drupipeParamChoices(context, paramName, paramDescription, paramType, paramScript, sandboxMode = true, paramFilterable = false, paramFilterLength = 0) {
     context.choiceParameter() {
         name(paramName)
         choiceType(paramType)
@@ -1092,13 +1072,25 @@ def drupipeParamSingleSelect(context, paramName, paramDescription, paramType, pa
 }
 
 def drupipeParamNodeNameSelect(context, nodeParam) {
-    drupipeParamSingleSelect(
+    drupipeParamChoices(
         context,
         nodeParam.nodeParamName,
         'Allows to select node to run pipeline block',
         'PT_SINGLE_SELECT',
         activeChoiceGetChoicesScript(nodeParam.labels.collect { it.toString() }, nodeParam.nodeName)
     )
+}
+
+def drupipeParamDisableBlocksCheckboxes(context, name, job) {
+    if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+        drupipeParamChoices(
+            context,
+            name,
+            'Allows to disable pipeline blocks',
+            'PT_CHECKBOX',
+            activeChoiceGetChoicesScript(job.value.pipeline.blocks.collect { it }, ''),
+        )
+    }
 }
 
 def activeChoiceGetChoicesScript(ArrayList choices, String defaultChoice) {
