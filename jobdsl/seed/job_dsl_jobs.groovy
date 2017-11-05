@@ -240,12 +240,13 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                     if (block_config.containsKey('nodeName')) {
                                         def node_name = block_config['nodeName']
                                         println "Default nodeName for ${pipeline_block}: ${node_name}"
-                                        activeChoiceParam(pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name') {
+                                        choiceParameter(pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name') {
                                             description('Allows to select node to run pipeline block')
                                             choiceType('SINGLE_SELECT')
                                             groovyScript {
-                                                script('["choice1", "choice2"]')
-//                                                script(activeChoiceGetChoicesScript(labels.collect { it.toString() }, node_name))
+                                                sandbox(true)
+//                                                script('["choice1", "choice2"]')
+                                                script(activeChoiceGetChoicesScript(labels.collect { it.toString() }, node_name))
                                             }
                                         }
                                     }
