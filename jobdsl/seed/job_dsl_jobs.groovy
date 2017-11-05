@@ -244,7 +244,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                             description('Allows to select node to run pipeline block')
                                             choiceType('SINGLE_SELECT')
                                             groovyScript {
-                                                script(labels.collect { it.toString() }, node_name)
+                                                script(activeChoiceGetChoicesScript(labels.collect { it.toString() }, node_name))
                                             }
                                         }
                                     }
