@@ -685,13 +685,13 @@ def drupipeParamsDefault(context, job, config) {
 }
 
 def drupipeParameterSeparatorStylized(context, separatorName, header, color, bold = false, height = '2px', fontSize = '14px') {
-    bold = bold ? 'font-weight: bold;' : ''
+    bold = bold ? ' font-weight: bold;' : ''
     drupipeParameterSeparator(
         context,
         separatorName,
         header,
-        "margin-top:10px; margin-bottom:10px; color: ${color}; background-color: ${color}; ${bold} border: 0 none; height: ${height}",
-        "font-size: ${fontSize}; color: ${color};"
+        "margin-top:10px; margin-bottom:10px; color: ${color}; background-color: ${color}; border: 0 none; height: ${height}",
+        "font-size: ${fontSize}; color: ${color};${bold}"
     )
 }
 
