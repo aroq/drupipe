@@ -223,58 +223,12 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     logRotator(-1, config.logRotatorNumToKeep)
                     parameters {
                         stringParam('projectName', 'master')
-                        stringParam('debugEnabled', '0')
-                        stringParam('force', '0')
                         stringParam('simulate', '0')
                         stringParam('docrootDir', 'docroot')
                         stringParam('type', 'branch')
                         stringParam('environment', buildEnvironment)
                         stringParam('version', jobBranch)
-
-                        for (nodeParam in getNodeParams(job, config)) {
-                            drupipeParamNodeNameSelect(delegate, nodeParam)
-                        }
-                        drupipeParamDisableBlocksCheckboxes(delegate, 'disable_block', job)
-//                        if (job.value.containsKey('notify')) {
-//                            activeChoiceParam('mute_notification') {
-//                                description('Allows to mute notifications in selected channels')
-//                                choiceType('CHECKBOX')
-//                                scriptlerScript ('choices.groovy') {
-//                                    def choices = []
-//                                    for (channel in job.value.notify) {
-//                                        choices << channel
-//                                    }
-//                                    def choices_param = choices.join('|')
-//                                    println "MUTE NOTIFICATION CHOICES: ${choices_param}"
-//                                    parameter('defaultChoice', '')
-//                                    parameter('choices', choices_param)
-//                                }
-//                            }
-//                        }
-//                        if (job.value.containsKey('trigger')) {
-//                            activeChoiceParam('disable_trigger') {
-//                                description('Allows to disable post build job trigger')
-//                                choiceType('CHECKBOX')
-//                                scriptlerScript ('choices.groovy') {
-//                                    def choices = []
-//                                    for (trigger_job in job.value.trigger) {
-//                                        choices << trigger_job.name
-//                                    }
-//                                    def choices_param = choices.join('|')
-//                                    println "DISABLE TRIGGER CHOICES: ${choices_param}"
-//                                    parameter('defaultChoice', '')
-//                                    parameter('choices', choices_param)
-//                                }
-//                            }
-                            for (trigger_job in job.value.trigger) {
-                                if (trigger_job.containsKey('params')) {
-                                    for (param in trigger_job.params) {
-                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
-                                        stringParam(trigger_job_name_safe + '_' + param.key, param.value)
-                                    }
-                                }
-                            }
-//                        }
+                        drupipeParamsDefault(delegate, job, config)
                     }
                     definition {
                         cpsScm {
@@ -1046,6 +1000,17 @@ ArrayList getNodeParams(job, config) {
     result
 }
 
+def drupipeParamsDefault(context, job, config) {
+    context.stringParam('debugEnabled', '0')
+    context.stringParam('force', '0')
+    drupipeParamNodeNameSelects(context, job, config)
+    drupipeParamDisableBlocksCheckboxes(context, job)
+    drupipeParamMuteNotificationCheckboxes(context, job)
+    drupipeParamDisableTriggersCheckboxes(context, job)
+    drupipeParamTriggerParams(context, job)
+
+}
+
 def drupipeParamChoices(context, paramName, paramDescription, paramType, paramScript, sandboxMode = true, paramFilterable = false, paramFilterLength = 0) {
     context.choiceParameter() {
         name(paramName)
@@ -1069,27 +1034,66 @@ def drupipeParamChoices(context, paramName, paramDescription, paramType, paramSc
     }
 }
 
-def drupipeParamNodeNameSelect(context, nodeParam) {
-    drupipeParamChoices(
-        context,
-        nodeParam.nodeParamName,
-        'Allows to select node to run pipeline block',
-        'PT_SINGLE_SELECT',
-        activeChoiceGetChoicesScript(nodeParam.labels.collect { it.toString() }, nodeParam.nodeName)
-    )
+def drupipeParamNodeNameSelects(context, job, config) {
+    for (nodeParam in getNodeParams(job, config)) {
+        drupipeParamChoices(
+            context,
+            nodeParam.nodeParamName,
+            'Allows to select node to run pipeline block',
+            'PT_SINGLE_SELECT',
+            activeChoiceGetChoicesScript(nodeParam.labels.collect { it.toString() }, nodeParam.nodeName)
+        )
+    }
 }
 
-def drupipeParamDisableBlocksCheckboxes(context, name, job) {
+def drupipeParamDisableBlocksCheckboxes(context, job) {
     if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
         drupipeParamChoices(
             context,
-            name,
+            'disable_block',
             'Allows to disable pipeline blocks',
             'PT_CHECKBOX',
             activeChoiceGetChoicesScript(job.value.pipeline.blocks.collect { it }, ''),
         )
     }
 }
+
+def drupipeParamMuteNotificationCheckboxes(context, job) {
+    if (job.value.containsKey('trigger')) {
+        drupipeParamChoices(
+            context,
+            'mute_notification',
+            'Allows to mute notifications in selected channels',
+            'PT_CHECKBOX',
+            activeChoiceGetChoicesScript(job.value.notify.collect { it }, ''),
+        )
+    }
+}
+
+def drupipeParamDisableTriggersCheckboxes(context, job) {
+    if (job.value.containsKey('notify')) {
+        drupipeParamChoices(
+            context,
+            'disable_trigger',
+            'Allows to disable post build job trigger',
+            'PT_CHECKBOX',
+            activeChoiceGetChoicesScript(job.value.trigger.collect { it.name }, ''),
+        )
+    }
+}
+
+def drupipeParamTriggerParams(context, job) {
+    for (trigger_job in job.value.trigger) {
+        if (trigger_job.containsKey('params')) {
+            for (param in trigger_job.params) {
+                def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
+                context.stringParam(trigger_job_name_safe + '_' + param.key, param.value)
+            }
+        }
+    }
+}
+
+
 
 def activeChoiceGetChoicesScript(ArrayList choices, String defaultChoice) {
     String choicesString = choices.join('|')
