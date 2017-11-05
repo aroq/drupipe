@@ -233,7 +233,6 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
 
                         for (nodeParam in getNodeParams(job, config)) {
                             drupipeParamNodeNameSelect(delegate, nodeParam)
-//                            "${drupipeParamNodeNameSelectClosure}"(it, nodeParam)
                         }
 
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
@@ -1086,7 +1085,7 @@ def drupipeParamSingleSelect(context, paramName, paramDescription, paramType, pa
                 }
             }
         }
-        randomName(nodeParam.nodeParamName)
+        randomName(paramName)
         filterable(paramFilterable)
         filterLength(paramFilterLength)
     }
