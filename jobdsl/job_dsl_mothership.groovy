@@ -1,8 +1,6 @@
 @Grab(group='org.yaml', module='snakeyaml', version='1.18')
 import org.yaml.snakeyaml.Yaml
-
-import com.github.aroq.DocmanConfig
-import com.github.aroq.GitlabHelper
+import com.github.aroq.dsl.GitlabHelper
 
 def configMain = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 

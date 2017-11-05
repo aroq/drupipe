@@ -1,4 +1,4 @@
-package com.github.aroq
+package com.github.aroq.dsl
 
 @Grab('org.codehaus.groovy.modules.http-builder:http-builder:0.7')
 import groovyx.net.http.HTTPBuilder

@@ -1,8 +1,5 @@
-@Grab(group='org.yaml', module='snakeyaml', version='1.18')
-import org.yaml.snakeyaml.Yaml
-
-import com.github.aroq.DocmanConfig
-import com.github.aroq.GitlabHelper
+import com.github.aroq.dsl.DocmanConfig
+import com.github.aroq.dsl.GitlabHelper
 
 println "Docman Job DSL processing"
 
