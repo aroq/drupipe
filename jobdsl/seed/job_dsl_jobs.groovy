@@ -1092,7 +1092,6 @@ choices
 
 """
     script
-    return '["choice1", "choice2"]'
 }
 
 
