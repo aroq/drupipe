@@ -234,9 +234,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         for (nodeParam in getNodeParams(job, config)) {
                             drupipeParamNodeNameSelect(delegate, nodeParam)
                         }
-                        drupipeParamDisableBlocksCheckboxes(delegate, job)
-
-//                        }
+                        drupipeParamDisableBlocksCheckboxes(delegate, 'disable_block', job)
 //                        if (job.value.containsKey('notify')) {
 //                            activeChoiceParam('mute_notification') {
 //                                description('Allows to mute notifications in selected channels')
