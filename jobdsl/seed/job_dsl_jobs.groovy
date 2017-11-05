@@ -672,34 +672,42 @@ ArrayList getNodeParams(job, config) {
 }
 
 def drupipeParamsDefault(context, job, config) {
-    drupipeParameterSeparatorStylized(context, 'default_params', 'GENERAL PARAMETERS', 'green', true, '4px', '16px')
+    drupipeParameterSeparatorLevel1(context, 'GENERAL PARAMETERS')
 
-    drupipeParameterSeparatorStylized(context, 'default_common_params', 'Common parameters', 'green', true, '1px', '14px')
-    context.stringParam('debugEnabled', '0')
-    context.stringParam('force', '0')
+    drupipeParameterSeparatorLevel2(context, 'Common parameters')
+    drupipeParameterDebugEnabled(context)
+    drupipeParameterForce(context)
 
-    drupipeParameterSeparatorStylized(context, 'default_params_test', 'Block parameters', 'green', true, '1px', '14px')
+    drupipeParameterSeparatorLevel2(context, 'Block parameters')
 
     drupipeParamNodeNameSelects(context, job, config)
     drupipeParamDisableBlocksCheckboxes(context, job)
 
     if (job.value.containsKey('notify')) {
-        drupipeParameterSeparatorStylized(context, 'default_notification_params', 'Notification parameters', 'green', true,'1px', '14px')
+        drupipeParameterSeparatorLevel2(context, 'Notification parameters')
         drupipeParamMuteNotificationCheckboxes(context, job)
     }
 
     if (job.value.containsKey('trigger')) {
-        drupipeParameterSeparatorStylized(context, 'default_trigger_params', 'Trigger parameters', 'green', true,'1px', '14px')
+        drupipeParameterSeparatorLevel2(context, 'Trigger parameters')
         drupipeParamDisableTriggersCheckboxes(context, job)
         drupipeParamTriggerParams(context, job)
     }
 }
 
-def drupipeParameterSeparatorStylized(context, separatorName, header, color, bold = false, height = '2px', fontSize = '14px') {
+def drupipeParameterSeparatorLevel1(context, header, color = 'green', bold = true, height = '4px', fontSize = '16px') {
+    drupipeParameterSeparatorStylized(context, header, color, bold, height, fontSize)
+}
+
+def drupipeParameterSeparatorLevel2(context, header, color = 'green', bold = true, height = '2px', fontSize = '14px') {
+    drupipeParameterSeparatorStylized(context, header, color, bold, height, fontSize)
+}
+
+def drupipeParameterSeparatorStylized(context, header, color, bold = false, height = '2px', fontSize = '14px') {
     bold = bold ? ' font-weight: bold;' : ''
     drupipeParameterSeparator(
         context,
-        separatorName,
+        'separator',
         header,
         "margin-top:10px; margin-bottom:10px; color: ${color}; background-color: ${color}; border: 0 none; height: ${height}",
         "font-size: ${fontSize}; color: ${color};${bold}"
@@ -713,6 +721,14 @@ def drupipeParameterSeparator(context, separatorName, header, style = '', header
         sectionHeader(header)
         sectionHeaderStyle(headerStyle)
     }
+}
+
+def drupipeParameterDebugEnabled(context) {
+    context.stringParam('debugEnabled', '0')
+}
+
+def drupipeParameterForce(context) {
+    context.stringParam('force', '0')
 }
 
 def drupipeParamChoices(context, paramName, paramDescription, paramType, paramScript, sandboxMode = true, paramFilterable = false, paramFilterLength = 0) {
