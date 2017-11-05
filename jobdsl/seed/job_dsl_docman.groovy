@@ -1,6 +1,8 @@
 @Grab(group='org.yaml', module='snakeyaml', version='1.18')
 import org.yaml.snakeyaml.Yaml
 
+import org.github.aroq.DocmanConfig
+
 println "Docman Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
@@ -358,70 +360,4 @@ class GitlabHelper {
         script.println users
         users
     }
-}
-
-import groovy.json.JsonSlurper
-
-/**
- * Created by Aroq on 06/06/16.
- */
-class DocmanConfig {
-
-    def docrootConfigJson
-
-    def docmanConfig
-
-    def script
-
-    def init() {
-        docmanConfig = JsonSlurper.newInstance().parseText(docrootConfigJson)
-    }
-
-    def getProjects() {
-        init()
-        docmanConfig['projects']
-    }
-
-    def getStates() {
-        init()
-        docmanConfig['states']
-    }
-
-    def getEnvironmentByState(String stateName) {
-        def states = getStates()
-        states[stateName]
-    }
-
-    def getEnvironments() {
-        init()
-        docmanConfig['environments']
-    }
-
-    def getVersionBranch(project, stateName) {
-        init()
-        if (!project) {
-            // TODO: retrieve first project from docman config.
-            def projectMap = docmanConfig.projects.find { it.value.containsKey('states') }
-            if (projectMap) {
-                project = projectMap.key
-                script.println "First project name: ${project}"
-            }
-            else {
-                throw new RuntimeException("Project with states is not found in ${docmanConfig.projects}")
-            }
-
-        }
-        if (docmanConfig.projects[project]['states'][stateName]) {
-            if (docmanConfig.projects[project]['states'][stateName]['version']) {
-                docmanConfig.projects[project]['states'][stateName]['version']
-            }
-            else if (docmanConfig.projects[project]['states'][stateName]['source']) {
-                docmanConfig.projects[project]['states'][stateName]['source']['branch']
-            }
-        }
-        else {
-            throw new RuntimeException("There is no state ${stateName} defined in project ${docmanConfig.projects[project]}")
-        }
-    }
-
 }
