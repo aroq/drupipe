@@ -257,7 +257,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
                             choiceParameter() {
                                 name('disable_block')
-                                choiceType('PT_OPTION')
+                                choiceType('PT_CHECKBOX')
                                 description('Allows to disable pipeline blocks')
                                 script {
                                     groovyScript {
