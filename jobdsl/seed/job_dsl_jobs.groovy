@@ -32,6 +32,7 @@ if (config.jobs) {
 
 def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
     def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipelines/pipeline'
+
     for (job in jobs) {
         def parentConfigParams = [:]
         parentConfigParams << parentConfigParamsPassed
@@ -232,7 +233,30 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         stringParam('type', 'branch')
                         stringParam('environment', buildEnvironment)
                         stringParam('version', jobBranch)
-                        activeChoiceNodeBlocksParams(this, job, config)
+
+                        def nodeParamNames = getNodeParamNames(job, config)
+                        for (nodeParamName in nodeParamNames) {
+                            choiceParameter() {
+                                name(nodeParamName.nodeParamName)
+                                choiceType('PT_SINGLE_SELECT')
+                                description('Allows to select node to run pipeline block')
+                                script {
+                                    groovyScript {
+                                        script {
+                                            sandbox(true)
+                                            script(activeChoiceGetChoicesScript(labels.collect { it.toString() }, nodeParamName.nodeName))
+                                        }
+                                        fallbackScript {
+                                            script('')
+                                            sandbox(true)
+                                        }
+                                    }
+                                }
+                                randomName(nodeParamName.nodeParamName)
+                                filterable(false)
+                                filterLength(0)
+                            }
+                        }
 //                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
 //                            activeChoiceParam('disable_block') {
 //                                description('Allows to disable pipeline blocks')
@@ -1039,41 +1063,24 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
     }
 }
 
-def activeChoiceNodeBlocksParams(script, job, config) {
+ArrayList getNodeParamNames(job, config) {
+    ArrayList result = []
+//    def labels = jenkins.model.Jenkins.instance.getLabels()
     if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
-        def labels = jenkins.model.Jenkins.instance.getLabels()
         for (pipeline_block in job.value.pipeline.blocks) {
+            def entry = [:]
             if (config.blocks.containsKey(pipeline_block)) {
                 def block_config = config.blocks[pipeline_block]
                 if (block_config.containsKey('nodeName')) {
-                    def node_name = block_config['nodeName']
-                    println "Default nodeName for ${pipeline_block}: ${node_name}"
-
-                    String param_name = pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name'
-                    script.choiceParameter() {
-                        name(param_name)
-                        choiceType('PT_SINGLE_SELECT')
-                        description('Allows to select node to run pipeline block')
-                        script {
-                            groovyScript {
-                                script {
-                                    sandbox(true)
-                                    script(activeChoiceGetChoicesScript(labels.collect { it.toString() }, node_name))
-                                }
-                                fallbackScript {
-                                    script('')
-                                    sandbox(true)
-                                }
-                            }
-                        }
-                        randomName(param_name)
-                        filterable(false)
-                        filterLength(0)
-                    }
+                    entry.nodeName = block_config['nodeName']
+                    println "Default nodeName for ${pipeline_block}: ${entry.node_name}"
+                    entry.nodeParamName = pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name'
+                    result += entry
                 }
             }
         }
     }
+    result
 }
 
 def activeChoiceGetChoicesScript(ArrayList choices, String defaultChoice) {
