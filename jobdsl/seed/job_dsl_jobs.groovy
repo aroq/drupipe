@@ -232,8 +232,8 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         stringParam('version', jobBranch)
 
                         for (nodeParam in getNodeParams(job, config)) {
-                            drupipeParamNodeNameSelectClosure = drupipeParamNodeNameSelect()
-                            "${drupipeParamNodeNameSelectClosure}"(nodeParam)
+                            drupipeParamNodeNameSelect(delegate, nodeParam)
+//                            "${drupipeParamNodeNameSelectClosure}"(it, nodeParam)
                         }
 
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
@@ -1069,30 +1069,27 @@ ArrayList getNodeParams(job, config) {
     result
 }
 
-def drupipeParamNodeNameSelect() {
-    def drupipeParamNodeNameSelectClosure = { nodeParam ->
-        choiceParameter() {
-            name(nodeParam.nodeParamName)
-            choiceType('PT_SINGLE_SELECT')
-            description('Allows to select node to run pipeline block')
-            script {
-                groovyScript {
-                    script {
-                        sandbox(true)
-                        script(activeChoiceGetChoicesScript(nodeParam.labels.collect { it.toString() }, nodeParam.nodeName))
-                    }
-                    fallbackScript {
-                        script('')
-                        sandbox(true)
-                    }
+def drupipeParamNodeNameSelect(context, nodeParam) {
+    context.choiceParameter() {
+        name(nodeParam.nodeParamName)
+        choiceType('PT_SINGLE_SELECT')
+        description('Allows to select node to run pipeline block')
+        script {
+            groovyScript {
+                script {
+                    sandbox(true)
+                    script(activeChoiceGetChoicesScript(nodeParam.labels.collect { it.toString() }, nodeParam.nodeName))
+                }
+                fallbackScript {
+                    script('')
+                    sandbox(true)
                 }
             }
-            randomName(nodeParam.nodeParamName)
-            filterable(false)
-            filterLength(0)
         }
+        randomName(nodeParam.nodeParamName)
+        filterable(false)
+        filterLength(0)
     }
-   drupipeParamNodeNameSelectClosure
 }
 
 def activeChoiceGetChoicesScript(ArrayList choices, String defaultChoice) {
