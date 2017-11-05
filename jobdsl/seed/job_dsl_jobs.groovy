@@ -250,10 +250,11 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                                 }
 //                                                def choices_param = choices.join('|')
 //                                                choices = choices.tokenize('|')
-                                                defaultChoice = node_name.tokenize('|')
+                                                defaultChoice = node_name
+                                                defaultChoice = defaultChoice.tokenize('|')
 
                                                 for (def i = 0; i < choices.size(); i++) {
-                                                    if (choices[i] in node_name) {
+                                                    if (choices[i] in defaultChoice) {
                                                         choices[i] = choices[i] + ':selected'
                                                     }
                                                 }
