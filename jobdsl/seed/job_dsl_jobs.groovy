@@ -259,7 +259,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                                     }
                                                 }
                                             }
-                                            randomname(param_name)
+                                            randomName(param_name)
                                             filterable(false)
                                             filterLength(0)
                                         }
