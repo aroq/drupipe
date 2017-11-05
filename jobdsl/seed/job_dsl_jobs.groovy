@@ -243,16 +243,28 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                         activeChoiceParam(pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name') {
                                             description('Allows to select node to run pipeline block')
                                             choiceType('SINGLE_SELECT')
-                                            scriptlerScript ('choices.groovy') {
+                                            groovyScript {
                                                 def choices = []
                                                 for (label in labels) {
                                                     choices << label.toString()
                                                 }
-                                                def choices_param = choices.join('|')
-                                                println "NODE SELECT CHOICES: ${choices_param}"
-                                                parameter('defaultChoice', node_name)
-                                                parameter('choices', choices_param)
+//                                                def choices_param = choices.join('|')
+//                                                choices = choices.tokenize('|')
+                                                defaultChoice = node_name.tokenize('|')
+
+                                                for (def i = 0; i < choices.size(); i++) {
+                                                    if (choices[i] in node_name) {
+                                                        choices[i] = choices[i] + ':selected'
+                                                    }
+                                                }
+
+                                                choices
                                             }
+//                                            scriptlerScript ('choices.groovy') {
+//                                                println "NODE SELECT CHOICES: ${choices_param}"
+//                                                parameter('defaultChoice', node_name)
+//                                                parameter('choices', choices_param)
+//                                            }
                                         }
                                     }
                                 }
