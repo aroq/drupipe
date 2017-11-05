@@ -674,22 +674,22 @@ ArrayList getNodeParams(job, config) {
 def drupipeParamsDefault(context, job, config) {
     drupipeParameterSeparatorStylized(context, 'default_params', 'GENERAL PARAMETERS', 'green', true, '4px', '16px')
 
-    drupipeParameterSeparatorStylized(context, 'default_common_params', 'Common parameters', 'green', true, '2px', '14px')
+    drupipeParameterSeparatorStylized(context, 'default_common_params', 'Common parameters', 'green', true, '1px', '14px')
     context.stringParam('debugEnabled', '0')
     context.stringParam('force', '0')
 
-    drupipeParameterSeparatorStylized(context, 'default_params_test', 'Block parameters', 'green', false, '2px', '14px')
+    drupipeParameterSeparatorStylized(context, 'default_params_test', 'Block parameters', 'green', false, '1px', '14px')
 
     drupipeParamNodeNameSelects(context, job, config)
     drupipeParamDisableBlocksCheckboxes(context, job)
 
     if (job.value.containsKey('notify')) {
-        drupipeParameterSeparatorStylized(context, 'default_notification_params', 'Notification parameters', 'green', false,'2px', '14px')
+        drupipeParameterSeparatorStylized(context, 'default_notification_params', 'Notification parameters', 'green', false,'1px', '14px')
         drupipeParamMuteNotificationCheckboxes(context, job)
     }
 
     if (job.value.containsKey('trigger')) {
-        drupipeParameterSeparatorStylized(context, 'default_trigger_params', 'Trigger parameters', 'green', false,'2px', '14px')
+        drupipeParameterSeparatorStylized(context, 'default_trigger_params', 'Trigger parameters', 'green', false,'1px', '14px')
         drupipeParamDisableTriggersCheckboxes(context, job)
         drupipeParamTriggerParams(context, job)
     }
