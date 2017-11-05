@@ -251,62 +251,62 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                 }
                             }
                         }
-                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
-                            activeChoiceParam('disable_block') {
-                                description('Allows to disable pipeline blocks')
-                                choiceType('CHECKBOX')
-                                scriptlerScript ('choices.groovy') {
-                                    def choices = []
-                                    for (pipeline_block in job.value.pipeline.blocks) {
-                                        choices << pipeline_block
-                                    }
-                                    def choices_param = choices.join('|')
-                                    println "DISABLE PIPELINE BLOCK CHOICES: ${choices_param}"
-                                    parameter('defaultChoice', '')
-                                    parameter('choices', choices_param)
-                                }
-                            }
-                        }
-                        if (job.value.containsKey('notify')) {
-                            activeChoiceParam('mute_notification') {
-                                description('Allows to mute notifications in selected channels')
-                                choiceType('CHECKBOX')
-                                scriptlerScript ('choices.groovy') {
-                                    def choices = []
-                                    for (channel in job.value.notify) {
-                                        choices << channel
-                                    }
-                                    def choices_param = choices.join('|')
-                                    println "MUTE NOTIFICATION CHOICES: ${choices_param}"
-                                    parameter('defaultChoice', '')
-                                    parameter('choices', choices_param)
-                                }
-                            }
-                        }
-                        if (job.value.containsKey('trigger')) {
-                            activeChoiceParam('disable_trigger') {
-                                description('Allows to disable post build job trigger')
-                                choiceType('CHECKBOX')
-                                scriptlerScript ('choices.groovy') {
-                                    def choices = []
-                                    for (trigger_job in job.value.trigger) {
-                                        choices << trigger_job.name
-                                    }
-                                    def choices_param = choices.join('|')
-                                    println "DISABLE TRIGGER CHOICES: ${choices_param}"
-                                    parameter('defaultChoice', '')
-                                    parameter('choices', choices_param)
-                                }
-                            }
-                            for (trigger_job in job.value.trigger) {
-                                if (trigger_job.containsKey('params')) {
-                                    for (param in trigger_job.params) {
-                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
-                                        stringParam(trigger_job_name_safe + '_' + param.key, param.value)
-                                    }
-                                }
-                            }
-                        }
+//                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+//                            activeChoiceParam('disable_block') {
+//                                description('Allows to disable pipeline blocks')
+//                                choiceType('CHECKBOX')
+//                                scriptlerScript ('choices.groovy') {
+//                                    def choices = []
+//                                    for (pipeline_block in job.value.pipeline.blocks) {
+//                                        choices << pipeline_block
+//                                    }
+//                                    def choices_param = choices.join('|')
+//                                    println "DISABLE PIPELINE BLOCK CHOICES: ${choices_param}"
+//                                    parameter('defaultChoice', '')
+//                                    parameter('choices', choices_param)
+//                                }
+//                            }
+//                        }
+//                        if (job.value.containsKey('notify')) {
+//                            activeChoiceParam('mute_notification') {
+//                                description('Allows to mute notifications in selected channels')
+//                                choiceType('CHECKBOX')
+//                                scriptlerScript ('choices.groovy') {
+//                                    def choices = []
+//                                    for (channel in job.value.notify) {
+//                                        choices << channel
+//                                    }
+//                                    def choices_param = choices.join('|')
+//                                    println "MUTE NOTIFICATION CHOICES: ${choices_param}"
+//                                    parameter('defaultChoice', '')
+//                                    parameter('choices', choices_param)
+//                                }
+//                            }
+//                        }
+//                        if (job.value.containsKey('trigger')) {
+//                            activeChoiceParam('disable_trigger') {
+//                                description('Allows to disable post build job trigger')
+//                                choiceType('CHECKBOX')
+//                                scriptlerScript ('choices.groovy') {
+//                                    def choices = []
+//                                    for (trigger_job in job.value.trigger) {
+//                                        choices << trigger_job.name
+//                                    }
+//                                    def choices_param = choices.join('|')
+//                                    println "DISABLE TRIGGER CHOICES: ${choices_param}"
+//                                    parameter('defaultChoice', '')
+//                                    parameter('choices', choices_param)
+//                                }
+//                            }
+//                            for (trigger_job in job.value.trigger) {
+//                                if (trigger_job.containsKey('params')) {
+//                                    for (param in trigger_job.params) {
+//                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
+//                                        stringParam(trigger_job_name_safe + '_' + param.key, param.value)
+//                                    }
+//                                }
+//                            }
+//                        }
                     }
                     definition {
                         cpsScm {
