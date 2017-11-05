@@ -19,7 +19,7 @@ class GitlabHelper {
         config.repoParams.projectID     = "${config.repoParams.groupName}%2F${config.repoParams.projectName}"
     }
 
-    def addWebhook(String repo, url) {
+    def addWebhook(String repo, url, hookData = [:]) {
         setRepoProperties(repo)
         def hook_id = null
         getWebhooks(repo).each { hook ->
@@ -33,6 +33,7 @@ class GitlabHelper {
             'PRIVATE-TOKEN': config.env.GITLAB_API_TOKEN_TEXT,
         ])
         def data = [id: "${config.repoParams.groupName}/${config.repoParams.projectName}", url: url, push_events: true]
+        data << hookData
         try {
             if (hook_id) {
                 data << [hook_id: hook_id]
@@ -112,9 +113,14 @@ class GitlabHelper {
 
     def getBranch(String repo, String branch) {
         setRepoProperties(repo)
-        def url = "https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/repository/branches/${branch}?private_token=${config.env.GITLAB_API_TOKEN_TEXT}"
-        def branch_obj = new groovy.json.JsonSlurper().parseText(new URL(url).text)
-        branch_obj
+        try {
+            def url = "https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/repository/branches/${branch}?private_token=${config.env.GITLAB_API_TOKEN_TEXT}"
+            def branch_obj = new groovy.json.JsonSlurper().parseText(new URL(url).text)
+            return branch_obj
+        }
+        catch (Exception e) {
+            return false
+        }
     }
 
     def getWebhooks(String repo) {
@@ -147,4 +153,5 @@ class GitlabHelper {
         script.println users
         users
     }
+
 }
