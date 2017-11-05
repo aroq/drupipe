@@ -1076,7 +1076,7 @@ choices
 
 """
     script
-//    return '["choice1", "choice2"]'
+    return '["choice1", "choice2"]'
 }
 
 
