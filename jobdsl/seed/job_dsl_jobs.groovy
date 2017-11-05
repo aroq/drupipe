@@ -241,9 +241,9 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                         def node_name = block_config['nodeName']
                                         println "Default nodeName for ${pipeline_block}: ${node_name}"
 
-                                        def name = pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name'
 
                                         choiceParameter() {
+                                            String name = pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name'
                                             name(name)
                                             description('Allows to select node to run pipeline block')
                                             choiceType('SINGLE_SELECT')
