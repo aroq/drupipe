@@ -231,8 +231,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         stringParam('environment', buildEnvironment)
                         stringParam('version', jobBranch)
 
-                        ArrayList nodeParamNames = getNodeParams(job, config)
-                        for (nodeParam in nodeParamNames) {
+                        def choiceParamNodeName = { nodeParam ->
                             choiceParameter() {
                                 name(nodeParam.nodeParamName)
                                 choiceType('PT_SINGLE_SELECT')
@@ -253,6 +252,12 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                 filterable(false)
                                 filterLength(0)
                             }
+
+                        }
+
+                        ArrayList nodeParamNames = getNodeParams(job, config)
+                        for (nodeParam in nodeParamNames) {
+                            choiceParamNodeName(nodeParam)
                         }
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
                             choiceParameter() {
@@ -275,20 +280,6 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                 filterable(false)
                                 filterLength(0)
                             }
-//                            activeChoiceParam('disable_block') {
-//                                description('Allows to disable pipeline blocks')
-//                                choiceType('CHECKBOX')
-//                                scriptlerScript ('choices.groovy') {
-//                                    def choices = []
-//                                    for (pipeline_block in job.value.pipeline.blocks) {
-//                                        choices << pipeline_block
-//                                    }
-//                                    def choices_param = choices.join('|')
-//                                    println "DISABLE PIPELINE BLOCK CHOICES: ${choices_param}"
-//                                    parameter('defaultChoice', '')
-//                                    parameter('choices', choices_param)
-//                                }
-//                            }
                         }
 //                        if (job.value.containsKey('notify')) {
 //                            activeChoiceParam('mute_notification') {
