@@ -93,90 +93,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                 }
                             }
                         }
-                        stringParam('debugEnabled', '0')
-                        stringParam('force', '0')
-                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
-                            def labels = jenkins.model.Jenkins.instance.getLabels()
-                            for (pipeline_block in job.value.pipeline.blocks) {
-                                if (config.blocks.containsKey(pipeline_block)) {
-                                    def block_config = config.blocks[pipeline_block]
-                                    if (block_config.containsKey('nodeName')) {
-                                        def node_name = block_config['nodeName']
-                                        println "Default nodeName for ${pipeline_block}: ${node_name}"
-                                        activeChoiceParam(pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name') {
-                                            description('Allows to select node to run pipeline block')
-                                            choiceType('SINGLE_SELECT')
-                                            scriptlerScript ('choices.groovy') {
-                                                def choices = []
-                                                for (label in labels) {
-                                                    choices << label.toString()
-                                                }
-                                                def choices_param = choices.join('|')
-                                                println "NODE SELECT CHOICES: ${choices_param}"
-                                                parameter('defaultChoice', node_name)
-                                                parameter('choices', choices_param)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
-                            activeChoiceParam('disable_block') {
-                                description('Allows to disable pipeline blocks')
-                                choiceType('CHECKBOX')
-                                scriptlerScript ('choices.groovy') {
-                                    def choices = []
-                                    for (pipeline_block in job.value.pipeline.blocks) {
-                                        choices << pipeline_block
-                                    }
-                                    def choices_param = choices.join('|')
-                                    println "DISABLE PIPELINE BLOCK CHOICES: ${choices_param}"
-                                    parameter('defaultChoice', '')
-                                    parameter('choices', choices_param)
-                                }
-                            }
-                        }
-                        if (job.value.containsKey('notify')) {
-                            activeChoiceParam('mute_notification') {
-                                description('Allows to mute notifications in selected channels')
-                                choiceType('CHECKBOX')
-                                scriptlerScript ('choices.groovy') {
-                                    def choices = []
-                                    for (channel in job.value.notify) {
-                                        choices << channel
-                                    }
-                                    def choices_param = choices.join('|')
-                                    println "MUTE NOTIFICATION CHOICES: ${choices_param}"
-                                    parameter('defaultChoice', '')
-                                    parameter('choices', choices_param)
-                                }
-                            }
-                        }
-                        if (job.value.containsKey('trigger')) {
-                            activeChoiceParam('disable_trigger') {
-                                description('Allows to disable post build job trigger')
-                                choiceType('CHECKBOX')
-                                scriptlerScript ('choices.groovy') {
-                                    def choices = []
-                                    for (trigger_job in job.value.trigger) {
-                                        choices << trigger_job.name
-                                    }
-                                    def choices_param = choices.join('|')
-                                    println "DISABLE TRIGGER CHOICES: ${choices_param}"
-                                    parameter('defaultChoice', '')
-                                    parameter('choices', choices_param)
-                                }
-                            }
-                            for (trigger_job in job.value.trigger) {
-                                if (trigger_job.containsKey('params')) {
-                                    for (param in trigger_job.params) {
-                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
-                                        stringParam(trigger_job_name_safe + '_' + param.key, param.value)
-                                    }
-                                }
-                            }
-                        }
+                        drupipeParamsDefault(delegate, job, config)
                     }
                     definition {
                         cpsScm {
@@ -392,8 +309,6 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                     }
                                 }
                                 stringParam('environment', job.value.env)
-                                stringParam('debugEnabled', '0')
-                                stringParam('force', '0')
                             }
                         }
                         drupipeParamsDefault(delegate, job, config)
@@ -460,8 +375,6 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     concurrentBuild(false)
                     logRotator(-1, config.logRotatorNumToKeep)
                     parameters {
-                        stringParam('debugEnabled', '0')
-                        stringParam('force', '0')
                         if (config.config_version < 2) {
                             // TODO: check if it can be replaced by pipelinesRepo.
                             stringParam('configRepo', pipelinesRepo)
@@ -588,7 +501,6 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     concurrentBuild(false)
                     logRotator(-1, config.logRotatorNumToKeep)
                     parameters {
-                        stringParam('debugEnabled', '0')
                         stringParam('configRepo', repo)
                         drupipeParamsDefault(delegate, job, config)
 
