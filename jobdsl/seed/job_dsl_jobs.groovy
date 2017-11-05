@@ -1,6 +1,3 @@
-@Grab(group='org.yaml', module='snakeyaml', version='1.18')
-import org.yaml.snakeyaml.Yaml
-
 println "Subjobs Job DSL processing"
 
 def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
@@ -234,17 +231,17 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         stringParam('environment', buildEnvironment)
                         stringParam('version', jobBranch)
 
-                        def nodeParamNames = getNodeParamNames(job, config)
-                        for (nodeParamName in nodeParamNames) {
+                        ArrayList nodeParamNames = getNodeParams(job, config)
+                        for (nodeParam in nodeParamNames) {
                             choiceParameter() {
-                                name(nodeParamName.nodeParamName)
+                                name(nodeParam.nodeParamName)
                                 choiceType('PT_SINGLE_SELECT')
                                 description('Allows to select node to run pipeline block')
                                 script {
                                     groovyScript {
                                         script {
                                             sandbox(true)
-                                            script(activeChoiceGetChoicesScript(labels.collect { it.toString() }, nodeParamName.nodeName))
+                                            script(activeChoiceGetChoicesScript(nodeParam.labels.collect { it.toString() }, nodeParam.nodeName))
                                         }
                                         fallbackScript {
                                             script('')
@@ -252,7 +249,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                         }
                                     }
                                 }
-                                randomName(nodeParamName.nodeParamName)
+                                randomName(nodeParam.nodeParamName)
                                 filterable(false)
                                 filterLength(0)
                             }
@@ -1063,9 +1060,9 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
     }
 }
 
-ArrayList getNodeParamNames(job, config) {
+ArrayList getNodeParams(job, config) {
     ArrayList result = []
-//    def labels = jenkins.model.Jenkins.instance.getLabels()
+    def labels = jenkins.model.Jenkins.instance.getLabels()
     if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
         for (pipeline_block in job.value.pipeline.blocks) {
             def entry = [:]
@@ -1075,6 +1072,7 @@ ArrayList getNodeParamNames(job, config) {
                     entry.nodeName = block_config['nodeName']
                     println "Default nodeName for ${pipeline_block}: ${entry.node_name}"
                     entry.nodeParamName = pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name'
+                    entry.labels = labels
                     result += entry
                 }
             }
