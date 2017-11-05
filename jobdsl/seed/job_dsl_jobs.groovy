@@ -1256,6 +1256,28 @@ class GitlabHelper {
         script.println users
         users
     }
+
+    String activeChoiceGetChoicesScript(ArrayList choices, String defaultChoice) {
+        String choicesString = choices.join('|')
+        def script =
+            """
+def choices = "${choicesString}"
+def defaultChoice = "${defaultChoice}"
+choices = choices.tokenize('|')
+defaultChoice = defaultChoice.tokenize('|')
+
+for (def i = 0; i < choices.size(); i++) {
+  if (choices[i] in defaultChoice) {
+    choices[i] = choices[i] + ':selected'
+  }
+}
+
+choices
+
+"""
+        script
+    }
+
 }
 
 import groovy.json.JsonSlurper
@@ -1320,27 +1342,6 @@ class DocmanConfig {
         else {
             throw new RuntimeException("There is no state ${stateName} defined in project ${docmanConfig.projects[project]}")
         }
-    }
-
-    String activeChoiceGetChoicesScript(ArrayList choices, String defaultChoice) {
-        String choicesString = choices.join('|')
-        def script =
-"""
-def choices = "${choicesString}"
-def defaultChoice = "${defaultChoice}"
-choices = choices.tokenize('|')
-defaultChoice = defaultChoice.tokenize('|')
-
-for (def i = 0; i < choices.size(); i++) {
-  if (choices[i] in defaultChoice) {
-    choices[i] = choices[i] + ':selected'
-  }
-}
-
-choices
-
-"""
-        script
     }
 
 }
