@@ -1057,6 +1057,28 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
     }
 }
 
+String activeChoiceGetChoicesScript(ArrayList choices, String defaultChoice) {
+    String choicesString = choices.join('|')
+    def script =
+        """
+def choices = "${choicesString}"
+def defaultChoice = "${defaultChoice}"
+choices = choices.tokenize('|')
+defaultChoice = defaultChoice.tokenize('|')
+
+for (def i = 0; i < choices.size(); i++) {
+  if (choices[i] in defaultChoice) {
+    choices[i] = choices[i] + ':selected'
+  }
+}
+
+choices
+
+"""
+    script
+}
+
+
 Map merge(Map[] sources) {
     if (sources.length == 0) return [:]
     if (sources.length == 1) return sources[0]
@@ -1255,27 +1277,6 @@ class GitlabHelper {
         }
         script.println users
         users
-    }
-
-    String activeChoiceGetChoicesScript(ArrayList choices, String defaultChoice) {
-        String choicesString = choices.join('|')
-        def script =
-            """
-def choices = "${choicesString}"
-def defaultChoice = "${defaultChoice}"
-choices = choices.tokenize('|')
-defaultChoice = defaultChoice.tokenize('|')
-
-for (def i = 0; i < choices.size(); i++) {
-  if (choices[i] in defaultChoice) {
-    choices[i] = choices[i] + ':selected'
-  }
-}
-
-choices
-
-"""
-        script
     }
 
 }
