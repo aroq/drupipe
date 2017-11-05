@@ -419,6 +419,19 @@ params = [
                 '${action.params.destination}',
             ],
         ],
+        Kubectl_get_pod_logs: [
+            command: 'logs',
+            name: '',
+            flags: [
+                '--namespace': ['${action.params.namespace}'],
+            ],
+            full_command: [
+                '${action.params.executable}',
+                '${action.params.command}',
+                '${action.params.name}',
+                '${prepareFlags(action.params.flags)}',
+            ],
+        ],
         HealthCheck_wait_http_ok: [
             action_timeout: 5,
             url: '',
