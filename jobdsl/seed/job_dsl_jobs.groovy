@@ -251,6 +251,10 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                                         sandbox(true)
                                                         script(activeChoiceGetChoicesScript(labels.collect { it.toString() }, node_name))
                                                     }
+                                                    fallbackScript {
+                                                        script('')
+                                                        sandbox(true)
+                                                    }
                                                 }
                                             }
                                         }
