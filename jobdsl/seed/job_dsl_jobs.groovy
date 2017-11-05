@@ -672,7 +672,7 @@ ArrayList getNodeParams(job, config) {
 }
 
 def drupipeParamsDefault(context, job, config) {
-    drupipeParameterSeparatorStylized(context, 'default_params', 'GENERAL PARAMETERS', 'green', '4px', '16px')
+    drupipeParameterSeparatorStylized(context, 'default_params', 'GENERAL PARAMETERS', 'green', true, '4px', '16px')
     context.stringParam('debugEnabled', '0')
     context.stringParam('force', '0')
     drupipeParameterSeparatorStylized(context, 'default_params', 'Block parameters', 'green', '2x', '12px')
@@ -684,12 +684,13 @@ def drupipeParamsDefault(context, job, config) {
     drupipeParamTriggerParams(context, job)
 }
 
-def drupipeParameterSeparatorStylized(context, separatorName, header, color, height = '2px', fontSize = '14px') {
+def drupipeParameterSeparatorStylized(context, separatorName, header, color, bold = false, height = '2px', fontSize = '14px') {
+    bold = bold ? 'font-weight: bold;' : ''
     drupipeParameterSeparator(
         context,
         separatorName,
         header,
-        "margin-top:10px; margin-bottom:10px; color: ${color}; background-color: ${color}; border: 0 none; height: ${height}",
+        "margin-top:10px; margin-bottom:10px; color: ${color}; background-color: ${color}; ${bold} border: 0 none; height: ${height}",
         "font-size: ${fontSize}; color: ${color};"
     )
 }
