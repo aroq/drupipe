@@ -233,7 +233,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
 
                         for (nodeParam in getNodeParams(job, config)) {
                             drupipeParamNodeNameSelectClosure = drupipeParamNodeNameSelect()
-                            drupipeParamNodeNameSelectClosure(nodeParam)
+                            "${drupipeParamNodeNameSelectClosure}"(nodeParam)
                         }
 
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
