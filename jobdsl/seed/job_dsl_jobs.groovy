@@ -672,6 +672,12 @@ ArrayList getNodeParams(job, config) {
 }
 
 def drupipeParamsDefault(context, job, config) {
+    context.parameterSeparatorDefinition {
+        name('separator')
+        separatorStyle('')
+        sectionHeader('header')
+        sectionHeaderStyle('')
+    }
     context.stringParam('debugEnabled', '0')
     context.stringParam('force', '0')
     drupipeParamNodeNameSelects(context, job, config)
