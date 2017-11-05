@@ -672,20 +672,26 @@ ArrayList getNodeParams(job, config) {
 }
 
 def drupipeParamsDefault(context, job, config) {
-    drupipeParameterSeparator(
-        context,
-        'default_params',
-        'GENERAL PARAMETERS',
-        'margin-top:10px; margin-bottom:10px; color: green; background-color: green; border: 0 none; height: 2px',
-        'font-size: 14px; color: green;'
-    )
+    drupipeParameterSeparatorStylized(context, 'default_params', 'GENERAL PARAMETERS', 'green', '4px', '16px')
     context.stringParam('debugEnabled', '0')
     context.stringParam('force', '0')
+    drupipeParameterSeparatorStylized(context, 'default_params', 'Block parameters', 'green', '2x', '12px')
     drupipeParamNodeNameSelects(context, job, config)
     drupipeParamDisableBlocksCheckboxes(context, job)
     drupipeParamMuteNotificationCheckboxes(context, job)
+    drupipeParameterSeparatorStylized(context, 'default_params', 'Trigger parameters', 'green', '2x', '12px')
     drupipeParamDisableTriggersCheckboxes(context, job)
     drupipeParamTriggerParams(context, job)
+}
+
+def drupipeParameterSeparatorStylized(context, separatorName, header, color, height = '2px', fontSize = '14px') {
+    drupipeParameterSeparator(
+        context,
+        separatorName,
+        header,
+        "margin-top:10px; margin-bottom:10px; color: ${color}; background-color: ${color}; border: 0 none; height: ${height}",
+        "font-size: ${fontSize}; color: ${color};"
+    )
 }
 
 def drupipeParameterSeparator(context, separatorName, header, style = '', headerStyle = '') {
