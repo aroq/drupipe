@@ -1057,7 +1057,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
     }
 }
 
-String activeChoiceGetChoicesScript(ArrayList choices, String defaultChoice) {
+def activeChoiceGetChoicesScript(ArrayList choices, String defaultChoice) {
     String choicesString = choices.join('|')
     def script =
         """
@@ -1076,6 +1076,7 @@ choices
 
 """
     script
+//    return '["choice1", "choice2"]'
 }
 
 
