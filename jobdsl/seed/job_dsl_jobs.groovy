@@ -245,7 +245,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                         String param_name = pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name'
                                         choiceParameter() {
                                             name(param_name)
-                                            choiceType('OPTION')
+                                            choiceType('PT_SINGLE_SELECT')
                                             description('Allows to select node to run pipeline block')
                                             script {
                                                 groovyScript {
