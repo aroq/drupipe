@@ -678,7 +678,7 @@ def drupipeParamsDefault(context, job, config) {
     context.stringParam('debugEnabled', '0')
     context.stringParam('force', '0')
 
-    drupipeParameterSeparatorStylized(context, 'default_params_test', 'GENERAL PARAMETERS', 'green', true, '2px', '16px')
+    drupipeParameterSeparatorStylized(context, 'default_params_test', 'GENERAL PARAMETERS', 'green', true, '2px', '14px')
 
     drupipeParameterSeparatorStylized(context, 'default_block_params', 'Block parameters', 'green', true,'2x', '14px')
     drupipeParamNodeNameSelects(context, job, config)
