@@ -242,9 +242,9 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                         println "Default nodeName for ${pipeline_block}: ${node_name}"
 
 
+                                        String param_name = pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name'
                                         choiceParameter() {
-                                            String name = pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name'
-                                            name(name)
+                                            name(param_name)
                                             description('Allows to select node to run pipeline block')
                                             choiceType('SINGLE_SELECT')
                                             script {
@@ -259,7 +259,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                                     }
                                                 }
                                             }
-                                            randomname(name)
+                                            randomname(param_name)
                                             filterable(false)
                                             filterLength(0)
                                         }
