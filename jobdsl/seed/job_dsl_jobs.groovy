@@ -231,34 +231,10 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         stringParam('environment', buildEnvironment)
                         stringParam('version', jobBranch)
 
-                        def choiceParamNodeName = { nodeParam ->
-                            choiceParameter() {
-                                name(nodeParam.nodeParamName)
-                                choiceType('PT_SINGLE_SELECT')
-                                description('Allows to select node to run pipeline block')
-                                script {
-                                    groovyScript {
-                                        script {
-                                            sandbox(true)
-                                            script(activeChoiceGetChoicesScript(nodeParam.labels.collect { it.toString() }, nodeParam.nodeName))
-                                        }
-                                        fallbackScript {
-                                            script('')
-                                            sandbox(true)
-                                        }
-                                    }
-                                }
-                                randomName(nodeParam.nodeParamName)
-                                filterable(false)
-                                filterLength(0)
-                            }
-
+                        for (nodeParam in getNodeParams(job, config)) {
+                            drupipeParamNodeNameSelect(nodeParam)
                         }
 
-                        ArrayList nodeParamNames = getNodeParams(job, config)
-                        for (nodeParam in nodeParamNames) {
-                            choiceParamNodeName(nodeParam)
-                        }
                         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
                             choiceParameter() {
                                 name('disable_block')
@@ -1090,6 +1066,29 @@ ArrayList getNodeParams(job, config) {
         }
     }
     result
+}
+
+def drupipeParamNodeNameSelect = { nodeParam ->
+    choiceParameter() {
+        name(nodeParam.nodeParamName)
+        choiceType('PT_SINGLE_SELECT')
+        description('Allows to select node to run pipeline block')
+        script {
+            groovyScript {
+                script {
+                    sandbox(true)
+                    script(activeChoiceGetChoicesScript(nodeParam.labels.collect { it.toString() }, nodeParam.nodeName))
+                }
+                fallbackScript {
+                    script('')
+                    sandbox(true)
+                }
+            }
+        }
+        randomName(nodeParam.nodeParamName)
+        filterable(false)
+        filterLength(0)
+    }
 }
 
 def activeChoiceGetChoicesScript(ArrayList choices, String defaultChoice) {
