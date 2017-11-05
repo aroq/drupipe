@@ -244,28 +244,8 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                             description('Allows to select node to run pipeline block')
                                             choiceType('SINGLE_SELECT')
                                             groovyScript {
-                                                def choices = []
-                                                for (label in labels) {
-                                                    choices << label.toString()
-                                                }
-//                                                def choices_param = choices.join('|')
-//                                                choices = choices.tokenize('|')
-                                                defaultChoice = node_name
-                                                defaultChoice = defaultChoice.tokenize('|')
-
-                                                for (def i = 0; i < choices.size(); i++) {
-                                                    if (choices[i] in defaultChoice) {
-                                                        choices[i] = choices[i] + ':selected'
-                                                    }
-                                                }
-
-                                                choices
+                                                script(labels.collect { it.toString() }, node_name)
                                             }
-//                                            scriptlerScript ('choices.groovy') {
-//                                                println "NODE SELECT CHOICES: ${choices_param}"
-//                                                parameter('defaultChoice', node_name)
-//                                                parameter('choices', choices_param)
-//                                            }
                                         }
                                     }
                                 }
@@ -1340,6 +1320,27 @@ class DocmanConfig {
         else {
             throw new RuntimeException("There is no state ${stateName} defined in project ${docmanConfig.projects[project]}")
         }
+    }
+
+    String activeChoiceGetChoicesScript(ArrayList choices, String defaultChoice) {
+        String choicesString = choices.join('|')
+        def script =
+"""
+def choices = "${choicesString}"
+def defaultChoice = "${defaultChoice}"
+choices = choices.tokenize('|')
+defaultChoice = defaultChoice.tokenize('|')
+
+for (def i = 0; i < choices.size(); i++) {
+  if (choices[i] in defaultChoice) {
+    choices[i] = choices[i] + ':selected'
+  }
+}
+
+choices
+
+"""
+        script
     }
 
 }
