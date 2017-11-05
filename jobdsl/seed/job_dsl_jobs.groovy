@@ -1069,27 +1069,37 @@ ArrayList getNodeParams(job, config) {
     result
 }
 
-def drupipeParamNodeNameSelect(context, nodeParam) {
+def drupipeParamSingleSelect(context, paramName, paramDescription, paramType, paramScript, sandboxMode = true, paramFilterable = false, paramFilterLength = 0) {
     context.choiceParameter() {
-        name(nodeParam.nodeParamName)
-        choiceType('PT_SINGLE_SELECT')
-        description('Allows to select node to run pipeline block')
+        name(paramName)
+        choiceType(paramType)
+        description(paramDescription)
         script {
             groovyScript {
                 script {
-                    sandbox(true)
-                    script(activeChoiceGetChoicesScript(nodeParam.labels.collect { it.toString() }, nodeParam.nodeName))
+                    sandbox(sandboxMode)
+                    script(paramScript)
                 }
                 fallbackScript {
                     script('')
-                    sandbox(true)
+                    sandbox(sandboxMode)
                 }
             }
         }
         randomName(nodeParam.nodeParamName)
-        filterable(false)
-        filterLength(0)
+        filterable(paramFilterable)
+        filterLength(paramFilterLength)
     }
+}
+
+def drupipeParamNodeNameSelect(context, nodeParam) {
+    drupipeParamSingleSelect(
+        context,
+        nodeParam.nodeParamName,
+        'Allows to select node to run pipeline block',
+        'PT_SINGLE_SELECT',
+        activeChoiceGetChoicesScript(nodeParam.labels.collect { it.toString() }, nodeParam.nodeName)
+    )
 }
 
 def activeChoiceGetChoicesScript(ArrayList choices, String defaultChoice) {
