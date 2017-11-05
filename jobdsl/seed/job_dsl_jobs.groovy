@@ -254,7 +254,27 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                 filterLength(0)
                             }
                         }
-//                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                        if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
+                            choiceParameter() {
+                                name('disable_block')
+                                choiceType('PT_OPTION')
+                                description('Allows to disable pipeline blocks')
+                                script {
+                                    groovyScript {
+                                        script {
+                                            sandbox(true)
+                                            script(activeChoiceGetChoicesScript(job.value.pipeline.blocks.collect { it }, ''))
+                                        }
+                                        fallbackScript {
+                                            script('')
+                                            sandbox(true)
+                                        }
+                                    }
+                                }
+                                randomName('disable_block')
+                                filterable(false)
+                                filterLength(0)
+                            }
 //                            activeChoiceParam('disable_block') {
 //                                description('Allows to disable pipeline blocks')
 //                                choiceType('CHECKBOX')
@@ -269,7 +289,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
 //                                    parameter('choices', choices_param)
 //                                }
 //                            }
-//                        }
+                        }
 //                        if (job.value.containsKey('notify')) {
 //                            activeChoiceParam('mute_notification') {
 //                                description('Allows to mute notifications in selected channels')
@@ -301,14 +321,14 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
 //                                    parameter('choices', choices_param)
 //                                }
 //                            }
-//                            for (trigger_job in job.value.trigger) {
-//                                if (trigger_job.containsKey('params')) {
-//                                    for (param in trigger_job.params) {
-//                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
-//                                        stringParam(trigger_job_name_safe + '_' + param.key, param.value)
-//                                    }
-//                                }
-//                            }
+                            for (trigger_job in job.value.trigger) {
+                                if (trigger_job.containsKey('params')) {
+                                    for (param in trigger_job.params) {
+                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
+                                        stringParam(trigger_job_name_safe + '_' + param.key, param.value)
+                                    }
+                                }
+                            }
 //                        }
                     }
                     definition {
