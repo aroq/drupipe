@@ -97,7 +97,7 @@ class Jenkins extends BaseAction {
             this.action.params.jobName = "${projects[i]}/seed"
             builds[i] = buildPrepare()
         }
-        parallel builds
+        script.parallel builds
         [:]
     }
 
