@@ -111,9 +111,10 @@ class DrupipePipeline implements Serializable {
 
                 if (blocks) {
                     if (context.containerMode == 'kubernetes') {
-                        script.echo "Executing block in kubernetes mode"
+                        script.echo "Executing blocks in kubernetes mode"
                         script.drupipeExecuteBlocksWithKubernetes(this, body)
                     } else {
+                        script.echo "Executing blocks in standard mode"
                         executeBlocks()
                     }
                 }
@@ -123,6 +124,7 @@ class DrupipePipeline implements Serializable {
 
                 // Trigger other jobs if configured.
                 script.node('master') {
+                    script.echo "Trigger other jobs if configured"
                     if (context.job && context.job.trigger) {
                         for (def i = 0; i < context.job.trigger.size(); i++) {
                             def trigger_job = context.job.trigger[i]
