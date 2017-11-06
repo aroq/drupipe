@@ -152,6 +152,7 @@ class Config extends BaseAction {
         // TODO: Use env vars pattern to ovverride.
         result.credentialsId = result.env.credentialsId
         result.environment = result.env.environment
+        result.configRepo = result.env.configRepo
 //        result << result.env
 
         String jobPath = script.env.BUILD_URL ? script.env.BUILD_URL : script.env.JOB_DISPLAY_URL
@@ -305,10 +306,19 @@ class Config extends BaseAction {
     def projectConfig() {
         utils.debugLog(action.pipeline.context, "projectConfig repo: ${action.pipeline.context.configRepo}", [:], [], true)
         if (action.pipeline.context.configRepo) {
+//            def sourceObject = [
+//                name: 'project',
+//                path: action.pipeline.context.projectConfigPath,
+//                type: 'dir',
+//                mode: 'shell',
+//            ]
+
             def sourceObject = [
                 name: 'project',
-                path: action.pipeline.context.projectConfigPath,
-                type: 'dir',
+                path: 'sources/project',
+                type: 'git',
+                url: action.pipeline.context.configRepo,
+                branch: 'master',
                 mode: 'shell',
             ]
 
