@@ -70,17 +70,15 @@ def call(pipeline) {
 
     node("master") {
         for (def i = 0; i < masterBlocks.size(); i++) {
-
-//        blocks[i].name = "block${i}"
+            echo "BLOCK EXECUTE START on master node - ${blocks[i].name}"
             masterBlocks[i].pipeline = pipeline
             pipeline.scmCheckout()
             unstash('config')
             def block = new DrupipeBlock(masterBlocks[i])
-            echo 'BLOCK EXECUTE START on master node'
             sshagent([pipeline.context.credentialsId]) {
                 block.execute()
             }
-            echo 'BLOCK EXECUTE END on master node'
+            echo "BLOCK EXECUTE END on master node - ${blocks[i].name}"
         }
     }
 }
