@@ -77,42 +77,30 @@ class Jenkins extends BaseAction {
         }
     }
 
-    def executeCli(envvars) {
-    }
-
-//    def crumb() {
-//        action.params.jenkins_user_token = action.pipeline.context.jenkins_user_token
-//        if (action.params.jenkins_user_token) {
-//            def envvars = ["JENKINS_URL=http://${getJenkinsAddress()}:${this.action.params.port}", "JENKINS_API_TOKEN=${action.params.jenkins_user_token}"]
-//            this.script.withEnv(envvars) {
-//                def result = this.script.drupipeShell("""
-//         """, this.action.pipeline.context.clone() << [return_stdout: true])
-//            }
-//        }
-//
-//       result.stdout
-//    }
-
     def build() {
-        this.action.params.command = "build ${this.action.params.args} ${this.action.params.jobName}"
-        cli()
+        return {
+            this.action.params.command = "build ${this.action.params.args} ${this.action.params.jobName}"
+            cli()
+        }
     }
 
     def seedTest() {
         def mothershipConfig = utils.getMothershipConfigFile(action.pipeline.context)
-        def projects = parseProjects(mothershipConfig).tokenize(',')
+        def projects = parseProjects(mothershipConfig, 'tests', 'seed').tokenize(',')
+        def builds = [:]
         for (def i = 0; i < projects.size(); i++) {
             this.script.echo projects[i]
             this.action.params.jobName = "${projects[i]}/seed"
-            build()
+            builds[i] = build()
         }
+        parallel builds
     }
 
     @NonCPS
-    def parseProjects(def projects) {
+    def parseProjects(def projects, String param, String tag) {
         def result = []
         for (project in projects) {
-            if (project.value?.params?.containsKey('tests') && project.value.params['tests'].contains('seed')) {
+            if (project.value?.params?.containsKey(param) && project.value.params[param].contains(tag)) {
                 result << project.key
             }
         }
