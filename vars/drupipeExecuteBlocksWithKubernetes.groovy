@@ -51,7 +51,7 @@ def call(pipeline) {
             node(nodeName) {
                 pipeline.context.workspace = pwd()
                 for (def i = 0; i < k8sBlocks.size(); i++) {
-                    def block = k8sBlocks[o]
+                    def block = k8sBlocks[i]
                     if (block.withDocker) {
                         block.name = "block${i}"
                         block.pipeline = pipeline
