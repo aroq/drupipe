@@ -78,9 +78,13 @@ class Jenkins extends BaseAction {
     }
 
     def build() {
+        this.action.params.command = "build ${this.action.params.args} ${this.action.params.jobName}"
+        cli()
+    }
+
+    def buildPrepare() {
         return {
-            this.action.params.command = "build ${this.action.params.args} ${this.action.params.jobName}"
-            cli()
+            build()
         }
     }
 
@@ -91,7 +95,7 @@ class Jenkins extends BaseAction {
         for (def i = 0; i < projects.size(); i++) {
             this.script.echo projects[i]
             this.action.params.jobName = "${projects[i]}/seed"
-            builds[i] = build()
+            builds[i] = buildPrepare()
         }
         parallel builds
         [:]
