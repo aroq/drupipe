@@ -149,21 +149,19 @@ class Config extends BaseAction {
         def result = [:]
         result.workspace = this.script.pwd()
         result.env = this.utils.envToMap()
-        // TODO: Use env vars pattern to ovverride.
+        // TODO: Use env vars pattern to override.
         result.credentialsId = result.env.credentialsId
         result.environment = result.env.environment
         result.configRepo = result.env.configRepo
-//        result << result.env
 
         String jobPath = script.env.BUILD_URL ? script.env.BUILD_URL : script.env.JOB_DISPLAY_URL
-
         result.jenkinsFolderName = utils.getJenkinsFolderName(jobPath)
         result.jenkinsJobName = utils.getJenkinsJobName(jobPath)
 
         if (script.env.KUBERNETES_PORT) {
             result.containerMode = 'kubernetes'
         }
-        utils.serializeAndDeserialize(result)
+//        utils.serializeAndDeserialize(result)
     }
 
     def mothershipConfig() {

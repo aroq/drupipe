@@ -48,6 +48,7 @@ def call(pipeline, body) {
             containers: containers
         ) {
             node(nodeName) {
+                pipeline.context.workspace = pwd()
                 for (def i = 0; i < blocks.size(); i++) {
                     blocks[i].name = "block${i}"
                     blocks[i].pipeline = pipeline
