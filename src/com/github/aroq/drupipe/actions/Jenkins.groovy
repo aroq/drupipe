@@ -46,7 +46,7 @@ class Jenkins extends BaseAction {
         action.pipeline.context
     }
 
-    def cli() {
+    def cli(cli_command) {
         // TODO: Remove it after action refactor and tests.
         if (action.params.jenkins_user_token_file) {
             action.params.jenkins_user_token = script.readFile file: action.params.jenkins_user_token_file
@@ -59,7 +59,7 @@ class Jenkins extends BaseAction {
             this.script.withEnv(envvars) {
                 this.script.drupipeShell(
 """
-/jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${this.action.params.command}
+/jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${cli_command}
 """, this.action.params)
             }
         }
@@ -70,7 +70,7 @@ class Jenkins extends BaseAction {
                 this.script.withEnv(envvars) {
                     this.script.drupipeShell(
 """
-/jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${this.action.params.command}
+/jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${cli_command}
 """, this.action.params)
                 }
             }
@@ -78,13 +78,12 @@ class Jenkins extends BaseAction {
     }
 
     def build() {
-        this.action.params.command = "build ${this.action.params.args} ${this.action.params.jobName}"
-        cli()
+        cli("build ${this.action.params.args} ${this.action.params.jobName}")
     }
 
-    def buildPrepare() {
+    def buildPrepare(String jobName) {
         return {
-            build()
+            cli("build ${this.action.params.args} ${jobName}")
         }
     }
 
@@ -94,8 +93,8 @@ class Jenkins extends BaseAction {
         def builds = [:]
         for (def i = 0; i < projects.size(); i++) {
             this.script.echo projects[i]
-            this.action.params.jobName = "${projects[i]}/seed"
-            builds[i] = buildPrepare()
+//            this.action.params.jobName = "${projects[i]}/seed"
+            builds[i] = buildPrepare("${projects[i]}/seed")
         }
         script.parallel builds
         [:]
