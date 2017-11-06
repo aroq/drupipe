@@ -112,7 +112,7 @@ class DrupipePipeline implements Serializable {
                 if (blocks) {
                     if (context.containerMode == 'kubernetes') {
                         script.echo "Executing blocks in kubernetes mode"
-                        script.drupipeExecuteBlocksWithKubernetes(this, body)
+                        script.drupipeExecuteBlocksWithKubernetes(this)
                     } else {
                         script.echo "Executing blocks in standard mode"
                         executeBlocks()

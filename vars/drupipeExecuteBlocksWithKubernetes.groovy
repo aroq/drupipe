@@ -1,6 +1,6 @@
 import com.github.aroq.drupipe.DrupipeBlock
 
-def call(pipeline, body) {
+def call(pipeline) {
     echo "Container mode: kubernetes"
     def nodeName = 'drupipe'
     def containers = []
@@ -49,7 +49,6 @@ def call(pipeline, body) {
             containers: containers
         ) {
             node(nodeName) {
-                body(body)
                 pipeline.context.workspace = pwd()
                 for (def i = 0; i < k8sBlocks.size(); i++) {
                     def block = k8sBlocks[o]
