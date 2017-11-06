@@ -30,6 +30,8 @@ class DrupipePipeline implements Serializable {
         try {
             script.timestamps {
                 script.node('master') {
+                    script.echo "Executing pipeline"
+
                     params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 
                     utils.dump(params, params, 'PIPELINE-PARAMS')
@@ -39,7 +41,6 @@ class DrupipePipeline implements Serializable {
                     utils.dump(context, context, 'PIPELINE-CONTEXT')
 
                     // Secret option for emergency remove workspace.
-
                 }
 
                 if (body) {
@@ -110,6 +111,7 @@ class DrupipePipeline implements Serializable {
 
                 if (blocks) {
                     if (context.containerMode == 'kubernetes') {
+                        script.echo "Executing block in kubernetes mode"
                         script.drupipeExecuteBlocksWithKubernetes(this, body)
                     } else {
                         executeBlocks()
@@ -119,6 +121,7 @@ class DrupipePipeline implements Serializable {
                     script.echo "No pipeline blocks defined"
                 }
 
+                // Trigger other jobs if configured.
                 script.node('master') {
                     if (context.job && context.job.trigger) {
                         for (def i = 0; i < context.job.trigger.size(); i++) {
@@ -157,13 +160,10 @@ class DrupipePipeline implements Serializable {
 
                               script.build(job: trigger_job.job, wait: false, propagate: false, parameters: params)
                             }
-
                         }
                     }
                 }
             }
-
-            context
         }
         catch (e) {
             notification.status = 'FAILED'
@@ -174,11 +174,7 @@ class DrupipePipeline implements Serializable {
                 notification.status = 'SUCCESSFUL'
             }
             utils.pipelineNotify(context, notification)
-
-            context
         }
-
-        context
     }
 
     def executeStages(stagesToExecute = [:]) {

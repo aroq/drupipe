@@ -8,6 +8,7 @@ def call(pipeline, body) {
     ArrayList blocks = pipeline.blocks
 
     ArrayList masterBlocks = []
+    ArrayList k8sBlocks = []
 
     for (def i = 0; i < blocks.size(); i++) {
         echo "BLOCK name: ${blocks[i].name}"
@@ -35,6 +36,7 @@ def call(pipeline, body) {
                     secretEnvVar(key: 'GITLAB_API_TOKEN_TEXT', secretName: 'zebra-keys', secretKey: 'zebra_gitlab_api_token'),
                 ],
             ))
+            k8sBlocks += blocks[i]
         }
         else {
             masterBlocks += blocks[i]
@@ -49,20 +51,22 @@ def call(pipeline, body) {
         ) {
             node(nodeName) {
                 pipeline.context.workspace = pwd()
-                for (def i = 0; i < blocks.size(); i++) {
-                    blocks[i].name = "block${i}"
-                    blocks[i].pipeline = pipeline
+                for (def i = 0; i < k8sBlocks.size(); i++) {
                     if (blocks[i].withDocker) {
-                        container("block${i}") {
-                            pipeline.scmCheckout()
-                            unstash('config')
-                            DrupipeBlock block = new DrupipeBlock(blocks[i])
-                            echo 'BLOCK EXECUTE START'
-                            sshagent([pipeline.context.credentialsId]) {
-                                block.blockInNode = true
-                                block.execute()
+                        blocks[i].name = "block${i}"
+                        blocks[i].pipeline = pipeline
+                        if (blocks[i].withDocker) {
+                            container("block${i}") {
+                                pipeline.scmCheckout()
+                                unstash('config')
+                                DrupipeBlock block = new DrupipeBlock(blocks[i])
+                                echo 'BLOCK EXECUTE START'
+                                sshagent([pipeline.context.credentialsId]) {
+                                    block.blockInNode = true
+                                    block.execute()
+                                }
+                                echo 'BLOCK EXECUTE END'
                             }
-                            echo 'BLOCK EXECUTE END'
                         }
                     }
                 }
@@ -78,11 +82,11 @@ def call(pipeline, body) {
             pipeline.scmCheckout()
             unstash('config')
             def block = new DrupipeBlock(masterBlocks[i])
-            echo 'BLOCK EXECUTE START'
+            echo 'BLOCK EXECUTE START on master node'
             sshagent([pipeline.context.credentialsId]) {
                 block.execute()
             }
-            echo 'BLOCK EXECUTE END'
+            echo 'BLOCK EXECUTE END on master node'
         }
     }
 }
