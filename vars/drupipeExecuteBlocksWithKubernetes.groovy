@@ -6,7 +6,6 @@ def call(pipeline, body) {
     def containers = []
 
     ArrayList blocks = pipeline.blocks
-
     ArrayList masterBlocks = []
     ArrayList k8sBlocks = []
 
@@ -50,23 +49,23 @@ def call(pipeline, body) {
             containers: containers
         ) {
             node(nodeName) {
+                body(body)
                 pipeline.context.workspace = pwd()
                 for (def i = 0; i < k8sBlocks.size(); i++) {
-                    if (blocks[i].withDocker) {
-                        blocks[i].name = "block${i}"
-                        blocks[i].pipeline = pipeline
-                        if (blocks[i].withDocker) {
-                            container("block${i}") {
-                                pipeline.scmCheckout()
-                                unstash('config')
-                                DrupipeBlock block = new DrupipeBlock(blocks[i])
-                                echo 'BLOCK EXECUTE START'
-                                sshagent([pipeline.context.credentialsId]) {
-                                    block.blockInNode = true
-                                    block.execute()
-                                }
-                                echo 'BLOCK EXECUTE END'
+                    def block = k8sBlocks[o]
+                    if (block.withDocker) {
+                        block.name = "block${i}"
+                        block.pipeline = pipeline
+                        container("block${i}") {
+                            pipeline.scmCheckout()
+                            unstash('config')
+                            DrupipeBlock drupipe_block = new DrupipeBlock(blocks[i])
+                            echo 'BLOCK EXECUTE START on k8s'
+                            sshagent([pipeline.context.credentialsId]) {
+                                drupipe_block.blockInNode = true
+                                drupipe_block.execute()
                             }
+                            echo 'BLOCK EXECUTE END on k8s'
                         }
                     }
                 }
