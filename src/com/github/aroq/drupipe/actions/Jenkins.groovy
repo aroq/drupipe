@@ -94,6 +94,7 @@ class Jenkins extends BaseAction {
             builds[i] = build()
         }
         parallel builds
+        [:]
     }
 
     @NonCPS
