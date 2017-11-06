@@ -31,7 +31,7 @@ ${concurrency} \
 ${throughput} \
 ${steps} \
 ${iterations} \
-${action.pipeline.context.taurus_args}"""
+${action.pipeline.context.env.taurus_args}"""
 
         this.script.echo "Execute BZT: ${bztString}"
 
