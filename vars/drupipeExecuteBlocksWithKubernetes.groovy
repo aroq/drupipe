@@ -10,10 +10,6 @@ def call(pipeline) {
     ArrayList k8sBlocks = []
 
     for (def i = 0; i < blocks.size(); i++) {
-        echo "BLOCK name: ${blocks[i].name}"
-        echo "BLOCK dockerImage: ${blocks[i].dockerImage}"
-        echo "BLOCK nodeName: ${blocks[i].nodeName}"
-
         if (blocks[i].withDocker) {
             echo "Create k8s containerTemplate for block: ${blocks[i].name}, image: ${blocks[i].dockerImage}"
             containers.add(containerTemplate(
@@ -53,7 +49,7 @@ def call(pipeline) {
                 for (def i = 0; i < k8sBlocks.size(); i++) {
                     def block = k8sBlocks[i]
                     if (block.withDocker) {
-                        block.name = "block${i}"
+//                        block.name = "block${i}"
                         block.pipeline = pipeline
                         container("block${i}") {
                             pipeline.scmCheckout()
