@@ -219,7 +219,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             println "Processing Gitlab webhooks for Docman project type"
                             config.docmanConfig.projects?.each { project ->
                                 println "Project: ${project}"
-                                if (project.value.type != 'root' && project.value.repo && isGitlabRepo(project.value.repo, config)) {
+                                if (project.value.type != 'root' && project.value.repo && config.gitlabHelper.isGitlabRepo(project.value.repo, config)) {
                                     def webhook_tags
                                     if (config.params.webhooksEnvironments) {
                                         webhook_tags = config.params.webhooksEnvironments
@@ -256,7 +256,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         else {
                             println "Processing Gitlab webhooks for Single project type"
                             println "Project: master"
-                            if (isGitlabRepo(config.configRepo, config)) {
+                            if (config.gitlabHelper.isGitlabRepo(config.configRepo, config)) {
                                 def webhook_tags
                                 if (config.params.webhooksEnvironments) {
                                     webhook_tags = config.params.webhooksEnvironments
@@ -688,10 +688,6 @@ Map merge(Map[] sources) {
         }
         result
     }
-}
-
-def isGitlabRepo(repo, config) {
-    config.env.GITLAB_HOST && repo.contains(config.env.GITLAB_HOST)
 }
 
 def sourcePath(params, sourceName, String path) {
