@@ -157,9 +157,11 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                             scm {
                                 git {
                                     def selectedRemoteBranch = 'master'
-                                    def gitLabBranchResponse = config.gitlabHelper.getBranch(config.configRepo, jobBranch)
-                                    if (gitLabBranchResponse && gitLabBranchResponse.containsKey('name')) {
-                                        selectedRemoteBranch = gitLabBranchResponse.name
+                                    if (config.containsKey('tags') && config.tags.contains('single')) {
+                                        def gitLabBranchResponse = config.gitlabHelper.getBranch(config.configRepo, jobBranch)
+                                        if (gitLabBranchResponse && gitLabBranchResponse.containsKey('name')) {
+                                            selectedRemoteBranch = gitLabBranchResponse.name
+                                        }
                                     }
                                     branch(selectedRemoteBranch)
                                     remote {
@@ -721,5 +723,3 @@ def getServersByTags(tags, servers) {
     println "getServersByTags: ${result}"
     result
 }
-
-
