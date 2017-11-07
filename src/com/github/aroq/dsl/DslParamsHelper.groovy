@@ -10,7 +10,7 @@ class DslParamsHelper {
 
     ArrayList getNodeParams(job, config) {
         ArrayList result = []
-        def labels = jenkins.model.Jenkins.instance.getLabels()
+        def labels = script.jenkins.model.Jenkins.instance.getLabels()
         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
             for (pipeline_block in job.value.pipeline.blocks) {
                 def entry = [:]
