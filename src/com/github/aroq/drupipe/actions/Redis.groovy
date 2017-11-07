@@ -13,11 +13,11 @@ class Redis extends BaseAction {
     def DrupipeActionWrapper action
 
     def runCommand() {
-        def dsns = (this.context.redis_dsn.length() != 0) ? "${this.context.redis_dsn}" : ''
-        def socket = (this.context.redis_socket.length() != 0) ? "-s ${this.context.redis_socket}" : ''
-        def host = (this.context.redis_host.length() != 0) ? "-h ${this.context.redis_host}" : ''
-        def port = (this.context.redis_port.length() != 0) ? "-s ${this.context.redis_port}" : ''
-        def command = (this.context.redis_command.length() != 0) ? "${this.context.redis_command}" : 'INFO'
+        def dsns = (action.pipeline.context.env.redis_dsn && action.pipeline.context.env.redis_dsn.length() != 0) ? "${action.pipeline.context.env.redis_dsn}" : ''
+        def socket = (action.pipeline.context.env.redis_socket && action.pipeline.context.env.redis_socket.length() != 0) ? "-s ${action.pipeline.context.env.redis_socket}" : ''
+        def host = (action.pipeline.context.env.redis_host && action.pipeline.context.env.redis_host.length() != 0) ? "-h ${action.pipeline.context.env.redis_host}" : ''
+        def port = (action.pipeline.context.env.redis_port && action.pipeline.context.env.redis_port.length() != 0) ? "-s ${action.pipeline.context.env.redis_port}" : ''
+        def command = (action.pipeline.context.env.redis_command && action.pipeline.context.env.redis_command.length() != 0) ? "${action.pipeline.context.env.redis_command}" : 'INFO'
 
         // Do not use socket/host/port if dsn available
         if (dsns != '') {
