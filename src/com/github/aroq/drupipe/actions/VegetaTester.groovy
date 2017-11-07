@@ -13,9 +13,9 @@ class VegetaTester extends BaseAction {
     def DrupipeActionWrapper action
 
     def prepare() {
-        if (this.context.vegeta_prepare_command && this.context.vegeta_prepare_command.length() != 0) {
+        if (action.pipeline.context.env.vegeta_prepare_command && action.pipeline.context.env.vegeta_prepare_command.length() != 0) {
             this.script.drupipeShell("mkdir -p vegeta", action.params)
-            this.script.drupipeShell(this.context.vegeta_prepare_command, action.params)
+            this.script.drupipeShell(action.pipeline.context.env.vegeta_prepare_command, action.params)
             this.script.drupipeShell("""
                 cat vegeta/input.txt
                 """, action.params
@@ -29,15 +29,15 @@ class VegetaTester extends BaseAction {
         if (this.script.fileExists("vegeta/input.txt")) {
             this.script.drupipeShell("rm -rf vegeta/report.bin", action.params)
 
-            def connections = (this.context.vegeta_connections && this.context.vegeta_connections.length() != 0) ? "-connections ${this.context.vegeta_connections}" : ''
-            def duration = (this.context.vegeta_duration && this.context.vegeta_duration.length() != 0) ? "-duration ${this.context.vegeta_duration}" : ''
-            def redirects = (this.context.vegeta_redirects && this.context.vegeta_redirects.length() != 0) ? "-redirects ${this.context.vegeta_redirects}" : ''
-            def rate = (this.context.vegeta_rate && this.context.vegeta_rate.length() != 0) ? "-rate ${this.context.vegeta_rate}" : ''
-            def timeout = (this.context.vegeta_timeout && this.context.vegeta_timeout.length() != 0) ? "-timeout ${this.context.vegeta_timeout}" : ''
-            def workers = (this.context.vegeta_workers && this.context.vegeta_workers.length() != 0) ? "-workers ${this.context.vegeta_workers}" : ''
-            def insecure = (this.context.vegeta_insecure && this.context.vegeta_insecure.length() != 0) ? "-insecure" : ''
-            def keepalive = (this.context.vegeta_keepalive && this.context.vegeta_keepalive.length() != 0) ? "-keepalive" : ''
-            def lazy = (this.context.vegeta_lazy && this.context.vegeta_lazy.length() != 0) ? "-lazy" : ''
+            def connections = (action.pipeline.context.env.vegeta_connections && action.pipeline.context.env.vegeta_connections.length() != 0) ? "-connections ${action.pipeline.context.env.vegeta_connections}" : ''
+            def duration = (action.pipeline.context.env.vegeta_duration && action.pipeline.context.env.vegeta_duration.length() != 0) ? "-duration ${action.pipeline.context.env.vegeta_duration}" : ''
+            def redirects = (action.pipeline.context.env.vegeta_redirects && action.pipeline.context.env.vegeta_redirects.length() != 0) ? "-redirects ${action.pipeline.context.env.vegeta_redirects}" : ''
+            def rate = (action.pipeline.context.env.vegeta_rate && action.pipeline.context.env.vegeta_rate.length() != 0) ? "-rate ${action.pipeline.context.env.vegeta_rate}" : ''
+            def timeout = (action.pipeline.context.env.vegeta_timeout && action.pipeline.context.env.vegeta_timeout.length() != 0) ? "-timeout ${action.pipeline.context.env.vegeta_timeout}" : ''
+            def workers = (action.pipeline.context.env.vegeta_workers && action.pipeline.context.env.vegeta_workers.length() != 0) ? "-workers ${action.pipeline.context.env.vegeta_workers}" : ''
+            def insecure = (action.pipeline.context.env.vegeta_insecure && action.pipeline.context.env.vegeta_insecure.length() != 0) ? "-insecure" : ''
+            def keepalive = (action.pipeline.context.env.vegeta_keepalive && action.pipeline.context.env.vegeta_keepalive.length() != 0) ? "-keepalive" : ''
+            def lazy = (action.pipeline.context.env.vegeta_lazy && action.pipeline.context.env.vegeta_lazy.length() != 0) ? "-lazy" : ''
 
             def vegetaAttackString = """vegeta attack \
 -output vegeta/report.bin \
@@ -51,7 +51,7 @@ ${workers} \
 ${insecure} \
 ${keepalive} \
 ${lazy} \
-${this.context.vegeta_args}"""
+${action.pipeline.context.env.vegeta_args}"""
 
             this.script.echo "Execute Vegeta attack: ${vegetaAttackString}"
 
