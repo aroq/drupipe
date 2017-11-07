@@ -271,7 +271,6 @@ class DrupipePipeline implements Serializable {
 
     def executePipelineActionList(actions) {
         def result = [:]
-        this.script.echo("executePipelineActionList actions: ${actions}")
         def actionList = processPipelineActionList(actions)
         try {
             for (action in actionList) {
