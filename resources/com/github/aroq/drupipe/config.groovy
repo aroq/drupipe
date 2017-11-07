@@ -98,6 +98,9 @@ params = [
             infraSourceName: 'infra-config',
             shell_bash_login: false,
         ],
+        Drush: [
+            return_stdout: true,
+        ],
         DrushFeaturesList: [
             return_stdout: true,
         ],

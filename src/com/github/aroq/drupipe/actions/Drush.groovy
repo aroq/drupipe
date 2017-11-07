@@ -11,11 +11,11 @@ class Drush extends BaseAction {
     DrupipeActionWrapper action
 
     def runCommand() {
-        def drush_dsn = (action.pipeline.context.drush_dsn && action.pipeline.context.drush_dsn.length() != 0) ? "${action.pipeline.context.drush_dsn}" : null
-        def command = (action.pipeline.context.drush_command && action.pipeline.context.drush_command.length() != 0) ? "${action.pipeline.context.drush_command}" : 'core-status'
-        def site = (action.pipeline.context.drush_site && action.pipeline.context.drush_site.length() != 0) ? "${action.pipeline.context.drush_site}" : 'default'
-        def docroot = (action.pipeline.context.drush_site_docroot && action.pipeline.context.drush_site_docroot.length() != 0) ? "${action.pipeline.context.drush_site_docroot}" : 'docroot'
-        def environment = (action.pipeline.context.drush_environment && action.pipeline.context.drush_environment.length() != 0) ? "${action.pipeline.context.drush_environment}" : 'dev'
+        def drush_dsn = (action.pipeline.context.env.drush_dsn && action.pipeline.context.env.drush_dsn.length() != 0) ? "${action.pipeline.context.env.drush_dsn}" : null
+        def command = (action.pipeline.context.env.drush_command && action.pipeline.context.env.drush_command.length() != 0) ? "${action.pipeline.context.env.drush_command}" : 'core-status'
+        def site = (action.pipeline.context.env.drush_site && action.pipeline.context.env.drush_site.length() != 0) ? "${action.pipeline.context.env.drush_site}" : 'default'
+        def docroot = (action.pipeline.context.env.drush_site_docroot && action.pipeline.context.env.drush_site_docroot.length() != 0) ? "${action.pipeline.context.env.drush_site_docroot}" : 'docroot'
+        def environment = (action.pipeline.context.env.drush_environment && action.pipeline.context.env.drush_environment.length() != 0) ? "${action.pipeline.context.env.drush_environment}" : 'dev'
         def user
         def host
         def root
