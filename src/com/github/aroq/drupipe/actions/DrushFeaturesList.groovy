@@ -16,7 +16,7 @@ class DrushFeaturesList extends BaseAction {
         def features = []
 
         // TODO: Don't use context root for action specific params.
-        action.pipeline.context.drush_command = 'fl --format=json'
+        action.pipeline.context.env.drush_command = 'fl --format=json'
         def fl_result = this.script.drupipeAction([action: "Drush.runCommand", params: [store_result: true]], action.pipeline)
 
         def jsonOutput = this.script.readJSON(text: fl_result.stdout)
@@ -31,8 +31,8 @@ class DrushFeaturesList extends BaseAction {
             features.each { feature ->
                 exception_table = exception_table + "|${feature['name']}|${feature['feature']}|\n"
 
-                action.pipeline.context.drush_command = 'fd ' + feature['feature']
-                this.script.drupipeAction("Drush.runCommand", action.pipeline)
+                this.action.pipeline.context.env.drush_command = 'fd ' + feature['feature']
+                this.script.drupipeAction([action: "Drush.runCommand"], this.action.pipeline)
             }
 
             throw new Exception("OVERRIDEN FEATURES:\n\n${exception_table}")
