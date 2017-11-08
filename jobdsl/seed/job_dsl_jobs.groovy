@@ -456,7 +456,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                         webhook_tags = config.webhooksEnvironments
                     }
                     println "Webhook Tags: ${webhook_tags}"
-                    if (job.value.webhooks && configMode == MODE_CONFIG_AND_PROJECT_REPO && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                    if (job.value.webhooks && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
                         properties {
                             gitLabConnectionProperty {
                                 gitLabConnection('Gitlab')
