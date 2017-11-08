@@ -291,7 +291,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                     logRotator(-1, config.logRotatorNumToKeep)
                     parameters {
                         config.docmanConfig.projects?.each { project ->
-                            if ((project.value.type == 'root' || project.value.type == 'root_chain') && project.value.repo) {
+                            if ((project.value.type == 'root' || project.value.type == 'root_chain' || project.value.type == 'single') && project.value.repo) {
                                 println "Project: ${project.value.name}"
                                 def releaseRepo = project.value.type == 'root' ? project.value.repo : project.value.root_repo
                                 activeChoiceParam('release') {
