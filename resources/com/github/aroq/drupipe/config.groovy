@@ -4,12 +4,9 @@ config_version = 1
 environment = ''
 debugEnabled = false
 docrootDir = 'docroot'
-projectConfigPath = 'docroot/config'
+docmanDir = 'docman'
+projectConfigPath = '.unipipe/config'
 projectConfigFile = 'docroot.config'
-
-
-dockerImage = 'aroq/drudock:1.4.0'
-nodeName = 'default'
 containerMode = 'docker'
 configSeedType = 'docman'
 defaultDocmanImage = 'michaeltigr/zebra-build-php-drush-docman:latest'
@@ -25,7 +22,9 @@ params = [
         ]
     ],
     block: [
-
+        nodeName: 'default',
+        // TODO: remove it after configs update.
+        dockerImage: 'aroq/drudock:1.4.0',
     ],
     action: [
         // Default action params (merged to all actions params).
@@ -99,6 +98,9 @@ params = [
             infraSourceName: 'infra-config',
             shell_bash_login: false,
         ],
+        Drush: [
+            return_stdout: true,
+        ],
         DrushFeaturesList: [
             return_stdout: true,
         ],
@@ -124,9 +126,9 @@ params = [
             removedJobAction: 'DELETE',
             removedViewAction: 'DELETE',
             lookupStrategy: 'SEED_JOB',
-            additionalClasspath: ['library/src'],
+            additionalClasspath: ['.unipipe/library/src'],
             // TODO: Need another way of providing dsl scripts.
-            jobsPattern: ['library/jobdsl/seed/*.groovy'],
+            jobsPattern: ['.unipipe/library/jobdsl/seed/*.groovy'],
         ],
         Druflow: [
             druflowDir: 'druflow',
@@ -155,19 +157,20 @@ params = [
             executeCommand: 'gitGetRepo',
         ],
         Ansible: [
-            playbook: 'library/ansible/deployWithAnsistrano.yml',
+            playbooksDir: '.unipipe/library/ansible',
+            playbook: 'deployWithAnsistrano.yml',
             playbookParams: [
                 ansistrano_deploy_via: 'rsync',
             ],
         ],
         Ansible_deployWithGit: [
-            playbook: 'library/ansible/deployWithGit.yml',
+            playbook: 'deployWithGit.yml',
         ],
         Ansible_deployWithAnsistrano: [
-            playbook: 'library/ansible/deployWithAnsistrano.yml',
+            playbook: 'deployWithAnsistrano.yml',
             playbookParams: [
                 ansistrano_deploy_via: 'rsync',
-                ansistrano_deploy_from: '../../docroot/master/',
+                ansistrano_deploy_from: 'docroot/master',
             ],
         ],
         Common_confirm: [

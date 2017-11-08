@@ -2,32 +2,36 @@
 
 // Pipeline used to create project specific pipelines.
 def call(LinkedHashMap p = [:]) {
-    drupipe { context, pipeline ->
-        drupipeBlock(withDocker: true, nodeName: 'default', dockerImage: context.defaultDocmanImage, pipeline) {
+    drupipe { pipeline ->
+        def block1 = {
             checkout scm
-            drupipeAction(action: 'Docman.info', pipeline)
-            stash name: 'config', includes: "${context.projectConfigPath}/**, library/**, mothership/**', excludes: '.git, .git/**"
+            drupipeAction([action: 'Docman.info'], pipeline)
+            def stashes = pipeline.context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
+            stashes = stashes + ", ${pipeline.context.docmanDir}/config/config.json"
+            stash name: 'config', includes: "${stashes}", excludes: '.git, .git/**'
         }
+        pipeline.blocks << [body: block1, withDocker: true, nodeName: 'default', dockerImage: pipeline.context.defaultDocmanImage]
 
-        drupipeBlock(nodeName: 'master') {
-            checkout scm
-            if (fileExists(context.projectConfigPath)) {
-                dir(context.projectConfigPath) {
+        def block2 = {
+            //checkout scm
+            if (fileExists(pipeline.context.projectConfigPath)) {
+                dir(pipeline.context.projectConfigPath) {
                     deleteDir()
                 }
-                dir('library') {
+                dir('.unipipe/library') {
                     deleteDir()
                 }
-                dir('mothership') {
+                dir('.unipipe/mothership') {
                     deleteDir()
                 }
             }
 
             unstash 'config'
-            if (fileExists("${context.projectConfigPath}/pipelines/jobdsl")) {
-                context.params.action.JobDslSeed_perform.jobsPattern << "${context.projectConfigPath}/pipelines/jobdsl/*.groovy"
+            if (fileExists("${pipeline.context.projectConfigPath}/pipelines/jobdsl")) {
+                pipeline.context.params.action.JobDslSeed_perform.jobsPattern << "${pipeline.context.projectConfigPath}/pipelines/jobdsl/*.groovy"
             }
-            drupipeAction(action: 'JobDslSeed.perform', context)
+            drupipeAction([action: 'JobDslSeed.perform'], pipeline)
         }
+        pipeline.blocks << [body: block2, nodeName: 'master']
     }
 }

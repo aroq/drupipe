@@ -21,8 +21,7 @@ class GitArtifact extends BaseAction {
             """, action.params
         )
 
-        action.pipeline.context.builder.artifactParams.dir = "${action.pipeline.context.workspace}/${action.params.dir}/${action.params.repoDirName}"
+        action.pipeline.context.builder.artifactParams.dir = "${action.params.dir}/${action.params.repoDirName}"
         [:]
     }
 }
-

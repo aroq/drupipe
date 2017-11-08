@@ -6,11 +6,11 @@ def call() {
                     action: 'JobDslSeed.perform',
                     params: [
                         lookupStrategy: 'JENKINS_ROOT',
-                        jobsPattern: ['library/jobdsl/job_dsl_mothership.groovy'],
+                        jobsPattern: ['.unipipe/library/jobdsl/job_dsl_mothership.groovy'],
                         override: true,
                         removedJobAction: 'DELETE',
                         removedViewAction: 'DELETE',
-                        additionalClasspath: ['library/src'],
+                        additionalClasspath: ['.unipipe/library/src'],
                     ],
                     pipeline
                 )

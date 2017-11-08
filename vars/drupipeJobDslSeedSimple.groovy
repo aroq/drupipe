@@ -21,7 +21,7 @@ def call(LinkedHashMap p = [:]) {
             if (fileExists("${pipeline.context.projectConfigPath}/pipelines/jobdsl")) {
                 pipeline.context.params.action.JobDslSeed_perform.jobsPattern << "${pipeline.context.projectConfigPath}/pipelines/jobdsl/*.groovy"
             }
-            drupipeAction(action: 'JobDslSeed.perform', pipeline)
+            drupipeAction([action: 'JobDslSeed.perform'], pipeline)
         }
     }
 }

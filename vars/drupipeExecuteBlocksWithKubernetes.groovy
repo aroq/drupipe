@@ -1,13 +1,13 @@
 import com.github.aroq.drupipe.DrupipeBlock
 
-def call(pipeline, body) {
+def call(pipeline) {
     echo "Container mode: kubernetes"
     def nodeName = 'drupipe'
     def containers = []
 
     ArrayList blocks = pipeline.blocks
-
     ArrayList masterBlocks = []
+    ArrayList k8sBlocks = []
 
     for (def i = 0; i < blocks.size(); i++) {
         if (blocks[i].withDocker) {
@@ -31,6 +31,7 @@ def call(pipeline, body) {
                     secretEnvVar(key: 'GITLAB_API_TOKEN_TEXT', secretName: 'zebra-keys', secretKey: 'zebra_gitlab_api_token'),
                 ],
             ))
+            k8sBlocks += blocks[i]
         }
         else {
             masterBlocks += blocks[i]
@@ -44,32 +45,24 @@ def call(pipeline, body) {
             containers: containers
         ) {
             node(nodeName) {
-                for (def i = 0; i < blocks.size(); i++) {
-                    blocks[i].name = "block${i}"
-                    blocks[i].pipeline = pipeline
-                    if (blocks[i].withDocker) {
+                pipeline.context.workspace = pwd()
+                for (def i = 0; i < k8sBlocks.size(); i++) {
+                    def block = k8sBlocks[i]
+                    if (block.withDocker) {
+//                        block.name = "block${i}"
+                        block.pipeline = pipeline
                         container("block${i}") {
                             pipeline.scmCheckout()
                             unstash('config')
-                            DrupipeBlock block = new DrupipeBlock(blocks[i])
-                            echo 'BLOCK EXECUTE START'
+                            DrupipeBlock drupipe_block = new DrupipeBlock(blocks[i])
+                            echo 'BLOCK EXECUTE START on k8s'
                             sshagent([pipeline.context.credentialsId]) {
-                                block.blockInNode = true
-                                block.execute()
+                                drupipe_block.blockInNode = true
+                                drupipe_block.execute()
                             }
-                            echo 'BLOCK EXECUTE END'
+                            echo 'BLOCK EXECUTE END on k8s'
                         }
                     }
-//                    else {
-//                        pipeline.context.pipeline.scmCheckout()
-//                        unstash('config')
-//                        def block = new DrupipeBlock(blocks[i])
-//                        echo 'BLOCK EXECUTE START'
-//                        sshagent([pipeline.context.credentialsId]) {
-//                            block.execute()
-//                        }
-//                        echo 'BLOCK EXECUTE END'
-//                    }
                 }
             }
         }
@@ -77,16 +70,16 @@ def call(pipeline, body) {
 
     node("master") {
         for (def i = 0; i < masterBlocks.size(); i++) {
-
-//        blocks[i].name = "block${i}"
+            echo "BLOCK EXECUTE START on master node - ${blocks[i].name}"
             masterBlocks[i].pipeline = pipeline
             pipeline.scmCheckout()
             unstash('config')
             def block = new DrupipeBlock(masterBlocks[i])
-            echo 'BLOCK EXECUTE START'
             sshagent([pipeline.context.credentialsId]) {
                 block.execute()
             }
-            echo 'BLOCK EXECUTE END'
+            echo "BLOCK EXECUTE END on master node - ${blocks[i].name}"
         }
     }
+}
+

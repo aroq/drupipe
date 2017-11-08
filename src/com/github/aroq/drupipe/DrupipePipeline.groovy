@@ -30,6 +30,8 @@ class DrupipePipeline implements Serializable {
         try {
             script.timestamps {
                 script.node('master') {
+                    script.echo "Executing pipeline"
+
                     params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 
                     utils.dump(params, params, 'PIPELINE-PARAMS')
@@ -39,10 +41,10 @@ class DrupipePipeline implements Serializable {
                     utils.dump(context, context, 'PIPELINE-CONTEXT')
 
                     // Secret option for emergency remove workspace.
-                    if (context.force == '11') {
-                        script.echo 'FORCE REMOVE DIR'
-                        script.deleteDir()
-                    }
+                }
+
+                if (body) {
+                    body(this)
                 }
 
                 if (!blocks) {
@@ -109,8 +111,10 @@ class DrupipePipeline implements Serializable {
 
                 if (blocks) {
                     if (context.containerMode == 'kubernetes') {
-                        script.drupipeExecuteBlocksWithKubernetes(this, body)
+                        script.echo "Executing blocks in kubernetes mode"
+                        script.drupipeExecuteBlocksWithKubernetes(this)
                     } else {
+                        script.echo "Executing blocks in standard mode"
                         executeBlocks()
                     }
                 }
@@ -118,11 +122,9 @@ class DrupipePipeline implements Serializable {
                     script.echo "No pipeline blocks defined"
                 }
 
-                if (body) {
-                    body(this)
-                }
-
+                // Trigger other jobs if configured.
                 script.node('master') {
+                    script.echo "Trigger other jobs if configured"
                     if (context.job && context.job.trigger) {
                         for (def i = 0; i < context.job.trigger.size(); i++) {
                             def trigger_job = context.job.trigger[i]
@@ -160,13 +162,10 @@ class DrupipePipeline implements Serializable {
 
                               script.build(job: trigger_job.job, wait: false, propagate: false, parameters: params)
                             }
-
                         }
                     }
                 }
             }
-
-            context
         }
         catch (e) {
             notification.status = 'FAILED'
@@ -177,11 +176,7 @@ class DrupipePipeline implements Serializable {
                 notification.status = 'SUCCESSFUL'
             }
             utils.pipelineNotify(context, notification)
-
-            context
         }
-
-        context
     }
 
     def executeStages(stagesToExecute = [:]) {
@@ -276,7 +271,6 @@ class DrupipePipeline implements Serializable {
 
     def executePipelineActionList(actions) {
         def result = [:]
-        this.script.echo("executePipelineActionList actions: ${actions}")
         def actionList = processPipelineActionList(actions)
         try {
             for (action in actionList) {
@@ -312,9 +306,9 @@ class DrupipePipeline implements Serializable {
 
     def scripts_library_load() {
         if (!context.scripts_library_loaded) {
-            def url  = pipelineParam('scripts_library.url')
-            def ref  = pipelineParam('scripts_library.ref')
-            def type = pipelineParam('scripts_library.type')
+            def url  = getParam('scripts_library.url')
+            def ref  = getParam('scripts_library.ref')
+            def type = getParam('scripts_library.type')
 
             // TODO: check for the version ref type)
             if (context.env['library.global.version']) {
@@ -331,7 +325,7 @@ class DrupipePipeline implements Serializable {
                     source: [
                         name: 'library',
                         type: 'git',
-                        path: 'library',
+                        path: '.unipipe/library',
                         url: url,
                         branch: ref,
                         refType: type,
@@ -342,7 +336,7 @@ class DrupipePipeline implements Serializable {
         }
     }
 
-    def pipelineParam(String param) {
+    def getParam(String param) {
         utils.deepGet(this, 'context.params.pipeline.' + param)
     }
 

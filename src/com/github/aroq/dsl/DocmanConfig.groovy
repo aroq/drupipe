@@ -1,4 +1,4 @@
-package com.github.aroq
+package com.github.aroq.dsl
 
 import groovy.json.JsonSlurper
 

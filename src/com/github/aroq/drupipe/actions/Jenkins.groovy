@@ -46,7 +46,7 @@ class Jenkins extends BaseAction {
         action.pipeline.context
     }
 
-    def cli() {
+    def cli(cli_command) {
         // TODO: Remove it after action refactor and tests.
         if (action.params.jenkins_user_token_file) {
             action.params.jenkins_user_token = script.readFile file: action.params.jenkins_user_token_file
@@ -59,7 +59,7 @@ class Jenkins extends BaseAction {
             this.script.withEnv(envvars) {
                 this.script.drupipeShell(
 """
-/jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${this.action.params.command}
+/jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${cli_command}
 """, this.action.params)
             }
         }
@@ -70,49 +70,41 @@ class Jenkins extends BaseAction {
                 this.script.withEnv(envvars) {
                     this.script.drupipeShell(
 """
-/jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${this.action.params.command}
+/jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${cli_command}
 """, this.action.params)
                 }
             }
         }
     }
 
-    def executeCli(envvars) {
+    def build() {
+        cli("build ${this.action.params.args} ${this.action.params.jobName}")
     }
 
-//    def crumb() {
-//        action.params.jenkins_user_token = action.pipeline.context.jenkins_user_token
-//        if (action.params.jenkins_user_token) {
-//            def envvars = ["JENKINS_URL=http://${getJenkinsAddress()}:${this.action.params.port}", "JENKINS_API_TOKEN=${action.params.jenkins_user_token}"]
-//            this.script.withEnv(envvars) {
-//                def result = this.script.drupipeShell("""
-//         """, this.action.pipeline.context.clone() << [return_stdout: true])
-//            }
-//        }
-//
-//       result.stdout
-//    }
-
-    def build() {
-        this.action.params.command = "build ${this.action.params.args} ${this.action.params.jobName}"
-        cli()
+    def buildPrepare(String jobName) {
+        return {
+            cli("build ${this.action.params.args} ${jobName}")
+        }
     }
 
     def seedTest() {
         def mothershipConfig = utils.getMothershipConfigFile(action.pipeline.context)
-        def projects = parseProjects(mothershipConfig).tokenize(',')
+        def projects = parseProjects(mothershipConfig, 'tests', 'seed').tokenize(',')
+        def builds = [:]
         for (def i = 0; i < projects.size(); i++) {
             this.script.echo projects[i]
-            this.action.params.jobName = "${projects[i]}/seed"
-            build()
+//            this.action.params.jobName = "${projects[i]}/seed"
+            builds[i] = buildPrepare("${projects[i]}/seed")
         }
+        script.parallel builds
+        [:]
     }
 
     @NonCPS
-    def parseProjects(def projects) {
+    def parseProjects(def projects, String param, String tag) {
         def result = []
         for (project in projects) {
-            if (project.value?.params?.containsKey('tests') && project.value.params['tests'].contains('seed')) {
+            if (project.value?.params?.containsKey(param) && project.value.params[param].contains(tag)) {
                 result << project.key
             }
         }

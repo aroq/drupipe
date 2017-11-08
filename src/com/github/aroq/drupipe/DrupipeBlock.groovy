@@ -6,7 +6,7 @@ class DrupipeBlock implements Serializable {
 
     String name
 
-    String nodeName = 'use_default'
+    String nodeName
 
     Boolean withDocker = false
 
@@ -20,31 +20,39 @@ class DrupipeBlock implements Serializable {
 
     Boolean blockInNode = false
 
+    def body = null
+
     def utils
 
-    def execute(body = null) {
+    def execute(b = null) {
+        if (b) {
+            this.body = b
+        }
+
         utils = pipeline.utils
 
+        // TODO: check it.
         pipeline.context = utils.merge(pipeline.context, this.config)
 
-        pipeline.script.echo "BLOCK NAME: ${name}"
+        // TODO: refactor it.
+        if (!nodeName) {
+            nodeName = getParam('nodeName')
+        }
+        if (withDocker && !dockerImage) {
+            dockerImage = getParam('dockerImage')
+        }
+        pipeline.context.dockerImage = dockerImage
 
         if (utils.isTriggeredByUser() && name instanceof CharSequence && pipeline.context.jenkinsParams[name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_node_name']) {
             nodeName = pipeline.context.jenkinsParams[name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_node_name']
         }
 
-        if (nodeName == 'use_default') {
-            nodeName = pipeline.context.nodeName
-        }
-
-        if (withDocker && dockerImage == 'use_default') {
-            dockerImage = pipeline.context.dockerImage
-        }
-        pipeline.context.dockerImage = dockerImage
+        pipeline.script.echo "BLOCK NAME: ${name}"
+        pipeline.script.echo "NODE NAME: ${nodeName}"
 
         pipeline.block = this
 
-        if (nodeName && withDocker && pipeline.context.containerMode == 'docker') {
+        if (nodeName && nodeName != 'master' && withDocker && pipeline.context.containerMode == 'docker') {
             pipeline.script.echo "Execute block in ${pipeline.context.containerMode} container mode"
             pipeline.script.echo "NODE NAME: ${nodeName}"
             pipeline.script.node(nodeName) {
@@ -68,7 +76,7 @@ class DrupipeBlock implements Serializable {
                 }
             }
         }
-        else if (withDocker && pipeline.context.containerMode == 'kubernetes') {
+        else if (nodeName != 'master' && withDocker && pipeline.context.containerMode == 'kubernetes') {
             pipeline.script.echo "Execute block in ${pipeline.context.containerMode} container mode"
             if (this.blockInNode) {
                 pipeline.script.echo "Pod template is already defined"
@@ -101,5 +109,9 @@ class DrupipeBlock implements Serializable {
                 body()
             }
         }
+    }
+
+    def getParam(String param) {
+        utils.deepGet(this, 'context.params.block.' + param)
     }
 }

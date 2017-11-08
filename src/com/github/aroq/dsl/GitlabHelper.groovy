@@ -1,4 +1,4 @@
-package com.github.aroq
+package com.github.aroq.dsl
 
 @Grab('org.codehaus.groovy.modules.http-builder:http-builder:0.7')
 import groovyx.net.http.HTTPBuilder
@@ -19,7 +19,7 @@ class GitlabHelper {
         config.repoParams.projectID     = "${config.repoParams.groupName}%2F${config.repoParams.projectName}"
     }
 
-    def addWebhook(String repo, url) {
+    def addWebhook(String repo, url, hookData = [:]) {
         setRepoProperties(repo)
         def hook_id = null
         getWebhooks(repo).each { hook ->
@@ -33,6 +33,7 @@ class GitlabHelper {
             'PRIVATE-TOKEN': config.env.GITLAB_API_TOKEN_TEXT,
         ])
         def data = [id: "${config.repoParams.groupName}/${config.repoParams.projectName}", url: url, push_events: true]
+        data << hookData
         try {
             if (hook_id) {
                 data << [hook_id: hook_id]
@@ -103,6 +104,25 @@ class GitlabHelper {
         }
     }
 
+    def getBranches(String repo) {
+        setRepoProperties(repo)
+        def url = "https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/repository/branches?private_token=${config.env.GITLAB_API_TOKEN_TEXT}"
+        def branches = new groovy.json.JsonSlurper().parseText(new URL(url).text)
+        branches
+    }
+
+    def getBranch(String repo, String branch) {
+        setRepoProperties(repo)
+        try {
+            def url = "https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/repository/branches/${branch}?private_token=${config.env.GITLAB_API_TOKEN_TEXT}"
+            def branch_obj = new groovy.json.JsonSlurper().parseText(new URL(url).text)
+            return branch_obj
+        }
+        catch (Exception e) {
+            return false
+        }
+    }
+
     def getWebhooks(String repo) {
         setRepoProperties(repo)
         def url = "https://${config.repoParams.gitlabAddress}/api/v3/projects/${config.repoParams.projectID}/hooks?private_token=${config.env.GITLAB_API_TOKEN_TEXT}"
@@ -133,4 +153,9 @@ class GitlabHelper {
         script.println users
         users
     }
+
+    def isGitlabRepo(repo, config) {
+        config.env.GITLAB_HOST && repo.contains(config.env.GITLAB_HOST)
+    }
+
 }
