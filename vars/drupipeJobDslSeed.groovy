@@ -10,7 +10,7 @@ def call(LinkedHashMap p = [:]) {
             stashes = stashes + ", ${pipeline.context.docmanDir}/config/config.json"
             stash name: 'config', includes: "${stashes}", excludes: '.git, .git/**'
         }
-        pipeline.blocks << [body: block1, withDocker: true, nodeName: 'default', dockerImage: pipeline.context.defaultDocmanImage]
+        pipeline.blocks << [pipeline: pipeline, body: block1, withDocker: true, nodeName: 'default', dockerImage: pipeline.context.defaultDocmanImage]
 
         def block2 = {
             //checkout scm
@@ -32,6 +32,6 @@ def call(LinkedHashMap p = [:]) {
             }
             drupipeAction([action: 'JobDslSeed.perform'], pipeline)
         }
-        pipeline.blocks << [body: block2, nodeName: 'master']
+        pipeline.blocks << [pipeline: pipeline, body: block2, nodeName: 'master']
     }
 }
