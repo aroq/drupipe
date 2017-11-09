@@ -102,9 +102,7 @@ class DrupipeActionWrapper implements Serializable {
                 }
 
                 try {
-                    this.script.echo "Call hook_${this.methodName}_preprocess()"
-                    this.result = actionInstance."${this.methodName}"()
-
+                    this.script.echo "${this.methodName}_Call hook_preprocess()"
                     actionInstance."${this.methodName}_hook_preprocess"()
                 }
                 catch (err) {
