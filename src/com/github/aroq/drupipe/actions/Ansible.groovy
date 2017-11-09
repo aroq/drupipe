@@ -87,8 +87,8 @@ class Ansible extends BaseAction {
         }
         action.pipeline.scripts_library_load()
 
+        // TODO: Make it centralized.
         String vaultPassFile
-
         if (action.pipeline.context.containerMode == 'kubernetes') {
             this.script.drupipeShell("""
             echo "\${ANSIBLE_VAULT_PASS_FILE}" > .vault_pass
