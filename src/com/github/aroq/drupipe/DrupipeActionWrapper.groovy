@@ -101,6 +101,16 @@ class DrupipeActionWrapper implements Serializable {
                     // No preprocess defined.
                 }
 
+                try {
+                    this.script.echo "Call hook_${this.methodName}_preprocess()"
+                    this.result = actionInstance."${this.methodName}"()
+
+                    actionInstance."${this.methodName}_hook_preprocess"()
+                }
+                catch (err) {
+                    // No preprocess defined.
+                }
+
                 utils.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
                 // TODO: Store processed action params in pipeline.context (pipeline.context.actions['action_name']) to allow use it for interpolation in other actions.
             }
