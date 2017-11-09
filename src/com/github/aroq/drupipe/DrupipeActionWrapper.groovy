@@ -180,7 +180,6 @@ class DrupipeActionWrapper implements Serializable {
             if (context) {
                 pipeline.context = pipeline.context ? utils.merge(pipeline.context, context) : context
             }
-            utils.debugLog(pipeline.context, pipeline.context, '!!!pipeline.context', [debugMode: 'json'], [], true)
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
             this.result
