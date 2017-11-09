@@ -22,7 +22,7 @@ echo "\${${action.params.access_key_file_id}}" > .google_access_key_file
 """
                 , this.action.params
             )
-            access_key_file = action.params.workingDir != '.' ? '../.google_access_key_file' : '.google_access_key_file'
+            access_key_file = action.params.workingDir != '.' ? '.google_access_key_file' : '.google_access_key_file'
         }
         else {
             access_key_file = "\${${action.params.access_key_file_id}}"
