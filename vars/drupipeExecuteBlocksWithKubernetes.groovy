@@ -50,6 +50,7 @@ def call(pipeline) {
                     def block = k8sBlocks[i]
                     if (block.withDocker) {
 //                        block.name = "block${i}"
+                        block.nodeName = nodeName
                         block.pipeline = pipeline
                         container("block${i}") {
                             pipeline.scmCheckout()
