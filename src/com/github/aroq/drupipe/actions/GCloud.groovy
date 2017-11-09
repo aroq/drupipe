@@ -18,7 +18,7 @@ class GCloud extends BaseAction {
         if (action.pipeline.context.containerMode == 'kubernetes') {
             this.script.drupipeShell(
 """
-echo "\${${action.params.access_key_file_id}" > .google_access_key_file
+echo "\${${action.params.access_key_file_id}}" > .google_access_key_file
 """
                 , this.action.params
             )
