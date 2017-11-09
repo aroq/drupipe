@@ -47,6 +47,8 @@ params = [
         ],
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
+            debugEnabled: true,
+            dump_result: true,
             post_process: [
                 context: [
                     type: 'result',
