@@ -335,12 +335,17 @@ def getMothershipConfigFile(params) {
             def file = readFile(projectsFile)
             if (file) {
                 if (extension in ['yaml', 'yml']) {
+                    echo "getMothershipConfigFile: load file: ${file}"
                     return readYaml(text: file).projects
                 }
                 else if (extension == 'json') {
+                    echo "getMothershipConfigFile: load file: ${file}"
                     return readJSON(text: file).projects
                 }
             }
+        }
+        else {
+            echo "getMothershipConfigFile: file: ${file} doesn't exist"
         }
     }
     throw new Exception("getMothershipConfigFile: mothership config file not found.")

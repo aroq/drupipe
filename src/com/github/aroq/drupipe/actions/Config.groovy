@@ -200,6 +200,8 @@ class Config extends BaseAction {
             def mothershipServers = this.utils.getMothershipServersFile(result)
             utils.debugLog(mothershipServers, action.pipeline.context, 'mothershipServers', [debugMode: 'json'], [], true)
 
+            script.echo ""
+
             result = utils.merge(result, mothershipConfig[action.pipeline.context.jenkinsFolderName])
             result = utils.merge(result, [jenkinsServers: mothershipServers])
 
