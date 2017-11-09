@@ -93,7 +93,7 @@ class DrupipeActionWrapper implements Serializable {
             // TODO: Make sure only allowed credentials could be used. Control it with projects.yaml in mothership config.
             ArrayList credentials = []
             // Do not use credentials in k8s mode.
-            if (actionParams.credentials && context.containerMode != 'kubernetes') {
+            if (actionParams.credentials && pipeline.context.containerMode != 'kubernetes') {
                 actionParams.credentials.each { k, v ->
                     if (v.type == 'file') {
                         v.variable_name = v.variable_name ? v.variable_name : v.id
