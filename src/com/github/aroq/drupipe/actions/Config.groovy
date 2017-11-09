@@ -200,10 +200,13 @@ class Config extends BaseAction {
             def mothershipServers = this.utils.getMothershipServersFile(result)
             utils.debugLog(action.pipeline.context, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], true)
 
-            script.echo ""
+            def mothershipProjectConfig = mothershipConfig[action.pipeline.context.jenkinsFolderName]
+            script.echo "mothershipProjectConfig: ${mothershipProjectConfig}"
 
-            result = utils.merge(result, mothershipConfig[action.pipeline.context.jenkinsFolderName])
+            result = utils.merge(result, mothershipProjectConfig)
+            utils.debugLog(action.pipeline.context, result, 'mothershipServer result after merge', [debugMode: 'json'], [], true)
             result = utils.merge(result, [jenkinsServers: mothershipServers])
+            utils.debugLog(action.pipeline.context, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], true)
 
 //            this.configRepo = result.configRepo
         }
