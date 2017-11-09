@@ -196,9 +196,9 @@ class Config extends BaseAction {
             ]
             result = action.pipeline.executePipelineActionList(providers)
             def mothershipConfig = this.utils.getMothershipConfigFile(result)
-            utils.debugLog(mothershipConfig, action.pipeline.context, 'mothershipConfig', [debugMode: 'json'], [], true)
+            utils.debugLog(action.pipeline.context, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], true)
             def mothershipServers = this.utils.getMothershipServersFile(result)
-            utils.debugLog(mothershipServers, action.pipeline.context, 'mothershipServers', [debugMode: 'json'], [], true)
+            utils.debugLog(action.pipeline.context, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], true)
 
             script.echo ""
 
