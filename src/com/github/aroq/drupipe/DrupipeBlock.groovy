@@ -43,6 +43,8 @@ class DrupipeBlock implements Serializable {
         }
         pipeline.context.dockerImage = dockerImage
 
+        pipeline.script.echo "NODE NAME: ${nodeName}"
+
         if (utils.isTriggeredByUser() && name instanceof CharSequence && pipeline.context.jenkinsParams[name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_node_name']) {
             nodeName = pipeline.context.jenkinsParams[name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_node_name']
         }

@@ -55,12 +55,12 @@ def call(pipeline) {
                             pipeline.scmCheckout()
                             unstash('config')
                             DrupipeBlock drupipe_block = new DrupipeBlock(blocks[i])
-                            echo 'BLOCK EXECUTE START on k8s'
+                            echo "BLOCK EXECUTE START on k8s, nodeName=${nodeName}"
                             sshagent([pipeline.context.credentialsId]) {
                                 drupipe_block.blockInNode = true
                                 drupipe_block.execute()
                             }
-                            echo 'BLOCK EXECUTE END on k8s'
+                            echo "BLOCK EXECUTE END on k8s, nodeName=${nodeName}"
                         }
                     }
                 }
