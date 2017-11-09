@@ -27,7 +27,7 @@ if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
     config.gitlabHelper = new GitlabHelper(script: this, config: config)
 }
 
-config.dslHelper = new config.dslHelper(script: this, config: config)
+config.dslHelper = new DslHelper(script: this, config: config)
 config.dslParamsHelper = new DslParamsHelper(script: this, config: config)
 
 if (config.jobs) {
