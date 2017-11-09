@@ -16,7 +16,7 @@ class Helm extends BaseAction {
         executeHelmCommand()
     }
 
-    def apply_hook_preprocess() {
+    def hook_apply_preprocess() {
         script.echo "Inside hook_preprocess()"
         if (action.pipeline.context.containerMode == 'kubernetes') {
             this.script.drupipeShell("""
