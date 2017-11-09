@@ -16,21 +16,20 @@ class Helm extends BaseAction {
         executeHelmCommand()
     }
 
-    def apply() {
-        String helmSecretsFile
+    def hook_preprocess() {
         if (action.pipeline.context.containerMode == 'kubernetes') {
-            this.script.drupipeShell(
+            this.script.drupipeShell("""
 
-"""
 echo "\${${action.params.secret_values_file_id}}" > .google_access_key_file
+
 """, this.action.params
 
             )
             action.params.secret_values_file = action.params.workingDir != '.' ? '.secret_values_file_id' : '.secret_values_file_id'
         }
-//        else {
-//            helmSecretsFile = "\${${action.params.secret_values_file_id}}"
-//        }
+    }
+
+    def apply() {
         executeHelmCommand()
     }
 
