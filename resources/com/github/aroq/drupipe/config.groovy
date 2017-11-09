@@ -47,8 +47,6 @@ params = [
         ],
         // TODO: add params subsections (that will be containerized inside common config).
         Config: [
-            debugEnabled: true,
-            dump_result: true,
             post_process: [
                 context: [
                     type: 'result',
@@ -64,8 +62,6 @@ params = [
         Config_envConfig: [
         ],
         JobDslSeed: [
-            debugEnabled: true,
-            dump_result: true,
         ],
         Config_mothershipConfig: [
             mothershipConfigFile: 'mothership.config',
@@ -209,6 +205,8 @@ params = [
             deployFile: 'unipipe.y*ml',
         ],
         GCloud: [
+            debugEnabled: true,
+            dump_result: true,
             executable: 'gcloud',
             kubectl_config_file: '.kubeconfig',
             env: [
