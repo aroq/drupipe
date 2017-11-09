@@ -474,6 +474,8 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                 else if (config.webhooksEnvironments) {
                     webhook_tags = config.webhooksEnvironments
                 }
+                println "config.webhooksEnvironments: ${config.webhooksEnvironments}"
+                println "config.params.webhooksEnvironments: ${config.params.webhooksEnvironments}"
                 println "job.value.webhooks: ${job.value.webhooks}"
                 println "webhook_tags: ${webhook_tags}"
                 println "config.env.drupipeEnvironment: ${config.env.drupipeEnvironment}"
