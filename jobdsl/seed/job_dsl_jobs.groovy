@@ -328,6 +328,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                         name('origin')
                                         url(config.configRepo)
                                         credentials(config.credentialsId)
+                                        branch('master')
                                     }
                                     extensions {
                                         relativeTargetDirectory(config.projectConfigPath)
