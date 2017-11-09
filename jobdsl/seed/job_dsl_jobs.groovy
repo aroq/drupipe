@@ -472,6 +472,10 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                 else if (config.webhooksEnvironments) {
                     webhook_tags = config.webhooksEnvironments
                 }
+                println "job.value.webhooks: ${job.value.webhooks}"
+                println "webhook_tags: ${webhook_tags}"
+                println "config.env.drupipeEnvironment: ${config.env.drupipeEnvironment}"
+                println "config.jenkinsServers: ${config.jenkinsServers}"
                 if (job.value.webhooks && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
                     println "Create webhooks..."
                     job.value.webhooks.each { hook ->
