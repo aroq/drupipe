@@ -571,20 +571,12 @@ def serializeAndDeserialize(params) {
     def yamlFilePath = '.unipipe/temp/serializeAndDeserialize.yaml'
     if (params) {
         if (fileExists(yamlFilePath)) {
-            echo "serializeAndDeserialize: File exists: ${yamlFilePath}"
-            sh("pwd")
-            sh(script: "ls -al .unipipe/temp/")
-            sh("whoami")
-            def status = sh(returnStatus: true, script: "rm -f ${yamlFilePath} >> output.txt")
-            if (status != 0) {
-                echo "output: ${readFile('output.txt').trim()}"
-            }
+            sh("rm -f ${yamlFilePath} >> output.txt")
         }
         writeYaml(file: yamlFilePath, data: params)
         if (fileExists(yamlFilePath)) {
             result = readYaml(file: yamlFilePath)
         }
-//        debugLog(result, result, "serializeAndDeserialize.RESULT", [debugMode: 'json'], [])
     }
     result
 
