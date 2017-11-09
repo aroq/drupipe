@@ -21,7 +21,7 @@ class Helm extends BaseAction {
         if (action.pipeline.context.containerMode == 'kubernetes') {
             this.script.drupipeShell("""
 
-echo "\${${action.params.secret_values_file_id}}" > .google_access_key_file
+echo "\${${action.params.secret_values_file_id}}" > secret_values_file_id.
 
 """, this.action.params
 
