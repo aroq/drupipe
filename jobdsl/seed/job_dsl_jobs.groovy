@@ -1,6 +1,6 @@
 import com.github.aroq.dsl.DocmanConfig
 import com.github.aroq.dsl.GitlabHelper
-import com.github.aroq.dsl.DslHelper
+import com.github.aroq.dsl.config.dslHelper
 import com.github.aroq.dsl.DslParamsHelper
 
 println "Subjobs Job DSL processing"
@@ -27,7 +27,7 @@ if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
     config.gitlabHelper = new GitlabHelper(script: this, config: config)
 }
 
-config.dslHelper = new DslHelper(script: this, config: config)
+config.dslHelper = new config.dslHelper(script: this, config: config)
 config.dslParamsHelper = new DslParamsHelper(script: this, config: config)
 
 if (config.jobs) {
@@ -231,7 +231,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                     }
                                     println "Webhook Tags: ${webhook_tags}"
                                     if (webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
-                                        def tag_servers = dslHelper.getServersByTags(webhook_tags, config.jenkinsServers)
+                                        def tag_servers = config.dslHelper.getServersByTags(webhook_tags, config.jenkinsServers)
                                         config.gitlabHelper.deleteWebhook(
                                             project.value.repo,
                                             tag_servers,
@@ -268,7 +268,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                 }
                                 println "Webhook Tags: ${webhook_tags}"
                                 if (webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
-                                    def tag_servers = dslHelper.getServersByTags(webhook_tags, config.jenkinsServers)
+                                    def tag_servers = config.dslHelper.getServersByTags(webhook_tags, config.jenkinsServers)
                                     config.gitlabHelper.deleteWebhook(
                                         config.configRepo,
                                         tag_servers,
@@ -345,7 +345,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                 def seedRepo = config.configRepo
                 def localConfig = config.clone()
                 if (job.value.context) {
-                    localConfig = dslHelper.merge(localConfig, job.value.context)
+                    localConfig = config.dslHelper.merge(localConfig, job.value.context)
                 }
 //                println "Local config: ${localConfig}"
                 // Define repository that will be used for pipelines retrieve and execution.
@@ -481,7 +481,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                 if (job.value.webhooks && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
                     println "Create webhooks..."
                     job.value.webhooks.each { hook ->
-                        def tag_servers = dslHelper.getServersByTags(webhook_tags, config.jenkinsServers)
+                        def tag_servers = config.dslHelper.getServersByTags(webhook_tags, config.jenkinsServers)
                         config.gitlabHelper.deleteWebhook(
                             pipelinesRepo,
                             tag_servers,
