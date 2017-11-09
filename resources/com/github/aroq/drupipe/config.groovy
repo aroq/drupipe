@@ -275,6 +275,7 @@ params = [
             values_file: '${action.params.chart_name}.${action.params.value_suffix}',
             env_values_file: '${context.environment}.${action.params.values_file}',
             secret_values_file_id: '',
+            secret_values_file: '\\\$${action.params.secret_values_file_id}', // To interpolate first "$" sign inside shell script.
             chart_dir: '${action.params.charts_dir}/${action.params.chart_name}',
             credentials: [
                 secret_values_file: [
@@ -291,7 +292,7 @@ params = [
                 '-f': [
                     '${action.params.values_file}',
                     '${action.params.env_values_file}',
-                    '\\\$${action.params.secret_values_file_id}', // To interpolate first "$" sign inside shell script.
+                    '${action.params.secret_values_file}',
                 ]
             ],
             full_command: [
