@@ -1,6 +1,6 @@
 import com.github.aroq.dsl.DocmanConfig
 import com.github.aroq.dsl.GitlabHelper
-import com.github.aroq.dsl.config.dslHelper
+import com.github.aroq.dsl.DslHelper
 import com.github.aroq.dsl.DslParamsHelper
 
 println "Subjobs Job DSL processing"
