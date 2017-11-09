@@ -45,11 +45,10 @@ class DrupipeBlock implements Serializable {
         }
         pipeline.context.dockerImage = dockerImage
 
-        pipeline.script.echo "NODE NAME: ${nodeName}"
-
-        if (utils.isTriggeredByUser() && name instanceof CharSequence && pipeline.context.jenkinsParams[name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_node_name']) {
-            nodeName = pipeline.context.jenkinsParams[name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_node_name']
-        }
+        // TODO: Make it work ONLY if block's selection is enabled.
+//        if (utils.isTriggeredByUser() && name instanceof CharSequence && pipeline.context.jenkinsParams[name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_node_name']) {
+//            nodeName = pipeline.context.jenkinsParams[name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_node_name']
+//        }
 
         pipeline.script.echo "BLOCK NAME: ${name}"
         pipeline.script.echo "NODE NAME AFTER: ${nodeName}"
