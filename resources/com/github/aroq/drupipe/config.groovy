@@ -63,6 +63,10 @@ params = [
         ],
         Config_envConfig: [
         ],
+        JobDslSeed: [
+            debugEnabled: true,
+            dump_result: true,
+        ],
         Config_mothershipConfig: [
             mothershipConfigFile: 'mothership.config',
             post_process: [
