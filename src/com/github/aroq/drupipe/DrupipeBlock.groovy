@@ -34,6 +34,8 @@ class DrupipeBlock implements Serializable {
         // TODO: check it.
         pipeline.context = utils.merge(pipeline.context, this.config)
 
+        pipeline.script.echo "NODE NAME BEFORE: ${nodeName}"
+
         // TODO: refactor it.
         if (!nodeName) {
             nodeName = getParam('nodeName')
@@ -50,7 +52,7 @@ class DrupipeBlock implements Serializable {
         }
 
         pipeline.script.echo "BLOCK NAME: ${name}"
-        pipeline.script.echo "NODE NAME: ${nodeName}"
+        pipeline.script.echo "NODE NAME AFTER: ${nodeName}"
 
         pipeline.block = this
 
