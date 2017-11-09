@@ -80,13 +80,13 @@ params = [
         Config_projectConfig: [
         ],
         Source: [
-            post_process: [
-                context: [
-                    type: 'result',
-                    source: 'result',
-                    destination: 'context',
-                ],
-            ],
+//            post_process: [
+//                context: [
+//                    type: 'result',
+//                    source: 'result',
+//                    destination: 'context',
+//                ],
+//            ],
         ],
         YamlFileConfig: [
         ],
