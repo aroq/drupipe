@@ -1,5 +1,6 @@
 import com.github.aroq.dsl.DocmanConfig
 import com.github.aroq.dsl.GitlabHelper
+import com.github.aroq.dsl.DslHelper
 import com.github.aroq.dsl.DslParamsHelper
 
 println "Subjobs Job DSL processing"
@@ -26,6 +27,7 @@ if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
     config.gitlabHelper = new GitlabHelper(script: this, config: config)
 }
 
+config.dslHelper = new DslHelper(script: this, config: config)
 config.dslParamsHelper = new DslParamsHelper(script: this, config: config)
 
 if (config.jobs) {
@@ -229,7 +231,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                     }
                                     println "Webhook Tags: ${webhook_tags}"
                                     if (webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
-                                        def tag_servers = getServersByTags(webhook_tags, config.jenkinsServers)
+                                        def tag_servers = dslHelper.getServersByTags(webhook_tags, config.jenkinsServers)
                                         config.gitlabHelper.deleteWebhook(
                                             project.value.repo,
                                             tag_servers,
@@ -266,7 +268,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                                 }
                                 println "Webhook Tags: ${webhook_tags}"
                                 if (webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
-                                    def tag_servers = getServersByTags(webhook_tags, config.jenkinsServers)
+                                    def tag_servers = dslHelper.getServersByTags(webhook_tags, config.jenkinsServers)
                                     config.gitlabHelper.deleteWebhook(
                                         config.configRepo,
                                         tag_servers,
@@ -343,7 +345,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                 def seedRepo = config.configRepo
                 def localConfig = config.clone()
                 if (job.value.context) {
-                    localConfig = merge(localConfig, job.value.context)
+                    localConfig = dslHelper.merge(localConfig, job.value.context)
                 }
 //                println "Local config: ${localConfig}"
                 // Define repository that will be used for pipelines retrieve and execution.
@@ -479,7 +481,7 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
                 if (job.value.webhooks && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
                     println "Create webhooks..."
                     job.value.webhooks.each { hook ->
-                        def tag_servers = getServersByTags(webhook_tags, config.jenkinsServers)
+                        def tag_servers = dslHelper.getServersByTags(webhook_tags, config.jenkinsServers)
                         config.gitlabHelper.deleteWebhook(
                             pipelinesRepo,
                             tag_servers,
@@ -661,85 +663,3 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
     }
 }
 
-ArrayList getNodeParams(job, config) {
-    ArrayList result = []
-    def labels = jenkins.model.Jenkins.instance.getLabels()
-    if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
-        for (pipeline_block in job.value.pipeline.blocks) {
-            def entry = [:]
-            if (config.blocks.containsKey(pipeline_block)) {
-                def block_config = config.blocks[pipeline_block]
-                if (block_config.containsKey('nodeName')) {
-                    entry.nodeName = block_config['nodeName']
-                    println "Default nodeName for ${pipeline_block}: ${entry.node_name}"
-                    entry.nodeParamName = pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name'
-                    entry.labels = labels
-                    result += entry
-                }
-            }
-        }
-    }
-    result
-}
-
-Map merge(Map[] sources) {
-    if (sources.length == 0) return [:]
-    if (sources.length == 1) return sources[0]
-
-    sources.inject([:]) { result, source ->
-        if (source && source.containsKey('override') && source['override']) {
-            result = source
-        }
-        else {
-            source.each { k, v ->
-                if (result[k] instanceof Map && v instanceof Map ) {
-                    if (v.containsKey('override') && v['override']) {
-                        v.remove('override')
-                        result[k] = v
-                    }
-                    else {
-                        result[k] = merge(result[k], v)
-                    }
-                }
-                else if (result[k] instanceof List && v instanceof List) {
-                    result[k] += v
-                    result[k] = result[k].unique()
-                }
-                else {
-                    result[k] = v
-                }
-            }
-        }
-        result
-    }
-}
-
-def sourcePath(params, sourceName, String path) {
-    if (sourceName in params.loadedSources) {
-        println "sourcePath: " + params.loadedSources[sourceName].path + '/' + path
-        params.loadedSources[sourceName].path + '/' + path
-    }
-}
-
-def sourceDir(params, sourceName) {
-    if (sourceName in params.loadedSources) {
-        println "sourceDir: " + params.loadedSources[sourceName].path
-        params.loadedSources[sourceName].path
-    }
-}
-
-def getServersByTags(tags, servers) {
-    def result = [:]
-    if (tags && tags instanceof ArrayList) {
-        for (def i = 0; i < tags.size(); i++) {
-            def tag = tags[i]
-            for (server in servers) {
-                if (server.value?.tags && tag in server.value?.tags && server.value?.jenkinsUrl) {
-                    result << ["${server.key}": server.value]
-                }
-            }
-        }
-    }
-    println "getServersByTags: ${result}"
-    result
-}

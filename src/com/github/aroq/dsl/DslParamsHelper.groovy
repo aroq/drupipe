@@ -4,10 +4,6 @@ import jenkins.model.Jenkins
 
 class DslParamsHelper {
 
-    def script
-
-    def config
-
     ArrayList getNodeParams(job, config) {
         ArrayList result = []
         def jenkins = Jenkins.instance
