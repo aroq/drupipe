@@ -571,6 +571,7 @@ def serializeAndDeserialize(params) {
     def yamlFilePath = '.unipipe/temp/serializeAndDeserialize.yaml'
     if (params) {
         if (fileExists(yamlFilePath)) {
+            echo "serializeAndDeserialize: File exists: ${yamlFilePath}"
             sh("rm -f ${yamlFilePath}")
         }
         writeYaml(file: yamlFilePath, data: params)
