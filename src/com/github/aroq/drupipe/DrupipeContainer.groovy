@@ -4,6 +4,8 @@ class DrupipeContainer implements Serializable {
 
     String name
 
+    String image
+
     ArrayList<DrupipeBlock> blocks = []
 
     DrupipeController controller
