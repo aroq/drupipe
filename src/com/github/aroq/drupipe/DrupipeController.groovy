@@ -102,7 +102,9 @@ class DrupipeController implements Serializable {
 
                 if (configVersion() > 1) {
                     preprocessConfig()
-                    utils.debugLog(context, utils.serializeAndDeserialize(job), 'JOB', [debugMode: 'json'], [], true)
+                    script.node(master) {
+                        utils.debugLog(context, utils.serializeAndDeserialize(job), 'JOB', [debugMode: 'json'], [], true)
+                    }
                 }
                 else {
                     if (!blocks) {
