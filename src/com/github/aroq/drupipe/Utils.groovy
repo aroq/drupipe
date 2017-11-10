@@ -571,7 +571,7 @@ def serializeAndDeserialize(params) {
     def yamlFilePath = '.unipipe/temp/serializeAndDeserialize.yaml'
     if (params) {
         if (fileExists(yamlFilePath)) {
-            sh("rm -f ${yamlFilePath} >> output.txt")
+            sh("rm -f ${yamlFilePath}")
         }
         writeYaml(file: yamlFilePath, data: params)
         if (fileExists(yamlFilePath)) {
@@ -579,7 +579,6 @@ def serializeAndDeserialize(params) {
         }
     }
     result
-
 }
 
 def stripContext(context) {

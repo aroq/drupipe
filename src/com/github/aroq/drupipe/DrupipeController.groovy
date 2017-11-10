@@ -87,6 +87,15 @@ class DrupipeController implements Serializable {
         context.config_version as int
     }
 
+    def serializeContext(path, context) {
+        if (params) {
+            if (fileExists(path)) {
+                sh("rm -f ${path}")
+            }
+            writeYaml(file: path, data: params)
+        }
+    }
+
     def config() {
         script.node('master') {
             script.echo "Executing pipeline"
@@ -97,6 +106,10 @@ class DrupipeController implements Serializable {
             utils.dump(params, config, 'PIPELINE-CONFIG')
 
             script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params]], this)
+            def contextDumpPath = '.unipipe/temp/context.yaml'
+            serializeContext(contextDumpPath, context)
+            this.script.archiveArtifacts artifacts: contextDumpPath
+
             utils.dump(context, context, 'PIPELINE-CONTEXT')
 
             // Secret option for emergency remove workspace.
@@ -121,7 +134,6 @@ class DrupipeController implements Serializable {
                 if (configVersion() > 1) {
                     preprocessConfig()
                     script.node('master') {
-                        utils.debugLog(context, context, 'JOB', [debugMode: 'json'], [], true)
                         utils.debugLog(context, job.pipeline.name, 'JOB', [debugMode: 'json'], [], true)
                     }
                 }
