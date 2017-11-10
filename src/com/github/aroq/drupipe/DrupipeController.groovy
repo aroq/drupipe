@@ -87,12 +87,17 @@ class DrupipeController implements Serializable {
         context.config_version as int
     }
 
-    def serializeContext(path, context) {
+    def serializeContext(path, context, mode = 'yaml') {
         if (context) {
             if (script.fileExists(path)) {
                 script.sh("rm -f ${path}")
             }
-            script.writeYaml(file: path, data: context)
+            if (mode == 'yaml') {
+                script.writeYaml(file: path, data: context)
+            }
+            else if (mode == 'json') {
+                script.writeJson(file: path, data: context)
+            }
         }
     }
 
@@ -108,6 +113,9 @@ class DrupipeController implements Serializable {
             script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params]], this)
             def contextDumpPath = '.unipipe/temp/context.yaml'
             serializeContext(contextDumpPath, context)
+            this.script.archiveArtifacts artifacts: contextDumpPath
+            contextDumpPath = '.unipipe/temp/context.json'
+            serializeContext(contextDumpPath, context, 'json')
             this.script.archiveArtifacts artifacts: contextDumpPath
 
             utils.dump(context, context, 'PIPELINE-CONTEXT')
