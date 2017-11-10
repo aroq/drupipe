@@ -51,7 +51,7 @@ class DrupipeController implements Serializable {
         if (object instanceof Map) {
             result = [:]
             for (item in object) {
-                if (object instanceof Map) {
+                if (item instanceof Map) {
                     result[item.key] = processConfigItem(processFrom(item.value))
                 }
                 else {
