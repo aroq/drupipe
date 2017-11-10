@@ -24,18 +24,6 @@ class DrupipeController implements Serializable {
 
     DrupipeJob job
 
-//    def processFromValue() {
-//        if (object.containsKey('from')) {
-//            if (object.from instanceof CharSequence) {
-//                def fromObject = utils.deepGet(this, 'context.params.' + object.from)
-//                if (fromObject) {
-//                    fromObject = processFrom(fromObject)
-//                }
-//            }
-//        }
-//
-//   }
-
     LinkedHashMap processFrom(LinkedHashMap object) {
         LinkedHashMap result = object.clone()
         if (object.containsKey('from')) {
@@ -60,7 +48,7 @@ class DrupipeController implements Serializable {
     def preprocessConfig() {
         if (configVersion() > 1) {
             if (context.job) {
-               job = new DrupipeJob(processFrom(context.job) << [controller: this])
+               job = new DrupipeJob(processFrom(context.job) << [controller: this, pipeline: processFrom(context.job.pipeline)])
             }
         }
     }
@@ -103,7 +91,7 @@ class DrupipeController implements Serializable {
                 if (configVersion() > 1) {
                     preprocessConfig()
                     script.node('master') {
-                        utils.debugLog(context, utils.serializeAndDeserialize(job.pipeline), 'JOB', [debugMode: 'json'], [], true)
+                        utils.debugLog(context, utils.serializeAndDeserialize(job.pipeline.name), 'JOB', [debugMode: 'json'], [], true)
                     }
                 }
                 else {

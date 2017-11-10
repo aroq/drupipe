@@ -16,9 +16,9 @@ class DrupipeJob implements Serializable {
 
     def context
 
-    def pipeline
+//    def pipeline
 
-    DrupipePipeline drupipePipeline
+    DrupipePipeline pipeline
 
     DrupipeController controller
 
