@@ -14,7 +14,7 @@ class DrupipeBlock implements Serializable {
 
     LinkedHashMap config = [:]
 
-    DrupipePipeline pipeline
+    DrupipeController pipeline
 
     DrupipeStage stage
 

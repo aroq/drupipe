@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe
 
-class DrupipePipeline implements Serializable {
+class DrupipeController implements Serializable {
 
     ArrayList<DrupipeBlock> blocks = []
 

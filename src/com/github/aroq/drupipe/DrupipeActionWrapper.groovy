@@ -12,7 +12,7 @@ class DrupipeActionWrapper implements Serializable {
 
     HashMap notification = [:]
 
-    DrupipePipeline pipeline
+    DrupipeController pipeline
 
     def script
 
