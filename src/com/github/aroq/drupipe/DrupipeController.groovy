@@ -96,7 +96,8 @@ class DrupipeController implements Serializable {
                 script.writeYaml(file: path, data: context)
             }
             else if (mode == 'json') {
-                script.writeJSON(file: path, json: context)
+                def outJson = groovy.json.JsonOutput.toJson(context)
+                script.writeFile file: path, text: outJson, encoding: 'UTF-8'
             }
         }
     }
