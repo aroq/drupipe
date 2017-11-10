@@ -27,7 +27,6 @@ class Config extends BaseAction {
                     // We need to pass params as "context" is not ready yet.
                     store_result: true,
                     interpolate: false,
-                    dump_result: true,
                     post_process: [
                         context: [
                             type: 'result',
@@ -196,10 +195,17 @@ class Config extends BaseAction {
             ]
             result = action.pipeline.executePipelineActionList(providers)
             def mothershipConfig = this.utils.getMothershipConfigFile(result)
+            utils.debugLog(action.pipeline.context, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], true)
             def mothershipServers = this.utils.getMothershipServersFile(result)
+            utils.debugLog(action.pipeline.context, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], true)
 
-            result = utils.merge(result, mothershipConfig[action.pipeline.context.jenkinsFolderName])
+            def mothershipProjectConfig = mothershipConfig[action.pipeline.context.jenkinsFolderName]
+            script.echo "mothershipProjectConfig: ${mothershipProjectConfig}"
+
+            result = utils.merge(result, mothershipProjectConfig)
+            utils.debugLog(action.pipeline.context, result, 'mothershipServer result after merge', [debugMode: 'json'], [], true)
             result = utils.merge(result, [jenkinsServers: mothershipServers])
+            utils.debugLog(action.pipeline.context, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], true)
 
 //            this.configRepo = result.configRepo
         }
@@ -228,7 +234,6 @@ class Config extends BaseAction {
                         scenario.name = values[0]
                     }
                     utils.debugLog(action.pipeline.context, tempContext.scenarioSources, 'Scenario sources')
-//                    script.echo("action.pipeline.context.loadedSources: ${action.pipeline.context.loadedSources}")
                     if ((scenariosConfig.scenarioSources && scenariosConfig.scenarioSources.containsKey(scenarioSourceName)) || (tempContext.scenarioSources && tempContext.scenarioSources.containsKey(scenarioSourceName)) || action.pipeline.context.loadedSources.containsKey(scenarioSourceName)) {
                         if (!action.pipeline.context.loadedSources[scenarioSourceName]) {
                             script.echo "Adding source: ${scenarioSourceName}"

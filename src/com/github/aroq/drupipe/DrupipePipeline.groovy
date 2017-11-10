@@ -52,8 +52,6 @@ class DrupipePipeline implements Serializable {
                     if (context.job) {
                         def job = context.job
                         if (job) {
-//                            utils.pipelineNotify(context, notification << [status: 'START'])
-
                             def pipelineBlocks = context.job.pipeline && context.job.pipeline.blocks ? context.job.pipeline.blocks : []
                             if (pipelineBlocks) {
                                 for (def i = 0; i < pipelineBlocks.size(); i++) {

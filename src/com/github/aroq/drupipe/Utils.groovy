@@ -80,6 +80,7 @@ def envToMap() {
 }
 
 def dumpConfigFile(config, fileName = 'config.dump.groovy') {
+    debugLog(config, config, 'dumpConfigFile', [debugMode: 'json'], [], true)
     echo "Dumping config file: config.dump.groovy"
     writeFile(file: fileName, text: configToSlurperFile(config))
     sh "cat ${fileName}"
@@ -335,12 +336,17 @@ def getMothershipConfigFile(params) {
             def file = readFile(projectsFile)
             if (file) {
                 if (extension in ['yaml', 'yml']) {
+                    echo "getMothershipConfigFile: load file: ${file}"
                     return readYaml(text: file).projects
                 }
                 else if (extension == 'json') {
+                    echo "getMothershipConfigFile: load file: ${file}"
                     return readJSON(text: file).projects
                 }
             }
+        }
+        else {
+            echo "getMothershipConfigFile: file: ${file} doesn't exist"
         }
     }
     throw new Exception("getMothershipConfigFile: mothership config file not found.")
@@ -565,13 +571,12 @@ def serializeAndDeserialize(params) {
     def yamlFilePath = '.unipipe/temp/serializeAndDeserialize.yaml'
     if (params) {
         if (fileExists(yamlFilePath)) {
-            sh("rm -f ${yamlFilePath}")
+            sh("rm -f ${yamlFilePath} >> output.txt")
         }
         writeYaml(file: yamlFilePath, data: params)
         if (fileExists(yamlFilePath)) {
             result = readYaml(file: yamlFilePath)
         }
-//        debugLog(result, result, "serializeAndDeserialize.RESULT", [debugMode: 'json'], [])
     }
     result
 

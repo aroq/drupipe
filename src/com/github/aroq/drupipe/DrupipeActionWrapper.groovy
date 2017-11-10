@@ -73,12 +73,42 @@ class DrupipeActionWrapper implements Serializable {
             this.params = utils.merge(defaultActionParams, this.params)
             utils.debugLog(this.params, this.params, "this.params after merge defaultActionParams with this.params", [debugMode: 'json'], [], this.params && this.params.debugEnabled)
 
+            def actionInstance
+            try {
+                actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false)?.newInstance(
+                    action: this,
+                    script: this.script,
+                    utils: utils,
+                )
+            }
+            catch (err) {
+                this.script.echo err.toString()
+                throw err
+            }
+
             // Interpolate action params with pipeline.context variables.
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
                 this.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
             }
             else {
                 this.params = utils.serializeAndDeserialize(this.params)
+
+                try {
+                    this.script.echo "Call hook_preprocess()"
+                    actionInstance.hook_preprocess()
+                }
+                catch (err) {
+                    // No preprocess defined.
+                }
+
+                try {
+                    this.script.echo "Call ${this.methodName}_hook_preprocess()"
+                    actionInstance."${this.methodName}_hook_preprocess"()
+                }
+                catch (err) {
+                    // No preprocess defined.
+                }
+
                 utils.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
                 // TODO: Store processed action params in pipeline.context (pipeline.context.actions['action_name']) to allow use it for interpolation in other actions.
             }
@@ -92,7 +122,8 @@ class DrupipeActionWrapper implements Serializable {
             // Process credentials.
             // TODO: Make sure only allowed credentials could be used. Control it with projects.yaml in mothership config.
             ArrayList credentials = []
-            if (actionParams.credentials) {
+            // Do not use credentials in k8s mode.
+            if (actionParams.credentials && pipeline.context.containerMode != 'kubernetes') {
                 actionParams.credentials.each { k, v ->
                     if (v.type == 'file') {
                         v.variable_name = v.variable_name ? v.variable_name : v.id
@@ -121,11 +152,11 @@ class DrupipeActionWrapper implements Serializable {
                     // ...Otherwise execute from class.
                     if (!actionFile) {
                         try {
-                            def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance(
-                                action: this,
-                                script: this.script,
-                                utils: utils,
-                            )
+//                            def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance(
+//                                action: this,
+//                                script: this.script,
+//                                utils: utils,
+//                            )
 
                             def action_timeout = this.params.action_timeout ? this.params.action_timeout : 120
                             this.script.timeout(action_timeout) {

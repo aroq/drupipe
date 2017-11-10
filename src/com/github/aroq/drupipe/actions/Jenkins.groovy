@@ -50,6 +50,7 @@ class Jenkins extends BaseAction {
         // TODO: Remove it after action refactor and tests.
         if (action.params.jenkins_user_token_file) {
             action.params.jenkins_user_token = script.readFile file: action.params.jenkins_user_token_file
+            script.echo "jenkins_user_token_file is set action.params.jenkins_user_token to ${action.params.jenkins_user_token}"
         }
         if (!action.params.jenkins_address) {
             action.params.jenkins_address = "${getJenkinsAddress()}:${this.action.params.port}"
@@ -59,7 +60,7 @@ class Jenkins extends BaseAction {
             this.script.withEnv(envvars) {
                 this.script.drupipeShell(
 """
-/jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:\${JENKINS_API_TOKEN} ${cli_command}
+JENKINS_URL=http://${this.action.params.jenkins_address} /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:${this.action.params.jenkins_user_token} ${cli_command}
 """, this.action.params)
             }
         }

@@ -20,6 +20,7 @@ class GitlabHelper {
     }
 
     def addWebhook(String repo, url, hookData = [:]) {
+        script.println "Add webhooks: ${url}"
         setRepoProperties(repo)
         def hook_id = null
         getWebhooks(repo).each { hook ->
@@ -124,6 +125,7 @@ class GitlabHelper {
     }
 
     def getWebhooks(String repo) {
+        script.println "Get webhooks: ${repo}"
         setRepoProperties(repo)
         def url = "https://${config.repoParams.gitlabAddress}/api/v3/projects/${config.repoParams.projectID}/hooks?private_token=${config.env.GITLAB_API_TOKEN_TEXT}"
         def hooks = new groovy.json.JsonSlurper().parseText(new URL(url).text)
