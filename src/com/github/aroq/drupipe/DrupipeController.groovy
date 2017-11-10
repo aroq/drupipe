@@ -121,6 +121,7 @@ class DrupipeController implements Serializable {
                 if (configVersion() > 1) {
                     preprocessConfig()
                     script.node('master') {
+                        utils.debugLog(context, context, 'JOB', [debugMode: 'json'], [], true)
                         utils.debugLog(context, job.pipeline.name, 'JOB', [debugMode: 'json'], [], true)
                     }
                 }
