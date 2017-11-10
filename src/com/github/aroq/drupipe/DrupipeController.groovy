@@ -28,16 +28,16 @@ class DrupipeController implements Serializable {
         def result = obj
         if (obj.containsKey('from')) {
             if (obj.from instanceof CharSequence) {
-                def fromObject = deepGet('params.' + obj.from)
+                def fromObject = utils.deepGet(context, 'params.' + obj.from)
                 if (fromObject) {
-                    result = merge(result, processFrom(fromObject))
+                    result = utils.merge(result, processFrom(fromObject))
                 }
             }
             else {
                 for (item in obj.from) {
-                    def fromObject = deepGet('params.' + item)
+                    def fromObject = utils.deepGet(context, 'params.' + item)
                     if (fromObject) {
-                        result = merge(result, processFrom(fromObject))
+                        result = utils.merge(result, processFrom(fromObject))
                     }
                 }
             }
