@@ -1,11 +1,11 @@
 import com.github.aroq.drupipe.DrupipeBlock
 
-def call(pipeline) {
+def call(drupipePipeline) {
     echo "Container mode: kubernetes"
     def nodeName = 'drupipe'
     def containers = []
 
-    ArrayList blocks = pipeline.blocks
+    ArrayList blocks = drupipePipeline.blocks
     ArrayList masterBlocks = []
     ArrayList k8sBlocks = []
 
@@ -25,7 +25,7 @@ def call(pipeline) {
                 alwaysPullImage: true,
                 // TODO: move in configs.
                 envVars: [
-                    envVar(key: 'TF_VAR_consul_address', value: pipeline.context.env.TF_VAR_consul_address),
+                    envVar(key: 'TF_VAR_consul_address', value: drupipePipeline.context.env.TF_VAR_consul_address),
                     secretEnvVar(key: 'DIGITALOCEAN_TOKEN', secretName: 'zebra-keys', secretKey: 'zebra_do_token'),
 //                  secretEnvVar(key: 'CONSUL_ACCESS_TOKEN', secretName: 'zebra-keys', secretKey: 'zebra_consul_access_token'),
                     secretEnvVar(key: 'ANSIBLE_VAULT_PASS_FILE', secretName: 'zebra-keys', secretKey: 'zebra_ansible_vault_pass'),
@@ -48,21 +48,21 @@ def call(pipeline) {
             containers: containers
         ) {
             node(nodeName) {
-                pipeline.context.workspace = pwd()
+                drupipePipeline.context.workspace = pwd()
                 for (def i = 0; i < k8sBlocks.size(); i++) {
                     def block = k8sBlocks[i]
                     if (block.withDocker) {
 //                        block.name = "block${i}"
                         block.nodeName = nodeName
-                        if (pipeline) {
-                            block.pipeline = pipeline
-                        }
                         container("block${i}") {
-                            pipeline.scmCheckout()
+                            drupipePipeline.scmCheckout()
                             unstash('config')
                             DrupipeBlock drupipe_block = new DrupipeBlock(blocks[i])
+                            if (drupipePipeline) {
+                                drupipePipeline.pipeline = drupipePipeline
+                            }
                             echo "BLOCK EXECUTE START on k8s, nodeName=${nodeName}"
-                            sshagent([pipeline.context.credentialsId]) {
+                            sshagent([drupipePipeline.context.credentialsId]) {
                                 drupipe_block.blockInNode = true
                                 drupipe_block.execute()
                             }
@@ -77,11 +77,11 @@ def call(pipeline) {
     node("master") {
         for (def i = 0; i < masterBlocks.size(); i++) {
             echo "BLOCK EXECUTE START on master node - ${blocks[i].name}"
-            masterBlocks[i].pipeline = pipeline
-            pipeline.scmCheckout()
+            masterBlocks[i].pipeline = drupipePipeline
+            drupipePipeline.scmCheckout()
             unstash('config')
             def block = new DrupipeBlock(masterBlocks[i])
-            sshagent([pipeline.context.credentialsId]) {
+            sshagent([drupipePipeline.context.credentialsId]) {
                 block.execute()
             }
             echo "BLOCK EXECUTE END on master node - ${blocks[i].name}"
