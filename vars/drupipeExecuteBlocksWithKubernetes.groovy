@@ -59,7 +59,7 @@ def call(drupipePipeline) {
                             unstash('config')
                             DrupipeBlock drupipe_block = new DrupipeBlock(blocks[i])
                             if (drupipePipeline) {
-                                drupipePipeline.pipeline = drupipePipeline
+                                drupipe_block.pipeline = drupipePipeline
                             }
                             echo "BLOCK EXECUTE START on k8s, nodeName=${nodeName}"
                             sshagent([drupipePipeline.context.credentialsId]) {
