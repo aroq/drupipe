@@ -12,6 +12,7 @@ class DrupipePod implements Serializable {
         def script = controller.script
         script.echo "DrupipePod execute - ${name}"
         for (container in containers) {
+            container = new DrupipeContainer(container)
             container.controller = controller
             container.execute()
         }
