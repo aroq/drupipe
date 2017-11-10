@@ -63,7 +63,7 @@ class DrupipeController implements Serializable {
         if (configVersion() > 1) {
             if (context.job) {
 
-                job = new DrupipeJob(processConfigItem(context.job) << [controller: this])
+                job = new DrupipeJob(processConfigItem(context, context.job) << [controller: this])
 //                def tempPipeline = processFrom(context.job.pipeline)
 //                if (tempPipeline) {
 //                    if (tempPipeline.pods) {
