@@ -88,11 +88,11 @@ class DrupipeController implements Serializable {
     }
 
     def serializeContext(path, context) {
-        if (params) {
-            if (fileExists(path)) {
-                sh("rm -f ${path}")
+        if (context) {
+            if (script.fileExists(path)) {
+                script.sh("rm -f ${path}")
             }
-            writeYaml(file: path, data: params)
+            script.writeYaml(file: path, data: context)
         }
     }
 
