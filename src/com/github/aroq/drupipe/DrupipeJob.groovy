@@ -4,7 +4,21 @@ class DrupipeJob implements Serializable {
 
     String name
 
-    DrupipePipeline pipeline
+    String type
+
+    String from
+
+    String branch
+
+    def triggers
+
+    def webhooks
+
+    def context
+
+    def pipeline
+
+    DrupipePipeline drupipePipeline
 
     DrupipeController controller
 
