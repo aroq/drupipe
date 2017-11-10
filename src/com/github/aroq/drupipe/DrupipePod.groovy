@@ -4,6 +4,8 @@ class DrupipePod implements Serializable {
 
     String name
 
+    String image
+
     ArrayList<DrupipeContainer> containers = []
 
     DrupipeController controller
