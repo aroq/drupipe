@@ -24,20 +24,20 @@ class DrupipeController implements Serializable {
 
     DrupipeJob job
 
-    def processFrom(def context, def obj) {
+    def processFrom(def obj) {
         def result = obj
         if (obj.containsKey('from')) {
             if (obj.from instanceof CharSequence) {
-                def fromObject = deepGet(context, 'params.' + obj.from)
+                def fromObject = deepGet('params.' + obj.from)
                 if (fromObject) {
-                    result = merge(result, processFrom(context, fromObject))
+                    result = merge(result, processFrom(fromObject))
                 }
             }
             else {
                 for (item in obj.from) {
-                    def fromObject = deepGet(context, 'params.' + item)
+                    def fromObject = deepGet('params.' + item)
                     if (fromObject) {
-                        result = merge(result, processFrom(context, fromObject))
+                        result = merge(result, processFrom(fromObject))
                     }
                 }
             }
@@ -46,15 +46,15 @@ class DrupipeController implements Serializable {
         result
     }
 
-    def processConfigItem(context, object) {
+    def processConfigItem(object) {
         if (object instanceof Map) {
-            object = processFrom(context, object)
+            object = processFrom(object)
             for (item in object) {
-                object[item.key] = processConfigItem(context, item.value)
+                object[item.key] = processConfigItem(item.value)
             }
         }
         else if (object instanceof List) {
-            object = object.collect { processConfigItem(context, it) }
+            object = object.collect { processConfigItem(it) }
         }
         object
     }
@@ -63,7 +63,7 @@ class DrupipeController implements Serializable {
         if (configVersion() > 1) {
             if (context.job) {
 
-                job = new DrupipeJob(processConfigItem(context, context.job) << [controller: this])
+                job = new DrupipeJob(processConfigItem(context.job) << [controller: this])
 //                def tempPipeline = processFrom(context.job.pipeline)
 //                if (tempPipeline) {
 //                    if (tempPipeline.pods) {
