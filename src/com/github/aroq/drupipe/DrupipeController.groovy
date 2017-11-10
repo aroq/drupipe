@@ -24,45 +24,39 @@ class DrupipeController implements Serializable {
 
     DrupipeJob job
 
-    LinkedHashMap processFrom(LinkedHashMap object) {
-        LinkedHashMap result = object.clone()
-        if (object.containsKey('from')) {
-            if (object.from instanceof CharSequence) {
-                LinkedHashMap fromObject = utils.deepGet(this, 'context.params.' + object.from)
+    def processFrom(def context, def obj) {
+        def result = obj
+        if (obj.containsKey('from')) {
+            if (obj.from instanceof CharSequence) {
+                def fromObject = deepGet(context, 'params.' + obj.from)
                 if (fromObject) {
-                    result = utils.merge(result, processFrom(fromObject))
+                    result = merge(result, processFrom(context, fromObject))
                 }
             }
             else {
-                for (item in object.from) {
-                    LinkedHashMap fromObject = utils.deepGet(this, 'context.params.' + item)
+                for (item in obj.from) {
+                    def fromObject = deepGet(context, 'params.' + item)
                     if (fromObject) {
-                        result = utils.merge(result, processFrom(fromObject))
+                        result = merge(result, processFrom(context, fromObject))
                     }
                 }
             }
-            object.remove('from')
+            result.remove('from')
         }
         result
     }
 
-    def processConfigItem(object) {
-        def result
+    def processConfigItem(context, object) {
         if (object instanceof Map) {
-            result = [:]
+            object = processFrom(context, object)
             for (item in object) {
-                if (item instanceof Map) {
-                    result[item.key] = processConfigItem(processFrom(item.value))
-                }
-                else {
-                    result[item.key] = item.value
-                }
+                object[item.key] = processConfigItem(context, item.value)
             }
         }
-        else {
-            result = object
+        else if (object instanceof List) {
+            object = object.collect { processConfigItem(context, it) }
         }
-        result
+        object
     }
 
     def preprocessConfig() {
@@ -112,6 +106,10 @@ class DrupipeController implements Serializable {
             utils.dump(params, config, 'PIPELINE-CONFIG')
 
             script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params]], this)
+
+            // TODO: remove it.
+            context.params.blocks = context.blocks
+
             def contextDumpPath = '.unipipe/temp/context.yaml'
             serializeContext(contextDumpPath, context)
             this.script.archiveArtifacts artifacts: contextDumpPath
