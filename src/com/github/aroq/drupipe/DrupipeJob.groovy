@@ -29,6 +29,8 @@ class DrupipeJob implements Serializable {
     def execute(body = null) {
         def script = controller.script
         script.echo "DrupipeJob execute - ${name}"
+        pipeline.controller = controller
+        pipeline.execute()
     }
 
 }

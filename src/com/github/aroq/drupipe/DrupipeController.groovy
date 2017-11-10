@@ -62,17 +62,7 @@ class DrupipeController implements Serializable {
     def preprocessConfig() {
         if (configVersion() > 1) {
             if (context.job) {
-
                 job = new DrupipeJob(processConfigItem(context.job) << [controller: this])
-//                def tempPipeline = processFrom(context.job.pipeline)
-//                if (tempPipeline) {
-//                    if (tempPipeline.pods) {
-//                        for (pod in pods) {
-//                            tempPipeline[node.key] = processFrom(node.value)
-//                        }
-//                    }
-//                }
-//                job = new DrupipeJob(processFrom(context.job) << [controller: this, pipeline: tempPipeline])
             }
         }
     }
@@ -143,6 +133,7 @@ class DrupipeController implements Serializable {
                     script.node('master') {
                         utils.debugLog(context, job.pipeline.name, 'JOB', [debugMode: 'json'], [], true)
                     }
+                    job.execute()
                 }
                 else {
                     if (!blocks) {
