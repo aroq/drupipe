@@ -22,7 +22,7 @@ class DrupipeController implements Serializable {
 
     def scm
 
-    def job
+    DrupipeJob job
 
 //    def processFromValue() {
 //        if (object.containsKey('from')) {
@@ -37,7 +37,7 @@ class DrupipeController implements Serializable {
 //   }
 
     LinkedHashMap processFrom(LinkedHashMap object) {
-        LinkedHashMap result = object
+        LinkedHashMap result = object.clone()
         if (object.containsKey('from')) {
             if (object.from instanceof CharSequence) {
                 LinkedHashMap fromObject = utils.deepGet(this, 'context.params.' + object.from)
@@ -60,7 +60,7 @@ class DrupipeController implements Serializable {
     def preprocessConfig() {
         if (configVersion() > 1) {
             if (context.job) {
-               context.job = processFrom(context.job)
+               job = new DrupipeJob(processFrom(context.job) << [controller: this])
             }
         }
     }
@@ -102,7 +102,7 @@ class DrupipeController implements Serializable {
 
                 if (configVersion() > 1) {
                     preprocessConfig()
-                    utils.debugLog(context, context.job, 'JOB', [debugMode: 'json'], [], true)
+                    utils.debugLog(context, utils.serializeAndDeserialize(job), 'JOB', [debugMode: 'json'], [], true)
                 }
                 else {
                     if (!blocks) {

@@ -8,6 +8,10 @@ class DrupipeJob implements Serializable {
 
     DrupipeController controller
 
+    def init() {
+
+    }
+
     def execute(body = null) {
         def script = controller.script
         script.echo "DrupipeJob execute - ${name}"
