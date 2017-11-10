@@ -41,6 +41,26 @@ class DrupipeController implements Serializable {
                     }
                 }
             }
+            object.remove('from')
+        }
+        result
+    }
+
+    def processConfigItem(object) {
+        def result
+        if (object instanceof Map) {
+            result = [:]
+            for (item in object) {
+                if (object instanceof Map) {
+                    result[item.key] = processConfigItem(processFrom(item.value))
+                }
+                else {
+                    result[item.key] = item.value
+                }
+            }
+        }
+        else {
+            result = object
         }
         result
     }
@@ -48,7 +68,17 @@ class DrupipeController implements Serializable {
     def preprocessConfig() {
         if (configVersion() > 1) {
             if (context.job) {
-               job = new DrupipeJob(processFrom(context.job) << [controller: this, pipeline: processFrom(context.job.pipeline)])
+
+                job = new DrupipeJob(processConfigItem(context.job) << [controller: this])
+//                def tempPipeline = processFrom(context.job.pipeline)
+//                if (tempPipeline) {
+//                    if (tempPipeline.pods) {
+//                        for (pod in pods) {
+//                            tempPipeline[node.key] = processFrom(node.value)
+//                        }
+//                    }
+//                }
+//                job = new DrupipeJob(processFrom(context.job) << [controller: this, pipeline: tempPipeline])
             }
         }
     }
@@ -91,7 +121,7 @@ class DrupipeController implements Serializable {
                 if (configVersion() > 1) {
                     preprocessConfig()
                     script.node('master') {
-                        utils.debugLog(context, utils.serializeAndDeserialize(job.pipeline.name), 'JOB', [debugMode: 'json'], [], true)
+                        utils.debugLog(context, job.pipeline.pods[0].name, 'JOB', [debugMode: 'json'], [], true)
                     }
                 }
                 else {
