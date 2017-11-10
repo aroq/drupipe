@@ -4,6 +4,8 @@ class DrupipePipeline implements Serializable {
 
     String name
 
+    String from
+
     ArrayList<DrupipePod> pods = []
 
     DrupipeController controller
