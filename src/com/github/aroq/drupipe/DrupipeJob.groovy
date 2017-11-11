@@ -16,19 +16,12 @@ class DrupipeJob implements Serializable {
 
     def context
 
-//    def pipeline
-
     DrupipePipeline pipeline
 
     DrupipeController controller
 
-    def init() {
-
-    }
-
     def execute(body = null) {
-        def script = controller.script
-        script.echo "DrupipeJob execute - ${name}"
+        controller.script.echo "DrupipeJob execute - ${name}"
         pipeline.controller = controller
         pipeline.execute()
     }

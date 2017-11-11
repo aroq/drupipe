@@ -11,12 +11,11 @@ class DrupipeContainer implements Serializable {
     DrupipeController controller
 
     def execute(body = null) {
-        def script = controller.script
-        script.echo "DrupipeContainer execute - ${name}"
+        controller.script.echo "DrupipeContainer execute - ${name}"
 
         for (block in blocks) {
-            block = DrupipeBlock(block)
-            block.pipeline = controller
+            block = new DrupipeContainerBlock(block)
+            block.controller = controller
             block.execute()
         }
 

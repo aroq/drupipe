@@ -11,8 +11,7 @@ class DrupipePipeline implements Serializable {
     DrupipeController controller
 
     def execute(body = null) {
-        def script = controller.script
-        script.echo "DrupipePipeline execute - ${name}"
+        controller.script.echo "DrupipePipeline execute - ${name}"
         for (pod in pods) {
             pod = new DrupipePod(pod)
             pod.controller = controller
