@@ -31,6 +31,10 @@ class DrupipeController implements Serializable {
             if (obj.from instanceof CharSequence) {
                 def fromObject = utils.deepGet(context, 'params.' + obj.from)
                 if (fromObject) {
+                    // Set name to 'from' if parent is 'actions'.
+                    if (parent == 'actions') {
+                        def actionName = obj.from.tokenize('.').pop()
+                    }
                     result = utils.merge(result, processFrom(fromObject, parent))
                 }
             }

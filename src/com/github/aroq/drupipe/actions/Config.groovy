@@ -20,6 +20,10 @@ class Config extends BaseAction {
         this.script.sh("mkdir -p .unipipe")
         this.script.sh("mkdir -p .unipipe/temp")
 
+        if () {
+
+        }
+
         def providers = [
             [
                 action: 'GroovyFileConfig.groovyConfigFromLibraryResource',
@@ -45,6 +49,9 @@ class Config extends BaseAction {
             ],
             [
                 action: "Config.projectConfig"
+            ],
+            [
+                action: "Config.config_version2"
             ],
             [
                 action: "Config.jenkinsConfig"
@@ -387,6 +394,30 @@ class Config extends BaseAction {
 
             utils.debugLog(result, 'Project config with scenarios loaded')
             result
+        }
+    }
+
+    def config_version2() {
+        if (action.pipeline.configVersion() > 1) {
+            def providers = [
+                [
+                    action: 'GroovyFileConfig.groovyConfigFromLibraryResource',
+                    params: [
+                        resource: 'com/github/aroq/drupipe/config.yaml'
+                    ]
+                ],
+                [
+                    action: 'GroovyFileConfig.groovyConfigFromLibraryResource',
+                    params: [
+                        resource: 'com/github/aroq/drupipe/actions.yaml'
+                    ]
+                ],
+            ]
+
+            action.pipeline.executePipelineActionList(providers)
+        }
+        else {
+            [:]
         }
     }
 

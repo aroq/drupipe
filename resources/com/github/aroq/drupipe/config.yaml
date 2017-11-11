@@ -1,0 +1,37 @@
+docmanDir: docman
+drupipeDockerArgs: --user root:root --net=host
+
+params:
+  jobs:
+    __default:
+
+  pipelines:
+    default:
+      name: default
+
+  pods:
+    __default:
+      name: default
+
+    master:
+      name: master
+      from: pods.default
+
+    k8s:
+      name: k8s
+      from: pods.default
+
+  containers:
+    __default:
+
+    common:
+      image: michaeltigr/zebra-build-php-drush-docman
+
+  pipeline:
+    scripts_library:
+      url: https://github.com/aroq/drupipe.git
+      ref: master
+      type: branch
+
+  blocks:
+
