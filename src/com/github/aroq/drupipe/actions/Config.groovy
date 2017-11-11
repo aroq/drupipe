@@ -20,10 +20,6 @@ class Config extends BaseAction {
         this.script.sh("mkdir -p .unipipe")
         this.script.sh("mkdir -p .unipipe/temp")
 
-        if () {
-
-        }
-
         def providers = [
             [
                 action: 'GroovyFileConfig.groovyConfigFromLibraryResource',
