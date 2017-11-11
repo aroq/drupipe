@@ -31,7 +31,10 @@ class DrupipeController implements Serializable {
             if (obj.from instanceof CharSequence) {
                 def fromObject = utils.deepGet(context, 'params.' + obj.from)
                 if (fromObject) {
-                    if (parent == 'jobs') {
+                    if (parent == 'job') {
+                        fromObject.name = obj.from
+                    }
+                    if (parent == 'pipeline') {
                         fromObject.name = obj.from
                     }
                     if (parent == 'containers') {
