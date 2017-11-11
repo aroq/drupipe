@@ -10,7 +10,7 @@ class DrupipeContainerBlock implements Serializable {
 
     def execute(body = null) {
         def script = controller.script
-        script.echo "DrupipeAction execute - ${name}"
+        script.echo "DrupipeContainerBlock execute - ${name}"
         for (action in actions) {
             def actionWrapper = [
                 name: action.name,
