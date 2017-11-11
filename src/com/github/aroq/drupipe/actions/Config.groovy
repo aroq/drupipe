@@ -397,13 +397,13 @@ class Config extends BaseAction {
         if (action.pipeline.configVersion() > 1) {
             def providers = [
                 [
-                    action: 'GroovyFileConfig.groovyConfigFromLibraryResource',
+                    action: 'YamlFileConfig.loadFromLibraryResource',
                     params: [
                         resource: 'com/github/aroq/drupipe/config.yaml'
                     ]
                 ],
                 [
-                    action: 'GroovyFileConfig.groovyConfigFromLibraryResource',
+                    action: 'YamlFileConfig.loadFromLibraryResource',
                     params: [
                         resource: 'com/github/aroq/drupipe/actions.yaml'
                     ]
