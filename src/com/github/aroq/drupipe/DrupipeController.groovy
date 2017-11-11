@@ -98,7 +98,7 @@ class DrupipeController implements Serializable {
             script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params]], this)
 
             // TODO: remove it.
-            context.params.blocks = context.blocks
+//            context.params.blocks = context.blocks
 
             def contextDumpPath = '.unipipe/temp/context.yaml'
             serializeContext(contextDumpPath, context)
