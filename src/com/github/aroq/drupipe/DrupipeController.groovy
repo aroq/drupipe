@@ -33,7 +33,12 @@ class DrupipeController implements Serializable {
                 if (fromObject) {
                     // Set name to 'from' if parent is 'actions'.
                     if (parent == 'actions') {
-                        def actionName = obj.from.tokenize('.').pop()
+                        def action = obj.from - 'actions.'
+                        def values = action.split("\\.")
+                        if (values.size() > 1) {
+                            fromObject.name = values[0]
+                            fromObject.methodName = values[1]
+                        }
                     }
                     result = utils.merge(result, processFrom(fromObject, parent))
                 }

@@ -11,7 +11,11 @@ class DrupipeContainerBlock implements Serializable {
     def execute(body = null) {
         def script = controller.script
         script.echo "DrupipeAction execute - ${name}"
-        for (actionWrapper in actions) {
+        for (action in actions) {
+            def actionWrapper = [
+                name: action.name,
+                methodName: action.methodName,
+            ]
             actionWrapper.pipeline = controller
             (new DrupipeActionWrapper(actionWrapper)).execute()
         }
