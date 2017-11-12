@@ -1,6 +1,6 @@
 params:
   actions:
-    __default:
+    params:
       action_timeout: 120
       store_result: true
       dump_result: true
@@ -16,7 +16,7 @@ params:
       return_stdout: false
 
     Config:
-      __default:
+      params:
         post_process:
           context:
             type: result
@@ -43,7 +43,7 @@ params:
             destination: context
 
     Behat:
-      __default:
+      params:
         masterPath: docroot/master
         masterRelativePath: ..
         behatExecutable: bin/behat
@@ -52,20 +52,20 @@ params:
         behat_args: --format=pretty --out=std --format=junit
 
     Terraform:
-      __default:
+      params:
         infraSourceName: infra-config
         shell_bash_login: false
 
     Drush:
-      __default:
+      params:
         return_stdout: true
 
     DrushFeaturesList:
-      __default:
+      params:
         return_stdout: true
 
     Docman:
-      __default:
+      params:
         docmanJsonConfigFile: config.json
         build_type: git_target
 
@@ -95,7 +95,7 @@ params:
           - .unipipe/library/jobdsl/seed/*.groovy
 
     Druflow:
-      __default:
+      params:
         druflowDir: druflow
         druflowRepo: https://github.com/aroq/druflow.git
         druflowGitReference: v0.1.3
@@ -122,7 +122,7 @@ params:
         executeCommand: gitGetRepo
 
     Ansible:
-      __default:
+      params:
         playbooksDir: .unipipe/library/ansible
         playbook: deployWithAnsistrano.yml
         playbookParams:
@@ -142,7 +142,7 @@ params:
         timeToConfirm: 60
 
     PipelineController:
-      __default:
+      params:
         buildHandler:
           method: build
         deployHandler:
@@ -154,21 +154,21 @@ params:
           method: operations
 
     GitArtifact:
-      __default:
+      params:
         dir: artifacts
         repoDirName: master
 
     Git:
-      __default:
+      params:
         singleBranch: true
         depth: 1
 
     YamlFileHandler:
-      __default:
+      params:
         deployFile: unipipe.y*ml
 
     GCloud:
-      __default:
+      params:
         debugEnabled: true
         dump_result: true
         executable: gcloud
@@ -186,7 +186,7 @@ params:
         cluster_name: main
 
     Jenkins:
-      __default:
+      params:
         shell_bash_login: false
 
       build:
@@ -196,7 +196,7 @@ params:
         jenkins_user_token: ''
 
     Helm:
-      __default:
+      params:
         executable: helm
         chart_name: zebra-cd
         release_name: ${action.params.chart_name}-${context.environment}
@@ -276,7 +276,7 @@ params:
         - ${action.params.release_name}
 
     Kubectl:
-      __default:
+      params:
         executable: kubectl
         kubectl_config_file: .kubeconfig
         shell_bash_login: false
