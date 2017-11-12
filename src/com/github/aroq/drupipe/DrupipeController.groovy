@@ -24,7 +24,23 @@ class DrupipeController implements Serializable {
 
     DrupipeJob job
 
+    def getFromPathItem(object, pathItem) {
+        def result = [:]
+        if (object.containsKey(pathItem)) {
+            if (object[pathItem].containsKey('params')) {
+                result = object[pathItem]['params']
+                utils.debugLog(context, object[pathItem]['params'], 'OBJECT PROPERTY params', [debugMode: 'json'], [], true)
+                script.echo "Property contains 'params', merging obj[prop] with obj[prop][params]"
+            }
+            else {
+                script.echo "Property doesn't contain 'params'"
+            }
+        }
+        result
+    }
+
     def getFrom(object, path) {
+        def result = [:]
         script.echo "PROCESS path: ${path}"
         if (path instanceof CharSequence) {
             path = path.tokenize('.')
@@ -32,28 +48,32 @@ class DrupipeController implements Serializable {
         if (!path) {
             return object
         }
-        path.inject(object, { obj, prop ->
-            if (obj && obj[prop]) {
-                script.echo "PROCESS property: ${prop}"
-                def result
-                if (prop == 'GCloud') {
-                }
-                utils.debugLog(context, obj[prop], 'OBJECT PROPERTY', [debugMode: 'json'], [], true)
-                if (obj[prop].containsKey('__default')) {
-                    utils.debugLog(context, obj[prop]['__default'], 'OBJECT PROPERTY DEFAULT', [debugMode: 'json'], [], true)
-                    script.echo "Property contains '__default', merging obj[prop] with obj[prop][default]"
-                    result = utils.merge(obj[prop], obj[prop]['__default'])
-                }
-                else {
-                    script.echo "Property doesn't contain '__default'"
-                    result = obj[prop]
-                }
-                if (prop == 'GCloud') {
-                }
-                utils.debugLog(context, result, 'RESULT', [debugMode: 'json'], [], true)
-                result
-            }
-        })
+
+        for (pathItem in path) {
+            result = utils.merge(result, getFromPathItem(object, pathItem))
+        }
+        result
+
+//        path.inject(object, { obj, prop ->
+//            if (obj && obj[prop]) {
+//                script.echo "PROCESS property: ${prop}"
+//                def result
+//                if (prop == 'GCloud') {
+//                }
+//                utils.debugLog(context, obj[prop], 'OBJECT PROPERTY', [debugMode: 'json'], [], true)
+//                if (obj[prop].containsKey('__default')) {
+//                    utils.debugLog(context, obj[prop]['__default'], 'OBJECT PROPERTY DEFAULT', [debugMode: 'json'], [], true)
+//                    script.echo "Property contains '__default', merging obj[prop] with obj[prop][default]"
+//                }
+//                else {
+//                    script.echo "Property doesn't contain '__default'"
+//                }
+//                if (prop == 'GCloud') {
+//                }
+//                utils.debugLog(context, result, 'RESULT', [debugMode: 'json'], [], true)
+//                obj
+//            }
+//        })
     }
 
     def processFromItem(result, from, parent) {
