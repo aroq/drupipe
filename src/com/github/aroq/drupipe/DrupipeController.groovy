@@ -37,10 +37,11 @@ class DrupipeController implements Serializable {
                 script.echo "PROCESS property: ${prop}"
                 def result
                 if (prop == 'GCloud') {
-                    utils.debugLog(context, obj[prop], 'OBJECT PROPERTY', [debugMode: 'json'], [], true)
                 }
+                utils.debugLog(context, obj[prop], 'OBJECT PROPERTY', [debugMode: 'json'], [], true)
                 if (obj[prop].containsKey('__default')) {
-                    script.echo "Property contains '__default'"
+                    utils.debugLog(context, obj[prop]['__default'], 'OBJECT PROPERTY DEFAULT', [debugMode: 'json'], [], true)
+                    script.echo "Property contains '__default', merging obj[prop] with obj[prop][default]"
                     result = utils.merge(obj[prop], obj[prop]['__default'])
                 }
                 else {
