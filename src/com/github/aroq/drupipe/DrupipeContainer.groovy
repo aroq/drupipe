@@ -14,6 +14,7 @@ class DrupipeContainer implements Serializable {
         controller.script.echo "DrupipeContainer execute - ${name}"
 
         for (block in blocks) {
+            controller.utils.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
             block = new DrupipeContainerBlock(block)
             block.controller = controller
             block.execute()

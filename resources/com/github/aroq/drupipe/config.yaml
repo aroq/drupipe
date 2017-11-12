@@ -32,6 +32,3 @@ params:
       url: https://github.com/aroq/drupipe.git
       ref: master
       type: branch
-
-#  blocks:
-
