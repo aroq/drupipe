@@ -44,7 +44,7 @@ class DrupipeController implements Serializable {
                     result = obj[prop]
                 }
                 if (prop == 'GCloud') {
-                    utils.debugLog(context, result, 'RESULT', [debugMode: 'json'], [], true)
+//                    utils.debugLog(context, result, 'RESULT', [debugMode: 'json'], [], true)
                 }
             }
         })
