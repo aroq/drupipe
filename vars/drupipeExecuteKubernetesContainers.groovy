@@ -1,4 +1,3 @@
-import com.github.aroq.drupipe.DrupipeContainer
 import com.github.aroq.drupipe.DrupipeContainerBlock
 import com.github.aroq.drupipe.DrupipeController
 
@@ -45,18 +44,18 @@ def call(ArrayList containers, DrupipeController controller) {
             containers: containersToExecute,
         ) {
             node(nodeName) {
+                controller.scmCheckout()
                 controller.context.workspace = pwd()
                 for (def i = 0; i < containers.size(); i++) {
                     container(containers[i].name.replaceAll('\\.','-')) {
-                        controller.scmCheckout()
                         unstash('config')
 
                         for (block in containers[i].blocks) {
-                            controller.utils.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
+//                            controller.utils.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
                             block.controller = controller
-                            sshagent([controller.context.credentialsId]) {
+//                            sshagent([controller.context.credentialsId]) {
                                 (new DrupipeContainerBlock(block)).execute()
-                            }
+//                            }
                         }
                     }
                 }
