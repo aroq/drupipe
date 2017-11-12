@@ -143,6 +143,7 @@ class DrupipeController implements Serializable {
         if (configVersion() > 1) {
             if (context.job) {
                 job = new DrupipeJob(processConfigItem(context.job, 'job') << [controller: this])
+                utils.debugLog(context, job, 'JOB', [debugMode: 'json'], [], true)
             }
         }
     }
