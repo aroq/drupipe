@@ -12,7 +12,7 @@ class DrupipeKubernetesPod implements Serializable {
         def script = controller.script
         script.echo "DrupipePod execute - ${name}"
 
-        drupipeExecuteKubernetesContainers(containers, controller)
+        script.drupipeExecuteKubernetesContainers(containers, controller)
 
 //        for (container in containers) {
 //            controller.utils.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], true)
