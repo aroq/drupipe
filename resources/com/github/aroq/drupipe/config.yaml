@@ -33,5 +33,5 @@ params:
       ref: master
       type: branch
 
-  blocks:
+#  blocks:
 
