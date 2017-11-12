@@ -15,7 +15,10 @@ class DrupipeContainerBlock implements Serializable {
             def actionWrapper = [
                 name: action.name,
                 methodName: action.methodName,
+                configVersion: action.configVersion,
             ]
+            action.remove('name', 'methodName', 'configVersion')
+            actionWrapper['params'] = action
             controller.utils.debugLog(controller.context, action, 'ACTION', [debugMode: 'json'], [], true)
             actionWrapper.pipeline = controller
             (new DrupipeActionWrapper(actionWrapper)).execute()
