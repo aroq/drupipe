@@ -54,7 +54,7 @@ class DrupipeController implements Serializable {
     }
 
     def processFromItem(result, from, parent) {
-        def fromObject = getFrom(context, 'params.' + from)
+        def fromObject = getFrom(context.params, from)
         if (fromObject) {
             if (parent == 'job') {
                 fromObject.name = from
