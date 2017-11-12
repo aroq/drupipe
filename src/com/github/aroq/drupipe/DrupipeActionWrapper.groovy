@@ -60,7 +60,7 @@ class DrupipeActionWrapper implements Serializable {
 //                utils.debugLog(pipeline.context, actionConfig, "${this.fullName} action YAML CONFIG", [:], [], true)
 //            }
 
-            if (this.params.configVersion == 1) {
+            if (!this.params.containsKey('configVersion') || this.params.configVersion == 1) {
                 for (actionName in ['__default', this.name, this.name + '_' + this.methodName]) {
                     if (pipeline.context && pipeline.context.params && pipeline.context.params.action && actionName in pipeline.context.params.action) {
                         defaultActionParams = utils.merge(defaultActionParams, pipeline.context.params.action[actionName])
