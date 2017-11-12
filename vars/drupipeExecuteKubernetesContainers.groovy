@@ -2,7 +2,7 @@ import com.github.aroq.drupipe.DrupipeContainer
 import com.github.aroq.drupipe.DrupipeContainerBlock
 import com.github.aroq.drupipe.DrupipeController
 
-def call(ArrayList<DrupipeContainer> containers, DrupipeController controller) {
+def call(ArrayList containers, DrupipeController controller) {
     echo "Container mode: kubernetes"
     def nodeName = 'drupipe'
     def containerNames = []
