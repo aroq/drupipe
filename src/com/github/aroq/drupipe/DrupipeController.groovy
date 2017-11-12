@@ -24,42 +24,47 @@ class DrupipeController implements Serializable {
 
     DrupipeJob job
 
+    def processFromItem(result, from, parent) {
+        def fromObject = utils.deepGet(context, 'params.' + from)
+        if (fromObject) {
+            if (parent == 'job') {
+                fromObject.name = from
+            }
+            if (parent == 'pipeline') {
+                fromObject.name = from
+            }
+            if (parent == 'containers') {
+                fromObject.name = from
+            }
+            if (parent == 'blocks') {
+                fromObject.name = from
+            }
+            // Set name to 'from' if parent is 'actions'.
+            if (parent == 'actions') {
+                def action = from - 'actions.'
+                def values = action.split("\\.")
+                if (values.size() > 1) {
+                    fromObject.name = values[0]
+                    fromObject.methodName = values[1]
+                }
+            }
+            utils.merge(result, processFrom(fromObject, parent))
+        }
+    }
+
     def processFrom(def obj, parent) {
         def result = obj
         if (obj.containsKey('from')) {
             script.echo "Process 'from' with parent: ${parent}"
             if (obj.from instanceof CharSequence) {
-                def fromObject = utils.deepGet(context, 'params.' + obj.from)
-                if (fromObject) {
-                    if (parent == 'job') {
-                        fromObject.name = obj.from
-                    }
-                    if (parent == 'pipeline') {
-                        fromObject.name = obj.from
-                    }
-                    if (parent == 'containers') {
-                        fromObject.name = obj.from
-                    }
-                    if (parent == 'blocks') {
-                        fromObject.name = obj.from
-                    }
-                    // Set name to 'from' if parent is 'actions'.
-                    if (parent == 'actions') {
-                        def action = obj.from - 'actions.'
-                        def values = action.split("\\.")
-                        if (values.size() > 1) {
-                            fromObject.name = values[0]
-                            fromObject.methodName = values[1]
-                        }
-                    }
-                    result = utils.merge(result, processFrom(fromObject, parent))
-                }
+                result = processFromItem(result, obj.from, parent)
             }
             else {
                 for (item in obj.from) {
                     def fromObject = utils.deepGet(context, 'params.' + item)
                     if (fromObject) {
-                        result = utils.merge(result, processFrom(fromObject, parent))
+                        result = processFromItem(result, item, parent)
+//                        result = utils.merge(result, processFrom(fromObject, parent))
                     }
                 }
             }
