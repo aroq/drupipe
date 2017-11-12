@@ -81,6 +81,7 @@ class DrupipeController implements Serializable {
                 if (values.size() > 1) {
                     fromObject.name = values[0]
                     fromObject.methodName = values[1]
+                    fromObject.configVersion = 2
                 }
             }
 //            println "Merging 'from': ${from}"
