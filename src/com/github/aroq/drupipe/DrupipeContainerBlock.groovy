@@ -20,6 +20,7 @@ class DrupipeContainerBlock implements Serializable {
             action.remove('name')
             action.remove('methodName')
             action.remove('configVersion')
+
             actionWrapper['params'] = action
             controller.utils.debugLog(controller.context, action, 'ACTION', [debugMode: 'json'], [], true)
             actionWrapper.pipeline = controller

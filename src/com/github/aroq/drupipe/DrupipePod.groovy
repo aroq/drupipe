@@ -16,7 +16,7 @@ class DrupipePod implements Serializable {
 
         script.node(name) {
             for (container in containers) {
-                controller.utils.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], true)
+//                controller.utils.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], true)
                 container = new DrupipeContainer(container)
                 container.controller = controller
                 container.pod = this

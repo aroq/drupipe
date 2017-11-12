@@ -13,7 +13,7 @@ class DrupipePipeline implements Serializable {
     def execute(body = null) {
         controller.script.echo "DrupipePipeline execute - ${name}"
         for (pod in pods) {
-            controller.utils.debugLog(controller.context, pod, 'POD', [debugMode: 'json'], [], true)
+//            controller.utils.debugLog(controller.context, pod, 'POD', [debugMode: 'json'], [], true)
 
             if (pod.containerized && controller.context.containerMode == 'kubernetes') {
                 pod = new DrupipeKubernetesPod(pod)
