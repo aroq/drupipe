@@ -25,6 +25,7 @@ class DrupipeController implements Serializable {
     DrupipeJob job
 
     def getFrom(object, path) {
+        script.echo "PROCESS path: ${path}"
         if (path instanceof CharSequence) {
             path = path.tokenize('.')
         }
@@ -33,6 +34,7 @@ class DrupipeController implements Serializable {
         }
         path.inject(object, { obj, prop ->
             if (obj && obj[prop]) {
+                script.echo "PROCESS property: ${prop}"
                 def result
                 if (prop == 'GCloud') {
                     utils.debugLog(context, obj[prop], 'OBJECT PROPERTY', [debugMode: 'json'], [], true)
