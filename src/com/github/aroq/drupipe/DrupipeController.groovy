@@ -29,10 +29,6 @@ class DrupipeController implements Serializable {
         if (object && object.containsKey(pathItem)) {
             if (object[pathItem] && object[pathItem].containsKey('params')) {
                 result = object[pathItem]['params']
-//                println "Property contains 'params', merging obj[prop] with obj[prop][params]"
-            }
-            else {
-//                println "Property doesn't contain 'params'"
             }
         }
         result
@@ -40,7 +36,6 @@ class DrupipeController implements Serializable {
 
     def getFrom(object, path) {
         def result = [:]
-//        println "PROCESS path: ${path}"
         if (path instanceof CharSequence) {
             path = path.tokenize('.')
         }
@@ -84,7 +79,6 @@ class DrupipeController implements Serializable {
                     fromObject.configVersion = 2
                 }
             }
-//            println "Merging 'from': ${from}"
             result = utils.merge(result, processFrom(fromObject, parent))
         }
         result
@@ -93,7 +87,6 @@ class DrupipeController implements Serializable {
     def processFrom(def obj, parent) {
         def result = obj
         if (obj.containsKey('from')) {
-//            println "Process 'from' with parent: ${parent}"
             if (obj.from instanceof CharSequence) {
                 result = processFromItem(result, obj.from, parent)
             }
