@@ -14,7 +14,7 @@ def call(ArrayList containers, DrupipeController controller) {
             echo "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
             containerNames += container.name
             containersToExecute.add(containerTemplate(
-                name: "container${i}",
+                name: container.name,
                 image: container.image,
                 ttyEnabled: true,
                 command: 'cat',
@@ -47,7 +47,7 @@ def call(ArrayList containers, DrupipeController controller) {
             node(nodeName) {
                 controller.context.workspace = pwd()
                 for (def i = 0; i < containers.size(); i++) {
-                    container("container${i}") {
+                    container(containers[i].name) {
                         controller.scmCheckout()
                         unstash('config')
 
