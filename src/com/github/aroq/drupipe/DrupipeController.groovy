@@ -24,8 +24,27 @@ class DrupipeController implements Serializable {
 
     DrupipeJob job
 
+    def getFrom(object, path) {
+        if (path instanceof CharSequence) {
+            path = path.tokenize('.')
+        }
+        if (!path) {
+            return object
+        }
+        path.inject(object, { obj, prop ->
+            if (obj && obj[prop]) {
+                if (obj[prop].containsKey('__default')) {
+                    utils.merge(obj[prop], obj[prop]['__default'])
+                }
+                else {
+                    obj[prop]
+                }
+            }
+        })
+    }
+
     def processFromItem(result, from, parent) {
-        def fromObject = utils.deepGet(context, 'params.' + from)
+        def fromObject = getFrom(context, 'params.' + from)
         if (fromObject) {
             if (parent == 'job') {
                 fromObject.name = from
