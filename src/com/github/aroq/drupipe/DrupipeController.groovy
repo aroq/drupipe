@@ -48,6 +48,7 @@ class DrupipeController implements Serializable {
                     fromObject.methodName = values[1]
                 }
             }
+            script.echo "Merging 'from': ${from}"
             result = utils.merge(result, processFrom(fromObject, parent))
         }
         result
@@ -65,7 +66,6 @@ class DrupipeController implements Serializable {
                     def fromObject = utils.deepGet(context, 'params.' + item)
                     if (fromObject) {
                         result = processFromItem(result, item, parent)
-//                        result = utils.merge(result, processFrom(fromObject, parent))
                     }
                 }
             }
