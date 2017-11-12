@@ -8,6 +8,8 @@ class DrupipePod implements Serializable {
 
     DrupipeController controller
 
+    boolean containerized = true
+
     def execute(body = null) {
         def script = controller.script
         script.echo "DrupipePod execute - ${name}"
