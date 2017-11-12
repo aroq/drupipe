@@ -26,14 +26,13 @@ class DrupipeController implements Serializable {
 
     def getFromPathItem(object, pathItem) {
         def result = [:]
-        if (object.containsKey(pathItem)) {
-            if (object[pathItem].containsKey('params')) {
+        if (object && object.containsKey(pathItem)) {
+            if (object[pathItem] && object[pathItem].containsKey('params')) {
                 result = object[pathItem]['params']
-                utils.debugLog(context, object[pathItem]['params'], 'OBJECT PROPERTY params', [debugMode: 'json'], [], true)
-                script.echo "Property contains 'params', merging obj[prop] with obj[prop][params]"
+                println "Property contains 'params', merging obj[prop] with obj[prop][params]"
             }
             else {
-                script.echo "Property doesn't contain 'params'"
+                println "Property doesn't contain 'params'"
             }
         }
         result
@@ -41,7 +40,7 @@ class DrupipeController implements Serializable {
 
     def getFrom(object, path) {
         def result = [:]
-        script.echo "PROCESS path: ${path}"
+        println "PROCESS path: ${path}"
         if (path instanceof CharSequence) {
             path = path.tokenize('.')
         }
@@ -49,31 +48,15 @@ class DrupipeController implements Serializable {
             return object
         }
 
+        def parentItem = ''
         for (pathItem in path) {
+            if (parentItem) {
+                object = object[parentItem]
+            }
             result = utils.merge(result, getFromPathItem(object, pathItem))
+            parentItem = pathItem
         }
         result
-
-//        path.inject(object, { obj, prop ->
-//            if (obj && obj[prop]) {
-//                script.echo "PROCESS property: ${prop}"
-//                def result
-//                if (prop == 'GCloud') {
-//                }
-//                utils.debugLog(context, obj[prop], 'OBJECT PROPERTY', [debugMode: 'json'], [], true)
-//                if (obj[prop].containsKey('__default')) {
-//                    utils.debugLog(context, obj[prop]['__default'], 'OBJECT PROPERTY DEFAULT', [debugMode: 'json'], [], true)
-//                    script.echo "Property contains '__default', merging obj[prop] with obj[prop][default]"
-//                }
-//                else {
-//                    script.echo "Property doesn't contain '__default'"
-//                }
-//                if (prop == 'GCloud') {
-//                }
-//                utils.debugLog(context, result, 'RESULT', [debugMode: 'json'], [], true)
-//                obj
-//            }
-//        })
     }
 
     def processFromItem(result, from, parent) {
@@ -100,7 +83,7 @@ class DrupipeController implements Serializable {
                     fromObject.methodName = values[1]
                 }
             }
-            script.echo "Merging 'from': ${from}"
+            println "Merging 'from': ${from}"
             result = utils.merge(result, processFrom(fromObject, parent))
         }
         result
@@ -109,7 +92,7 @@ class DrupipeController implements Serializable {
     def processFrom(def obj, parent) {
         def result = obj
         if (obj.containsKey('from')) {
-            script.echo "Process 'from' with parent: ${parent}"
+            println "Process 'from' with parent: ${parent}"
             if (obj.from instanceof CharSequence) {
                 result = processFromItem(result, obj.from, parent)
             }
