@@ -48,8 +48,9 @@ class DrupipeController implements Serializable {
                     fromObject.methodName = values[1]
                 }
             }
-            utils.merge(result, processFrom(fromObject, parent))
+            result = utils.merge(result, processFrom(fromObject, parent))
         }
+        result
     }
 
     def processFrom(def obj, parent) {
