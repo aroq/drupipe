@@ -33,6 +33,10 @@ class DrupipeController implements Serializable {
         }
         path.inject(object, { obj, prop ->
             if (obj && obj[prop]) {
+                if (prop == 'GCloud') {
+                    utils.debugLog(context, obj, 'OBJECT', [debugMode: 'json'], [], true)
+                    utils.debugLog(context, obj[prop], 'OBJECT PROPERTY', [debugMode: 'json'], [], true)
+                }
                 if (obj[prop].containsKey('__default')) {
                     utils.merge(obj[prop], obj[prop]['__default'])
                 }
