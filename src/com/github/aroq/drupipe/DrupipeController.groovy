@@ -119,16 +119,57 @@ class DrupipeController implements Serializable {
 
     def preprocessConfig() {
         if (configVersion() > 1) {
-            if (context.job) {
-                context = processConfigItem(context, 'context')
-                archiveObjectJsonAndYaml(context, 'context_from_processsed')
-                def jobConfig = context.job
-                utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [], true)
-                archiveObjectJsonAndYaml(jobConfig, 'job')
-                job = new DrupipeJob(jobConfig << [controller: this])
+            context = processConfigItem(context, 'context')
+            archiveObjectJsonAndYaml(context, 'context_from_processsed')
+        }
+        if (context.job) {
+            def jobConf = context.job
+            utils.debugLog(context, jobConf, 'JOB', [debugMode: 'json'], [], true)
+            archiveObjectJsonAndYaml(jobConf, 'job')
+            jobConfig()
+            if (configVersion() > 1) {
+                job = new DrupipeJob(jobConf << [controller: this])
             }
         }
     }
+
+    def jobConfig() {
+        def result = [:]
+        if (context.jobs) {
+            processJobs(context.jobs)
+            utils.jsonDump(context, context.jobs, 'CONFIG JOBS PROCESSED')
+
+            result.job = (context.env.JOB_NAME).split('/').drop(1).inject(context, { obj, prop ->
+                obj.jobs[prop]
+            })
+
+            if (result.job) {
+                if (result.job.context) {
+                    result = utils.merge(result, result.job.context)
+                }
+            }
+            result.jobs = context.jobs
+        }
+        result
+    }
+
+    def processJobs(jobs, prefixes = [], parentParams = [:]) {
+        if (jobs) {
+            for (job in jobs) {
+                if (job.value.children) {
+                    job.value.jobs = job.value.remove('children')
+                }
+                def children = job.value.jobs ? job.value.jobs : [:]
+                job.value = utils.merge(parentParams, job.value)
+                if (children) {
+                    def jobClone = job.value.clone()
+                    jobClone.remove('jobs')
+                    processJobs(children, prefixes << job.key, jobClone)
+                }
+            }
+        }
+    }
+
 
     int configVersion() {
         context.config_version as int
