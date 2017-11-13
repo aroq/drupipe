@@ -148,12 +148,6 @@ class DrupipeActionWrapper implements Serializable {
                     // ...Otherwise execute from class.
                     if (!actionFile) {
                         try {
-//                            def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance(
-//                                action: this,
-//                                script: this.script,
-//                                utils: utils,
-//                            )
-
                             def action_timeout = this.params.action_timeout ? this.params.action_timeout : 120
                             this.script.timeout(action_timeout) {
                                 this.result = actionInstance."${this.methodName}"()
@@ -194,6 +188,7 @@ class DrupipeActionWrapper implements Serializable {
                             }
                         }
                         pipeline.archiveObjectJsonAndYaml(pipeline.context.actions, 'action_results')
+                        pipeline.archiveObjectJsonAndYaml(pipeline.context.results, 'context_results')
                     }
 
                     if (pipeline.context.params && pipeline.context.params.action && pipeline.context.params.action["${name}_${methodName}"] && pipeline.context.params.action["${name}_${methodName}"].debugEnabled) {
