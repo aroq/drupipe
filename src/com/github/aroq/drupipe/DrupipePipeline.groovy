@@ -7,19 +7,20 @@ class DrupipePipeline implements Serializable {
     String from
 
     ArrayList<DrupipePod> pre_pods = []
+
     ArrayList<DrupipePod> pods = []
+
     ArrayList<DrupipePod> post_pods = []
+
     ArrayList<DrupipePod> final_pods = []
 
     ArrayList phases = ['pre_pods', 'pods', 'post_pods', 'final_pods']
 
     DrupipeController controller
 
-    def script = controller.script
-
     def execute(body = null) {
+        def script = controller.script
         controller.script.echo "DrupipePipeline execute - ${name}"
-
         for (phase in phases) {
             if (this."${phase}") {
                 script.echo "Execute PIPELINE phase: ${phase}"
