@@ -214,6 +214,11 @@ class DrupipeController implements Serializable {
             script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params]], this)
             archiveObjectJsonAndYaml(context, 'context')
 
+            if (configVersion() > 1) {
+                preprocessConfig()
+                utils.debugLog(context, job.pipeline.name, 'JOB', [debugMode: 'json'], [])
+            }
+
             // Secret option for emergency remove workspace.
             // TODO: Bring it back.
         }
@@ -235,10 +240,6 @@ class DrupipeController implements Serializable {
                 }
 
                 if (configVersion() > 1) {
-                    script.node('master') {
-                        preprocessConfig()
-                        utils.debugLog(context, job.pipeline.name, 'JOB', [debugMode: 'json'], [])
-                    }
                     job.execute()
                 }
                 else {
