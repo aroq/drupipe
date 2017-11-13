@@ -120,7 +120,7 @@ class DrupipeController implements Serializable {
     def preprocessConfig() {
         if (configVersion() > 1) {
             if (context.job) {
-                def jobConfig = processConfigItem(context.job, 'job')
+                def jobConfig = processConfigItem(context, 'context')
                 utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [])
                 archiveObjectJsonAndYaml(jobConfig, 'job')
                 job = new DrupipeJob(jobConfig << [controller: this])
