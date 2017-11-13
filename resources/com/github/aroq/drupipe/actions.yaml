@@ -328,7 +328,7 @@ params:
         params:
           command: scale replicaset
           replicas: ''
-          name: ''
+          replicaset_name: ''
           flags:
             --replicas:
               - ${action.params.replicas}
@@ -338,7 +338,7 @@ params:
             - ${action.params.executable}
             - ${action.params.command}
             - ${prepareFlags(action.params.flags)}
-            - ${action.params.name}
+            - ${action.params.replicaset_name}
 
       scale_down_up:
         params:
@@ -417,9 +417,9 @@ params:
       copy_from_pod:
         params:
           command: cp
-          name: ''
+          pod_name: ''
           source_file_name: ''
-          source: ${context.k8s.namespace}/${action.params.name}:${action.params.source_file_name}
+          source: ${context.k8s.namespace}/${action.params.pod_name}:${action.params.source_file_name}
           destination: ''
           full_command:
             - ${action.params.executable}
@@ -431,14 +431,14 @@ params:
         params:
           debugEnabled: true
           command: logs
-          name: ''
+          pod_name: ''
           flags:
             --namespace:
               - ${action.params.namespace}
           full_command:
             - ${action.params.executable}
             - ${action.params.command}
-            - ${action.params.name}
+            - ${action.params.pod_name}
             - ${prepareFlags(action.params.flags)}
 
     HealthCheck:
