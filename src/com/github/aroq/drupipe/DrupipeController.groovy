@@ -120,7 +120,9 @@ class DrupipeController implements Serializable {
         if (configVersion() > 1) {
             if (context.job) {
                 def jobConfig = processConfigItem(context.job, 'job')
-                utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [], true)
+                utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [])
+                archiveObjectJsonAndYaml(jobConfig, 'job')
+
                 job = new DrupipeJob(jobConfig << [controller: this])
             }
         }
@@ -130,42 +132,47 @@ class DrupipeController implements Serializable {
         context.config_version as int
     }
 
-    def serializeContext(path, context, mode = 'yaml') {
-        if (context) {
+    def serializeObject(path, object, mode = 'yaml') {
+        if (object) {
             if (script.fileExists(path)) {
                 script.sh("rm -f ${path}")
             }
             if (mode == 'yaml') {
-                script.writeYaml(file: path, data: context)
+                script.writeYaml(file: path, data: object)
             }
             else if (mode == 'json') {
-                def outJson = groovy.json.JsonOutput.toJson(context)
+                def outJson = groovy.json.JsonOutput.toJson(object)
                 script.writeFile file: path, text: outJson, encoding: 'UTF-8'
             }
         }
     }
 
+    def archiveObject(path, object, mode = 'yaml') {
+        if (object) {
+            serializeObject(path, object, mode)
+            this.script.archiveArtifacts artifacts: path
+        }
+    }
+
+    def archiveObjectJsonAndYaml(object, String name, String prefixPath = '.unipipe/temp') {
+        archiveObject("${prefixPath}/${name}.yaml", object)
+        archiveObject("${prefixPath}/${name}.json", object, 'json')
+    }
+
     def config() {
         script.node('master') {
             script.echo "Executing pipeline"
-
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 
             utils.dump(params, params, 'PIPELINE-PARAMS')
             utils.dump(params, config, 'PIPELINE-CONFIG')
 
+            // Get config (context).
             script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params]], this)
-
-            def contextDumpPath = '.unipipe/temp/context.yaml'
-            serializeContext(contextDumpPath, context)
-            this.script.archiveArtifacts artifacts: contextDumpPath
-            contextDumpPath = '.unipipe/temp/context.json'
-            serializeContext(contextDumpPath, context, 'json')
-            this.script.archiveArtifacts artifacts: contextDumpPath
-
-            utils.dump(context, context, 'PIPELINE-CONTEXT')
+            archiveObjectJsonAndYaml(context, 'context')
 
             // Secret option for emergency remove workspace.
+            // TODO: Bring it back.
         }
     }
 
