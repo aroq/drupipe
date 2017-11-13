@@ -23,7 +23,7 @@ params:
             source: result
             destination: context
           # Unset parent params.
-          result:
+          result: null
 
       perform:
         params:
@@ -42,19 +42,19 @@ params:
       params:
         post_process:
           # Unset parent params.
-          result:
+          result: null
 
     YamlFileConfig:
       params:
         post_process:
           # Unset parent params.
-          result:
+          result: null
 
     Source:
       params:
         post_process:
           # Unset parent params.
-          result:
+          result: null
       add:
         params:
           post_process:
