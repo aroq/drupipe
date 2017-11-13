@@ -50,6 +50,10 @@ class DrupipeActionWrapper implements Serializable {
             utils.pipelineNotify(pipeline.context, notification << [status: 'START'])
             utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} start <-")
 
+            // Define action params.
+            def actionParams = [:]
+            def defaultActionParams = [:]
+
             if (configVersion == 1) {
                 for (actionName in ['__default', this.name, this.name + '_' + this.methodName]) {
                     if (pipeline.context && pipeline.context.params && pipeline.context.params.action && actionName in pipeline.context.params.action) {
@@ -62,7 +66,7 @@ class DrupipeActionWrapper implements Serializable {
             if (!this.params) {
                 this.params = [:]
             }
-            this.params = utils.merge(defaultActionParams, this.params)
+            this.params = utils.merge(defaultactionparams, this.params)
             utils.debugLog(this.params, this.params, "this.params after merge defaultActionParams with this.params", [debugMode: 'json'], [], this.params && this.params.debugEnabled)
 
             def actionInstance
