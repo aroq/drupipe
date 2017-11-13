@@ -119,21 +119,21 @@ class DrupipeController implements Serializable {
 
     def preprocessConfig() {
         if (configVersion() > 1) {
-            context = processConfigItem(context, 'context')
-            archiveObjectJsonAndYaml(context, 'context_from_processsed')
+            context = processConfigItem(context.jobs, 'jobs')
+            archiveObjectJsonAndYaml(context.jobs, 'jobs_processsed')
         }
+        processJobsConfig()
         if (context.job) {
             def jobConf = context.job
             utils.debugLog(context, jobConf, 'JOB', [debugMode: 'json'], [], true)
             archiveObjectJsonAndYaml(jobConf, 'job')
-            jobConfig()
             if (configVersion() > 1) {
                 job = new DrupipeJob(jobConf << [controller: this])
             }
         }
     }
 
-    def jobConfig() {
+    def processJobsConfig() {
         def result = [:]
         if (context.jobs) {
             processJobs(context.jobs)
