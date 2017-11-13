@@ -24,7 +24,6 @@ params:
             destination: context
           # Unset parent params.
           result:
-            type: null
 
       perform:
         params:
@@ -44,21 +43,18 @@ params:
         post_process:
           # Unset parent params.
           result:
-            type: null
 
     YamlFileConfig:
       params:
         post_process:
           # Unset parent params.
           result:
-            type: null
 
     Source:
       params:
         post_process:
           # Unset parent params.
           result:
-            type: null
       add:
         params:
           post_process:
