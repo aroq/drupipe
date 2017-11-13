@@ -366,6 +366,7 @@ params:
 
       get_pod_name:
         params:
+          debugEnabled: true
           command: get pod
           release_name: ${actions.Helm_status.release_name}
           jsonpath: '{.items[0].metadata.name}'
