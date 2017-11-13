@@ -38,7 +38,23 @@ params:
               source: result.configRepo
               destination: context.configRepo
 
+    GroovyFileConfig:
+      params:
+        post_process:
+          # Unset parent params.
+          result:
+
+    YamlFileConfig:
+      params:
+        post_process:
+          # Unset parent params.
+          result:
+
     Source:
+      params:
+        post_process:
+          # Unset parent params.
+          result:
       add:
         params:
           post_process:
