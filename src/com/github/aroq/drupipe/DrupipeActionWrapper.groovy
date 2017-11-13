@@ -50,18 +50,6 @@ class DrupipeActionWrapper implements Serializable {
             utils.pipelineNotify(pipeline.context, notification << [status: 'START'])
             utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} start <-")
 
-
-            // Define action params.
-            def actionParams = [:]
-            def defaultActionParams = [:]
-
-            // TODO: read action default params from YAML.
-//            def actionConfigFile = [utils.sourceDir(pipeline.context, 'library'), 'actions', this.name + '.yaml'].join('/')
-//            if (this.script.fileExists(actionConfigFile)) {
-//                def actionConfig = this.script.readYaml(file: actionConfigFile)
-//                utils.debugLog(pipeline.context, actionConfig, "${this.fullName} action YAML CONFIG", [:], [], true)
-//            }
-
             if (configVersion == 1) {
                 for (actionName in ['__default', this.name, this.name + '_' + this.methodName]) {
                     if (pipeline.context && pipeline.context.params && pipeline.context.params.action && actionName in pipeline.context.params.action) {
@@ -201,6 +189,7 @@ class DrupipeActionWrapper implements Serializable {
                                 }
                             }
                         }
+                        pipeline.archiveObjectJsonAndYaml(pipeline.context.actions, 'action_results')
                     }
 
                     if (pipeline.context.params && pipeline.context.params.action && pipeline.context.params.action["${name}_${methodName}"] && pipeline.context.params.action["${name}_${methodName}"].debugEnabled) {
