@@ -21,6 +21,7 @@ class DrupipePipeline implements Serializable {
     def execute(body = null) {
         def script = controller.script
         controller.script.echo "DrupipePipeline execute - ${name}"
+        // TODO: add try/finally for 'final_pods' execution.
         for (phase in phases) {
             if (this."${phase}") {
                 script.echo "Execute PIPELINE phase: ${phase}"
