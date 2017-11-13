@@ -22,6 +22,8 @@ params:
             type: result
             source: result
             destination: context
+          # Unset parent params.
+          result:
 
       perform:
         params:
@@ -331,7 +333,7 @@ params:
         params:
           command: get replicaset
           release_name: ${actions.Helm_status.release_name}
-          jsonpath: '''{.items[0].metadata.name}'''
+          jsonpath: '{.items[0].metadata.name}'
           return_stdout: true
           selector: release=${context.k8s.selector}
           flags:
@@ -350,7 +352,7 @@ params:
         params:
           command: get pod
           release_name: ${actions.Helm_status.release_name}
-          jsonpath: '''{.items[0].metadata.name}'''
+          jsonpath: '{.items[0].metadata.name}'
           return_stdout: true
           selector: release=${context.k8s.selector}
           flags:
@@ -380,7 +382,7 @@ params:
         params:
           command: get service
           release_name: ${actions.Helm_status.release_name}
-          jsonpath: '''{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}'''
+          jsonpath: '{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}'
           return_stdout: true
           selector: release=${context.k8s.selector}
           flags:
