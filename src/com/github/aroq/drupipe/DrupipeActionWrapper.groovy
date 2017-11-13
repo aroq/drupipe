@@ -66,7 +66,7 @@ class DrupipeActionWrapper implements Serializable {
             if (!this.params) {
                 this.params = [:]
             }
-            this.params = utils.merge(defaultactionparams, this.params)
+            this.params = utils.merge(defaultActionParams, this.params)
             utils.debugLog(this.params, this.params, "this.params after merge defaultActionParams with this.params", [debugMode: 'json'], [], this.params && this.params.debugEnabled)
 
             def actionInstance
