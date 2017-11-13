@@ -12,13 +12,14 @@ class DrupipeContainerBlock implements Serializable {
 
     DrupipeController controller
 
+    def script = controller.script
+
     def execute(body = null) {
-        def script = controller.script
         script.echo "DrupipeContainerBlock execute - ${name}"
 
         for (phase in phases) {
             if (this."${phase}") {
-                script.echo "Execute phase: ${phase}"
+                script.echo "Execute CONTAINER BLOCK phase: ${phase}"
                 for (action in this."${phase}") {
                     executeAction(action)
                 }
