@@ -70,7 +70,7 @@ class DrupipeController implements Serializable {
                 fromObject.name = from
             }
             // Set name to 'from' if parent is 'actions'.
-            if (parent == 'actions') {
+            if (parent in ['actions', 'pre_actions', 'post_actions']) {
                 def action = from - 'actions.'
                 def values = action.split("\\.")
                 if (values.size() > 1) {
