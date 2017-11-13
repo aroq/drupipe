@@ -79,7 +79,8 @@ class DrupipeController implements Serializable {
                     fromObject.configVersion = 2
                 }
             }
-            result = utils.merge(result, processFrom(fromObject, parent))
+            fromObject = processFrom(fromObject, parent)
+            result = utils.merge(fromObject, result)
         }
         result
     }
