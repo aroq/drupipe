@@ -43,8 +43,8 @@ params:
       params:
         post_process:
           # Unset parent params.
-            type: null
           result: null
+            type: null
 
     YamlFileConfig:
       params:
