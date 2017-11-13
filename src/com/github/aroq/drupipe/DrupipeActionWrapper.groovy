@@ -187,8 +187,6 @@ class DrupipeActionWrapper implements Serializable {
                                 }
                             }
                         }
-                        pipeline.archiveObjectJsonAndYaml(pipeline.context.actions, 'action_results')
-                        pipeline.archiveObjectJsonAndYaml(pipeline.context.results, 'context_results')
                     }
 
                     if (pipeline.context.params && pipeline.context.params.action && pipeline.context.params.action["${name}_${methodName}"] && pipeline.context.params.action["${name}_${methodName}"].debugEnabled) {
@@ -202,6 +200,8 @@ class DrupipeActionWrapper implements Serializable {
             }
             if (context) {
                 pipeline.context = pipeline.context ? utils.merge(pipeline.context, context) : context
+                pipeline.archiveObjectJsonAndYaml(pipeline.context.actions, 'action_results')
+                pipeline.archiveObjectJsonAndYaml(pipeline.context.results, 'context_results')
             }
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
