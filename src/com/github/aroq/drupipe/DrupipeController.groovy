@@ -45,10 +45,10 @@ class DrupipeController implements Serializable {
 
         def parentItem = ''
         for (pathItem in path) {
-            if (parentItem) {
-                object = object[parentItem]
-            }
-            result = utils.merge(result, getFromPathItem(object, pathItem))
+            def subObject = parentItem ? object[parentItem] : object
+            result = utils.merge(result, getFromPathItem(subObject, pathItem))
+            // Override with params set in object itself (priority over 'imported' from 'from' params).
+            result = utils.merge(result, object)
             parentItem = pathItem
         }
         result
