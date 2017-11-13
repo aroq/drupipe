@@ -17,27 +17,31 @@ class DrupipeContainerBlock implements Serializable {
         script.echo "DrupipeContainerBlock execute - ${name}"
 
         for (phase in phases) {
-            script.echo "Execute phase: ${phase}"
-            for (action in this."${phase}") {
-                executeAction(action)
+            if (this."${phase}") {
+                script.echo "Execute phase: ${phase}"
+                for (action in this."${phase}") {
+                    executeAction(action)
+                }
             }
         }
     }
 
     def executeAction(action) {
-        def actionWrapper = [
-            name: action.name,
-            methodName: action.methodName,
-            configVersion: action.configVersion,
-        ]
-        action.remove('name')
-        action.remove('methodName')
-        action.remove('configVersion')
+        if (action) {
+            def actionWrapper = [
+                name: action.name,
+                methodName: action.methodName,
+                configVersion: action.configVersion,
+            ]
+            action.remove('name')
+            action.remove('methodName')
+            action.remove('configVersion')
 
-        actionWrapper['params'] = action
-        controller.utils.debugLog(controller.context, action, 'ACTION', [debugMode: 'json'], [], true)
-        actionWrapper.pipeline = controller
-        (new DrupipeActionWrapper(actionWrapper)).execute()
+            actionWrapper['params'] = action
+            controller.utils.debugLog(controller.context, action, 'ACTION', [debugMode: 'json'], [], true)
+            actionWrapper.pipeline = controller
+            (new DrupipeActionWrapper(actionWrapper)).execute()
+        }
     }
 
 }
