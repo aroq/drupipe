@@ -429,6 +429,7 @@ params:
 
       get_pod_logs:
         params:
+          debugEnabled: true
           command: logs
           name: ''
           flags:
