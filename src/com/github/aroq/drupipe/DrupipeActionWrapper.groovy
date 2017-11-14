@@ -176,12 +176,18 @@ class DrupipeActionWrapper implements Serializable {
                                 }
                                 if (deepValue) {
                                     if (result.value.destination) {
-                                        script.echo "before serializeAndDeserialize"
-                                        utils.serializeAndDeserialize(this.context)
+                                        if (this.context) {
+                                            script.echo "before serializeAndDeserialize1"
+                                            utils.serializeAndDeserialize(this.context)
+                                            script.echo "after serializeAndDeserialize1"
+                                        }
                                         contextStoreResult(result.value.destination.tokenize('.'), this, deepValue)
                                         script.echo "after contextStoreResult"
-                                        utils.serializeAndDeserialize(this.context)
-                                        script.echo "after serializeAndDeserialize"
+                                        if (this.context) {
+                                            script.echo "before serializeAndDeserialize2"
+                                            utils.serializeAndDeserialize(this.context)
+                                            script.echo "after serializeAndDeserialize2"
+                                        }
                                     }
                                     if (this.params.dump_result && this.params.debugEnabled) {
                                         script.echo "SOURCE: ${result.value.source}"
