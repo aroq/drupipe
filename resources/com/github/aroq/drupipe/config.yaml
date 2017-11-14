@@ -1,8 +1,8 @@
 docmanDir: docman
 drupipeDockerArgs: --user root:root --net=host
 
-seed_jobs:
-  common:
+jobs:
+  seed:
     type: seed
     pipeline:
       pods:
