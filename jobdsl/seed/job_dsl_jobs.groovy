@@ -38,7 +38,6 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
     def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipelines/pipeline'
 
     for (job in jobs) {
-
         if (job.key == 'seed') {
             continue
         }
