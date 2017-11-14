@@ -6,13 +6,13 @@ class DrupipeController implements Serializable {
 
     ArrayList<DrupipePod> pods = []
 
-    LinkedHashMap context = [:]
+    def context = [:]
 
-    LinkedHashMap params = [:]
+    def params = [:]
 
     HashMap notification = [:]
 
-    LinkedHashMap config = [:]
+    def config = [:]
 
     DrupipeBlock block
 
