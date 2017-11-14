@@ -156,6 +156,7 @@ class DrupipeController implements Serializable {
     }
 
     def processJobs(jobs, prefixes = [], parentParams = [:]) {
+        script.echo "processJobs() started"
         if (jobs) {
             for (job in jobs) {
                 if (job.value.children) {
@@ -170,6 +171,7 @@ class DrupipeController implements Serializable {
                 }
             }
         }
+        script.echo "processJobs() ended"
     }
 
 
