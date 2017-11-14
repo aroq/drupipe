@@ -135,28 +135,32 @@ class DrupipeController implements Serializable {
 
     def processJobsConfig() {
         script.echo "processJobsConfig() started"
-        def result = [:]
         if (context.jobs) {
             script.echo "processJobsConfig() - if context.jobs"
             processJobs(context.jobs)
             script.echo "processJobsConfig() - processJobs() ended"
             if (!context.jobs) {
-                script.echo "processJobsConfig() - no context.jobs"
+                script.echo "processJobsConfig() - no context.jobs defined"
             }
             utils.debugLog(context, context.jobs, 'CONFIG JOBS PROCESSED', [debugMode: 'json'], true)
 
-            result.job = (context.env.JOB_NAME).split('/').drop(1).inject(context, { obj, prop ->
+            script.echo "processJobsConfig() - after debugLog()"
+
+            context.job = (context.env.JOB_NAME).split('/').drop(1).inject(context, { obj, prop ->
                 obj.jobs[prop]
             })
 
-            if (result.job) {
-                if (result.job.context) {
-                    result = utils.merge(result, result.job.context)
+            script.echo "processJobsConfig() - after inject"
+
+            if (context.job) {
+                if (context.job.context) {
+                    context = utils.merge(context, context.job.context)
                 }
             }
-            result.jobs = context.jobs
+            else {
+                script.echo "processJobsConfig() - no context.job defined"
+            }
         }
-        result
     }
 
     def processJobs(jobs, prefixes = [], parentParams = [:]) {
