@@ -11,8 +11,8 @@ jobs:
             - from: containers.common
               blocks:
                 - actions:
-                    - from: actions.JobDslSeed.prepare
-                    - from: actions.JobDslSeed.perform
+                  - from: actions.JobDslSeed.prepare
+                  - from: actions.JobDslSeed.perform
 
 params:
   jobs:
