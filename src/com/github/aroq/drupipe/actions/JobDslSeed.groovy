@@ -11,7 +11,7 @@ class JobDslSeed extends BaseAction {
     DrupipeActionWrapper action
 
     def prepare() {
-        script.checkout scm
+        script.checkout script.scm
         if (script.fileExists(action.pipeline.context.projectConfigPath)) {
             script.dir(action.pipeline.context.projectConfigPath) {
                 script.deleteDir()
