@@ -141,14 +141,9 @@ class DrupipeController implements Serializable {
             }
             utils.debugLog(context, context.jobs, 'CONFIG JOBS PROCESSED', [debugMode: 'json'], true)
 
-//            if (context.env.JOB_NAME.tokenize('/').pop() == 'seed') {
-//                context.job = context.seed_jobs.common
-//            }
-//            else {
-                context.job = (context.env.JOB_NAME).split('/').drop(1).inject(context, { obj, prop ->
-                    obj.jobs[prop]
-                })
-//            }
+            context.job = (context.env.JOB_NAME).split('/').drop(1).inject(context, { obj, prop ->
+                obj.jobs[prop]
+            })
 
             if (context.job) {
                 if (context.job.context) {
