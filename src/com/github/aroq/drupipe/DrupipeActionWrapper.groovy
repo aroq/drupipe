@@ -170,7 +170,7 @@ class DrupipeActionWrapper implements Serializable {
                     if (this.params.store_result) {
                         if (this.params.post_process) {
                             for (result in this.params.post_process) {
-                                def deepValue
+                                HashMap deepValue
                                 if (result.value.type == 'result') {
                                     deepValue = utils.deepGet(this, result.value.source.tokenize('.'))
                                     script.echo "SOURCE: ${result.value.source}"
