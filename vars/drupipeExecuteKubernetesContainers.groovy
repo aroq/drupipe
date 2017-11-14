@@ -11,7 +11,7 @@ def call(ArrayList containers, DrupipeController controller) {
         def container = containers[i]
         if (!containerNames.contains(container.name)) {
             echo "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
-            container.name = container.name.replaceAll('\\.','-')
+            container.name = container.name.replaceAll('\\.','-').replaceAll('_','-')
             containerNames += container.name
             containersToExecute.add(containerTemplate(
                 name: container.name,
@@ -48,7 +48,7 @@ def call(ArrayList containers, DrupipeController controller) {
                 controller.scmCheckout()
                 controller.context.workspace = pwd()
                 for (def i = 0; i < containers.size(); i++) {
-                    container(containers[i].name.replaceAll('\\.','-')) {
+                    container(containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
                         unstash('config')
 
                         for (block in containers[i].blocks) {
