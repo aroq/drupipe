@@ -117,7 +117,7 @@ class DrupipeController implements Serializable {
         object
     }
 
-    def preprocessConfig() {
+    def processConfig() {
         if (configVersion() > 1) {
             context.jobs = processConfigItem(context.jobs, 'jobs')
             archiveObjectJsonAndYaml(context.jobs, 'jobs_processsed')
@@ -134,8 +134,10 @@ class DrupipeController implements Serializable {
     }
 
     def processJobsConfig() {
+        script.echo "processJobsConfig() started"
         def result = [:]
         if (context.jobs) {
+            script.echo "processJobsConfig() - if context.jobs"
             processJobs(context.jobs)
             utils.debugLog(context, context.jobs, 'CONFIG JOBS PROCESSED', [debugMode: 'json'], true)
 
@@ -215,7 +217,7 @@ class DrupipeController implements Serializable {
             archiveObjectJsonAndYaml(context, 'context')
 
             if (configVersion() > 1) {
-                preprocessConfig()
+                processConfig()
                 utils.debugLog(context, job.pipeline.name, 'JOB', [debugMode: 'json'], [])
             }
 
