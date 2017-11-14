@@ -181,6 +181,7 @@ class DrupipeActionWrapper implements Serializable {
                                             utils.serializeAndDeserialize(this.context)
                                             script.echo "after serializeAndDeserialize1"
                                         }
+                                        script.echo "deepValue: ${deepValue}"
                                         contextStoreResult(result.value.destination.tokenize('.'), this, deepValue)
                                         script.echo "after contextStoreResult"
                                         if (this.context) {

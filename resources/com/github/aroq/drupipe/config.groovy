@@ -14,13 +14,13 @@ logRotatorNumToKeep = 5
 drupipeDockerArgs = '--user root:root --net=host'
 
 params = [
-//    pipeline: [
-//        scripts_library: [
-//            url: 'https://github.com/aroq/drupipe.git',
-//            ref: 'master',
-//            type: 'branch',
-//        ]
-//    ],
+    pipeline: [
+        scripts_library: [
+            url: 'https://github.com/aroq/drupipe.git',
+            ref: 'master',
+            type: 'branch',
+        ]
+    ],
     block: [
         nodeName: 'default',
         // TODO: remove it after configs update.
