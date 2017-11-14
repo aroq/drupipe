@@ -173,6 +173,9 @@ class DrupipeActionWrapper implements Serializable {
                                 def deepValue
                                 if (result.value.type == 'result') {
                                     deepValue = utils.deepGet(this, result.value.source.tokenize('.'))
+                                    script.echo "SOURCE: ${result.value.source}"
+                                    script.echo "DESTINATION: ${result.value.destination}"
+                                    script.echo "deepValue: ${deepValue}"
                                 }
                                 if (deepValue) {
                                     if (result.value.destination) {
@@ -192,9 +195,6 @@ class DrupipeActionWrapper implements Serializable {
                                         }
                                     }
                                     if (this.params.dump_result && this.params.debugEnabled) {
-                                        script.echo "SOURCE: ${result.value.source}"
-                                        script.echo "DESTINATION: ${result.value.destination}"
-                                        script.echo "deepValue: ${deepValue}"
                                         utils.debugLog(pipeline.context, context, "Temp context", [debugMode: 'json'], [], this.params.debugEnabled)
                                     }
                                 }
