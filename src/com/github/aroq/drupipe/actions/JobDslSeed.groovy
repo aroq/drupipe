@@ -14,13 +14,13 @@ class JobDslSeed extends BaseAction {
         script.checkout script.scm
         if (script.fileExists(action.pipeline.context.projectConfigPath)) {
             script.dir(action.pipeline.context.projectConfigPath) {
-                script.deleteDir()
+                this.script.deleteDir()
             }
             script.dir('library') {
-                script.deleteDir()
+                this.script.deleteDir()
             }
             script.dir('mothership') {
-                script.deleteDir()
+                this.script.deleteDir()
             }
         }
 
