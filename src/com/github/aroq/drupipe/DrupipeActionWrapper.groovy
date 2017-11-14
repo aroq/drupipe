@@ -176,6 +176,9 @@ class DrupipeActionWrapper implements Serializable {
                                 }
                                 if (deepValue) {
                                     if (result.value.destination) {
+                                        script.echo "before serializeAndDeserialize"
+                                        utils.serializeAndDeserialize(this.context)
+                                        script.echo "after serializeAndDeserialize"
                                         contextStoreResult(result.value.destination.tokenize('.'), this, deepValue)
                                     }
                                     if (this.params.dump_result && this.params.debugEnabled) {
