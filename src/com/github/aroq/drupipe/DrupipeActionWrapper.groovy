@@ -176,7 +176,7 @@ class DrupipeActionWrapper implements Serializable {
                                     script.echo "SOURCE: ${result.value.source}"
                                     script.echo "DESTINATION: ${result.value.destination}"
                                     script.echo "deepValue: ${deepValue}"
-                                    utils.serializeAndDeserialize([test: 'test'])
+//                                    utils.serializeAndDeserialize([test: 't¨est'])
                                 }
                                 if (deepValue) {
                                     if (result.value.destination) {
