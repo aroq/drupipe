@@ -139,6 +139,10 @@ class DrupipeController implements Serializable {
         if (context.jobs) {
             script.echo "processJobsConfig() - if context.jobs"
             processJobs(context.jobs)
+            script.echo "processJobsConfig() - processJobs() ended"
+            if (!context.jobs) {
+                script.echo "processJobsConfig() - no context.jobs"
+            }
             utils.debugLog(context, context.jobs, 'CONFIG JOBS PROCESSED', [debugMode: 'json'], true)
 
             result.job = (context.env.JOB_NAME).split('/').drop(1).inject(context, { obj, prop ->
