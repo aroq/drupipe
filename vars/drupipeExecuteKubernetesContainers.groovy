@@ -54,9 +54,9 @@ def call(ArrayList containers, DrupipeController controller) {
                         for (block in containers[i].blocks) {
 //                            controller.utils.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
                             block.controller = controller
-//                            sshagent([controller.context.credentialsId]) {
+                            sshagent([controller.context.credentialsId]) {
                                 (new DrupipeContainerBlock(block)).execute()
-//                            }
+                            }
                         }
                     }
                 }
