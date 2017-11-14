@@ -1,6 +1,19 @@
 docmanDir: docman
 drupipeDockerArgs: --user root:root --net=host
 
+seed_jobs:
+  common:
+    type: seed
+    pipeline:
+      pods:
+        - from: pods.master
+          containers:
+            - from: containers.common
+              blocks:
+                - actions:
+                    - from: actions.JobDslSeed.prepare
+                    - from: actions.JobDslSeed.perform
+
 params:
   jobs:
     __default:
