@@ -11,9 +11,10 @@ def call(ArrayList containers, DrupipeController controller) {
         def container = containers[i]
         if (!containerNames.contains(container.name)) {
             echo "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
+            container.name = container.name.replaceAll('\\.','-')
             containerNames += container.name
             containersToExecute.add(containerTemplate(
-                name: container.name.replaceAll('\\.','-'),
+                name: container.name,
                 image: container.image,
                 ttyEnabled: true,
                 command: 'cat',

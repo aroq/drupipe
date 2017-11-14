@@ -134,23 +134,16 @@ class DrupipeController implements Serializable {
     }
 
     def processJobsConfig() {
-        script.echo "processJobsConfig() started"
         if (context.jobs) {
-            script.echo "processJobsConfig() - if context.jobs"
             processJobs(context.jobs)
-            script.echo "processJobsConfig() - processJobs() ended"
             if (!context.jobs) {
                 script.echo "processJobsConfig() - no context.jobs defined"
             }
             utils.debugLog(context, context.jobs, 'CONFIG JOBS PROCESSED', [debugMode: 'json'], true)
 
-            script.echo "processJobsConfig() - after debugLog()"
-
             context.job = (context.env.JOB_NAME).split('/').drop(1).inject(context, { obj, prop ->
                 obj.jobs[prop]
             })
-
-            script.echo "processJobsConfig() - after inject"
 
             if (context.job) {
                 if (context.job.context) {
@@ -164,7 +157,6 @@ class DrupipeController implements Serializable {
     }
 
     def processJobs(jobs, prefixes = [], parentParams = [:]) {
-        script.echo "processJobs() started"
         if (jobs) {
             for (job in jobs) {
                 if (job.value.children) {
@@ -179,7 +171,6 @@ class DrupipeController implements Serializable {
                 }
             }
         }
-        script.echo "processJobs() ended"
     }
 
 
