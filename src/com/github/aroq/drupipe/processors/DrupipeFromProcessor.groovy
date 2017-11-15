@@ -1,6 +1,11 @@
 package com.github.aroq.drupipe.processors
 
+import com.github.aroq.drupipe.DrupipeController
+
 class DrupipeFromProcessor {
+
+    DrupipeController controller
+
     def getFromPathItem(object, pathItem, String key) {
         def result = [:]
         if (object && object.containsKey(pathItem)) {
@@ -25,7 +30,7 @@ class DrupipeFromProcessor {
             if (parentItem) {
                 object = object[parentItem]
             }
-            result = utils.merge(result, getFromPathItem(object, pathItem, key))
+            result = controller.utils.merge(result, getFromPathItem(object, pathItem, key))
             parentItem = pathItem
         }
         result
