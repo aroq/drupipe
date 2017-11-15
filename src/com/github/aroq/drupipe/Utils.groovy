@@ -566,7 +566,6 @@ def prepareFlags(flags) {
     }.join(' ')
 }
 
-@NonCPS
 def serializeAndDeserialize(params) {
     def result = [:]
     def yamlFilePath = '.unipipe/temp/serializeAndDeserialize.yaml'

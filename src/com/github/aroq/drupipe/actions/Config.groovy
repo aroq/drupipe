@@ -52,9 +52,9 @@ class Config extends BaseAction {
             [
                 action: "Config.jenkinsConfig"
             ],
-//            [
-//                action: "Config.jobConfig"
-//            ],
+            [
+                action: "Config.jobConfig"
+            ],
         ]
 
         if (action.pipeline.context.configProviders) {
@@ -108,6 +108,43 @@ class Config extends BaseAction {
 
     def jenkinsConfig() {
         action.params.jenkinsParams
+    }
+
+    def jobConfig() {
+        def result = [:]
+        if (action.pipeline.context.jobs) {
+            processJobs(action.pipeline.context.jobs)
+            utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED')
+
+            result.job = (action.pipeline.context.env.JOB_NAME).split('/').drop(1).inject(action.pipeline.context, { obj, prop ->
+                obj.jobs[prop]
+            })
+
+            if (result.job) {
+                if (result.job.context) {
+                    result = utils.merge(result, result.job.context)
+                }
+            }
+            result.jobs = action.pipeline.context.jobs
+        }
+        result
+    }
+
+    def processJobs(jobs, prefixes = [], parentParams = [:]) {
+        if (jobs) {
+            for (job in jobs) {
+                if (job.value.children) {
+                    job.value.jobs = job.value.remove('children')
+                }
+                def children = job.value.jobs ? job.value.jobs : [:]
+                job.value = utils.merge(parentParams, job.value)
+                if (children) {
+                    def jobClone = job.value.clone()
+                    jobClone.remove('jobs')
+                    processJobs(children, prefixes << job.key, jobClone)
+                }
+            }
+        }
     }
 
     def envConfig() {

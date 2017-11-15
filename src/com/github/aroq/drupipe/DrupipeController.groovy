@@ -117,22 +117,33 @@ class DrupipeController implements Serializable {
         object
     }
 
-    def processConfig() {
+    def preprocessConfig() {
         if (configVersion() > 1) {
-            context.jobs = processConfigItem(context.jobs, 'jobs')
-            archiveObjectJsonAndYaml(context.jobs, 'jobs_processsed')
-        }
-        processJobsConfig()
-        if (context.job) {
-            def jobConf = context.job
-            utils.debugLog(context, jobConf, 'JOB', [debugMode: 'json'], [], true)
-            archiveObjectJsonAndYaml(jobConf, 'job')
-            if (configVersion() > 1) {
-                job = new DrupipeJob(jobConf)
-                job.controller = this
+            if (context.job) {
+                def jobConfig = processConfigItem(context.job, 'job')
+                utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [])
+                archiveObjectJsonAndYaml(jobConfig, 'job')
+                job = new DrupipeJob(jobConfig << [controller: this])
             }
         }
     }
+
+//    def processConfig() {
+//        if (configVersion() > 1) {
+//            context.jobs = processConfigItem(context.jobs, 'jobs')
+//            archiveObjectJsonAndYaml(context.jobs, 'jobs_processsed')
+//        }
+//        processJobsConfig()
+//        if (context.job) {
+//            def jobConf = context.job
+//            utils.debugLog(context, jobConf, 'JOB', [debugMode: 'json'], [], true)
+//            archiveObjectJsonAndYaml(jobConf, 'job')
+//            if (configVersion() > 1) {
+//                job = new DrupipeJob(jobConf)
+//                job.controller = this
+//            }
+//        }
+//    }
 
     def processJobsConfig() {
         if (context.jobs) {

@@ -86,7 +86,7 @@ class DrupipeActionWrapper implements Serializable {
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
                 this.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
             }
-            else if (this.params) {
+            else {
                 this.params = utils.serializeAndDeserialize(this.params)
 
                 try {
@@ -170,33 +170,18 @@ class DrupipeActionWrapper implements Serializable {
                     if (this.params.store_result) {
                         if (this.params.post_process) {
                             for (result in this.params.post_process) {
-                                HashMap deepValue
+                                def deepValue
                                 if (result.value.type == 'result') {
                                     deepValue = utils.deepGet(this, result.value.source.tokenize('.'))
-                                    script.echo "SOURCE: ${result.value.source}"
-                                    script.echo "DESTINATION: ${result.value.destination}"
-                                    script.echo "deepValue: ${deepValue}"
-                                    utils.serializeAndDeserialize([test: 'test'])
-                                    script.echo "after test serializeAndDeserialize"
                                 }
                                 if (deepValue) {
                                     if (result.value.destination) {
-                                        if (this.context) {
-                                            script.echo "before serializeAndDeserialize1"
-                                            utils.serializeAndDeserialize(this.context)
-                                            script.echo "after serializeAndDeserialize1"
-                                        }
-                                        script.echo "deepValue"
-                                        utils.serializeAndDeserialize(deepValue)
                                         contextStoreResult(result.value.destination.tokenize('.'), this, deepValue)
-                                        script.echo "after contextStoreResult"
-                                        if (this.context) {
-                                            script.echo "before serializeAndDeserialize2"
-                                            utils.serializeAndDeserialize(this.context)
-                                            script.echo "after serializeAndDeserialize2"
-                                        }
                                     }
                                     if (this.params.dump_result && this.params.debugEnabled) {
+                                        script.echo "SOURCE: ${result.value.source}"
+                                        script.echo "DESTINATION: ${result.value.destination}"
+                                        script.echo "deepValue: ${deepValue}"
                                         utils.debugLog(pipeline.context, context, "Temp context", [debugMode: 'json'], [], this.params.debugEnabled)
                                     }
                                 }
