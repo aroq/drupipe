@@ -15,7 +15,7 @@ class DrupipeConfig {
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 
             utils.dump(params, params, 'PIPELINE-PARAMS')
-            utils.dump(params, config, 'PIPELINE-CONFIG')
+//            utils.dump(params, config, 'PIPELINE-CONFIG')
 
             // Get config (context).
             script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params]], controller)
