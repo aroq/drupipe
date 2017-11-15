@@ -255,6 +255,11 @@ class DrupipeController implements Serializable {
                 }
 
                 if (configVersion() > 1) {
+                    if (context.results) {
+                        script.echo "DrupipeController().execute: serializeAndDeserialize(pipeline.context.results) BEFORE0"
+                        utils.serializeAndDeserialize(context.results)
+                        script.echo "DrupipeController().execute: serializeAndDeserialize(pipeline.context.results) AFTER0"
+                    }
                     job.execute()
                 }
                 else {
