@@ -86,7 +86,7 @@ class DrupipeActionWrapper implements Serializable {
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
                 this.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
             }
-            else {
+            else if (this.params) {
                 this.params = utils.serializeAndDeserialize(this.params)
 
                 try {
