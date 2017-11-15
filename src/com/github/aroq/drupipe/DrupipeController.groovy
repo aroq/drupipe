@@ -123,7 +123,8 @@ class DrupipeController implements Serializable {
                 def jobConfig = context.job
                 utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [])
                 archiveObjectJsonAndYaml(jobConfig, 'job')
-                job = new DrupipeJob(jobConfig << [controller: this])
+                job = new DrupipeJob(jobConfig)
+                job.controller = this
             }
         }
     }
