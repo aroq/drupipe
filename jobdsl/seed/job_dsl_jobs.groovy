@@ -39,7 +39,7 @@ if (config.jobs) {
     processJob(config.jobs, '', config)
 }
 
-def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
+def processJob(jobs, currentFolder, config) {
     def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipelines/pipeline'
 
     for (job in jobs) {
@@ -47,8 +47,8 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
             continue
         }
 
-        def parentConfigParams = [:]
-        parentConfigParams << parentConfigParamsPassed
+//        def parentConfigParams = [:]
+//        parentConfigParams << parentConfigParamsPassed
         println job
         println "Processing job: ${job.key}"
         def currentName = currentFolder ? "${currentFolder}/${job.key}" : job.key
@@ -57,11 +57,11 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
 
         println "Job: ${job.value}"
         job.value.params = job.value.params ? job.value.params : [:]
-        job.value.params << (parentConfigParams << job.value.params)
-        println "Job params after parent params merge: ${job.value.params}"
+//        job.value.params << (parentConfigParams << job.value.params)
+//        println "Job params after parent params merge: ${job.value.params}"
 
         if (job.value.type == 'folder') {
-            parentConfigParams << job.value.params
+//            parentConfigParams << job.value.params
             folder(currentName) {
                 if (config.gitlabHelper) {
                     users = config.gitlabHelper.getUsers(config.configRepo)
@@ -669,8 +669,8 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
         }
 
         if (job.value.jobs) {
-            println "Parent config params: ${parentConfigParams}"
-            processJob(job.value.jobs, currentName, config, parentConfigParams)
+//            println "Parent config params: ${parentConfigParams}"
+            processJob(job.value.jobs, currentName, config)
         }
     }
 }
