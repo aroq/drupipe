@@ -24,131 +24,7 @@ class DrupipeController implements Serializable {
 
     DrupipeJob job
 
-    def getFromPathItem(object, pathItem) {
-        def result = [:]
-        if (object && object.containsKey(pathItem)) {
-            if (object[pathItem] && object[pathItem].containsKey('params')) {
-                result = object[pathItem]['params']
-            }
-        }
-        result
-    }
-
-    def getFrom(object, path) {
-        def result = [:]
-        if (path instanceof CharSequence) {
-            path = path.tokenize('.')
-        }
-        if (!path) {
-            return object
-        }
-
-        def parentItem = ''
-        for (pathItem in path) {
-            if (parentItem) {
-                object = object[parentItem]
-            }
-            result = utils.merge(result, getFromPathItem(object, pathItem))
-            parentItem = pathItem
-        }
-        result
-    }
-
-    def processFromItem(result, from, parent) {
-        def fromObject = getFrom(context.params, from)
-        if (fromObject) {
-            if (parent == 'job') {
-                fromObject.name = from
-            }
-            if (parent == 'pipeline') {
-                fromObject.name = from
-            }
-            if (parent == 'containers') {
-                fromObject.name = from
-            }
-            if (parent == 'blocks') {
-                fromObject.name = from
-            }
-            // Set name to 'from' if parent is 'actions'.
-            if (parent in ['actions', 'pre_actions', 'post_actions']) {
-                def action = from - 'actions.'
-                def values = action.split("\\.")
-                if (values.size() > 1) {
-                    fromObject.name = values[0]
-                    fromObject.methodName = values[1]
-                    fromObject.configVersion = 2
-                }
-            }
-            fromObject = processFrom(fromObject, parent)
-            result = utils.merge(fromObject, result)
-        }
-        result
-    }
-
-    def processFrom(def obj, parent) {
-        def result = obj
-        if (obj.containsKey('from')) {
-            if (obj.from instanceof CharSequence) {
-                result = processFromItem(result, obj.from, parent)
-            }
-            else {
-                for (item in obj.from) {
-                    def fromObject = utils.deepGet(context, 'params.' + item)
-                    if (fromObject) {
-                        result = processFromItem(result, item, parent)
-                    }
-                }
-            }
-            result.remove('from')
-        }
-        result
-    }
-
-    def processConfigItem(object, parent) {
-        if (object instanceof Map) {
-            object = processFrom(object, parent)
-            for (item in object) {
-                object[item.key] = processConfigItem(item.value, item.key)
-            }
-        }
-        else if (object instanceof List) {
-            object = object.collect { processConfigItem(it, parent) }
-        }
-        object
-    }
-
-    def processConfig() {
-        if (configVersion() > 1) {
-            if (context.job) {
-                def jobConfig = context.job
-                utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [])
-                archiveObjectJsonAndYaml(jobConfig, 'job')
-                job = new DrupipeJob(jobConfig)
-                job.controller = this
-            }
-        }
-    }
-
-//    def processConfig() {
-//        if (configVersion() > 1) {
-//            context.jobs = processConfigItem(context.jobs, 'jobs')
-//            archiveObjectJsonAndYaml(context.jobs, 'jobs_processsed')
-//        }
-//        processJobsConfig()
-//        if (context.job) {
-//            def jobConf = context.job
-//            utils.debugLog(context, jobConf, 'JOB', [debugMode: 'json'], [], true)
-//            archiveObjectJsonAndYaml(jobConf, 'job')
-//            if (configVersion() > 1) {
-//                job = new DrupipeJob(jobConf)
-//                job.controller = this
-//            }
-//        }
-//    }
-
-    int configVersion() {
-        context.config_version as int
-    }
+    DrupipeConfig drupipeConfig
 
     def serializeObject(path, object, mode = 'yaml') {
         if (object) {
@@ -177,26 +53,8 @@ class DrupipeController implements Serializable {
         archiveObject("${prefixPath}/${name}.json", object, 'json')
     }
 
-    def config() {
-        script.node('master') {
-            script.echo "Executing pipeline"
-            params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
-
-            utils.dump(params, params, 'PIPELINE-PARAMS')
-            utils.dump(params, config, 'PIPELINE-CONFIG')
-
-            // Get config (context).
-            script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params]], this)
-            archiveObjectJsonAndYaml(context, 'context')
-
-            if (configVersion() > 1) {
-                processConfig()
-                utils.debugLog(context, job.pipeline.name, 'JOB', [debugMode: 'json'], [])
-            }
-
-            // Secret option for emergency remove workspace.
-            // TODO: Bring it back.
-        }
+    def configVersion() {
+        drupipeConfig.configVersion()
     }
 
     def execute(body = null) {
@@ -208,7 +66,24 @@ class DrupipeController implements Serializable {
 
         try {
             script.timestamps {
-                config()
+                drupipeConfig = new DrupipeConfig(controller: this, script: script)
+                drupipeConfig.config(params)
+
+                if (configVersion() > 1) {
+                    if (configVersion() > 1) {
+                        if (context.job) {
+                            def jobConfig = context.job
+                            utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [])
+                            archiveObjectJsonAndYaml(jobConfig, 'job')
+                            job = new DrupipeJob(jobConfig)
+                            job.controller = this
+                        }
+                    }
+                    utils.debugLog(context, job.pipeline.name, 'JOB', [debugMode: 'json'], [])
+                }
+
+                // Secret option for emergency remove workspace.
+                // TODO: Bring it back.
 
                 if (body) {
                     body(this)

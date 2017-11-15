@@ -114,7 +114,7 @@ class Config extends BaseAction {
         def result = [:]
         if (action.pipeline.context.jobs) {
 
-            action.pipeline.context = action.pipeline.processConfigItem(action.pipeline.context, 'context')
+            action.pipeline.context = action.pipeline.drupipeConfig.processConfigItem(action.pipeline.context, action.pipeline.context, 'context')
             action.pipeline.archiveObjectJsonAndYaml(action.pipeline.context, 'context_processed')
 
             processJobs(action.pipeline.context.jobs)
