@@ -35,6 +35,11 @@ class DrupipeActionWrapper implements Serializable {
         this.script = pipeline.script
 
         try {
+            if (pipeline.context.results) {
+                script.echo "DrupipeActionWrapper: serializeAndDeserialize() BEFORE0"
+                utils.serializeAndDeserialize(pipeline.context.results)
+                script.echo "DrupipeActionWrapper: serializeAndDeserialize() AFTER0"
+            }
             // Stage name & echo.
             String drupipeStageName
             if (pipeline.block && pipeline.block.stage) {
