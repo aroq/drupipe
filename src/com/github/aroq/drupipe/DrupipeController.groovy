@@ -230,7 +230,17 @@ class DrupipeController implements Serializable {
             archiveObjectJsonAndYaml(context, 'context')
 
             if (configVersion() > 1) {
+                if (context.results) {
+                    script.echo "DrupipeController().config: serializeAndDeserialize(pipeline.context.results) BEFORE0"
+                    utils.serializeAndDeserialize(context.results)
+                    script.echo "DrupipeController().config: serializeAndDeserialize(pipeline.context.results) AFTER0"
+                }
                 processConfig()
+                if (context.results) {
+                    script.echo "DrupipeController().config: serializeAndDeserialize(pipeline.context.results) BEFORE1"
+                    utils.serializeAndDeserialize(context.results)
+                    script.echo "DrupipeController().config: serializeAndDeserialize(pipeline.context.results) AFTER1"
+                }
                 utils.debugLog(context, job.pipeline.name, 'JOB', [debugMode: 'json'], [])
             }
 
