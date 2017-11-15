@@ -41,7 +41,7 @@ class DrupipeContainerBlock implements Serializable {
             controller.utils.debugLog(controller.context, action, 'ACTION', [debugMode: 'json'], [], true)
             DrupipeActionWrapper drupipeActionWrapper = new DrupipeActionWrapper(actionWrapper)
             drupipeActionWrapper.pipeline = controller
-            drupipeActionWrapper.params = action.clone()
+            drupipeActionWrapper.params = action
             if (controller.context.results) {
                 controller.script.echo "DrupipeContainerBlock.executeAction(): serializeAndDeserialize(pipeline.context.results) BEFORE0"
                 controller.utils.serializeAndDeserialize(controller.context.results)
