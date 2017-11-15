@@ -63,7 +63,7 @@ class DrupipeFromProcessor {
                 }
             }
             fromObject = processFrom(context, fromObject, parent)
-            result = utils.merge(fromObject, result)
+            result = controller.utils.merge(fromObject, result)
         }
         result
     }
@@ -76,7 +76,7 @@ class DrupipeFromProcessor {
             }
             else {
                 for (item in obj.from) {
-                    def fromObject = utils.deepGet(context, 'params.' + item)
+                    def fromObject = controller.utils.deepGet(context, 'params.' + item)
                     if (fromObject) {
                         result = processFromItem(context, result, item, parent)
                     }
