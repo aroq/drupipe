@@ -58,7 +58,6 @@ def call(ArrayList containers, DrupipeController controller) {
 
                         for (block in containers[i].blocks) {
 //                            controller.utils.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
-                            block.controller = controller
                             sshagent([controller.context.credentialsId]) {
                                 if (controller.context.results) {
                                     controller.script.echo "DrupipeExecuteKubernetes().block: serializeAndDeserialize(pipeline.context.results) BEFORE0"
