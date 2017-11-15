@@ -38,11 +38,21 @@ class DrupipeContainerBlock implements Serializable {
             action.remove('methodName')
             action.remove('configVersion')
 
-            actionWrapper['params'] = action
             controller.utils.debugLog(controller.context, action, 'ACTION', [debugMode: 'json'], [], true)
             DrupipeActionWrapper drupipeActionWrapper = new DrupipeActionWrapper(actionWrapper)
             drupipeActionWrapper.pipeline = controller
+            drupipeActionWrapper.params = action.clone()
+            if (controller.context.results) {
+                controller.script.echo "DrupipeContainerBlock.executeAction(): serializeAndDeserialize(pipeline.context.results) BEFORE0"
+                controller.utils.serializeAndDeserialize(controller.context.results)
+                controller.script.echo "DrupipeContainerBlock.executeAction(): serializeAndDeserialize(pipeline.context.results) AFTER0"
+            }
             drupipeActionWrapper.execute()
+            if (controller.context.results) {
+                controller.script.echo "DrupipeContainerBlock.executeAction(): serializeAndDeserialize(pipeline.context.results) BEFORE1"
+                controller.utils.serializeAndDeserialize(controller.context.results)
+                controller.script.echo "DrupipeContainerBlock.executeAction(): serializeAndDeserialize(pipeline.context.results) AFTER1"
+            }
         }
     }
 
