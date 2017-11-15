@@ -203,9 +203,9 @@ class DrupipeActionWrapper implements Serializable {
                 utils.serializeAndDeserialize(pipeline.context.results)
                 script.echo "DrupipeActionWrapper: serializeAndDeserialize() AFTER1"
                 pipeline.context = pipeline.context ? utils.merge(pipeline.context, context) : context
-                script.echo "DrupipeActionWrapper: serializeAndDeserialize() BEFORE1"
+                script.echo "DrupipeActionWrapper: serializeAndDeserialize() BEFORE2"
                 utils.serializeAndDeserialize(pipeline.context.results)
-                script.echo "DrupipeActionWrapper: serializeAndDeserialize() AFTER1"
+                script.echo "DrupipeActionWrapper: serializeAndDeserialize() AFTER2"
                 pipeline.archiveObjectJsonAndYaml(pipeline.context.actions, 'action_results')
                 pipeline.archiveObjectJsonAndYaml(pipeline.context.results, 'context_results')
             }
