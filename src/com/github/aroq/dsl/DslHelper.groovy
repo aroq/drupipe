@@ -9,7 +9,7 @@ class DslHelper {
     def config
 
     def readJson(script, file) {
-        JsonSlurper.newInstance().parseText(script, readFileFromWorkspace(file))
+        JsonSlurper.newInstance().parseText(script.readFileFromWorkspace(file))
     }
 
     Map merge(Map[] sources) {
