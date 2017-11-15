@@ -1,10 +1,16 @@
 package com.github.aroq.dsl
 
+import groovy.json.JsonSlurper
+
 class DslHelper {
 
     def script
 
     def config
+
+    def readJson(script, file) {
+        JsonSlurper.newInstance().parseText(script, readFileFromWorkspace(file))
+    }
 
     Map merge(Map[] sources) {
         if (sources.length == 0) return [:]

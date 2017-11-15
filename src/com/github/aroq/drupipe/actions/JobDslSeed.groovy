@@ -31,7 +31,8 @@ class JobDslSeed extends BaseAction {
     }
 
     def perform() {
-        utils.dumpConfigFile(action.pipeline.context)
+        action.pipeline.serializeObject('.unipipe/temp/context_processed.json', action.pipeline.context, 'json')
+//        utils.dumpConfigFile(action.pipeline.context)
         action.pipeline.scripts_library_load()
 
         script.jobDsl targets: action.params.jobsPattern.join('\n'),

@@ -5,7 +5,12 @@ import com.github.aroq.dsl.DslParamsHelper
 
 println "Subjobs Job DSL processing"
 
-def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
+//def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
+
+def dslHelper = new DslHelper(script: this)
+def config = dslHelper.readJson(this, '.unipipe/temp/context_processed.json')
+dslHelper.config = config
+config.dslHelper = dslHelper
 
 println "Config tags: ${config.tags}"
 
@@ -27,7 +32,7 @@ if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
     config.gitlabHelper = new GitlabHelper(script: this, config: config)
 }
 
-config.dslHelper = new DslHelper(script: this, config: config)
+//config.dslHelper = new DslHelper(script: this, config: config)
 config.dslParamsHelper = new DslParamsHelper(script: this, config: config)
 
 if (config.jobs) {

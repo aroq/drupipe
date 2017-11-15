@@ -146,47 +146,6 @@ class DrupipeController implements Serializable {
 //        }
 //    }
 
-    def processJobsConfig() {
-        if (context.jobs) {
-            processJobs(context.jobs)
-            if (!context.jobs) {
-                script.echo "processJobsConfig() - no context.jobs defined"
-            }
-            utils.debugLog(context, context.jobs, 'CONFIG JOBS PROCESSED', [debugMode: 'json'], true)
-
-            context.job = (context.env.JOB_NAME).split('/').drop(1).inject(context, { obj, prop ->
-                obj.jobs[prop]
-            })
-
-            if (context.job) {
-                if (context.job.context) {
-                    context = utils.merge(context, context.job.context)
-                }
-            }
-            else {
-                script.echo "processJobsConfig() - no context.job defined"
-            }
-        }
-    }
-
-    def processJobs(jobs, prefixes = [], parentParams = [:]) {
-        if (jobs) {
-            for (job in jobs) {
-                if (job.value.children) {
-                    job.value.jobs = job.value.remove('children')
-                }
-                def children = job.value.jobs ? job.value.jobs : [:]
-                job.value = utils.merge(parentParams, job.value)
-                if (children) {
-                    def jobClone = job.value.clone()
-                    jobClone.remove('jobs')
-                    processJobs(children, prefixes << job.key, jobClone)
-                }
-            }
-        }
-    }
-
-
     int configVersion() {
         context.config_version as int
     }
@@ -231,17 +190,7 @@ class DrupipeController implements Serializable {
             archiveObjectJsonAndYaml(context, 'context')
 
             if (configVersion() > 1) {
-                if (context.results) {
-                    script.echo "DrupipeController().config: serializeAndDeserialize(pipeline.context.results) BEFORE0"
-                    utils.serializeAndDeserialize(context.results)
-                    script.echo "DrupipeController().config: serializeAndDeserialize(pipeline.context.results) AFTER0"
-                }
                 processConfig()
-                if (context.results) {
-                    script.echo "DrupipeController().config: serializeAndDeserialize(pipeline.context.results) BEFORE1"
-                    utils.serializeAndDeserialize(context.results)
-                    script.echo "DrupipeController().config: serializeAndDeserialize(pipeline.context.results) AFTER1"
-                }
                 utils.debugLog(context, job.pipeline.name, 'JOB', [debugMode: 'json'], [])
             }
 
@@ -266,13 +215,6 @@ class DrupipeController implements Serializable {
                 }
 
                 if (configVersion() > 1) {
-                    script.node('master') {
-                        if (context.results) {
-                            script.echo "DrupipeController().execute: serializeAndDeserialize(pipeline.context.results) BEFORE0"
-                            utils.serializeAndDeserialize(context.results)
-                            script.echo "DrupipeController().execute: serializeAndDeserialize(pipeline.context.results) AFTER0"
-                        }
-                    }
                     job.execute()
                 }
                 else {

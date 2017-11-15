@@ -35,16 +35,6 @@ class DrupipeActionWrapper implements Serializable {
         this.script = pipeline.script
 
         try {
-            if (pipeline.context.results) {
-                script.echo "DrupipeActionWrapper: serializeAndDeserialize(pipeline.context.results) BEFORE0"
-                utils.serializeAndDeserialize(pipeline.context.results)
-                script.echo "DrupipeActionWrapper: serializeAndDeserialize(pipeline.context.results) AFTER0"
-            }
-
-            script.echo "DrupipeActionWrapper: serializeAndDeserialize(context BEFORE0"
-            utils.serializeAndDeserialize(context)
-            script.echo "DrupipeActionWrapper: serializeAndDeserialize(context) AFTER0"
-
             // Stage name & echo.
             String drupipeStageName
             if (pipeline.block && pipeline.block.stage) {
@@ -172,9 +162,6 @@ class DrupipeActionWrapper implements Serializable {
                     if (this.params.dump_result) {
                         utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], this.params.debugEnabled)
                     }
-                    script.echo "DrupipeActionWrapper: serializeAndDeserialize(context BEFORE1"
-                    utils.serializeAndDeserialize(context)
-                    script.echo "DrupipeActionWrapper: serializeAndDeserialize(context) AFTER1"
 
                     // Results processing.
                     if (this.params.store_action_params) {
@@ -201,9 +188,6 @@ class DrupipeActionWrapper implements Serializable {
                             }
                         }
                     }
-                    script.echo "DrupipeActionWrapper: serializeAndDeserialize(context BEFORE2"
-                    utils.serializeAndDeserialize(context)
-                    script.echo "DrupipeActionWrapper: serializeAndDeserialize(context) AFTER2"
 
                     if (pipeline.context.params && pipeline.context.params.action && pipeline.context.params.action["${name}_${methodName}"] && pipeline.context.params.action["${name}_${methodName}"].debugEnabled) {
                         utils.debugLog(pipeline.context, pipeline.context, "pipeline.context results", [debugMode: 'json'], [this.params.store_result_key], this.params.debugEnabled)
@@ -215,16 +199,7 @@ class DrupipeActionWrapper implements Serializable {
                 utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], this.params.debugEnabled)
             }
             if (context) {
-                script.echo "DrupipeActionWrapper: serializeAndDeserialize(context BEFORE3"
-                utils.serializeAndDeserialize(context)
-                script.echo "DrupipeActionWrapper: serializeAndDeserialize(context) AFTER3"
-                script.echo "DrupipeActionWrapper: serializeAndDeserialize() BEFORE1"
-                utils.serializeAndDeserialize(pipeline.context.results)
-                script.echo "DrupipeActionWrapper: serializeAndDeserialize() AFTER1"
                 pipeline.context = pipeline.context ? utils.merge(pipeline.context, context) : context
-                script.echo "DrupipeActionWrapper: serializeAndDeserialize() BEFORE2"
-                utils.serializeAndDeserialize(pipeline.context.results)
-                script.echo "DrupipeActionWrapper: serializeAndDeserialize() AFTER2"
                 pipeline.archiveObjectJsonAndYaml(pipeline.context.actions, 'action_results')
                 pipeline.archiveObjectJsonAndYaml(pipeline.context.results, 'context_results')
             }

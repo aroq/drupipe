@@ -49,36 +49,15 @@ def call(ArrayList containers, DrupipeController controller) {
                 controller.context.workspace = pwd()
                 for (def i = 0; i < containers.size(); i++) {
                     container(containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
-                        if (controller.context.results) {
-                            controller.script.echo "DrupipeExecuteKubernetes().container: serializeAndDeserialize(pipeline.context.results) BEFORE0"
-                            controller.utils.serializeAndDeserialize(controller.context.results)
-                            controller.script.echo "DrupipeExecuteKubernetes().container: serializeAndDeserialize(pipeline.context.results) AFTER0"
-                        }
                         unstash('config')
 
                         for (block in containers[i].blocks) {
 //                            controller.utils.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
                             sshagent([controller.context.credentialsId]) {
-                                if (controller.context.results) {
-                                    controller.script.echo "DrupipeExecuteKubernetes().block: serializeAndDeserialize(pipeline.context.results) BEFORE0"
-                                    controller.utils.serializeAndDeserialize(controller.context.results)
-                                    controller.script.echo "DrupipeExecuteKubernetes().block: serializeAndDeserialize(pipeline.context.results) AFTER0"
-                                }
                                 def drupipeContainerBlock = new DrupipeContainerBlock(block)
                                 drupipeContainerBlock.controller = controller
                                 drupipeContainerBlock.execute()
-
-                                if (controller.context.results) {
-                                    controller.script.echo "DrupipeExecuteKubernetes().block: serializeAndDeserialize(pipeline.context.results) BEFORE0"
-                                    controller.utils.serializeAndDeserialize(controller.context.results)
-                                    controller.script.echo "DrupipeExecuteKubernetes().block: serializeAndDeserialize(pipeline.context.results) AFTER0"
-                                }
                             }
-                        }
-                        if (controller.context.results) {
-                            controller.script.echo "DrupipeExecuteKubernetes().container: serializeAndDeserialize(pipeline.context.results) BEFORE0"
-                            controller.utils.serializeAndDeserialize(controller.context.results)
-                            controller.script.echo "DrupipeExecuteKubernetes().container: serializeAndDeserialize(pipeline.context.results) AFTER0"
                         }
                     }
                 }
