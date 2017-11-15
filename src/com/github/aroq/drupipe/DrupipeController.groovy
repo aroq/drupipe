@@ -1,5 +1,7 @@
 package com.github.aroq.drupipe
 
+import com.github.aroq.drupipe.processors.DrupipeFromProcessor
+
 class DrupipeController implements Serializable {
 
     ArrayList<DrupipeBlock> blocks = []
@@ -25,6 +27,8 @@ class DrupipeController implements Serializable {
     DrupipeJob job
 
     DrupipeConfig drupipeConfig
+
+    DrupipeFromProcessor drupipeFormProcessor
 
     def serializeObject(path, object, mode = 'yaml') {
         if (object) {
@@ -57,6 +61,11 @@ class DrupipeController implements Serializable {
         drupipeConfig.configVersion()
     }
 
+    def init() {
+        drupipeFormProcessor = new DrupipeFromProcessor()
+        drupipeConfig = new DrupipeConfig(controller: this, script: script)
+    }
+
     def execute(body = null) {
         context.jenkinsParams = params
         utils = new com.github.aroq.drupipe.Utils()
@@ -66,7 +75,8 @@ class DrupipeController implements Serializable {
 
         try {
             script.timestamps {
-                drupipeConfig = new DrupipeConfig(controller: this, script: script)
+                init()
+
                 drupipeConfig.config(params)
 
                 if (configVersion() > 1) {
