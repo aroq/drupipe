@@ -65,7 +65,10 @@ def call(ArrayList containers, DrupipeController controller) {
                                     controller.utils.serializeAndDeserialize(controller.context.results)
                                     controller.script.echo "DrupipeExecuteKubernetes().block: serializeAndDeserialize(pipeline.context.results) AFTER0"
                                 }
-                                (new DrupipeContainerBlock(block)).execute()
+                                def drupipeContainerBlock = new DrupipeContainerBlock(block)
+                                drupipeContainerBlock.controller = controller
+                                drupipeContainerBlock.execute()
+
                                 if (controller.context.results) {
                                     controller.script.echo "DrupipeExecuteKubernetes().block: serializeAndDeserialize(pipeline.context.results) BEFORE0"
                                     controller.utils.serializeAndDeserialize(controller.context.results)
