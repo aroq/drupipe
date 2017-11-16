@@ -36,9 +36,9 @@ class DrupipeFromProcessor {
         result
     }
 
-    def processFromItem(context, result, from, parent) {
+    def processFromItem(context, result, from, parent, key = 'params') {
         // TODO: check about .params.
-        def fromObject = getFrom(context.params, from)
+        def fromObject = getFrom(context.params, from, key)
         if (fromObject) {
             if (parent == 'job') {
                 fromObject.name = from
@@ -62,23 +62,23 @@ class DrupipeFromProcessor {
                     fromObject.configVersion = 2
                 }
             }
-            fromObject = processFrom(context, fromObject, parent)
+            fromObject = processFrom(context, fromObject, parent, key)
             result = controller.utils.merge(fromObject, result)
         }
         result
     }
 
-    def processFrom(context, obj, parent) {
+    def processFrom(context, obj, parent, key = 'params') {
         def result = obj
         if (obj.containsKey('from')) {
             if (obj.from instanceof CharSequence) {
-                result = processFromItem(context, result, obj.from, parent)
+                result = processFromItem(context, result, obj.from, parent, key)
             }
             else {
                 for (item in obj.from) {
                     def fromObject = controller.utils.deepGet(context, 'params.' + item)
                     if (fromObject) {
-                        result = processFromItem(context, result, item, parent)
+                        result = processFromItem(context, result, item, parent, key)
                     }
                 }
             }
@@ -87,15 +87,15 @@ class DrupipeFromProcessor {
         result
     }
 
-    def processConfigItem(context, object, parent) {
+    def processConfigItem(context, object, parent, key = 'params') {
         if (object instanceof Map) {
-            object = processFrom(context, object, parent)
+            object = processFrom(context, object, parent, key)
             for (item in object) {
-                object[item.key] = processConfigItem(context, item.value, item.key)
+                object[item.key] = processConfigItem(context, item.value, item.key, key)
             }
         }
         else if (object instanceof List) {
-            object = object.collect { processConfigItem(context, it, parent) }
+            object = object.collect { processConfigItem(context, it, parent, key) }
         }
         object
     }
