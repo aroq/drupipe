@@ -31,8 +31,8 @@ class DrupipeContainer implements Serializable {
                 controller.script.sshagent([controller.context.credentialsId]) {
                     if (body) {
                         body(controller.context)
-                        executeBlocks()
                     }
+                    executeBlocks()
                 }
             }
         }
@@ -42,9 +42,8 @@ class DrupipeContainer implements Serializable {
     }
 
     def executeBlocks() {
-        controller.script.echo "executeBlock()"
         for (block in blocks) {
-            controller.utils.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
+//            controller.utils.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
             block = new DrupipeContainerBlock(block)
             block.controller = controller
             block.execute()
