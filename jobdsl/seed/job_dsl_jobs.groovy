@@ -92,23 +92,7 @@ def processJob(jobs, currentFolder, config) {
                     concurrentBuild(false)
                     logRotator(-1, config.logRotatorNumToKeep)
                     parameters {
-                        config.docmanConfig.projects?.each { project ->
-                            if (project.value.repo && (project.value.type != 'root')) {
-                                println "Project: ${project.value.name}"
-                                def projectRepo = project.value.repo
-                                println "Repo: ${projectRepo}"
-                                activeChoiceParam("${project.value.name}_version") {
-                                    description('Allows user choose from multiple choices')
-                                    filterable()
-                                    choiceType('SINGLE_SELECT')
-                                    scriptlerScript('git_tags.groovy') {
-                                        parameter('url', projectRepo)
-                                        parameter('tagPattern', "*")
-                                        parameter('sort', 'x.y.z')
-                                    }
-                                }
-                            }
-                        }
+                        config.dslParamsHelper.drupipeParamTags(delegate, job, config)
                         config.dslParamsHelper.drupipeParamsDefault(delegate, job, config)
                     }
                     definition {
@@ -303,29 +287,16 @@ def processJob(jobs, currentFolder, config) {
                     parameters {
                         config.docmanConfig.projects?.each { project ->
                             if ((project.value.type == 'root' || project.value.type == 'root_chain' || project.value.type == 'single') && (project.value.repo || project.value.root_repo)) {
-                                println "Project: ${project.value.name}"
-                                def releaseRepo = project.value.type == 'root' ? project.value.repo : project.value.root_repo
-                                activeChoiceParam('release') {
-                                    description('Allows user choose from multiple choices')
-                                    filterable()
-                                    choiceType('SINGLE_SELECT')
-                                    scriptlerScript("git_${job.value.source.type}.groovy") {
-                                        parameter('url', releaseRepo)
-                                        parameter('tagPattern', job.value.source.pattern)
-                                        parameter('sort', '')
-                                    }
+
+                                if (job.value.source.type == 'tags') {
+                                    config.dslParamsHelper.drupipeParamTagsSelects(delegate, job, config, 'release', project)
                                 }
-                                if (config.operationsModes) {
-                                    activeChoiceParam('operationsMode') {
-                                        description('Choose the mode for the operations')
-                                        scriptlerScript ('choices.groovy') {
-                                            def choices_param = config.operationsModes.join('|')
-                                            println "OPERATIONS MODES CHOICES: ${choices_param}"
-                                            parameter('defaultChoice', '')
-                                            parameter('choices', choices_param)
-                                        }
-                                    }
+                                else if (job.value.source.type == 'branches') {
+                                    config.dslParamsHelper.drupipeParamBranchesSelects(delegate, job, config, 'release', project)
                                 }
+
+                                config.dslParamsHelper.drupipeParamOperationsCheckboxes(delegate, job, config)
+
                                 stringParam('environment', job.value.env)
                             }
                         }
@@ -674,4 +645,3 @@ def processJob(jobs, currentFolder, config) {
         }
     }
 }
-
