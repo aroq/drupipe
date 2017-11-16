@@ -6,7 +6,7 @@ class DrupipeContainer implements Serializable {
 
     String image
 
-    ArrayList<DrupipeBlock> blocks = []
+    ArrayList blocks = []
 
     DrupipeController controller
 
@@ -42,6 +42,7 @@ class DrupipeContainer implements Serializable {
     }
 
     def executeBlocks() {
+        controller.script.echo "executeBlock()"
         for (block in blocks) {
             controller.utils.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
             block = new DrupipeContainerBlock(block)
