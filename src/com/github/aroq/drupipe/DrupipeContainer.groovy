@@ -15,26 +15,26 @@ class DrupipeContainer implements Serializable {
     def execute(body = null) {
         controller.script.echo "DrupipeContainer execute - ${name}"
 
+        def dockerImage
+
         if (pod.containerized && controller.context.containerMode != 'kubernetes') {
             if (controller.context.dockerfile) {
-                image = controller.script.docker.build(controller.context.dockerfile, controller.context.projectConfigPath)
+                dockerImage = controller.script.docker.build(controller.context.dockerfile, controller.context.projectConfigPath)
             }
             else {
-                image = controller.script.docker.image(controller.context.dockerImage)
-                controller.script.image.pull()
+                dockerImage = controller.script.docker.image(this.image)
+                dockerImage.pull()
             }
             def drupipeDockerArgs = controller.context.drupipeDockerArgs
-            controller.script.image.inside(drupipeDockerArgs) {
+            dockerImage.inside(drupipeDockerArgs) {
                 controller.context.workspace = controller.script.pwd()
                 controller.script.sshagent([controller.context.credentialsId]) {
                     if (body) {
                         body(controller.context)
                         executeBlocks()
                     }
-
                 }
             }
-
         }
         else {
             executeBlocks()
