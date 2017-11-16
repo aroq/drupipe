@@ -2,7 +2,7 @@ package com.github.aroq.drupipe.processors
 
 import com.github.aroq.drupipe.DrupipeController
 
-class DrupipeFromProcessor {
+class DrupipeFromProcessor implements Serializable {
 
     DrupipeController controller
 

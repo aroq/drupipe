@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe
 
-class DrupipeConfig {
+class DrupipeConfig implements Serializable {
 
     DrupipeController controller
 

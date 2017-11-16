@@ -101,6 +101,7 @@ class DrupipeController implements Serializable {
                     job.execute()
                 }
                 else {
+                    // For version 1 configs.
                     executeVersion1()
                 }
             }
@@ -234,7 +235,6 @@ class DrupipeController implements Serializable {
                 }
             }
         }
-
     }
 
     def executeStages(stagesToExecute = [:]) {
