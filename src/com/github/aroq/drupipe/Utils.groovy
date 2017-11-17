@@ -5,6 +5,10 @@ import groovy.json.JsonOutput
 import java.nio.file.Path
 import java.nio.file.Paths
 
+def echo(String message) {
+    echo message
+}
+
 def colorEcho(message, color = null) {
     if (!color) {
         color = 'green'

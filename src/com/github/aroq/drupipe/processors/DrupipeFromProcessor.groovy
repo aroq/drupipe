@@ -67,6 +67,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def process(context, obj, parent, key = 'params', mode = 'config') {
+        utils.echo "DrupipeFromProcessor->process()"
         def result = obj
         if (obj.containsKey('from')) {
             if (obj.from instanceof CharSequence) {
