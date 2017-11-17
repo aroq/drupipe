@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.processors
 
-class DrupipeProcessorsController {
+class DrupipeProcessorsController implements Serializable {
 
     ArrayList<DrupipeProcessor> processors
 
