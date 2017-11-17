@@ -13,6 +13,13 @@ defaultDocmanImage = 'michaeltigr/zebra-build-php-drush-docman:latest'
 logRotatorNumToKeep = 5
 drupipeDockerArgs = '--user root:root --net=host'
 
+processors = [
+    [
+        className: 'DrupipeFromProcessor',
+    ],
+]
+
+
 params = [
     pipeline: [
         scripts_library: [
