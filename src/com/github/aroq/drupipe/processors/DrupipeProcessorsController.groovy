@@ -1,15 +1,10 @@
 package com.github.aroq.drupipe.processors
 
-import com.github.aroq.drupipe.Utils
-
 class DrupipeProcessorsController {
 
     ArrayList<DrupipeProcessor> processors
 
-    Utils utils
-
     def process(context, object, parent, key = 'params', mode = 'config') {
-        utils.echo "DrupipeProcessorsController->process()"
         if (object instanceof Map) {
             for (DrupipeProcessor processor in processors) {
                 object = processor.process(context, object, parent, key, mode)
