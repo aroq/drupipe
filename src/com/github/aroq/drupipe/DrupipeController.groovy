@@ -60,7 +60,7 @@ class DrupipeController implements Serializable {
     }
 
     def init() {
-        drupipeFormProcessor = new DrupipeFromProcessor(controller: this)
+        drupipeFormProcessor = new DrupipeFromProcessor(utils: utils)
         drupipeConfig        = new DrupipeConfig(controller: this, script: script)
     }
 
