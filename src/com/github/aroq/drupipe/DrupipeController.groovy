@@ -1,6 +1,7 @@
 package com.github.aroq.drupipe
 
 import com.github.aroq.drupipe.processors.DrupipeFromProcessor
+import com.github.aroq.drupipe.processors.DrupipeProcessor
 import com.github.aroq.drupipe.processors.DrupipeProcessorsController
 
 class DrupipeController implements Serializable {
@@ -60,10 +61,28 @@ class DrupipeController implements Serializable {
         drupipeConfig.configVersion()
     }
 
+    DrupipeProcessorsController initProcessorsController() {
+        ArrayList<DrupipeProcessor> processors = []
+        for (processorConfig in context.processors) {
+            try {
+                processors << this.class.classLoader.loadClass("com.github.aroq.drupipe.processors.${processorConfig.className}", true, false)?.newInstance(
+                    utils: utils,
+                )
+            }
+            catch (err) {
+                throw err
+            }
+        }
+        new DrupipeProcessorsController(processors: processors)
+    }
+
     def init() {
-        def processors = [new DrupipeFromProcessor(utils: utils)]
-        drupipeProcessorsController = new DrupipeProcessorsController(processors: processors)
+        drupipeProcessorsController = initProcessorsController()
         drupipeConfig = new DrupipeConfig(controller: this, script: script)
+    }
+
+    def configuration() {
+        drupipeConfig.config(params)
     }
 
     def execute(body = null) {
@@ -76,32 +95,26 @@ class DrupipeController implements Serializable {
         try {
             script.timestamps {
                 init()
-                drupipeConfig.config(params)
-                script.node('master') {
-                    if (configVersion() > 1) {
-                        if (configVersion() > 1) {
-                            if (context.job) {
-                                def jobConfig = context.job
-                                utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [])
-                                archiveObjectJsonAndYaml(jobConfig, 'job')
-                                job = new DrupipeJob(jobConfig)
-                                job.controller = this
-                            }
-                        }
-                        utils.debugLog(context, job.pipeline.name, 'JOB', [debugMode: 'json'], [])
-                    }
-                }
-                // Secret option for emergency remove workspace.
-                // TODO: Bring it back.
-
-                if (body) {
-                    body(this)
-                }
+                configuration()
                 if (configVersion() > 1) {
+                    script.node('master') {
+                        // TODO: Bring it back.
+                        // Secret option for emergency remove workspace.
+                        if (context.job) {
+                            def jobConfig = context.job
+                            utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [])
+                            archiveObjectJsonAndYaml(jobConfig, 'job')
+                            job = new DrupipeJob(jobConfig)
+                            job.controller = this
+                        }
+                    }
                     job.execute()
                 }
                 else {
                     // For version 1 configs.
+                    if (body) {
+                        body(this)
+                    }
                     executeVersion1()
                 }
             }

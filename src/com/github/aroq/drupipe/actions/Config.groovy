@@ -115,10 +115,7 @@ class Config extends BaseAction {
         if (action.pipeline.context.jobs) {
             action.pipeline.archiveObjectJsonAndYaml(action.pipeline.context, 'context_unprocessed')
 
-            if (action.pipeline.configVersion() > 1) {
-                action.pipeline.context = action.pipeline.drupipeProcessorsController.process(action.pipeline.context, action.pipeline.context, 'context')
-                action.pipeline.archiveObjectJsonAndYaml(action.pipeline.context, 'context_processed')
-            }
+            action.pipeline.drupipeConfig.process()
 
             processJobs(action.pipeline.context.jobs)
             utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED')

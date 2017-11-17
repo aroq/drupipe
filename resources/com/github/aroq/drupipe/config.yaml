@@ -1,6 +1,9 @@
 docmanDir: docman
 drupipeDockerArgs: --user root:root --net=host
 
+processors:
+  - className: DrupipeFromProcessor
+
 jobs:
   seed:
     type: seed
