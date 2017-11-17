@@ -72,7 +72,7 @@ class DrupipeController implements Serializable {
                 throw err
             }
         }
-        new DrupipeProcessorsController(processors: processors)
+        new DrupipeProcessorsController(controller: this, processors: processors)
     }
 
     def init() {
