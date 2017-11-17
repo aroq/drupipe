@@ -1,6 +1,5 @@
 package com.github.aroq.drupipe
 
-import com.github.aroq.drupipe.processors.DrupipeFromProcessor
 import com.github.aroq.drupipe.processors.DrupipeProcessor
 import com.github.aroq.drupipe.processors.DrupipeProcessorsController
 
