@@ -51,7 +51,7 @@ class Docman extends BaseAction {
 
     def stripedBuild() {
         info()
-        def docrootConfigJson = script.readFile("${action.pipeline.context.projectConfigPath}/${action.params.docmanJsonConfigFile}")
+        def docrootConfigJson = script.readFile("${action.pipeline.context.docmanDir}/config/${action.params.docmanJsonConfigFile}")
         def componentVersions = component_versions(docrootConfigJson, 'nexus')
         script.echo "Component versions:${componentVersions}"
 
@@ -80,7 +80,7 @@ class Docman extends BaseAction {
 
     def releaseBuild() {
         info()
-        def docrootConfigJson = script.readFile("${action.pipeline.context.projectConfigPath}/${action.params.docmanJsonConfigFile}")
+        def docrootConfigJson = script.readFile("${action.pipeline.context.docmanDir}/config/${action.params.docmanJsonConfigFile}")
         def componentVersions = component_versions(docrootConfigJson)
         script.echo "Component versions:${componentVersions}"
 
