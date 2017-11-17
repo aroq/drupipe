@@ -4,6 +4,8 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     com.github.aroq.drupipe.Utils utils
 
+    String mode
+
     def getFromPathItem(object, pathItem, String key) {
         def result = [:]
         if (object && object.containsKey(pathItem)) {
@@ -36,6 +38,13 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     def processFromItem(context, result, from, parent, key = 'params') {
         // TODO: check about .params.
+        def processParams = getFrom(context.params, from, 'process_params')
+        if (processParams && processParams.from) {
+            def stop = true
+            if () {
+
+            }
+        }
         def fromObject = getFrom(context.params, from, key)
         if (fromObject) {
             if (parent == 'job') {
@@ -67,7 +76,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def process(context, obj, parent, key = 'params', mode = 'config') {
-        utils.println "DrupipeProcessorsController->process()"
+        this.mode = mode
         def result = obj
         if (obj.containsKey('from')) {
             if (obj.from instanceof CharSequence) {

@@ -1,11 +1,9 @@
 params:
-  process_params:
-    # 'process_from_mode' defines in which mode 'from' should be processed.
-    process_from_mode: config
   actions:
-    process_params:
-      # 'process_from_mode' defines in which mode 'from' should be processed.
-      process_from_mode: execute
+    processor_params:
+      from:
+        # defines in which mode 'from' should be processed.
+        mode: execute
     params:
       action_timeout: 120
       store_result: true

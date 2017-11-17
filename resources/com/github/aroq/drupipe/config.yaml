@@ -3,6 +3,8 @@ drupipeDockerArgs: --user root:root --net=host
 
 processors:
   - className: DrupipeFromProcessor
+    properties:
+      key: from
 
 jobs:
   seed:
@@ -18,6 +20,10 @@ jobs:
                   - from: actions.JobDslSeed.perform
 
 params:
+  processor_params:
+      from:
+        # defines in which mode 'from' should be processed.
+        mode: config
   jobs:
     __default:
 
