@@ -60,26 +60,8 @@ class DrupipeController implements Serializable {
         drupipeConfig.configVersion()
     }
 
-    DrupipeProcessorsController initProcessorsController() {
-        ArrayList<DrupipeProcessor> processors = []
-        for (processorConfig in context.processors) {
-            script.echo "Processor: ${processorConfig.className}"
-            try {
-                processors << this.class.classLoader.loadClass("com.github.aroq.drupipe.processors.${processorConfig.className}", true, false)?.newInstance(
-                    utils: utils,
-                )
-                script.echo "Processor: ${processorConfig.className} created"
-            }
-            catch (err) {
-                throw err
-            }
-        }
-        new DrupipeProcessorsController(processors: processors)
-    }
-
     def init() {
-        drupipeProcessorsController = initProcessorsController()
-        drupipeConfig = new DrupipeConfig(controller: this, script: script)
+        drupipeConfig = new DrupipeConfig(controller: this, script: script, utils: utils)
     }
 
     def configuration() {
