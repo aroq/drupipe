@@ -116,7 +116,7 @@ class Config extends BaseAction {
             action.pipeline.archiveObjectJsonAndYaml(action.pipeline.context, 'context_unprocessed')
 
             if (action.pipeline.configVersion() > 1) {
-                action.pipeline.context = action.pipeline.drupipeFormProcessor.processConfigItem(action.pipeline.context, action.pipeline.context, 'context')
+                action.pipeline.context = action.pipeline.drupipeProcessorsController.process(action.pipeline.context, action.pipeline.context, 'context')
                 action.pipeline.archiveObjectJsonAndYaml(action.pipeline.context, 'context_processed')
             }
 

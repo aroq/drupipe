@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe.processors
 
-class DrupipeFromProcessor implements Serializable {
+class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     com.github.aroq.drupipe.Utils utils
 
@@ -60,13 +60,13 @@ class DrupipeFromProcessor implements Serializable {
                     fromObject.configVersion = 2
                 }
             }
-            fromObject = processFrom(context, fromObject, parent, key)
+            fromObject = process(context, fromObject, parent, key)
             result = utils.merge(fromObject, result)
         }
         result
     }
 
-    def processFrom(context, obj, parent, key = 'params') {
+    def process(context, obj, parent, key = 'params', mode = 'config') {
         def result = obj
         if (obj.containsKey('from')) {
             if (obj.from instanceof CharSequence) {
@@ -83,19 +83,6 @@ class DrupipeFromProcessor implements Serializable {
             result.remove('from')
         }
         result
-    }
-
-    def processConfigItem(context, object, parent, key = 'params') {
-        if (object instanceof Map) {
-            object = processFrom(context, object, parent, key)
-            for (item in object) {
-                object[item.key] = processConfigItem(context, item.value, item.key, key)
-            }
-        }
-        else if (object instanceof List) {
-            object = object.collect { processConfigItem(context, it, parent, key) }
-        }
-        object
     }
 
 }

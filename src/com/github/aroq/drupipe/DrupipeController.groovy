@@ -1,6 +1,7 @@
 package com.github.aroq.drupipe
 
 import com.github.aroq.drupipe.processors.DrupipeFromProcessor
+import com.github.aroq.drupipe.processors.DrupipeProcessorsController
 
 class DrupipeController implements Serializable {
 
@@ -26,7 +27,7 @@ class DrupipeController implements Serializable {
 
     DrupipeConfig drupipeConfig
 
-    DrupipeFromProcessor drupipeFormProcessor
+    DrupipeProcessorsController drupipeProcessorsController
 
     def serializeObject(path, object, mode = 'yaml') {
         if (object) {
@@ -60,8 +61,9 @@ class DrupipeController implements Serializable {
     }
 
     def init() {
-        drupipeFormProcessor = new DrupipeFromProcessor(utils: utils)
-        drupipeConfig        = new DrupipeConfig(controller: this, script: script)
+        def processors = [new DrupipeFromProcessor(utils: utils)]
+        drupipeProcessorsController = new DrupipeProcessorsController(processors: processors)
+        drupipeConfig = new DrupipeConfig(controller: this, script: script)
     }
 
     def execute(body = null) {
