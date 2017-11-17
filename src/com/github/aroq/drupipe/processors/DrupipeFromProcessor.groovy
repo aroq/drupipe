@@ -1,10 +1,8 @@
 package com.github.aroq.drupipe.processors
 
-import com.github.aroq.drupipe.DrupipeController
-
 class DrupipeFromProcessor implements Serializable {
 
-    DrupipeController controller
+    com.github.aroq.drupipe.Utils utils
 
     def getFromPathItem(object, pathItem, String key) {
         def result = [:]
@@ -30,7 +28,7 @@ class DrupipeFromProcessor implements Serializable {
             if (parentItem) {
                 object = object[parentItem]
             }
-            result = controller.utils.merge(result, getFromPathItem(object, pathItem, key))
+            result = utils.merge(result, getFromPathItem(object, pathItem, key))
             parentItem = pathItem
         }
         result
@@ -63,7 +61,7 @@ class DrupipeFromProcessor implements Serializable {
                 }
             }
             fromObject = processFrom(context, fromObject, parent, key)
-            result = controller.utils.merge(fromObject, result)
+            result = utils.merge(fromObject, result)
         }
         result
     }
@@ -76,7 +74,7 @@ class DrupipeFromProcessor implements Serializable {
             }
             else {
                 for (item in obj.from) {
-                    def fromObject = controller.utils.deepGet(context, 'params.' + item)
+                    def fromObject = utils.deepGet(context, 'params.' + item)
                     if (fromObject) {
                         result = processFromItem(context, result, item, parent, key)
                     }
@@ -99,4 +97,5 @@ class DrupipeFromProcessor implements Serializable {
         }
         object
     }
+
 }

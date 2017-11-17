@@ -6,8 +6,6 @@ class DrupipeController implements Serializable {
 
     ArrayList<DrupipeBlock> blocks = []
 
-    ArrayList<DrupipePod> pods = []
-
     def context = [:]
 
     LinkedHashMap params = [:]
@@ -20,7 +18,7 @@ class DrupipeController implements Serializable {
 
     def script
 
-    def utils
+    com.github.aroq.drupipe.Utils utils
 
     def scm
 

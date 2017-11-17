@@ -113,6 +113,7 @@ class Config extends BaseAction {
     def jobConfig() {
         def result = [:]
         if (action.pipeline.context.jobs) {
+            action.pipeline.archiveObjectJsonAndYaml(action.pipeline.context, 'context_unprocessed')
 
             if (action.pipeline.configVersion() > 1) {
                 action.pipeline.context = action.pipeline.drupipeFormProcessor.processConfigItem(action.pipeline.context, action.pipeline.context, 'context')
