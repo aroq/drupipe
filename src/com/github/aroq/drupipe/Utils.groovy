@@ -5,7 +5,7 @@ import groovy.json.JsonOutput
 import java.nio.file.Path
 import java.nio.file.Paths
 
-def println(String message) {
+def log(String message) {
     echo message
 }
 
