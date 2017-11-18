@@ -163,6 +163,7 @@ class Docman extends BaseAction {
     }
 
     def bumpStable() {
+        script.drupipeShell("git config --global user.email 'drupipe@github.com'; git config --global user.name 'Drupipe'", action.params)
         script.drupipeShell("docman bump stable -n", action.params)
     }
 

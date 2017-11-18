@@ -12,7 +12,7 @@ class DrupipeActionWrapper implements Serializable {
 
     HashMap notification = [:]
 
-    DrupipePipeline pipeline
+    DrupipeController pipeline
 
     def script
 
@@ -22,6 +22,8 @@ class DrupipeActionWrapper implements Serializable {
     def context = [:]
 
     def utils
+
+    int configVersion = 1
 
     String getFullName() {
         "${this.name}.${this.methodName}"
@@ -48,22 +50,16 @@ class DrupipeActionWrapper implements Serializable {
             utils.pipelineNotify(pipeline.context, notification << [status: 'START'])
             utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} start <-")
 
-
             // Define action params.
             def actionParams = [:]
             def defaultActionParams = [:]
 
-            // TODO: read action default params from YAML.
-//            def actionConfigFile = [utils.sourceDir(pipeline.context, 'library'), 'actions', this.name + '.yaml'].join('/')
-//            if (this.script.fileExists(actionConfigFile)) {
-//                def actionConfig = this.script.readYaml(file: actionConfigFile)
-//                utils.debugLog(pipeline.context, actionConfig, "${this.fullName} action YAML CONFIG", [:], [], true)
-//            }
-
-            for (actionName in ['ACTION',this.name, this.name + '_' + this.methodName]) {
-                if (pipeline.context && pipeline.context.params && pipeline.context.params.action && actionName in pipeline.context.params.action) {
-                    defaultActionParams = utils.merge(defaultActionParams, pipeline.context.params.action[actionName])
-                    utils.debugLog(defaultActionParams, defaultActionParams, "defaultActionParams after merge from ${actionName} action CONFIG", [debugMode: 'json'], [], this.params && this.params.debugEnabled)
+            if (configVersion == 1) {
+                for (actionName in ['__default', this.name, this.name + '_' + this.methodName]) {
+                    if (pipeline.context && pipeline.context.params && pipeline.context.params.action && actionName in pipeline.context.params.action) {
+                        defaultActionParams = utils.merge(defaultActionParams, pipeline.context.params.action[actionName])
+                        utils.debugLog(defaultActionParams, defaultActionParams, "defaultActionParams after merge from ${actionName} action CONFIG", [debugMode: 'json'], [], this.params && this.params.debugEnabled)
+                    }
                 }
             }
 
@@ -152,12 +148,6 @@ class DrupipeActionWrapper implements Serializable {
                     // ...Otherwise execute from class.
                     if (!actionFile) {
                         try {
-//                            def actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false )?.newInstance(
-//                                action: this,
-//                                script: this.script,
-//                                utils: utils,
-//                            )
-
                             def action_timeout = this.params.action_timeout ? this.params.action_timeout : 120
                             this.script.timeout(action_timeout) {
                                 this.result = actionInstance."${this.methodName}"()
@@ -210,6 +200,8 @@ class DrupipeActionWrapper implements Serializable {
             }
             if (context) {
                 pipeline.context = pipeline.context ? utils.merge(pipeline.context, context) : context
+                pipeline.archiveObjectJsonAndYaml(pipeline.context.actions, 'action_results')
+                pipeline.archiveObjectJsonAndYaml(pipeline.context.results, 'context_results')
             }
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"

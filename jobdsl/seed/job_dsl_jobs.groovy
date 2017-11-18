@@ -5,7 +5,12 @@ import com.github.aroq.dsl.DslParamsHelper
 
 println "Subjobs Job DSL processing"
 
-def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
+//def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
+
+def dslHelper = new DslHelper(script: this)
+def config = dslHelper.readJson(this, '.unipipe/temp/context_processed.json')
+dslHelper.config = config
+config.dslHelper = dslHelper
 
 println "Config tags: ${config.tags}"
 
@@ -27,19 +32,23 @@ if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
     config.gitlabHelper = new GitlabHelper(script: this, config: config)
 }
 
-config.dslHelper = new DslHelper(script: this, config: config)
+//config.dslHelper = new DslHelper(script: this, config: config)
 config.dslParamsHelper = new DslParamsHelper(script: this, config: config)
 
 if (config.jobs) {
     processJob(config.jobs, '', config)
 }
 
-def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
+def processJob(jobs, currentFolder, config) {
     def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipelines/pipeline'
 
     for (job in jobs) {
-        def parentConfigParams = [:]
-        parentConfigParams << parentConfigParamsPassed
+        if (job.key == 'seed') {
+            continue
+        }
+
+//        def parentConfigParams = [:]
+//        parentConfigParams << parentConfigParamsPassed
         println job
         println "Processing job: ${job.key}"
         def currentName = currentFolder ? "${currentFolder}/${job.key}" : job.key
@@ -48,11 +57,11 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
 
         println "Job: ${job.value}"
         job.value.params = job.value.params ? job.value.params : [:]
-        job.value.params << (parentConfigParams << job.value.params)
-        println "Job params after parent params merge: ${job.value.params}"
+//        job.value.params << (parentConfigParams << job.value.params)
+//        println "Job params after parent params merge: ${job.value.params}"
 
         if (job.value.type == 'folder') {
-            parentConfigParams << job.value.params
+//            parentConfigParams << job.value.params
             folder(currentName) {
                 if (config.gitlabHelper) {
                     users = config.gitlabHelper.getUsers(config.configRepo)
@@ -631,8 +640,8 @@ def processJob(jobs, currentFolder, config, parentConfigParamsPassed = [:]) {
         }
 
         if (job.value.jobs) {
-            println "Parent config params: ${parentConfigParams}"
-            processJob(job.value.jobs, currentName, config, parentConfigParams)
+//            println "Parent config params: ${parentConfigParams}"
+            processJob(job.value.jobs, currentName, config)
         }
     }
 }

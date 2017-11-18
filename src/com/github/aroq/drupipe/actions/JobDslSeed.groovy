@@ -10,8 +10,29 @@ class JobDslSeed extends BaseAction {
 
     DrupipeActionWrapper action
 
+    def prepare() {
+        script.checkout script.scm
+        if (script.fileExists(action.pipeline.context.projectConfigPath)) {
+            script.dir(action.pipeline.context.projectConfigPath) {
+                this.script.deleteDir()
+            }
+            script.dir('library') {
+                this.script.deleteDir()
+            }
+            script.dir('mothership') {
+                this.script.deleteDir()
+            }
+        }
+
+        script.unstash 'config'
+        if (script.fileExists("${action.pipeline.context.projectConfigPath}/pipelines/jobdsl")) {
+            action.pipeline.context.params.action.JobDslSeed_perform.jobsPattern << "${action.pipeline.context.projectConfigPath}/pipelines/jobdsl/*.groovy"
+        }
+    }
+
     def perform() {
-        utils.dumpConfigFile(action.pipeline.context)
+        action.pipeline.serializeObject('.unipipe/temp/context_processed.json', action.pipeline.context, 'json')
+//        utils.dumpConfigFile(action.pipeline.context)
         action.pipeline.scripts_library_load()
 
         script.jobDsl targets: action.params.jobsPattern.join('\n'),

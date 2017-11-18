@@ -1,0 +1,56 @@
+docmanDir: docman
+drupipeDockerArgs: --user root:root --net=host
+
+processors:
+  - className: DrupipeFromProcessor
+    properties:
+      config_key: from
+
+jobs:
+  seed:
+    type: seed
+    pipeline:
+      pods:
+        - from: pods.master
+          containers:
+            - from: containers.common
+              blocks:
+                - actions:
+                  - from: actions.JobDslSeed.prepare
+                  - from: actions.JobDslSeed.perform
+
+params:
+  processor_params:
+      from:
+        # defines in which mode 'from' should be processed.
+        mode: config
+  jobs:
+    __default:
+
+  pipelines:
+    default:
+      name: default
+
+  pods:
+    __default:
+      name: default
+
+    master:
+      name: master
+      from: pods.default
+
+    k8s:
+      name: k8s
+      from: pods.default
+
+  containers:
+    __default:
+
+    common:
+      image: michaeltigr/zebra-build-php-drush-docman
+
+  pipeline:
+    scripts_library:
+      url: https://github.com/aroq/drupipe.git
+      ref: master
+      type: branch

@@ -28,7 +28,7 @@ params = [
     ],
     action: [
         // Default action params (merged to all actions params).
-        ACTION: [
+        __default: [
             action_timeout: 120,
             store_result: true,
             dump_result: true,

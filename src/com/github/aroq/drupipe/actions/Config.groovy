@@ -47,6 +47,9 @@ class Config extends BaseAction {
                 action: "Config.projectConfig"
             ],
             [
+                action: "Config.config_version2"
+            ],
+            [
                 action: "Config.jenkinsConfig"
             ],
             [
@@ -110,6 +113,11 @@ class Config extends BaseAction {
     def jobConfig() {
         def result = [:]
         if (action.pipeline.context.jobs) {
+            action.pipeline.archiveObjectJsonAndYaml(action.pipeline.context, 'context_unprocessed')
+
+            // Performed here as needed later for job processing.
+            action.pipeline.drupipeConfig.process()
+
             processJobs(action.pipeline.context.jobs)
             utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED')
 
@@ -195,19 +203,17 @@ class Config extends BaseAction {
             ]
             result = action.pipeline.executePipelineActionList(providers)
             def mothershipConfig = this.utils.getMothershipConfigFile(result)
-            utils.debugLog(action.pipeline.context, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], true)
+            utils.debugLog(action.pipeline.context, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], false)
             def mothershipServers = this.utils.getMothershipServersFile(result)
-            utils.debugLog(action.pipeline.context, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], true)
+            utils.debugLog(action.pipeline.context, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], false)
 
             def mothershipProjectConfig = mothershipConfig[action.pipeline.context.jenkinsFolderName]
             script.echo "mothershipProjectConfig: ${mothershipProjectConfig}"
 
             result = utils.merge(result, mothershipProjectConfig)
-            utils.debugLog(action.pipeline.context, result, 'mothershipServer result after merge', [debugMode: 'json'], [], true)
+            utils.debugLog(action.pipeline.context, result, 'mothershipServer result after merge', [debugMode: 'json'], [], false)
             result = utils.merge(result, [jenkinsServers: mothershipServers])
-            utils.debugLog(action.pipeline.context, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], true)
-
-//            this.configRepo = result.configRepo
+            utils.debugLog(action.pipeline.context, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], false)
         }
         result
     }
@@ -387,6 +393,30 @@ class Config extends BaseAction {
 
             utils.debugLog(result, 'Project config with scenarios loaded')
             result
+        }
+    }
+
+    def config_version2() {
+        if (action.pipeline.configVersion() > 1) {
+            def providers = [
+                [
+                    action: 'YamlFileConfig.loadFromLibraryResource',
+                    params: [
+                        resource: 'com/github/aroq/drupipe/config.yaml'
+                    ]
+                ],
+                [
+                    action: 'YamlFileConfig.loadFromLibraryResource',
+                    params: [
+                        resource: 'com/github/aroq/drupipe/actions.yaml'
+                    ]
+                ],
+            ]
+
+            action.pipeline.executePipelineActionList(providers)
+        }
+        else {
+            [:]
         }
     }
 

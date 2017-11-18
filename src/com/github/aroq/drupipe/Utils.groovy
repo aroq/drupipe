@@ -5,6 +5,10 @@ import groovy.json.JsonOutput
 import java.nio.file.Path
 import java.nio.file.Paths
 
+def log(String message) {
+    echo message
+}
+
 def colorEcho(message, color = null) {
     if (!color) {
         color = 'green'
@@ -101,7 +105,7 @@ def envTextToMap(env) {
 @NonCPS
 String configToSlurperFile(config) {
     def co = new ConfigObject()
-    skipConfigKeys = ['action', 'sources', 'loadedSources', 'sourcesList', 'stage', 'pipeline', 'block', 'utils']
+    skipConfigKeys = ['action', 'sources', 'loadedSources', 'sourcesList', 'stage', 'pipeline', 'block', 'utils', 'results']
     config.each { entry ->
         if (!skipConfigKeys.contains(entry.key)) {
             co.put(entry.key, entry.value)
@@ -336,11 +340,11 @@ def getMothershipConfigFile(params) {
             def file = readFile(projectsFile)
             if (file) {
                 if (extension in ['yaml', 'yml']) {
-                    echo "getMothershipConfigFile: load file: ${file}"
+//                    echo "getMothershipConfigFile: load file: ${file}"
                     return readYaml(text: file).projects
                 }
                 else if (extension == 'json') {
-                    echo "getMothershipConfigFile: load file: ${file}"
+//                    echo "getMothershipConfigFile: load file: ${file}"
                     return readJSON(text: file).projects
                 }
             }
@@ -571,7 +575,7 @@ def serializeAndDeserialize(params) {
     def yamlFilePath = '.unipipe/temp/serializeAndDeserialize.yaml'
     if (params) {
         if (fileExists(yamlFilePath)) {
-            sh("rm -f ${yamlFilePath} >> output.txt")
+            sh("rm -f ${yamlFilePath}")
         }
         writeYaml(file: yamlFilePath, data: params)
         if (fileExists(yamlFilePath)) {
@@ -579,7 +583,6 @@ def serializeAndDeserialize(params) {
         }
     }
     result
-
 }
 
 def stripContext(context) {

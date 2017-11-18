@@ -1,6 +1,6 @@
-import com.github.aroq.drupipe.DrupipePipeline
+import com.github.aroq.drupipe.DrupipeController
 
-def call(DrupipePipeline pipeline, body) {
+def call(DrupipeController pipeline, body) {
     String nodeName = 'default'
     String containerName = 'drupipecontainer'
 
