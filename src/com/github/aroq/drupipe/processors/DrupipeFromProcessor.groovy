@@ -41,6 +41,9 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     def processFromItem(context, result, from, parent, key = 'params') {
         // TODO: check about .params.
         from = 'params.' + from
+
+        utils.log "Process from: ${from}"
+
         def processorParams = getFrom(context, from, 'processor_params')
         if (processorParams) {
             utils.debugLog(context, processorParams, 'processFromItem->processorParams', [debugMode: 'json'], [], true)
