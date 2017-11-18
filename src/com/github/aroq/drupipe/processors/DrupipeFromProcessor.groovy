@@ -42,41 +42,46 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         // TODO: check about .params.
         from = 'params.' + from
         def processorParams = getFrom(context, from, 'processor_params')
-        def keyMode = utils.deepGet(processorParams, "${this.config_key}.mode")
+        if (processorParams) {
+            def keyMode = utils.deepGet(processorParams, "${this.config_key}.mode")
 
-        if (keyMode == this.mode) {
-            utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, config_key: ${this.config_key}"
-            def fromObject = getFrom(context, from, key)
-            if (fromObject) {
-                if (parent == 'job') {
-                    fromObject.name = from
-                }
-                if (parent == 'pipeline') {
-                    fromObject.name = from
-                }
-                if (parent == 'containers') {
-                    fromObject.name = from
-                }
-                if (parent == 'blocks') {
-                    fromObject.name = from
-                }
-                // Set name to 'from' if parent is 'actions'.
-                if (parent in ['actions', 'pre_actions', 'post_actions']) {
-                    def action = from - 'actions.'
-                    def values = action.split("\\.")
-                    if (values.size() > 1) {
-                        fromObject.name = values[0]
-                        fromObject.methodName = values[1]
-                        fromObject.configVersion = 2
+            if (keyMode == this.mode) {
+                utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, config_key: ${this.config_key}"
+                def fromObject = getFrom(context, from, key)
+                if (fromObject) {
+                    if (parent == 'job') {
+                        fromObject.name = from
                     }
+                    if (parent == 'pipeline') {
+                        fromObject.name = from
+                    }
+                    if (parent == 'containers') {
+                        fromObject.name = from
+                    }
+                    if (parent == 'blocks') {
+                        fromObject.name = from
+                    }
+                    // Set name to 'from' if parent is 'actions'.
+                    if (parent in ['actions', 'pre_actions', 'post_actions']) {
+                        def action = from - 'actions.'
+                        def values = action.split("\\.")
+                        if (values.size() > 1) {
+                            fromObject.name = values[0]
+                            fromObject.methodName = values[1]
+                            fromObject.configVersion = 2
+                        }
+                    }
+                    fromObject = process(context, fromObject, parent, key)
+                    result = utils.merge(fromObject, result)
                 }
-                fromObject = process(context, fromObject, parent, key)
-                result = utils.merge(fromObject, result)
+                result.remove(this.config_key)
             }
-            result.remove(this.config_key)
+            else {
+                utils.log "DrupipeFromProcessor->processFromItem() ${from} skipped as mode is ${keyMode}, config_key: ${this.config_key}"
+            }
         }
         else {
-            utils.log "DrupipeFromProcessor->processFromItem() ${from} skipped as mode is ${keyMode}, config_key: ${this.config_key}"
+            utils.log "DrupipeFromProcessor->processFromItem() no processorParams defined"
         }
 
         result
