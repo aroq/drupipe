@@ -28,7 +28,7 @@ class DrupipeContainerBlock implements Serializable {
     }
 
     def processAction(action) {
-        controller.drupipeConfig.processItem(action, 'action', 'params', 'execute')
+        controller.drupipeConfig.processItem(action, 'actions', 'params', 'execute')
     }
 
     def executeAction(action) {
