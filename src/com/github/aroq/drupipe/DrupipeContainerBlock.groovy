@@ -21,10 +21,14 @@ class DrupipeContainerBlock implements Serializable {
             if (this."${phase}") {
                 script.echo "Execute CONTAINER BLOCK phase: ${phase}"
                 for (action in this."${phase}") {
-                    executeAction(action)
+                    executeAction(processAction(action))
                 }
             }
         }
+    }
+
+    def processAction(action) {
+        controller.drupipeConfig.processItem(action, 'action', 'params', 'execute')
     }
 
     def executeAction(action) {
