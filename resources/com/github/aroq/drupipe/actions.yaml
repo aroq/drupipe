@@ -208,7 +208,6 @@ params:
 
     GCloud:
       params:
-        debugEnabled: true
         dump_result: true
         executable: gcloud
         kubectl_config_file: .kubeconfig
@@ -265,7 +264,6 @@ params:
 
       apply:
         params:
-          debugEnabled: true
           command: upgrade
           value_suffix: values.yaml
           timeout: '120'
@@ -370,7 +368,6 @@ params:
 
       get_pod_name:
         params:
-          debugEnabled: true
           command: get pod
           release_name: ${actions.Helm_status.release_name}
           jsonpath: '{.items[0].metadata.name}'
@@ -433,7 +430,6 @@ params:
 
       get_pod_logs:
         params:
-          debugEnabled: true
           command: logs
           pod_name: ''
           flags:

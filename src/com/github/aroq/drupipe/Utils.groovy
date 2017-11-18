@@ -340,11 +340,11 @@ def getMothershipConfigFile(params) {
             def file = readFile(projectsFile)
             if (file) {
                 if (extension in ['yaml', 'yml']) {
-                    echo "getMothershipConfigFile: load file: ${file}"
+//                    echo "getMothershipConfigFile: load file: ${file}"
                     return readYaml(text: file).projects
                 }
                 else if (extension == 'json') {
-                    echo "getMothershipConfigFile: load file: ${file}"
+//                    echo "getMothershipConfigFile: load file: ${file}"
                     return readJSON(text: file).projects
                 }
             }
