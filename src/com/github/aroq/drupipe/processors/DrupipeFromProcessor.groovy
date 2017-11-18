@@ -45,7 +45,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         def keyMode = utils.deepGet(processorParams, "${this.config_key}.mode")
 
         if (keyMode == this.mode) {
-            utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}"
+            utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, config_key: ${this.config_key}"
             def fromObject = getFrom(context, from, key)
             if (fromObject) {
                 if (parent == 'job') {
@@ -76,7 +76,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
             result.remove(this.config_key)
         }
         else {
-            utils.log "DrupipeFromProcessor->processFromItem() ${from} skipped as mode is ${keyMode}"
+            utils.log "DrupipeFromProcessor->processFromItem() ${from} skipped as mode is ${keyMode}, config_key: ${this.config_key}"
         }
 
         result
