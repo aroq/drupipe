@@ -203,19 +203,17 @@ class Config extends BaseAction {
             ]
             result = action.pipeline.executePipelineActionList(providers)
             def mothershipConfig = this.utils.getMothershipConfigFile(result)
-            utils.debugLog(action.pipeline.context, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], true)
+            utils.debugLog(action.pipeline.context, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], false)
             def mothershipServers = this.utils.getMothershipServersFile(result)
-            utils.debugLog(action.pipeline.context, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], true)
+            utils.debugLog(action.pipeline.context, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], false)
 
             def mothershipProjectConfig = mothershipConfig[action.pipeline.context.jenkinsFolderName]
             script.echo "mothershipProjectConfig: ${mothershipProjectConfig}"
 
             result = utils.merge(result, mothershipProjectConfig)
-            utils.debugLog(action.pipeline.context, result, 'mothershipServer result after merge', [debugMode: 'json'], [], true)
+            utils.debugLog(action.pipeline.context, result, 'mothershipServer result after merge', [debugMode: 'json'], [], false)
             result = utils.merge(result, [jenkinsServers: mothershipServers])
-            utils.debugLog(action.pipeline.context, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], true)
-
-//            this.configRepo = result.configRepo
+            utils.debugLog(action.pipeline.context, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], false)
         }
         result
     }
