@@ -43,6 +43,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         from = 'params.' + from
         def processorParams = getFrom(context, from, 'processor_params')
         if (processorParams) {
+            utils.debugLog(context, processorParams, [debugMode: 'json'], [], true)
             def keyMode = utils.deepGet(processorParams, "${this.config_key}.mode")
 
             if (keyMode == this.mode) {
@@ -88,7 +89,6 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def process(context, obj, parent, key = 'params', mode = 'config') {
-        utils.log "DrupipeFromProcessor->process() config key: ${this.config_key}"
         this.mode = mode
         def result = obj
         if (obj.containsKey(this.config_key)) {
