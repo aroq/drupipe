@@ -38,13 +38,13 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     def processFromItem(context, result, from, parent, key = 'params') {
         // TODO: check about .params.
-        def processParams = getFrom(context.params, from, 'process_params')
-        if (processParams && processParams.from) {
-            def stop = true
-            if () {
-
-            }
-        }
+//        def processParams = getFrom(context.params, from, 'process_params')
+//        if (processParams && processParams.from) {
+//            def stop = true
+//            if () {
+//
+//            }
+//        }
         def fromObject = getFrom(context.params, from, key)
         if (fromObject) {
             if (parent == 'job') {
