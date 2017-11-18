@@ -4,7 +4,7 @@ drupipeDockerArgs: --user root:root --net=host
 processors:
   - className: DrupipeFromProcessor
     properties:
-      key: from
+      config_key: from
 
 jobs:
   seed:

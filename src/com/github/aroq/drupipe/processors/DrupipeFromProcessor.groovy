@@ -6,6 +6,8 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     String mode
 
+    String config_key
+
     def getFromPathItem(object, pathItem, String key) {
         def result = [:]
         if (object && object.containsKey(pathItem)) {
@@ -38,59 +40,59 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     def processFromItem(context, result, from, parent, key = 'params') {
         // TODO: check about .params.
-//        def processParams = getFrom(context.params, from, 'process_params')
-//        if (processParams && processParams.from) {
-//            def stop = true
-//            if () {
-//
-//            }
-//        }
-        def fromObject = getFrom(context.params, from, key)
-        if (fromObject) {
-            if (parent == 'job') {
-                fromObject.name = from
-            }
-            if (parent == 'pipeline') {
-                fromObject.name = from
-            }
-            if (parent == 'containers') {
-                fromObject.name = from
-            }
-            if (parent == 'blocks') {
-                fromObject.name = from
-            }
-            // Set name to 'from' if parent is 'actions'.
-            if (parent in ['actions', 'pre_actions', 'post_actions']) {
-                def action = from - 'actions.'
-                def values = action.split("\\.")
-                if (values.size() > 1) {
-                    fromObject.name = values[0]
-                    fromObject.methodName = values[1]
-                    fromObject.configVersion = 2
+        from = 'params.' + from
+        def processorParams = getFrom(context, from, 'processor_params')
+        def keyMode = utils.deepGet(processorParams, "${this.config_key}.mode")
+
+        if (keyMode == this.mode) {
+            def fromObject = getFrom(context, from, key)
+            if (fromObject) {
+                if (parent == 'job') {
+                    fromObject.name = from
                 }
+                if (parent == 'pipeline') {
+                    fromObject.name = from
+                }
+                if (parent == 'containers') {
+                    fromObject.name = from
+                }
+                if (parent == 'blocks') {
+                    fromObject.name = from
+                }
+                // Set name to 'from' if parent is 'actions'.
+                if (parent in ['actions', 'pre_actions', 'post_actions']) {
+                    def action = from - 'actions.'
+                    def values = action.split("\\.")
+                    if (values.size() > 1) {
+                        fromObject.name = values[0]
+                        fromObject.methodName = values[1]
+                        fromObject.configVersion = 2
+                    }
+                }
+                fromObject = process(context, fromObject, parent, key)
+                result = utils.merge(fromObject, result)
             }
-            fromObject = process(context, fromObject, parent, key)
-            result = utils.merge(fromObject, result)
+            result.remove(this.config_key)
         }
+        else {
+            def stop = true
+        }
+
         result
     }
 
     def process(context, obj, parent, key = 'params', mode = 'config') {
         this.mode = mode
         def result = obj
-        if (obj.containsKey('from')) {
+        if (obj.containsKey(this.config_key)) {
             if (obj.from instanceof CharSequence) {
                 result = processFromItem(context, result, obj.from, parent, key)
             }
             else {
                 for (item in obj.from) {
-                    def fromObject = utils.deepGet(context, 'params.' + item)
-                    if (fromObject) {
-                        result = processFromItem(context, result, item, parent, key)
-                    }
+                    result = processFromItem(context, result, item, parent, key)
                 }
             }
-            result.remove('from')
         }
         result
     }

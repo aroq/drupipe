@@ -5,7 +5,7 @@ import com.github.aroq.drupipe.processors.DrupipeProcessorsController
 
 class DrupipeConfig implements Serializable {
 
-    DrupipeController controller
+    def controller
 
     def script
 
@@ -13,7 +13,7 @@ class DrupipeConfig implements Serializable {
 
     def config(params) {
         script.node('master') {
-            script.echo "Executing pipeline"
+            utils.log "Executing pipeline"
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
             utils.dump(params, params, 'PIPELINE-PARAMS')
             // Get config (context).
@@ -26,16 +26,20 @@ class DrupipeConfig implements Serializable {
         controller.context.config_version as int
     }
 
-    DrupipeProcessorsController initProcessorsController(processorsConfig) {
-        script.echo "initProcessorsController"
+    DrupipeProcessorsController initProcessorsController(parent, processorsConfig) {
+        utils.log "initProcessorsController"
         ArrayList<DrupipeProcessor> processors = []
         for (processorConfig in processorsConfig) {
-            script.echo "Processor: ${processorConfig.className}"
+            utils.log "Processor: ${processorConfig.className}"
             try {
-                processors << this.class.classLoader.loadClass("com.github.aroq.drupipe.processors.${processorConfig.className}", true, false)?.newInstance(
-                    utils: utils,
+                def properties = [utils: utils]
+                if (processorConfig.properties) {
+                    properties << processorConfig.properties
+                }
+                processors << parent.class.classLoader.loadClass("com.github.aroq.drupipe.processors.${processorConfig.className}", true, false)?.newInstance(
+                    properties
                 )
-                script.echo "Processor: ${processorConfig.className} created"
+                utils.log "Processor: ${processorConfig.className} created"
             }
             catch (err) {
                 throw err
@@ -45,7 +49,7 @@ class DrupipeConfig implements Serializable {
     }
 
     def process() {
-        script.echo "DrupipeConfig->process()"
+        utils.log "DrupipeConfig->process()"
         if (controller.configVersion() > 1) {
             controller.drupipeProcessorsController = initProcessorsController(controller.context.processors)
             controller.context = controller.drupipeProcessorsController.process(controller.context, controller.context, 'context')
