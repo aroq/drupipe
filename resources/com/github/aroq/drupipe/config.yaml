@@ -1,3 +1,17 @@
+uniconf:
+  keys:
+    include: scenarios
+    sources: scenarioSources
+    params: params
+    jobs: jobs
+  dirs:
+    sources: scenarios
+  files:
+    config_file_name: config.yaml
+  include:
+    prefix: .params.
+    separator: '|'
+
 docmanDir: docman
 drupipeDockerArgs: --user root:root --net=host
 

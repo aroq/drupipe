@@ -6,7 +6,7 @@ class Config extends BaseAction {
 
     def script
 
-    def utils
+    com.github.aroq.drupipe.Utils utils
 
     DrupipeActionWrapper action
 
@@ -219,14 +219,17 @@ class Config extends BaseAction {
     }
 
     def mergeScenariosConfigs(config, tempContext = [:], currentScenarioSourceName = null) {
+        def uniconfIncludeKey = utils.deepGet(action.pipeline.context, 'uniconf.keys.include')
+        def uniconfSourcesKey = utils.deepGet(action.pipeline.context, 'uniconf.keys.sources')
+
         def scenariosConfig = [:]
         if (!tempContext) {
             tempContext << action.pipeline.context
         }
         tempContext = utils.merge(tempContext, config)
-        if (config.scenarios) {
-            for (def i = 0; i < config.scenarios.size(); i++) {
-                def s = config.scenarios[i]
+        if (config.containsKey(uniconfIncludeKey)) {
+            for (def i = 0; i < config[uniconfIncludeKey].size(); i++) {
+                def s = config[uniconfIncludeKey][i]
                 if (s instanceof String) {
                     def values = s.split(":")
                     def scenario = [:]
@@ -239,15 +242,15 @@ class Config extends BaseAction {
                         scenarioSourceName = currentScenarioSourceName
                         scenario.name = values[0]
                     }
-                    utils.debugLog(action.pipeline.context, tempContext.scenarioSources, 'Scenario sources')
-                    if ((scenariosConfig.scenarioSources && scenariosConfig.scenarioSources.containsKey(scenarioSourceName)) || (tempContext.scenarioSources && tempContext.scenarioSources.containsKey(scenarioSourceName)) || action.pipeline.context.loadedSources.containsKey(scenarioSourceName)) {
+                    utils.debugLog(action.pipeline.context, tempContext[uniconfSourcesKey], 'Scenario sources')
+                    if ((scenariosConfig[uniconfSourcesKey] && scenariosConfig[uniconfSourcesKey].containsKey(scenarioSourceName)) || (tempContext[uniconfSourcesKey] && tempContext[uniconfSourcesKey].containsKey(scenarioSourceName)) || action.pipeline.context.loadedSources.containsKey(scenarioSourceName)) {
                         if (!action.pipeline.context.loadedSources[scenarioSourceName]) {
                             script.echo "Adding source: ${scenarioSourceName}"
-                            if (tempContext.scenarioSources.containsKey(scenarioSourceName)) {
-                                scenario.source = tempContext.scenarioSources[scenarioSourceName]
+                            if (tempContext[uniconfSourcesKey].containsKey(scenarioSourceName)) {
+                                scenario.source = tempContext[uniconfSourcesKey][scenarioSourceName]
                             }
-                            else if (scenariosConfig.scenarioSources.containsKey(scenarioSourceName)) {
-                                scenario.source = scenariosConfig.scenarioSources[scenarioSourceName]
+                            else if (scenariosConfig[uniconfSourcesKey].containsKey(scenarioSourceName)) {
+                                scenario.source = scenariosConfig[uniconfSourcesKey][scenarioSourceName]
                             }
 
                             script.sshagent([action.pipeline.context.credentialsId]) {
