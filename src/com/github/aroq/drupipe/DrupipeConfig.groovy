@@ -52,7 +52,7 @@ class DrupipeConfig implements Serializable {
         utils.log "DrupipeConfig->process()"
         if (controller.configVersion() > 1) {
             controller.drupipeProcessorsController = initProcessorsController(this, controller.context.processors)
-            controller.context = controller.drupipeProcessorsController.process(controller.context, controller.context, 'context')
+            controller.context.jobs = controller.drupipeProcessorsController.process(controller.context, controller.context.jobs, 'context')
             controller.archiveObjectJsonAndYaml(controller.context, 'context_processed')
         }
     }
