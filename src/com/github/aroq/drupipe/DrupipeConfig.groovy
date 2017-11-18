@@ -13,7 +13,7 @@ class DrupipeConfig implements Serializable {
 
     def config(params) {
         script.node('master') {
-            utils.log "Executing pipeline"
+//            utils.log "Executing pipeline"
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
             utils.dump(params, params, 'PIPELINE-PARAMS')
             // Get config (context).
@@ -27,7 +27,7 @@ class DrupipeConfig implements Serializable {
     }
 
     DrupipeProcessorsController initProcessorsController(parent, processorsConfig) {
-        utils.log "initProcessorsController"
+//        utils.log "initProcessorsController"
         ArrayList<DrupipeProcessor> processors = []
         for (processorConfig in processorsConfig) {
             utils.log "Processor: ${processorConfig.className}"
@@ -53,7 +53,7 @@ class DrupipeConfig implements Serializable {
     }
 
     def process() {
-        utils.log "DrupipeConfig->process()"
+//        utils.log "DrupipeConfig->process()"
         if (controller.configVersion() > 1) {
             controller.drupipeProcessorsController = initProcessorsController(this, controller.context.processors)
             controller.context.jobs = processItem(controller.context.jobs, 'context', 'params', 'config')
