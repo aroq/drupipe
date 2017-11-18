@@ -43,7 +43,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         from = 'params.' + from
         def processorParams = getFrom(context, from, 'processor_params')
         if (processorParams) {
-            utils.debugLog(context, processorParams, [debugMode: 'json'], [], true)
+            utils.debugLog(context, processorParams, 'processFromItem->processorParams', [debugMode: 'json'], [], true)
             def keyMode = utils.deepGet(processorParams, "${this.config_key}.mode")
 
             if (keyMode == this.mode) {
