@@ -6,7 +6,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     String mode
 
-    String config_key
+    String include_key
 
     def getFromPathItem(object, pathItem, String key) {
         def result = [:]
@@ -44,7 +44,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
 //        utils.log "Process from: ${from}"
 
-        def processorParams = getFrom(context, from, 'processor_params')
+        def processorParams = getFrom(context, from, 'processors')
         if (processorParams) {
 //            utils.debugLog(context, processorParams, 'processFromItem->processorParams', [debugMode: 'json'], [], true)
             def keyMode = utils.deepGet(processorParams, "${this.config_key}.mode")

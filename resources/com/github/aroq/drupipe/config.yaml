@@ -4,6 +4,7 @@ uniconf:
     sources: scenarioSources
     params: params
     jobs: jobs
+    processors: processors
   dirs:
     sources: scenarios
   files:
@@ -18,7 +19,7 @@ drupipeDockerArgs: --user root:root --net=host
 processors:
   - className: DrupipeFromProcessor
     properties:
-      config_key: from
+      include_key: from
 
 jobs:
   seed:
@@ -34,7 +35,7 @@ jobs:
                   - from: actions.JobDslSeed.perform
 
 params:
-  processor_params:
+  processors:
       from:
         # defines in which mode 'from' should be processed.
         mode: config

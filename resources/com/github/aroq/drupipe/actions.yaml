@@ -1,6 +1,6 @@
 params:
   actions:
-    processor_params:
+    processors:
       from:
         # defines in which mode 'from' should be processed.
         mode: execute
