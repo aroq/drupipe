@@ -570,16 +570,22 @@ def prepareFlags(flags) {
     }.join(' ')
 }
 
-def serializeAndDeserialize(params) {
+def serializeAndDeserialize(params, mode = 'yaml') {
     def result = [:]
-    def yamlFilePath = '.unipipe/temp/serializeAndDeserialize.yaml'
+    def filePath = ".unipipe/temp/serializeAndDeserialize.${mode}"
     if (params) {
-        if (fileExists(yamlFilePath)) {
-            sh("rm -f ${yamlFilePath}")
+        if (fileExists(filePath)) {
+            sh("rm -f ${filePath}")
         }
-        writeYaml(file: yamlFilePath, data: params)
-        if (fileExists(yamlFilePath)) {
-            result = readYaml(file: yamlFilePath)
+        if (mode == 'yaml') {
+            writeYaml(file: filePath, data: params)
+            result = readYaml(file: filePath)
+        }
+        else if (mode == 'json') {
+
+            def outJson = groovy.json.JsonOutput.toJson(params)
+            writeFile file: filePath, text: outJson, encoding: 'UTF-8'
+            result = readJson(file: filePath)
         }
     }
     result

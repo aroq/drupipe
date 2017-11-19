@@ -121,7 +121,7 @@ class Config extends BaseAction {
             utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED - BEFORE processJobs', false)
 
             // Deep clone of context.jobs before processing.
-            action.pipeline.context.jobs = utils.serializeAndDeserialize(action.pipeline.context.jobs)
+            action.pipeline.context.jobs = utils.serializeAndDeserialize(action.pipeline.context.jobs, 'json')
 
             action.pipeline.context.jobs = processJobs(action.pipeline.context.jobs)
 
@@ -140,6 +140,7 @@ class Config extends BaseAction {
         }
         result
     }
+
     def processJobs(jobs, parentParams = [:]) {
         def result = jobs
         for (job in jobs) {
