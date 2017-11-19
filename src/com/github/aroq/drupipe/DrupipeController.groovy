@@ -85,8 +85,8 @@ class DrupipeController implements Serializable {
                         // Secret option for emergency remove workspace.
                         if (context.job) {
                             def jobConfig = context.job
-                            utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [])
                             archiveObjectJsonAndYaml(jobConfig, 'job')
+                            utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [], true)
                             job = new DrupipeJob(jobConfig)
                             job.controller = this
                         }

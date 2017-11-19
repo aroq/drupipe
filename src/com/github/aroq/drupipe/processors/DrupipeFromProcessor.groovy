@@ -18,7 +18,12 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         result
     }
 
-    def getFrom(object, path, key = 'params') {
+    def collectKeyParamsFromJsonPath(object, path, key = 'params') {
+        // Remove first '.' if exists.
+        if (path[0] == '.') {
+            path = path.getAt(1..path.length() - 1)
+        }
+
         def result = [:]
         if (path instanceof CharSequence) {
             path = path.tokenize('.')
@@ -41,18 +46,15 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     def processFromItem(context, result, String from, String parent, String key = 'params') {
 //        utils.log "Process from: ${from}"
         // TODO: check about .params.
-        if (from[0] == '.') {
-            from = from.getAt(1..from.length() - 1)
-        }
 
-        def processorParams = getFrom(context, from, 'processors')
+        def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         if (processorParams) {
             utils.debugLog(context, processorParams, 'processFromItem->processorParams', [debugMode: 'json'], [], false)
             def keyMode = utils.deepGet(processorParams, "${this.include_key}.mode")
 
             if (keyMode == this.mode) {
 //                utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
-                def fromObject = getFrom(context, from, key)
+                def fromObject = collectKeyParamsFromJsonPath(context, from, key)
                 if (fromObject) {
                     if (parent == 'job') {
                         fromObject.name = from
