@@ -84,13 +84,13 @@ class DrupipeActionWrapper implements Serializable {
 
             // Interpolate action params with pipeline.context variables.
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
-                this.script.echo "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
+                utils.log "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
             }
             else {
                 this.params = utils.serializeAndDeserialize(this.params)
 
                 try {
-                    this.script.echo "Call hook_preprocess()"
+//                    utils.log "Call hook_preprocess()"
                     actionInstance.hook_preprocess()
                 }
                 catch (err) {
@@ -98,7 +98,7 @@ class DrupipeActionWrapper implements Serializable {
                 }
 
                 try {
-                    this.script.echo "Call ${this.methodName}_hook_preprocess()"
+//                    utils.log "Call ${this.methodName}_hook_preprocess()"
                     actionInstance."${this.methodName}_hook_preprocess"()
                 }
                 catch (err) {

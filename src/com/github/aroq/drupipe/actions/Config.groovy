@@ -222,12 +222,16 @@ class Config extends BaseAction {
         def uniconfIncludeKey = utils.deepGet(action.pipeline.context, 'uniconf.keys.include')
         def uniconfSourcesKey = utils.deepGet(action.pipeline.context, 'uniconf.keys.sources')
 
+        utils.log "uniconfIncludeKey: ${uniconfIncludeKey}"
+        utils.log "uniconfSourcesKey: ${uniconfSourcesKey}"
+
         def scenariosConfig = [:]
         if (!tempContext) {
             tempContext << action.pipeline.context
         }
         tempContext = utils.merge(tempContext, config)
         if (config.containsKey(uniconfIncludeKey)) {
+            utils.log "config.containsKey(uniconfIncludeKey)"
             for (def i = 0; i < config[uniconfIncludeKey].size(); i++) {
                 def s = config[uniconfIncludeKey][i]
                 if (s instanceof String) {
@@ -245,7 +249,7 @@ class Config extends BaseAction {
                     utils.debugLog(action.pipeline.context, tempContext[uniconfSourcesKey], 'Scenario sources')
                     if ((scenariosConfig[uniconfSourcesKey] && scenariosConfig[uniconfSourcesKey].containsKey(scenarioSourceName)) || (tempContext[uniconfSourcesKey] && tempContext[uniconfSourcesKey].containsKey(scenarioSourceName)) || action.pipeline.context.loadedSources.containsKey(scenarioSourceName)) {
                         if (!action.pipeline.context.loadedSources[scenarioSourceName]) {
-                            script.echo "Adding source: ${scenarioSourceName}"
+                            utils.log "Adding source: ${scenarioSourceName}"
                             if (tempContext[uniconfSourcesKey].containsKey(scenarioSourceName)) {
                                 scenario.source = tempContext[uniconfSourcesKey][scenarioSourceName]
                             }
@@ -316,15 +320,8 @@ class Config extends BaseAction {
     }
 
     def projectConfig() {
-        utils.debugLog(action.pipeline.context, "projectConfig repo: ${action.pipeline.context.configRepo}", [:], [], true)
+        utils.debugLog(action.pipeline.context, action.pipeline.context.configRepo,"projectConfig repo: ${action.pipeline.context.configRepo}", [:], [], true)
         if (action.pipeline.context.configRepo) {
-//            def sourceObject = [
-//                name: 'project',
-//                path: action.pipeline.context.projectConfigPath,
-//                type: 'dir',
-//                mode: 'shell',
-//            ]
-
             def sourceObject = [
                 name: 'project',
                 path: 'sources/project',
