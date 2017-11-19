@@ -119,7 +119,7 @@ class Config extends BaseAction {
             action.pipeline.drupipeConfig.process()
 
             processJobs(action.pipeline.context.jobs)
-            utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED')
+            utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED', true)
 
             result.job = (action.pipeline.context.env.JOB_NAME).split('/').drop(1).inject(action.pipeline.context, { obj, prop ->
                 utils.log "jobConfig() -> ${prop}"
