@@ -219,8 +219,8 @@ class Config extends BaseAction {
     }
 
     def mergeScenariosConfigs(config, tempContext = [:], currentScenarioSourceName = null) {
-        def uniconfIncludeKey = utils.deepGet(action.pipeline.context, 'uniconf.keys.include')
-        def uniconfSourcesKey = utils.deepGet(action.pipeline.context, 'uniconf.keys.sources')
+        def uniconfIncludeKey = utils.deepGet(config, 'uniconf.keys.include')
+        def uniconfSourcesKey = utils.deepGet(config, 'uniconf.keys.sources')
 
         utils.log "uniconfIncludeKey: ${uniconfIncludeKey}"
         utils.log "uniconfSourcesKey: ${uniconfSourcesKey}"
