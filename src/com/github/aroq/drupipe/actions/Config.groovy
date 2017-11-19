@@ -118,14 +118,14 @@ class Config extends BaseAction {
             // Performed here as needed later for job processing.
             action.pipeline.drupipeConfig.process()
 
-            utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED - BEFORE processJobs', true)
+            utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED - BEFORE processJobs', false)
+            action.pipeline.context.jobs = utils.serializeAndDeserialize(action.pipeline.context.jobs)
             processJobs(action.pipeline.context.jobs)
-            utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED - AFTER processJobs', true)
+            utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED - AFTER processJobs', false)
 
             result.job = (action.pipeline.context.env.JOB_NAME).split('/').drop(1).inject(action.pipeline.context, { obj, prop ->
                 obj.jobs[prop]
             })
-
 
             if (result.job) {
                 if (result.job.context) {
@@ -136,22 +136,26 @@ class Config extends BaseAction {
         }
         result
     }
-
-    def processJobs(jobs, prefixes = [], parentParams = [:]) {
-        if (jobs) {
-            for (job in jobs) {
-                if (job.value.children) {
-                    job.value.jobs = job.value.remove('children')
-                }
-                def children = job.value.jobs ? job.value.jobs : [:]
-                job.value = utils.merge(parentParams, job.value)
-                if (children) {
-                    def jobClone = job.value.clone()
-                    jobClone.remove('jobs')
-                    processJobs(children, prefixes << job.key, jobClone)
-                }
+    def processJobs(jobs, parentParams = [:]) {
+        def result = jobs
+        for (job in jobs) {
+            // For compatibility with previous config versions.
+            if (job.value.children) {
+                job.value.jobs = job.value.remove('children')
+            }
+            if (job.value.jobs) {
+                def params = job.value.clone()
+                params.remove('jobs')
+                job.value.jobs = processJobs(job.value.jobs, params)
+            }
+            if (parentParams) {
+                result[job.key] = utils.merge(parentParams, job.value)
+            }
+            else {
+                result[job.key] = job.value
             }
         }
+        result
     }
 
     def envConfig() {
