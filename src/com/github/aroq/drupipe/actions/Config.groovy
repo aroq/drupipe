@@ -122,6 +122,7 @@ class Config extends BaseAction {
             utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED')
 
             result.job = (action.pipeline.context.env.JOB_NAME).split('/').drop(1).inject(action.pipeline.context, { obj, prop ->
+                utils.log "jobConfig() -> ${prop}"
                 obj.jobs[prop]
             })
 
@@ -130,7 +131,7 @@ class Config extends BaseAction {
                     result = utils.merge(result, result.job.context)
                 }
             }
-            utils.debugLog(action.pipeline.context, result.job, 'jobConfig: JOB', [debugMode: 'json'], [], true)
+            utils.debugLog(action.pipeline.context, result.job, 'jobConfig JOB', [debugMode: 'json'], [], true)
 //            result.jobs = action.pipeline.context.jobs
         }
         result
