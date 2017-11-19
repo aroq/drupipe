@@ -40,9 +40,11 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     def processFromItem(context, result, from, parent, key = 'params') {
         // TODO: check about .params.
-//        from = 'params.' + from
+        if (from[0] == '.') {
+            from = from..getAt(1..from.length() - 1)
+        }
 
-//        utils.log "Process from: ${from}"
+        utils.log "Process from: ${from}"
 
         def processorParams = getFrom(context, from, 'processors')
         if (processorParams) {
