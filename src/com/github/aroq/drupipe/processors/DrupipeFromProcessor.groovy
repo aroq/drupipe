@@ -57,16 +57,16 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                 def fromObject = collectKeyParamsFromJsonPath(context, from, key)
                 if (fromObject) {
                     if (parent == 'job') {
-                        fromObject.name = from
+                        fromObject.name = from - '.params.jobs'
                     }
                     if (parent == 'pipeline') {
-                        fromObject.name = from
+                        fromObject.name = from - '.params.pipelines.'
                     }
                     if (parent == 'containers') {
-                        fromObject.name = from
+                        fromObject.name = from - '.params.containers.' - 'containers.'
                     }
                     if (parent == 'blocks') {
-                        fromObject.name = from
+                        fromObject.name = from - '.params.blocks.'
                     }
                     // Set name to 'from' if parent is 'actions'.
                     if (parent in ['actions', 'pre_actions', 'post_actions']) {
