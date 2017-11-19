@@ -122,6 +122,7 @@ class Config extends BaseAction {
 
             // Deep clone of context.jobs before processing.
             action.pipeline.context.jobs = utils.serializeAndDeserialize(action.pipeline.context.jobs, 'json')
+            action.pipeline.context.jobs = utils.serializeAndDeserialize(action.pipeline.context.jobs, 'yaml')
 
             action.pipeline.context.jobs = processJobs(action.pipeline.context.jobs)
 
