@@ -118,21 +118,20 @@ class Config extends BaseAction {
             // Performed here as needed later for job processing.
             action.pipeline.drupipeConfig.process()
 
+            utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED - BEFORE processJobs', true)
             processJobs(action.pipeline.context.jobs)
-            utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED', true)
+            utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED - AFTER processJobs', true)
 
             result.job = (action.pipeline.context.env.JOB_NAME).split('/').drop(1).inject(action.pipeline.context, { obj, prop ->
                 obj.jobs[prop]
             })
 
-            utils.debugLog(action.pipeline.context, result.job, 'jobConfig JOB1', [debugMode: 'json'], [], true)
 
             if (result.job) {
                 if (result.job.context) {
                     result = utils.merge(result, result.job.context)
                 }
             }
-            utils.debugLog(action.pipeline.context, result.job, 'jobConfig JOB2', [debugMode: 'json'], [], true)
 //            result.jobs = action.pipeline.context.jobs
         }
         result
