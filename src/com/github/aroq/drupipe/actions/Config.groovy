@@ -130,7 +130,8 @@ class Config extends BaseAction {
                     result = utils.merge(result, result.job.context)
                 }
             }
-            result.jobs = action.pipeline.context.jobs
+            utils.debugLog(action.pipeline.context, result.job, 'jobConfig: JOB', [debugMode: 'json'], [], true)
+//            result.jobs = action.pipeline.context.jobs
         }
         result
     }

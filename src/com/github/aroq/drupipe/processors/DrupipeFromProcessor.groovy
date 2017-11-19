@@ -55,6 +55,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
             if (keyMode == this.mode) {
 //                utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
                 def fromObject = collectKeyParamsFromJsonPath(context, from, key)
+                // TODO: Refactor it:
                 if (fromObject) {
                     if (parent == 'job') {
                         fromObject.name = from - '.params.jobs'
