@@ -38,13 +38,12 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         result
     }
 
-    def processFromItem(context, result, from, parent, key = 'params') {
+    def processFromItem(context, result, String from, String parent, String key = 'params') {
+//        utils.log "Process from: ${from}"
         // TODO: check about .params.
         if (from[0] == '.') {
             from = from.getAt(1..from.length() - 1)
         }
-
-//        utils.log "Process from: ${from}"
 
         def processorParams = getFrom(context, from, 'processors')
         if (processorParams) {
@@ -83,7 +82,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                 result.remove(this.include_key)
             }
             else {
-                utils.log "DrupipeFromProcessor->processFromItem() ${from} skipped as mode is ${keyMode}, include_key: ${this.include_key}"
+//                utils.log "DrupipeFromProcessor->processFromItem() ${from} skipped as mode is ${keyMode}, include_key: ${this.include_key}"
             }
         }
         else {

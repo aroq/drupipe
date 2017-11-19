@@ -34,7 +34,7 @@ class DrupipePipeline implements Serializable {
 
     def executePod(pod) {
         if (pod) {
-            controller.utils.debugLog(controller.context, pod, 'POD', [debugMode: 'json'], [], true)
+            controller.utils.debugLog(controller.context, pod, 'POD', [debugMode: 'json'], [], false)
 
             if (pod.containerized && controller.context.containerMode == 'kubernetes') {
                 pod = new DrupipeKubernetesPod(pod)
