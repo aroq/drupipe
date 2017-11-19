@@ -218,9 +218,9 @@ class Config extends BaseAction {
         result
     }
 
-    def mergeScenariosConfigs(config, tempContext = [:], currentScenarioSourceName = null) {
-        def uniconfIncludeKey = utils.deepGet(config, 'uniconf.keys.include')
-        def uniconfSourcesKey = utils.deepGet(config, 'uniconf.keys.sources')
+    def mergeScenariosConfigs(context, config, tempContext = [:], currentScenarioSourceName = null) {
+        def uniconfIncludeKey = utils.deepGet(context, 'uniconf.keys.include')
+        def uniconfSourcesKey = utils.deepGet(context, 'uniconf.keys.sources')
 
         utils.log "uniconfIncludeKey: ${uniconfIncludeKey}"
         utils.log "uniconfSourcesKey: ${uniconfSourcesKey}"
@@ -300,7 +300,7 @@ class Config extends BaseAction {
                         // Merge scenario if exists.
                         if (fileName != null) {
                             utils.debugLog(action.pipeline.context, "Scenario file name: ${fileName} exists")
-                            def scenarioConfig = mergeScenariosConfigs(script.readYaml(file: fileName), tempContext, scenarioSourceName)
+                            def scenarioConfig = mergeScenariosConfigs(context, script.readYaml(file: fileName), tempContext, scenarioSourceName)
                             utils.debugLog(action.pipeline.context, scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
                             utils.debugLog(action.pipeline.context, scenariosConfig, "Scenarios config")
@@ -389,7 +389,7 @@ class Config extends BaseAction {
                 utils.debugLog(action.pipeline.context, projectConfig, 'Project config')
             }
 
-            def result = mergeScenariosConfigs(projectConfig, [:], 'project')
+            def result = mergeScenariosConfigs(projectConfig, projectConfig, [:], 'project')
 
             utils.debugLog(result, 'Project config with scenarios loaded')
             result
