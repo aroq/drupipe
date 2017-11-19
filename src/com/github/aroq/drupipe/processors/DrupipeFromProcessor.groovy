@@ -47,10 +47,10 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         def processorParams = getFrom(context, from, 'processors')
         if (processorParams) {
 //            utils.debugLog(context, processorParams, 'processFromItem->processorParams', [debugMode: 'json'], [], true)
-            def keyMode = utils.deepGet(processorParams, "${this.config_key}.mode")
+            def keyMode = utils.deepGet(processorParams, "${this.include_key}.mode")
 
             if (keyMode == this.mode) {
-//                utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, config_key: ${this.config_key}"
+//                utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
                 def fromObject = getFrom(context, from, key)
                 if (fromObject) {
                     if (parent == 'job') {
@@ -78,10 +78,10 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                     fromObject = process(context, fromObject, parent, key)
                     result = utils.merge(fromObject, result)
                 }
-                result.remove(this.config_key)
+                result.remove(this.include_key)
             }
             else {
-//                utils.log "DrupipeFromProcessor->processFromItem() ${from} skipped as mode is ${keyMode}, config_key: ${this.config_key}"
+//                utils.log "DrupipeFromProcessor->processFromItem() ${from} skipped as mode is ${keyMode}, include_key: ${this.include_key}"
             }
         }
         else {
@@ -94,7 +94,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     def process(context, obj, parent, key = 'params', mode = 'config') {
         this.mode = mode
         def result = obj
-        if (obj.containsKey(this.config_key)) {
+        if (obj.containsKey(this.include_key)) {
             if (obj.from instanceof CharSequence) {
                 result = processFromItem(context, result, obj.from, parent, key)
             }
