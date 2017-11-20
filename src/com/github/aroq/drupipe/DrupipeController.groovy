@@ -70,6 +70,11 @@ class DrupipeController implements Serializable {
         drupipeConfig.config(params)
     }
 
+    def getUnprocessedContext() {
+        def filePath = '.unipipe/temp/context_unprocessed.yaml'
+        script.readYaml(file: filePath)
+    }
+
     def execute(body = null) {
         context.jenkinsParams = params
         utils = new com.github.aroq.drupipe.Utils(controller: this)

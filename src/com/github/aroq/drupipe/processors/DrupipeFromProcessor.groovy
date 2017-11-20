@@ -43,6 +43,11 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         result
     }
 
+    def getUnprocessedContext() {
+        def filePath = '.unipipe/temp/context_unprocessed.yaml'
+        utils.readYaml(filePath)
+    }
+
     def processFromItem(context, result, String from, String parent, String key = 'params') {
 //        utils.log "Process from: ${from}"
         // TODO: check about .params.
@@ -56,7 +61,13 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 //                utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
 
 //                def tempContext = utils.deepClone(context)
-                def tempContext = utils.getUnprocessedContext()
+                def tempContext
+                if (utils.drupipeExecutionMode == 'jenkins') {
+                    tempContext = getUnprocessedContext()
+                }
+                else {
+                    tempContext = utils.getUnprocessedContext()
+                }
                 def fromObject = collectKeyParamsFromJsonPath(tempContext, from, key)
 //                def fromObject = collectKeyParamsFromJsonPath(context, from, key)
 
