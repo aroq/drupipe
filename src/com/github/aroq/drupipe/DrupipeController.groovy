@@ -29,6 +29,8 @@ class DrupipeController implements Serializable {
 
     DrupipeProcessorsController drupipeProcessorsController
 
+    def unprocessedContext
+
     def serializeObject(path, object, mode = 'yaml') {
         if (object) {
             if (script.fileExists(path)) {
@@ -70,7 +72,7 @@ class DrupipeController implements Serializable {
 
     def execute(body = null) {
         context.jenkinsParams = params
-        utils = new com.github.aroq.drupipe.Utils()
+        utils = new com.github.aroq.drupipe.Utils(controller: this)
 
         notification.name = 'Build'
         notification.level = 'build'

@@ -5,6 +5,10 @@ import groovy.json.JsonOutput
 import java.nio.file.Path
 import java.nio.file.Paths
 
+DrupipeController controller
+
+def script
+
 def log(String message) {
     echo message
 }
@@ -589,6 +593,14 @@ def serializeAndDeserialize(params, mode = 'yaml') {
         }
     }
     result
+}
+
+def deepClone(obj) {
+    this.script.evaluate(obj.inspect())
+}
+
+def getUnprocessedContext() {
+    deepClone(this.controller.unprocessedContext)
 }
 
 def stripContext(context) {
