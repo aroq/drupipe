@@ -20,6 +20,18 @@ class DrupipeProcessorsController implements Serializable {
             utils.log "DrupipeProcessorsController->process BEFORE2.1 serializeAndDeserialize"
             utils.serializeAndDeserialize(context)
             utils.log "DrupipeProcessorsController->process AFTER2.1 serializeAndDeserialize"
+
+            for (int i = 0; i < object.size(); i++) {
+                def item = object[i]
+                utils.log "DrupipeProcessorsController->process BEFORE3.1 serializeAndDeserialize"
+                utils.serializeAndDeserialize(context)
+                utils.log "DrupipeProcessorsController->process AFTER3.1 serializeAndDeserialize"
+                object[i] = this.process(context, item.value, item.key, key, mode)
+                utils.log "DrupipeProcessorsController->process BEFORE4.1 serializeAndDeserialize"
+                utils.serializeAndDeserialize(context)
+                utils.log "DrupipeProcessorsController->process AFTER4.1 serializeAndDeserialize"
+            }
+
             for (item in object) {
                 utils.log "DrupipeProcessorsController->process BEFORE3 serializeAndDeserialize"
                 utils.serializeAndDeserialize(context)
