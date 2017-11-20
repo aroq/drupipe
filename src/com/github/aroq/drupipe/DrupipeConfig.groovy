@@ -49,18 +49,18 @@ class DrupipeConfig implements Serializable {
     }
 
     def processItem(item, parentKey, paramsKey = 'params', mode) {
-        utils.logs "DrupipeConfig->processItem BEFORE serializeAndDeserialize"
+        utils.log "DrupipeConfig->processItem BEFORE serializeAndDeserialize"
         def tempContext = utils.serializeAndDeserialize(controller.context)
-        utils.logs "DrupipeConfig->processItem AFTER serializeAndDeserialize"
+        utils.log "DrupipeConfig->processItem AFTER serializeAndDeserialize"
         controller.drupipeProcessorsController.process(controller.context, item, parentKey, paramsKey, mode)
     }
 
     def process() {
         utils.log "DrupipeConfig->process()"
         if (controller.configVersion() > 1) {
-            utils.logs "DrupipeConfig->processItem() BEFORE serializeAndDeserialize"
+            utils.log "DrupipeConfig->processItem() BEFORE serializeAndDeserialize"
             def tempContext = utils.serializeAndDeserialize(controller.context)
-            utils.logs "DrupipeConfig->processItem AFTER serializeAndDeserialize"
+            utils.log "DrupipeConfig->processItem AFTER serializeAndDeserialize"
             controller.drupipeProcessorsController = initProcessorsController(this, controller.context.processors)
             controller.context.jobs = processItem(controller.context.jobs, 'context', 'params', 'config')
             controller.archiveObjectJsonAndYaml(controller.context, 'context_processed')
