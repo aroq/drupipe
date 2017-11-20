@@ -122,9 +122,6 @@ class Config extends BaseAction {
 
             utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED - BEFORE processJobs', false)
 
-            // Deep clone of context.jobs before processing.
-//            action.pipeline.context.jobs = utils.serializeAndDeserialize(action.pipeline.context.jobs, 'yaml')
-
             action.pipeline.context.jobs = processJobs(action.pipeline.context.jobs)
 
             utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED - AFTER processJobs', false)
@@ -138,6 +135,9 @@ class Config extends BaseAction {
                     result = utils.merge(result, result.job.context)
                 }
             }
+        }
+        else {
+            utils.log "Config.jobConfig() -> No action.pipeline.context.jobs are defined"
         }
         result
     }
@@ -409,12 +409,20 @@ class Config extends BaseAction {
     }
 
     def config_version2() {
+        def providers = [
+            [
+                action: 'YamlFileConfig.loadFromLibraryResource',
+                params: [
+                    resource: 'com/github/aroq/drupipe/config.yaml'
+                ]
+            ],
+        ]
         if (action.pipeline.configVersion() > 1) {
-            def providers = [
+            providers << [
                 [
                     action: 'YamlFileConfig.loadFromLibraryResource',
                     params: [
-                        resource: 'com/github/aroq/drupipe/config.yaml'
+                        resource: 'com/github/aroq/drupipe/config_version2.yaml'
                     ]
                 ],
                 [
