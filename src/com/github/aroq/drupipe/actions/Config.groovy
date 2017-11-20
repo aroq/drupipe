@@ -116,6 +116,7 @@ class Config extends BaseAction {
             action.pipeline.archiveObjectJsonAndYaml(action.pipeline.context, 'context_unprocessed')
 
             // Performed here as needed later for job processing.
+            def tempContext = utils.serializeAndDeserialize(action.pipeline.context)
             action.pipeline.drupipeConfig.process()
 
             utils.log "AFTER jobConfig() action.pipeline.drupipeConfig.process()"
