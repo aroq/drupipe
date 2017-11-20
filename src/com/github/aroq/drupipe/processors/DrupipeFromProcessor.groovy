@@ -113,7 +113,9 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def process(context, obj, parent, key = 'params', mode = 'config') {
+        utils.log "DrupipeFromProcessor->process BEFORE serializeAndDeserialize"
         def tempContext = utils.serializeAndDeserialize(context)
+        utils.log "DrupipeFromProcessor->process AFTER serializeAndDeserialize"
         this.mode = mode
         def result = obj
         if (obj.containsKey(this.include_key)) {
