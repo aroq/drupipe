@@ -45,7 +45,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     def getUnprocessedContext() {
         def filePath = '.unipipe/temp/context_unprocessed.yaml'
-        utils.readYaml(filePath)
+        utils.drupipeReadYaml(filePath)
     }
 
     def processFromItem(context, result, String from, String parent, String key = 'params') {
