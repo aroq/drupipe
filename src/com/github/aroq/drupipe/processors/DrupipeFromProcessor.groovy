@@ -50,7 +50,6 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     def processFromItem(context, result, String from, String parent, String key = 'params') {
 //        utils.log "Process from: ${from}"
-        // TODO: check about .params.
 
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         if (processorParams) {
@@ -62,6 +61,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
                 def tempContext
 
+                // TODO: Find cheaper way to make sure context parts were not changed during previous operations.
                 if (mode == 'config') {
                     if (utils.drupipeExecutionMode() == 'jenkins') {
                         tempContext = getUnprocessedContext()

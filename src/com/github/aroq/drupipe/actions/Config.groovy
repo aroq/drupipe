@@ -116,7 +116,6 @@ class Config extends BaseAction {
             action.pipeline.archiveObjectJsonAndYaml(action.pipeline.context, 'context_unprocessed')
 
             // Performed here as needed later for job processing.
-            def tempContext = utils.serializeAndDeserialize(action.pipeline.context)
             action.pipeline.drupipeConfig.process()
 
             utils.log "AFTER jobConfig() action.pipeline.drupipeConfig.process()"
@@ -124,8 +123,7 @@ class Config extends BaseAction {
             utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED - BEFORE processJobs', false)
 
             // Deep clone of context.jobs before processing.
-//            action.pipeline.context.jobs = utils.serializeAndDeserialize(action.pipeline.context.jobs, 'json')
-            action.pipeline.context.jobs = utils.serializeAndDeserialize(action.pipeline.context.jobs, 'yaml')
+//            action.pipeline.context.jobs = utils.serializeAndDeserialize(action.pipeline.context.jobs, 'yaml')
 
             action.pipeline.context.jobs = processJobs(action.pipeline.context.jobs)
 
@@ -140,7 +138,6 @@ class Config extends BaseAction {
                     result = utils.merge(result, result.job.context)
                 }
             }
-//            result.jobs = action.pipeline.context.jobs
         }
         result
     }
