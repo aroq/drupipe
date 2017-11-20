@@ -60,16 +60,15 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
             if (keyMode == this.mode) {
 //                utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
 
-//                def tempContext = utils.deepClone(context)
-                def tempContext
-                if (utils.drupipeExecutionMode() == 'jenkins') {
-                    tempContext = getUnprocessedContext()
-                }
-                else {
-                    tempContext = utils.getUnprocessedContext()
-                }
+                def tempContext = utils.serializeAndDeserialize(context)
+//                if (utils.drupipeExecutionMode() == 'jenkins') {
+//                    tempContext = getUnprocessedContext()
+//                }
+//                else {
+//                    tempContext = utils.getUnprocessedContext()
+//                }
+
                 def fromObject = collectKeyParamsFromJsonPath(tempContext, from, key)
-//                def fromObject = collectKeyParamsFromJsonPath(context, from, key)
 
                 // TODO: Refactor it:
                 if (fromObject) {

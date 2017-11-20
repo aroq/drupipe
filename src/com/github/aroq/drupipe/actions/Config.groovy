@@ -118,6 +118,8 @@ class Config extends BaseAction {
             // Performed here as needed later for job processing.
             action.pipeline.drupipeConfig.process()
 
+            utils.log "AFTER jobConfig() action.pipeline.drupipeConfig.process()"
+
             utils.jsonDump(action.pipeline.context, action.pipeline.context.jobs, 'CONFIG JOBS PROCESSED - BEFORE processJobs', false)
 
             // Deep clone of context.jobs before processing.
