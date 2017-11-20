@@ -404,7 +404,9 @@ class Config extends BaseAction {
                 utils.debugLog(action.pipeline.context, projectConfig, 'Project config')
             }
 
-            def result = mergeScenariosConfigs(projectConfig, projectConfig, [:], 'project')
+            def projectConfigContext = utils.merge(action, pipeline.conxext, projectConfig)
+
+            def result = mergeScenariosConfigs(projectConfigContext, projectConfig, [:], 'project')
 
             utils.debugLog(result, 'Project config with scenarios loaded')
             result
