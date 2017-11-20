@@ -44,6 +44,9 @@ class Config extends BaseAction {
                 action: "Config.mothershipConfig",
             ],
             [
+                action: "Config.config"
+            ],
+            [
                 action: "Config.projectConfig"
             ],
             [
@@ -405,6 +408,24 @@ class Config extends BaseAction {
 
             utils.debugLog(result, 'Project config with scenarios loaded')
             result
+        }
+    }
+
+    def config() {
+        if (action.pipeline.configVersion() > 1) {
+            def providers = [
+                [
+                    action: 'YamlFileConfig.loadFromLibraryResource',
+                    params: [
+                        resource: 'com/github/aroq/drupipe/config.yaml'
+                    ]
+                ],
+            ]
+
+            action.pipeline.executePipelineActionList(providers)
+        }
+        else {
+            [:]
         }
     }
 
