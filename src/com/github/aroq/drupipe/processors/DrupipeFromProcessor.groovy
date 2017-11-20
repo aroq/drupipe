@@ -62,7 +62,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
 //                def tempContext = utils.deepClone(context)
                 def tempContext
-                if (utils.drupipeExecutionMode == 'jenkins') {
+                if (utils.drupipeExecutionMode() == 'jenkins') {
                     tempContext = getUnprocessedContext()
                 }
                 else {

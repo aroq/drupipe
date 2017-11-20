@@ -602,7 +602,7 @@ def drupipeReadYaml(filePath) {
     readYaml(file: filePath)
 }
 
-String drupipeExecutionMode() {
+def drupipeExecutionMode() {
     'jenkins'
 }
 
