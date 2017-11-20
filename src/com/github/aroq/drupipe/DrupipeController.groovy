@@ -77,7 +77,7 @@ class DrupipeController implements Serializable {
 
     def execute(body = null) {
         context.jenkinsParams = params
-        utils = new com.github.aroq.drupipe.Utils(controller: this)
+        utils = new com.github.aroq.drupipe.Utils()
 
         notification.name = 'Build'
         notification.level = 'build'
