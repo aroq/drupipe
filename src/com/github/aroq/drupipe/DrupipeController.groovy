@@ -29,8 +29,6 @@ class DrupipeController implements Serializable {
 
     DrupipeProcessorsController drupipeProcessorsController
 
-    def unprocessedContext
-
     def serializeObject(path, object, mode = 'yaml') {
         if (object) {
             if (script.fileExists(path)) {
@@ -68,11 +66,6 @@ class DrupipeController implements Serializable {
 
     def configuration() {
         drupipeConfig.config(params)
-    }
-
-    def getUnprocessedContext() {
-        def filePath = '.unipipe/temp/context_unprocessed.yaml'
-        script.readYaml(file: filePath)
     }
 
     def execute(body = null) {

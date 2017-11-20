@@ -115,8 +115,6 @@ class Config extends BaseAction {
         if (action.pipeline.context.jobs) {
             action.pipeline.archiveObjectJsonAndYaml(action.pipeline.context, 'context_unprocessed')
 
-            action.pipeline.unprocessedContext = utils.deepClone(action.pipeline.context)
-
             // Performed here as needed later for job processing.
             action.pipeline.drupipeConfig.process()
 
