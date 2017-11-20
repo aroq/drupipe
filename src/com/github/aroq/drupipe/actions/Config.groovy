@@ -412,21 +412,16 @@ class Config extends BaseAction {
     }
 
     def config() {
-        if (action.pipeline.configVersion() > 1) {
-            def providers = [
-                [
-                    action: 'YamlFileConfig.loadFromLibraryResource',
-                    params: [
-                        resource: 'com/github/aroq/drupipe/config.yaml'
-                    ]
-                ],
-            ]
+        def providers = [
+            [
+                action: 'YamlFileConfig.loadFromLibraryResource',
+                params: [
+                    resource: 'com/github/aroq/drupipe/config.yaml'
+                ]
+            ],
+        ]
 
-            action.pipeline.executePipelineActionList(providers)
-        }
-        else {
-            [:]
-        }
+        action.pipeline.executePipelineActionList(providers)
     }
 
     def config_version2() {
