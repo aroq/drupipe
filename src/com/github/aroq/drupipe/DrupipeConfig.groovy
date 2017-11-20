@@ -52,7 +52,7 @@ class DrupipeConfig implements Serializable {
         utils.log "DrupipeConfig->processItem BEFORE serializeAndDeserialize"
         def tempContext = utils.serializeAndDeserialize(controller.context)
         utils.log "DrupipeConfig->processItem AFTER serializeAndDeserialize"
-        controller.drupipeProcessorsController.process(controller.context, item, parentKey, paramsKey, mode)
+        controller.drupipeProcessorsController.process(controller.context, utils.serializeAndDeserialize(item), parentKey, paramsKey, mode)
     }
 
     def process() {
