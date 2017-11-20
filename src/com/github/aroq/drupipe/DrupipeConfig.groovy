@@ -45,7 +45,7 @@ class DrupipeConfig implements Serializable {
                 throw err
             }
         }
-        new DrupipeProcessorsController(processors: processors)
+        new DrupipeProcessorsController(processors: processors, utils: utils)
     }
 
     def processItem(item, parentKey, paramsKey = 'params', mode) {
