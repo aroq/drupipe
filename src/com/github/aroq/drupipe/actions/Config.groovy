@@ -276,7 +276,7 @@ class Config extends BaseAction {
                     )
                     {
                         if (!action.pipeline.context.loadedSources[scenarioSourceName]) {
-//                            utils.log "Adding source: ${scenarioSourceName}"
+                            utils.log "Adding source: ${scenarioSourceName}"
                             if (tempContext[uniconfSourcesKey].containsKey(scenarioSourceName)) {
                                 scenario.source = tempContext[uniconfSourcesKey][scenarioSourceName]
                             }
@@ -295,6 +295,7 @@ class Config extends BaseAction {
                                 ]
 
                                 this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
+                                utils.log "Source added: ${scenarioSourceName}"
                             }
                         }
                         else {
@@ -305,7 +306,6 @@ class Config extends BaseAction {
                         def fileName = null
 
                         def sourceDir = utils.sourceDir(action.pipeline.context, scenarioSourceName)
-
 
                         def filesToCheck = [
                             "/.unipipe/scenarios/${scenario.name}/config.yaml",
@@ -331,6 +331,9 @@ class Config extends BaseAction {
                             utils.debugLog(action.pipeline.context, scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
                             utils.debugLog(action.pipeline.context, scenariosConfig, "Scenarios config")
+                        }
+                        else {
+                            utils.log "Scenario file doesn't found"
                         }
                     }
                     else {
