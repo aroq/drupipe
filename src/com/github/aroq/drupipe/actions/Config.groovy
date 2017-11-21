@@ -64,7 +64,7 @@ class Config extends BaseAction {
             providers << action.pipeline.context.configProviders
         }
 
-        this.script.checkout this.script.scm
+//        this.script.checkout this.script.scm
 
         action.pipeline.executePipelineActionList(providers)
 
