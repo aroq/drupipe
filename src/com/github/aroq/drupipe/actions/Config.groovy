@@ -244,12 +244,15 @@ class Config extends BaseAction {
         if (!tempContext) {
             tempContext << action.pipeline.context
         }
+
         tempContext = utils.merge(tempContext, config)
         if (config.containsKey(uniconfIncludeKey)) {
 //            utils.log "config.containsKey(uniconfIncludeKey)"
+            // Iterate through 'include' keys.
             for (def i = 0; i < config[uniconfIncludeKey].size(); i++) {
                 def s = config[uniconfIncludeKey][i]
                 if (s instanceof String) {
+                    // Process include key value to extract source and file names.
                     def values = s.split(":")
                     def scenario = [:]
                     String scenarioSourceName
@@ -261,8 +264,15 @@ class Config extends BaseAction {
                         scenarioSourceName = currentScenarioSourceName
                         scenario.name = values[0]
                     }
+
                     utils.debugLog(action.pipeline.context, tempContext[uniconfSourcesKey], 'Scenario sources')
-                    if ((scenariosConfig[uniconfSourcesKey] && scenariosConfig[uniconfSourcesKey].containsKey(scenarioSourceName)) || (tempContext[uniconfSourcesKey] && tempContext[uniconfSourcesKey].containsKey(scenarioSourceName)) || action.pipeline.context.loadedSources.containsKey(scenarioSourceName)) {
+
+                    if (
+                        (scenariosConfig[uniconfSourcesKey] && scenariosConfig[uniconfSourcesKey].containsKey(scenarioSourceName))
+                        || (tempContext[uniconfSourcesKey] && tempContext[uniconfSourcesKey].containsKey(scenarioSourceName))
+                        || action.pipeline.context.loadedSources.containsKey(scenarioSourceName)
+                    )
+                    {
                         if (!action.pipeline.context.loadedSources[scenarioSourceName]) {
 //                            utils.log "Adding source: ${scenarioSourceName}"
                             if (tempContext[uniconfSourcesKey].containsKey(scenarioSourceName)) {
@@ -409,6 +419,17 @@ class Config extends BaseAction {
             }
 
             def projectConfigContext = utils.merge(action.pipeline.context, projectConfig)
+
+            if (action.pipeline.context.env.containsKey('UNIPIPE_FROM')) {
+                def sources = script.readJSON(text: action.pipeline.context.env['UNIPIPE_FROM'])
+                def uniconfSourcesKey = utils.deepGet(context, 'uniconf.keys.sources')
+                if (projectConfig[uniconfSourcesKey]) {
+                    projectConfig[uniconfSourcesKey] << sources
+                }
+                else {
+                    projectConfig[uniconfSourcesKey] = sources
+                }
+            }
 
             def result = mergeScenariosConfigs(projectConfigContext, projectConfig, [:], 'project')
 
