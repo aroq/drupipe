@@ -49,9 +49,9 @@ class Config extends BaseAction {
             [
                 action: "Config.projectConfig"
             ],
-            [
-                action: "Config.config_version2"
-            ],
+//            [
+//                action: "Config.config_version2"
+//            ],
             [
                 action: "Config.jenkinsConfig"
             ],
