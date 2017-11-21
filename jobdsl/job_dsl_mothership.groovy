@@ -81,7 +81,7 @@ projects.each { project ->
 
         String subDir = ''
         if (config.containsKey('config_version') && config.config_version == 2) {
-            pipelineScriptPath = jenkinsfile
+            pipelineScriptPath = "${config.configPath}/${jenkinsfile}"
         }
         else {
             subDir = config.projectConfigPath ? config.projectConfigPath.substring(0, config.projectConfigPath.length() - (config.projectConfigPath.endsWith("/") ? 1 : 0)) + '/' : ''
