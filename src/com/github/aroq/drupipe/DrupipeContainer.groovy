@@ -12,6 +12,8 @@ class DrupipeContainer implements Serializable {
 
     DrupipePod pod
 
+    LinkedHashMap k8s
+
     def execute(body = null) {
         controller.script.echo "DrupipeContainer execute - ${name}"
 
