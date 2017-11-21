@@ -427,14 +427,13 @@ class Config extends BaseAction {
                 utils.log "Processing UNIPIPE_FROM"
                 def uniconfSourcesKey = utils.deepGet(projectConfigContext, 'uniconf.keys.sources')
                 sources[uniconfSourcesKey] = script.readJSON(text: action.pipeline.context.env['UNIPIPE_FROM'])
-//                if (projectConfig[uniconfSourcesKey]) {
-//                    projectConfig[uniconfSourcesKey] << sources
-//                }
-//                else {
-//                    projectConfig[uniconfSourcesKey] = sources
-//                }
+                if (projectConfig[uniconfSourcesKey]) {
+                    projectConfig[uniconfSourcesKey] << sources[uniconfSourcesKey]
+                }
+                else {
+                    projectConfig[uniconfSourcesKey] = sources
+                }
 
-                projectConfigContext << sources
                 utils.debugLog(projectConfig, sources, 'UNIPIPE_FROM sources', ['debugMode': 'json'], [], true)
             }
 
