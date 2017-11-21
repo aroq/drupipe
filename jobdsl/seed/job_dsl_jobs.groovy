@@ -348,13 +348,18 @@ def processJob(jobs, currentFolder, config) {
                         pipelinesRepo = job.value.configRepo
                     }
                 }
-                if (pipelinesRepo == seedRepo) {
-//                    pipelineScriptPath = "${localConfig.projectConfigPath}/${pipelineScript}.groovy"
-                    pipelineScriptPath = "${pipelineScript}.groovy"
+                if (config.pipeline_script_full) {
+                    pipelineScriptPath = "${config.configDir}/${config.pipeline_script_full}"
                 }
                 else {
-                    configMode = MODE_CONFIG_AND_PROJECT_REPO
-                    pipelineScriptPath = "${pipelineScript}.groovy"
+                    if (pipelinesRepo == seedRepo) {
+//                    pipelineScriptPath = "${localConfig.projectConfigPath}/${pipelineScript}.groovy"
+                        pipelineScriptPath = "${pipelineScript}.groovy"
+                    }
+                    else {
+                        configMode = MODE_CONFIG_AND_PROJECT_REPO
+                        pipelineScriptPath = "${pipelineScript}.groovy"
+                    }
                 }
                 println "pipelinesRepo: ${pipelinesRepo}"
                 println "pipelineScriptPath: ${pipelineScriptPath}"
