@@ -402,6 +402,10 @@ class Config extends BaseAction {
             script.sshagent([action.pipeline.context.credentialsId]) {
                 projectConfig = action.pipeline.executePipelineActionList(providers)
                 utils.debugLog(action.pipeline.context, projectConfig, 'Project config')
+
+                if (projectConfig.configVersion() > 1) {
+                    projectConfig = utils.merge(config_version2(), projectConfig)
+                }
             }
 
             def projectConfigContext = utils.merge(action.pipeline.context, projectConfig)
@@ -427,7 +431,7 @@ class Config extends BaseAction {
     }
 
     def config_version2() {
-        if (action.pipeline.configVersion() > 1) {
+//        if (action.pipeline.configVersion() > 1) {
             def providers = [
                 [
                     action: 'YamlFileConfig.loadFromLibraryResource',
@@ -444,10 +448,10 @@ class Config extends BaseAction {
             ]
 
             action.pipeline.executePipelineActionList(providers)
-        }
-        else {
-            [:]
-        }
+//        }
+//        else {
+//            [:]
+//        }
     }
 
 }
