@@ -434,10 +434,11 @@ class Config extends BaseAction {
 //                    projectConfig[uniconfSourcesKey] = sources
 //                }
 
+                projectConfigContext << sources
                 utils.debugLog(projectConfig, sources, 'UNIPIPE_FROM sources', ['debugMode': 'json'], [], true)
             }
 
-            def result = mergeScenariosConfigs(projectConfigContext, projectConfig, [sources], 'project')
+            def result = mergeScenariosConfigs(projectConfigContext, projectConfig, [:], 'project')
 
             utils.debugLog(result, 'Project config with scenarios loaded')
             result
