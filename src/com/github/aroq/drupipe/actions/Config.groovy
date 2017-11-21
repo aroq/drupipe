@@ -431,7 +431,7 @@ class Config extends BaseAction {
                     projectConfig[uniconfSourcesKey] << sources[uniconfSourcesKey]
                 }
                 else {
-                    projectConfig[uniconfSourcesKey] = sources
+                    projectConfig[uniconfSourcesKey] = sources[uniconfSourcesKey]
                 }
 
                 utils.debugLog(projectConfig, sources, 'UNIPIPE_FROM sources', ['debugMode': 'json'], [], true)
