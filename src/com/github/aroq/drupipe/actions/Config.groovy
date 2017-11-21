@@ -264,6 +264,8 @@ class Config extends BaseAction {
                         scenarioSourceName = currentScenarioSourceName
                         scenario.name = values[0]
                     }
+                    utils.log("scenarioSourceName: ${scenarioSourceName}")
+                    utils.log("scenario.name: ${scenario.name}")
 
                     utils.debugLog(action.pipeline.context, tempContext[uniconfSourcesKey], 'Scenario sources')
 
