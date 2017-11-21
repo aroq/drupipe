@@ -76,8 +76,18 @@ projects.each { project ->
         println "CONFIG projectConfigPath: ${config.projectConfigPath}"
         println "CONFIG mothership_job_name: ${config.mothership_job_name}"
         println "CONFIG mothership_job_jenkinsfile: ${config.mothership_job_jenkinsfile}"
-        String subDir = config.projectConfigPath ? config.projectConfigPath.substring(0, config.projectConfigPath.length() - (config.projectConfigPath.endsWith("/") ? 1 : 0)) + '/' : ''
+
         String jenkinsfile = config.mothership_job_jenkinsfile ? config.mothership_job_jenkinsfile : 'Jenkinsfile'
+
+        String subDir = ''
+        if (config.containsKey('config_version') && config.config_version == 2) {
+            pipelineScriptPath = jenkinsfile
+        }
+        else {
+            subDir = config.projectConfigPath ? config.projectConfigPath.substring(0, config.projectConfigPath.length() - (config.projectConfigPath.endsWith("/") ? 1 : 0)) + '/' : ''
+            pipelineScriptPath = "${subDir}${jenkinsfile}"
+        }
+
         if (config.mothership_job_type == 'Jenkinsfile') {
             String jobName = config.mothership_job_name ? config.mothership_job_name : project.key
             println "JOB NAME: ${jobName}"
@@ -127,10 +137,12 @@ projects.each { project ->
                                 }
                                 branch('master')
                                 extensions {
-                                    relativeTargetDirectory(subDir)
+                                    if (subDir) {
+                                        relativeTargetDirectory(subDir)
+                                    }
                                 }
                             }
-                            scriptPath("${subDir}${jenkinsfile}")
+                            scriptPath(pipelineScriptPath)
                         }
                     }
                 }
