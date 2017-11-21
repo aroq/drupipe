@@ -423,6 +423,7 @@ class Config extends BaseAction {
             def projectConfigContext = utils.merge(action.pipeline.context, projectConfig)
 
             if (action.pipeline.context.env.containsKey('UNIPIPE_FROM')) {
+                utils.log "Processing UNIPIPE_FROM"
                 def sources = script.readJSON(text: action.pipeline.context.env['UNIPIPE_FROM'])
                 def uniconfSourcesKey = utils.deepGet(context, 'uniconf.keys.sources')
                 if (projectConfig[uniconfSourcesKey]) {
@@ -432,7 +433,7 @@ class Config extends BaseAction {
                     projectConfig[uniconfSourcesKey] = sources
                 }
 
-                utils.debugLog(projectConfig, projectConfig[uniconfSourcesKey], 'sources', ['debugMode': 'json'], [], true)
+                utils.debugLog(projectConfig, projectConfig[uniconfSourcesKey], 'UNIPIPE_FROM sources', ['debugMode': 'json'], [], true)
             }
 
             def result = mergeScenariosConfigs(projectConfigContext, projectConfig, [:], 'project')
