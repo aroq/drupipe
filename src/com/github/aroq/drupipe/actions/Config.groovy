@@ -246,7 +246,7 @@ class Config extends BaseAction {
         }
         tempContext = utils.merge(tempContext, config)
         if (config.containsKey(uniconfIncludeKey)) {
-            utils.log "config.containsKey(uniconfIncludeKey)"
+//            utils.log "config.containsKey(uniconfIncludeKey)"
             for (def i = 0; i < config[uniconfIncludeKey].size(); i++) {
                 def s = config[uniconfIncludeKey][i]
                 if (s instanceof String) {
@@ -264,7 +264,7 @@ class Config extends BaseAction {
                     utils.debugLog(action.pipeline.context, tempContext[uniconfSourcesKey], 'Scenario sources')
                     if ((scenariosConfig[uniconfSourcesKey] && scenariosConfig[uniconfSourcesKey].containsKey(scenarioSourceName)) || (tempContext[uniconfSourcesKey] && tempContext[uniconfSourcesKey].containsKey(scenarioSourceName)) || action.pipeline.context.loadedSources.containsKey(scenarioSourceName)) {
                         if (!action.pipeline.context.loadedSources[scenarioSourceName]) {
-                            utils.log "Adding source: ${scenarioSourceName}"
+//                            utils.log "Adding source: ${scenarioSourceName}"
                             if (tempContext[uniconfSourcesKey].containsKey(scenarioSourceName)) {
                                 scenario.source = tempContext[uniconfSourcesKey][scenarioSourceName]
                             }

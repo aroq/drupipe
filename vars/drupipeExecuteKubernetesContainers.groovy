@@ -9,6 +9,7 @@ def call(ArrayList containers, DrupipeController controller) {
 
     for (def i = 0; i < containers.size(); i++) {
         def container = containers[i]
+        controller.utils.debugLog(controller.context, container, 'CONTAINER TEMPLATE', [debugMode: 'json'], [], true)
         def containerName = container.name.replaceAll('\\.','-').replaceAll('_','-')
         if (!containerNames.contains(containerName)) {
             echo "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
@@ -16,14 +17,13 @@ def call(ArrayList containers, DrupipeController controller) {
             containersToExecute.add(containerTemplate(
                 name: containerName,
                 image: container.image,
-                ttyEnabled: true,
-                command: 'cat',
-                // TODO: Re-check it.
-                resourceRequestCpu: '50m',
-//            resourceLimitCpu: '100m',
-//                resourceRequestMemory: '100Mi',
-//                resourceLimitMemory: '200Mi',
-                alwaysPullImage: true,
+                ttyEnabled: container.ttyEnabled,
+                command: container.command,
+                resourceRequestCpu: container.resourceRequestCpu,
+                resourceLimitCpu: container.resourceLimitCpu,
+                resourceRequestMemory: container.resourceRequestMemory,
+                resourceLimitMemory: container.resourceLimitMemory,
+                alwaysPullImage: container.alwaysPullImage,
                 // TODO: move in configs.
                 envVars: [
                     envVar(key: 'TF_VAR_consul_address', value: controller.context.env.TF_VAR_consul_address),
@@ -64,5 +64,6 @@ def call(ArrayList containers, DrupipeController controller) {
             }
         }
     }
+
 }
 
