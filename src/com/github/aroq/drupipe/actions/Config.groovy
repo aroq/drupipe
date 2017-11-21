@@ -431,6 +431,8 @@ class Config extends BaseAction {
                 else {
                     projectConfig[uniconfSourcesKey] = sources
                 }
+
+                utils.debugLog(projectConfig, projectConfig[uniconfSourcesKey], 'sources', ['debugMode': 'json'], [], true)
             }
 
             def result = mergeScenariosConfigs(projectConfigContext, projectConfig, [:], 'project')
