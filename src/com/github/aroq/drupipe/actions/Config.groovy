@@ -351,19 +351,30 @@ class Config extends BaseAction {
 
     def projectConfig() {
         utils.debugLog(action.pipeline.context, action.pipeline.context.configRepo,"projectConfig repo: ${action.pipeline.context.configRepo}", [:], [], true)
-        if (action.pipeline.context.configRepo) {
+        if (action.pipeline.context.project_type == 'single') {
             def sourceObject = [
-                name: 'project',
-                path: 'sources/project',
-                type: 'git',
-                url: action.pipeline.context.configRepo,
-                branch: 'master',
-                mode: 'shell',
+                name  : 'project',
+                path  : action.pipeline.context.config_dir,
+                type  : 'dir',
             ]
-
-            script.sshagent([action.pipeline.context.credentialsId]) {
-                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
+            this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
+        }
+        else {
+            if (action.pipeline.context.configRepo) {
+                def sourceObject = [
+                    name  : 'project',
+                    path  : 'sources/project',
+                    type  : 'git',
+                    url   : action.pipeline.context.configRepo,
+                    branch: 'master',
+                    mode  : 'shell',
+                ]
+                script.sshagent([action.pipeline.context.credentialsId]) {
+                    this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
+                }
             }
+        }
+        if (action.pipeline.context.configRepo) {
 //            utils.debugLog(action.pipeline.context, action.pipeline.context, "action.pipeline.context", [debugMode: 'json'], [], true)
 //            utils.debugLog(action.pipeline.context, context, "context", [debugMode: 'json'], [], true)
 
