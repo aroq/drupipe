@@ -349,7 +349,7 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
                 if (config.pipeline_script_full) {
-                    pipelineScriptPath = "${config.configDir}/${config.pipeline_script_full}"
+                    pipelineScriptPath = "${config.config_dir}/${config.pipeline_script_full}"
                 }
                 else {
                     if (pipelinesRepo == seedRepo) {
