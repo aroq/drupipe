@@ -429,7 +429,7 @@ class Config extends BaseAction {
                 projectConfig = action.pipeline.executePipelineActionList(providers)
                 utils.debugLog(action.pipeline.context, projectConfig, 'Project config')
 
-                if (projectConfig.config_version > 1) {
+                if (projectConfig.config_version > 1 || action.pipeline.configVersion() > 1) {
                     projectConfig = utils.merge(config_version2(), projectConfig)
                 }
             }
