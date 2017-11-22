@@ -240,6 +240,10 @@ class Config extends BaseAction {
         utils.log "uniconfIncludeKey: ${uniconfIncludeKey}"
         utils.log "uniconfSourcesKey: ${uniconfSourcesKey}"
 
+        if (config.containsKey('scenarios') && uniconfIncludeKey != 'scenarios') {
+            config[uniconfIncludeKey] = config['scenarios']
+        }
+
         def scenariosConfig = [:]
         if (!tempContext) {
             tempContext << action.pipeline.context
