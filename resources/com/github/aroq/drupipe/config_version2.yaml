@@ -38,30 +38,64 @@ params:
       from:
         # defines in which mode 'from' should be processed.
         mode: config
+
   jobs:
-    __default:
+    folder:
+      params:
+        type: folder
+      dev:
+        params:
+          branch: develop
+          # Context params will be merged into main pipeline context.
+          context:
+            environment: dev
+      preprod:
+        params:
+          branch: master
+          # Context params will be merged into main pipeline context.
+          context:
+            environment: preprod
+      prod:
+        params:
+          branch: master
+          # Context params will be merged into main pipeline context.
+          context:
+            environment: prod
+      mr:
+        params:
+          # Context params will be merged into main pipeline context.
+          context:
+            environment: mr
+    common:
+      params:
+        type: common
 
   pipelines:
-    default:
+    params:
       name: default
 
   pods:
-    __default:
-      name: default
+    params:
+      containerized: true
 
     master:
-      name: master
-      from: pods.default
+      params:
+        containerized: false
+        name: master
 
-    k8s:
-      name: k8s
-      from: pods.default
+    default:
+      params:
+        name: default
 
   containers:
-    __default:
+    none:
+      params:
+        name: none
 
     common:
-      image: michaeltigr/zebra-build-php-drush-docman
+      params:
+        name: common
+        image: michaeltigr/zebra-build-php-drush-docman
 
   pipeline:
     scripts_library:
