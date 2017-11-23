@@ -104,6 +104,9 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                     fromObject = process(context, fromObject, parent, key)
                     result = utils.merge(fromObject, result)
                 }
+                else {
+                    utils.log "DrupipeFromProcessor->processFromItem() FROM ${from} is not found in tempContext"
+                }
                 result.remove(this.include_key)
             }
             else {
