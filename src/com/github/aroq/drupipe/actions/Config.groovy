@@ -271,7 +271,7 @@ class Config extends BaseAction {
                     utils.log("scenarioSourceName: ${scenarioSourceName}")
                     utils.log("scenario.name: ${scenario.name}")
 
-                    utils.debugLog(action.pipeline.context, tempContext[uniconfSourcesKey], 'Scenario sources', ['debugMode': 'json'], [], true)
+                    utils.debugLog(action.pipeline.context, tempContext[uniconfSourcesKey], 'Scenario sources', ['debugMode': 'json'], [], false)
 
                     if (
                         (scenariosConfig[uniconfSourcesKey] && scenariosConfig[uniconfSourcesKey].containsKey(scenarioSourceName))
