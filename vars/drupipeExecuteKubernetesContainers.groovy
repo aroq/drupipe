@@ -9,12 +9,16 @@ def call(ArrayList containers, DrupipeController controller) {
 
     for (def i = 0; i < containers.size(); i++) {
         def container = containers[i]
+<<<<<<< HEAD
         controller.utils.debugLog(controller.context, container, 'CONTAINER TEMPLATE', [debugMode: 'json'], [], true)
+=======
+>>>>>>> develop
         def containerName = container.name.replaceAll('\\.','-').replaceAll('_','-')
         if (!containerNames.contains(containerName)) {
             echo "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
             containerNames += containerName
             containersToExecute.add(containerTemplate(
+<<<<<<< HEAD
                 name:                  containerName,
                 image:                 container.image,
                 ttyEnabled:            container.k8s.ttyEnabled,
@@ -24,6 +28,18 @@ def call(ArrayList containers, DrupipeController controller) {
                 resourceRequestMemory: container.k8s.resourceRequestMemory,
                 resourceLimitMemory:   container.k8s.resourceLimitMemory,
                 alwaysPullImage:       container.k8s.alwaysPullImage,
+=======
+                name: containerName,
+                image: container.image,
+                ttyEnabled: true,
+                command: 'cat',
+                // TODO: Re-check it.
+                resourceRequestCpu: '50m',
+//            resourceLimitCpu: '100m',
+//                resourceRequestMemory: '100Mi',
+//                resourceLimitMemory: '200Mi',
+                alwaysPullImage: true,
+>>>>>>> develop
                 // TODO: move in configs.
                 envVars: [
                     envVar(key: 'TF_VAR_consul_address', value: controller.context.env.TF_VAR_consul_address),
@@ -38,6 +54,7 @@ def call(ArrayList containers, DrupipeController controller) {
         }
     }
 
+<<<<<<< HEAD
 //    def creds = [string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
 //    withCredentials(creds) {
     podTemplate(
@@ -57,13 +74,38 @@ def call(ArrayList containers, DrupipeController controller) {
                             def drupipeContainerBlock = new DrupipeContainerBlock(block)
                             drupipeContainerBlock.controller = controller
                             drupipeContainerBlock.execute()
+=======
+    def creds = [string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
+    withCredentials(creds) {
+        podTemplate(
+            label: nodeName,
+            containers: containersToExecute,
+        ) {
+            node(nodeName) {
+                controller.scmCheckout()
+                controller.context.workspace = pwd()
+                for (def i = 0; i < containers.size(); i++) {
+                    container(containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
+                        unstash('config')
+
+                        for (block in containers[i].blocks) {
+//                            controller.utils.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
+                            sshagent([controller.context.credentialsId]) {
+                                def drupipeContainerBlock = new DrupipeContainerBlock(block)
+                                drupipeContainerBlock.controller = controller
+                                drupipeContainerBlock.execute()
+                            }
+>>>>>>> develop
                         }
                     }
                 }
             }
         }
     }
+<<<<<<< HEAD
 //    }
 
+=======
+>>>>>>> develop
 }
 
