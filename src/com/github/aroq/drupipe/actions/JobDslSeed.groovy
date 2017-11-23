@@ -24,6 +24,10 @@ class JobDslSeed extends BaseAction {
             }
         }
 
+        if (action.pipeline.context.tags && action.pipeline.context.tags.contains('docman')) {
+            script.drupipeAction([action: 'Docman.info'], action.pipeline)
+        }
+
         script.unstash 'config'
         if (script.fileExists("${action.pipeline.context.projectConfigPath}/pipelines/jobdsl")) {
             action.pipeline.context.params.action.JobDslSeed_perform.jobsPattern << "${action.pipeline.context.projectConfigPath}/pipelines/jobdsl/*.groovy"
