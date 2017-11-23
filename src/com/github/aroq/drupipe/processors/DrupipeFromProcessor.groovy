@@ -49,15 +49,15 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def processFromItem(context, result, String from, String parent, String key = 'params') {
-//        utils.log "Process from: ${from}"
+        utils.log "Process from: ${from}"
 
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         if (processorParams) {
-//            utils.debugLog(context, processorParams, 'processFromItem->processorParams', [debugMode: 'json'], [], false)
+            utils.debugLog(context, processorParams, 'processFromItem->processorParams', [debugMode: 'json'], [], false)
             def keyMode = utils.deepGet(processorParams, "${this.include_key}.mode")
 
             if (keyMode == this.mode) {
-//                utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
+                utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
 
                 def tempContext
 

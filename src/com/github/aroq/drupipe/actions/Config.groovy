@@ -251,7 +251,7 @@ class Config extends BaseAction {
 
         tempContext = utils.merge(tempContext, config)
         if (config.containsKey(uniconfIncludeKey)) {
-//            utils.log "config.containsKey(uniconfIncludeKey)"
+            utils.log "config.containsKey(uniconfIncludeKey)"
             // Iterate through 'include' keys.
             for (def i = 0; i < config[uniconfIncludeKey].size(); i++) {
                 def s = config[uniconfIncludeKey][i]
