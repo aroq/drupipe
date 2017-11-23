@@ -103,7 +103,7 @@ params:
     common:
       params:
         name: common
-        image: michaeltigr/zebra-build-php-drush-docman:latest
+        image: michaeltigr/zebra-build-php-drush-docman:develop
 
   pipeline:
     scripts_library:
