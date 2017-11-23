@@ -79,6 +79,9 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
                 // TODO: Refactor it:
                 if (fromObject) {
+                    if (from == '.params.jobs.folder.helm.install-jenkins') {
+                        utils.debugLog(context, fromObject, "processFromItem->fromObject from ${from}", [debugMode: 'json'], [], true)
+                    }
                     if (parent == 'job') {
                         fromObject.name = from - '.params.jobs'
                     }
