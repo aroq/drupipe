@@ -31,10 +31,6 @@ class Docman extends BaseAction {
     }
 
     def info() {
-        if (action.pipeline.configVersion() > 1 && action.pipeline.context.tags && !action.pipeline.context.tags.contains('docman')) {
-            return [:]
-        }
-
         script.drupipeShell("git config --global user.email 'drupipe@github.com'; git config --global user.name 'Drupipe'", action.params)
         script.echo "Config repo: ${action.pipeline.context.configRepo}"
         prepare()

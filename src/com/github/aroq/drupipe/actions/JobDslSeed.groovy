@@ -10,6 +10,15 @@ class JobDslSeed extends BaseAction {
 
     DrupipeActionWrapper action
 
+    def info() {
+        if (action.pipeline.configVersion() > 1 && action.pipeline.context.tags && action.pipeline.context.tags.contains('docman')) {
+            script.drupipeAction([action: 'Docman.info'], action.pipeline)
+            def stashes = action.pipeline.context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
+            stashes = stashes + ", ${action.pipeline.context.docmanDir}/config/config.json"
+            script.stash name: 'config', includes: "${stashes}", excludes: '.git, .git/**'
+        }
+    }
+
     def prepare() {
         script.checkout script.scm
         if (script.fileExists(action.pipeline.context.projectConfigPath)) {
