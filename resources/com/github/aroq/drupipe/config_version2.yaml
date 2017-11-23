@@ -19,6 +19,12 @@ jobs:
     type: seed
     pipeline:
       pods:
+        - from: .params.pods.default
+          containers:
+            - from: .params.containers.common
+              blocks:
+                - actions:
+                  - from: .params.actions.Docman.info
         - from: .params.pods.master
           containers:
             - from: .params.containers.common
