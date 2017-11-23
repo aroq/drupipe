@@ -237,8 +237,8 @@ class Config extends BaseAction {
         def uniconfIncludeKey = utils.deepGet(context, 'uniconf.keys.include')
         def uniconfSourcesKey = utils.deepGet(context, 'uniconf.keys.sources')
 
-        utils.log "uniconfIncludeKey: ${uniconfIncludeKey}"
-        utils.log "uniconfSourcesKey: ${uniconfSourcesKey}"
+//        utils.log "uniconfIncludeKey: ${uniconfIncludeKey}"
+//        utils.log "uniconfSourcesKey: ${uniconfSourcesKey}"
 
         if (config.containsKey('scenarios') && uniconfIncludeKey != 'scenarios') {
             config[uniconfIncludeKey] = config['scenarios']
@@ -251,7 +251,7 @@ class Config extends BaseAction {
 
         tempContext = utils.merge(tempContext, config)
         if (config.containsKey(uniconfIncludeKey)) {
-            utils.log "config.containsKey(uniconfIncludeKey)"
+//            utils.log "config.containsKey(uniconfIncludeKey)"
             // Iterate through 'include' keys.
             for (def i = 0; i < config[uniconfIncludeKey].size(); i++) {
                 def s = config[uniconfIncludeKey][i]
@@ -268,8 +268,8 @@ class Config extends BaseAction {
                         scenarioSourceName = currentScenarioSourceName
                         scenario.name = values[0]
                     }
-                    utils.log("scenarioSourceName: ${scenarioSourceName}")
-                    utils.log("scenario.name: ${scenario.name}")
+//                    utils.log("scenarioSourceName: ${scenarioSourceName}")
+//                    utils.log("scenario.name: ${scenario.name}")
 
                     utils.debugLog(action.pipeline.context, tempContext[uniconfSourcesKey], 'Scenario sources', ['debugMode': 'json'], [], false)
 
@@ -299,7 +299,7 @@ class Config extends BaseAction {
                                 ]
 
                                 this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
-                                utils.log "Source added: ${scenarioSourceName}"
+//                                utils.log "Source added: ${scenarioSourceName}"
                             }
                         }
                         else {
