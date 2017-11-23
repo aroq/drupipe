@@ -88,10 +88,18 @@ params:
         name: default
 
   containers:
+    params:
+      k8s:
+        ttyEnabled: true
+        command: cat
+        resourceRequestCpu: 50m
+        resourceLimitCpu: 500m
+        resourceRequestMemory: 200Mi
+        resourceLimitMemory: 1000Mi
+        alwaysPullImage: true
     none:
       params:
         name: none
-
     common:
       params:
         name: common
