@@ -117,6 +117,7 @@ def processJob(jobs, currentFolder, config) {
             }
             else if (job.value.type == 'state') {
                 def seedRepo = config.configRepo
+                pipelineScriptState = (config.containsKey('config_version') && config.config_version >= 2) ? 'Jenkinsfile' : pipelineScript
                 String pipelineScriptPath
                 def localConfig = config.clone()
                 if (job.value.context) {
@@ -143,7 +144,7 @@ def processJob(jobs, currentFolder, config) {
                 }
                 if (localConfig.pipelines_repo) {
                     pipelinesRepo = localConfig.pipelines_repo
-                    pipelineScriptPath = "${pipelineScript}.groovy"
+                    pipelineScriptPath = "${pipelineScriptState}.groovy"
                 }
                 else {
                     if (job.value.configRepo) {
@@ -154,10 +155,10 @@ def processJob(jobs, currentFolder, config) {
                     pipelineScriptPath = "${config.config_dir}/${config.pipeline_script_full}"
                 }
                 else {
-                    pipelineScriptPath = "${pipelineScript}.groovy"
+                    pipelineScriptPath = "${pipelineScriptState}.groovy"
                 }
                 println "pipelinesRepo: ${pipelinesRepo}"
-                println "pipelineScriptPath: ${pipelineScriptPath}"
+                println "pipelineScriptPath: ${pipelineScriptState}"
                 pipelineJob(currentName) {
                     if (config.quietPeriodSeconds) {
                         quietPeriod(config.quietPeriodSeconds)
