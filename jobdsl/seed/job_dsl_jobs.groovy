@@ -116,6 +116,15 @@ def processJob(jobs, currentFolder, config) {
 
             }
             else if (job.value.type == 'state') {
+                def seedRepo = config.configRepo
+                String pipelineScriptPath
+                def localConfig = config.clone()
+                if (job.value.context) {
+                    localConfig = config.dslHelper.merge(localConfig, job.value.context)
+                }
+//                println "Local config: ${localConfig}"
+                // Define repository that will be used for pipelines retrieve and execution.
+                String pipelinesRepo = localConfig.configRepo
                 def state = job.value.state
                 def buildEnvironment
                 def jobBranch
@@ -132,6 +141,23 @@ def processJob(jobs, currentFolder, config) {
                     buildEnvironment = job.value.env
                     jobBranch = job.value.branch
                 }
+                if (localConfig.pipelines_repo) {
+                    pipelinesRepo = localConfig.pipelines_repo
+                    pipelineScriptPath = "${pipelineScript}.groovy"
+                }
+                else {
+                    if (job.value.configRepo) {
+                        pipelinesRepo = job.value.configRepo
+                    }
+                }
+                if (config.pipeline_script_full) {
+                    pipelineScriptPath = "${config.config_dir}/${config.pipeline_script_full}"
+                }
+                else {
+                    pipelineScriptPath = "${pipelineScript}.groovy"
+                }
+                println "pipelinesRepo: ${pipelinesRepo}"
+                println "pipelineScriptPath: ${pipelineScriptPath}"
                 pipelineJob(currentName) {
                     if (config.quietPeriodSeconds) {
                         quietPeriod(config.quietPeriodSeconds)
@@ -164,11 +190,18 @@ def processJob(jobs, currentFolder, config) {
                                         url(config.configRepo)
                                         credentials(config.credentialsId)
                                     }
-                                    extensions {
-                                        relativeTargetDirectory(config.projectConfigPath)
+                                    if (job.value.repoDir) {
+                                        extensions {
+                                            relativeTargetDirectory(job.value.repoDir)
+                                        }
+                                    }
+                                    else if (!job.value.configRepo && config.config_version < 2) {
+                                        extensions {
+                                            relativeTargetDirectory(config.projectConfigPath)
+                                        }
                                     }
                                 }
-                                scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
+                                scriptPath(pipelineScriptPath)
                             }
                         }
                     }
