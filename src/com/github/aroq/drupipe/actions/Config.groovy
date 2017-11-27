@@ -250,9 +250,6 @@ class Config extends BaseAction {
         }
 
         tempContext = utils.merge(tempContext, config)
-        script.echo("CONFIG: ${config}")
-        script.echo("uniconfIncludeKey: ${uniconfIncludeKey}")
-        script.echo("currentScenarioSourceName: ${currentScenarioSourceName}")
         if (config.containsKey(uniconfIncludeKey)) {
 //            utils.log "config.containsKey(uniconfIncludeKey)"
             // Iterate through 'include' keys.
