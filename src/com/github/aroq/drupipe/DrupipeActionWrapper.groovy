@@ -69,6 +69,8 @@ class DrupipeActionWrapper implements Serializable {
             this.params = utils.merge(defaultActionParams, this.params)
             utils.debugLog(this.params, this.params, "this.params after merge defaultActionParams with this.params", [debugMode: 'json'], [], this.params && this.params.debugEnabled)
 
+            this.utils.log("ACTION PARAMS: ${this.params}")
+
             def actionInstance
             try {
                 actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false)?.newInstance(
