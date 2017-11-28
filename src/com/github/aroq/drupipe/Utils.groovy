@@ -620,7 +620,7 @@ def getUnipipeConfig(controller) {
         controller.scmCheckout()
     }
     else {
-        unstash(controller, "config")
+        controller.script.unstash name: 'config'
     }
 }
 
