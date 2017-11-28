@@ -355,6 +355,7 @@ class Config extends BaseAction {
 
     def projectConfig() {
         utils.debugLog(action.pipeline.context, action.pipeline.context.configRepo,"projectConfig repo: ${action.pipeline.context.configRepo}", [:], [], true)
+        utils.log "Config context: ${action.pipeline.context}"
         if (action.pipeline.context.project_type == 'single') {
             def sourceObject = [
                 name  : 'project',
