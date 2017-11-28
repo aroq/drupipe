@@ -591,24 +591,24 @@ def serializeAndDeserialize(params, mode = 'yaml') {
     result
 }
 
-def unstashList(unstash) {
+def unstashList(controller, unstash) {
     if (unstash.size() > 0) {
         for (unstash_item in unstash) {
-            unstash name: unstash_item
+            controller.script.unstash name: unstash_item
         }
     }
 }
 
-def stashList(stash) {
+def stashList(controller, stash) {
     if (stash.size() > 0) {
         for (stash_item in stash) {
             def (name, path, exclude) = stash_item.tokenize(":")
             if (name && path) {
                 exclude = exclude == null ? '' : exclude
-                stash name: name, includes: path, excludes: exclude
+                controller.script.stash name: name, includes: path, excludes: exclude
             }
             else {
-                echo("Stash item should have form like name:path or name:path:exclude")
+                controller.script.echo("Stash item should have form like name:path or name:path:exclude")
             }
 
         }
@@ -620,7 +620,7 @@ def getUnipipeConfig(controller) {
         controller.scmCheckout()
     }
     else {
-        unstash("config")
+        unstash(controller, "config")
     }
 }
 

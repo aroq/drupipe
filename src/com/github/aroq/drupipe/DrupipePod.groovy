@@ -24,7 +24,7 @@ class DrupipePod implements Serializable {
             if (unipipe_retrieve_config) {
                 controller.utils.getUnipipeConfig(controller)
             }
-            controller.utils.unstashList(unstash)
+            controller.utils.unstashList(controller, unstash)
             for (container in containers) {
 //                controller.utils.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], true)
                 container = new DrupipeContainer(container)
@@ -32,7 +32,7 @@ class DrupipePod implements Serializable {
                 container.pod = this
                 container.execute()
             }
-            controller.utils.stashList(stash)
+            controller.utils.stashList(controller, stash)
         }
 
     }

@@ -49,7 +49,7 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
             if (unipipe_retrieve_config) {
                 controller.utils.getUnipipeConfig(controller)
             }
-            controller.utils.unstashList(unstash)
+            controller.utils.unstashList(controller, unstash)
             controller.context.workspace = pwd()
             for (def i = 0; i < containers.size(); i++) {
                 container(containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
@@ -63,7 +63,7 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
                     }
                 }
             }
-            controller.utils.stashList(stash)
+            controller.utils.stashList(controller, stash)
         }
     }
 //    }
