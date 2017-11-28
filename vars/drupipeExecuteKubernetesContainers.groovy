@@ -1,7 +1,7 @@
 import com.github.aroq.drupipe.DrupipeContainerBlock
 import com.github.aroq.drupipe.DrupipeController
 
-def call(ArrayList containers, DrupipeController controller) {
+def call(ArrayList containers, DrupipeController controller, ArrayList unstash = [], ArrayList stash = [], unipipe_retrieve_config = false) {
     echo "Container mode: kubernetes"
     def nodeName = 'drupipe'
     def containerNames = []
@@ -46,12 +46,13 @@ def call(ArrayList containers, DrupipeController controller) {
         containers: containersToExecute,
     ) {
         node(nodeName) {
-            controller.scmCheckout()
+            if (unipipe_retrieve_config) {
+                controller.utils.getUnipipeConfig(controller)
+            }
+            controller.utils.unstashList(unstash)
             controller.context.workspace = pwd()
             for (def i = 0; i < containers.size(); i++) {
                 container(containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
-                    unstash('config')
-
                     for (block in containers[i].blocks) {
 //                            controller.utils.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
                         sshagent([controller.context.credentialsId]) {
@@ -62,9 +63,9 @@ def call(ArrayList containers, DrupipeController controller) {
                     }
                 }
             }
+            controller.utils.stashList(stash)
         }
     }
 //    }
 
 }
-
