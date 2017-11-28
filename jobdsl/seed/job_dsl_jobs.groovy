@@ -196,7 +196,7 @@ def processJob(jobs, currentFolder, config) {
                                             relativeTargetDirectory(job.value.repoDir)
                                         }
                                     }
-                                    else if (!job.value.configRepo) {
+                                    else if (!job.value.containsKey('configRepo')) {
                                         extensions {
                                             relativeTargetDirectory(config.projectConfigPath)
                                         }
