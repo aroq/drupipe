@@ -196,7 +196,7 @@ def processJob(jobs, currentFolder, config) {
                                             relativeTargetDirectory(job.value.repoDir)
                                         }
                                     }
-                                    else if (!job.value.configRepo && config.config_version < 2) {
+                                    else if (!job.value.configRepo) {
                                         extensions {
                                             relativeTargetDirectory(config.projectConfigPath)
                                         }
