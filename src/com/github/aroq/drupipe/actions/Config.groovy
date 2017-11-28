@@ -365,7 +365,7 @@ class Config extends BaseAction {
             this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
         }
         else {
-            if (action.pipeline.context.job.configRepo) {
+            if (action.pipeline.context.containsKey('job') && action.pipeline.context.job.containsKey('configRepo') && action.pipeline.context.job.configRepo) {
                 def sourceObject = [
                     name  : 'project',
                     path  : action.pipeline.context.projectConfig,
@@ -381,7 +381,7 @@ class Config extends BaseAction {
             else {
                 def sourceObject = [
                     name  : 'project',
-                    path  : action.pipeline.context.projectConfig,
+                    path  : action.pipeline.context.projectConfigPath,
                     type  : 'dir',
                 ]
                 this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
