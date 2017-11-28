@@ -3,6 +3,7 @@ import org.yaml.snakeyaml.Yaml
 import com.github.aroq.dsl.GitlabHelper
 import com.github.aroq.dsl.DslHelper
 
+def dslHelper = new DslHelper(script: this)
 def configMain = dslHelper.readJson(this, '.unipipe/temp/context_processed.json')
 
 def projectsFileRead(filePath) {
