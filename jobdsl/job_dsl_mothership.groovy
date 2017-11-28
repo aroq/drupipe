@@ -6,6 +6,8 @@ import com.github.aroq.dsl.DslHelper
 def dslHelper = new DslHelper(script: this)
 def configMain = dslHelper.readJson(this, '.unipipe/temp/context_processed.json')
 
+println "configMain: ${configMain}"
+
 def projectsFileRead(filePath) {
   try {
       return readFileFromWorkspace(filePath)
