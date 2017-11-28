@@ -191,12 +191,15 @@ def processJob(jobs, currentFolder, config) {
                                         url(config.configRepo)
                                         credentials(config.credentialsId)
                                     }
+                                    println "job.value.containsKey('configRepo'): ${println}"
                                     if (job.value.repoDir) {
+                                        println "SCM: Job has repoDir, set relativeTargetDirectory to ${job.value.repoDir}"
                                         extensions {
                                             relativeTargetDirectory(job.value.repoDir)
                                         }
                                     }
                                     else if (!job.value.containsKey('configRepo')) {
+                                        println "SCM: Job doesn't have configRepo, set relativeTargetDirectory to ${config.projectConfigPath}"
                                         extensions {
                                             relativeTargetDirectory(config.projectConfigPath)
                                         }
