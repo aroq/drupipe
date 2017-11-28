@@ -594,7 +594,7 @@ def serializeAndDeserialize(params, mode = 'yaml') {
 def unstashList(unstash) {
     if (unstash.size() > 0) {
         for (unstash_item in unstash) {
-            unstash(unstash_item)
+            unstash name: unstash_item
         }
     }
 }
@@ -605,7 +605,7 @@ def stashList(stash) {
             def (name, path, exclude) = stash_item.tokenize(":")
             if (name && path) {
                 exclude = exclude == null ? '' : exclude
-                stash(name, path, exclude)
+                stash name: name, includes: path, excludes: exclude
             }
             else {
                 echo("Stash item should have form like name:path or name:path:exclude")
