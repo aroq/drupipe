@@ -1,8 +1,12 @@
 @Grab(group='org.yaml', module='snakeyaml', version='1.18')
 import org.yaml.snakeyaml.Yaml
 import com.github.aroq.dsl.GitlabHelper
+import com.github.aroq.dsl.DslHelper
 
-def configMain = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
+def dslHelper = new DslHelper(script: this)
+def configMain = dslHelper.readJson(this, '.unipipe/temp/context_processed.json')
+
+println "configMain: ${configMain}"
 
 def projectsFileRead(filePath) {
   try {
@@ -259,4 +263,3 @@ def getServersByTags(tags, servers) {
     println "getServersByTags: ${result}"
     result
 }
-

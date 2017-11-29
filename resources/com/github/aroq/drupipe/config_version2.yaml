@@ -76,6 +76,7 @@ params:
 
   pods:
     params:
+      unipipe_retrieve_config: false
       containerized: true
 
     master:

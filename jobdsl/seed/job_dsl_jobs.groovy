@@ -144,21 +144,23 @@ def processJob(jobs, currentFolder, config) {
                 }
                 if (localConfig.pipelines_repo) {
                     pipelinesRepo = localConfig.pipelines_repo
-                    pipelineScriptPath = "${pipelineScriptState}"
+                    pipelineScriptPath = "${config.projectConfigPath}/${pipelineScriptState}"
                 }
                 else {
                     if (job.value.configRepo) {
                         pipelinesRepo = job.value.configRepo
+                        pipelineScriptPath = "${pipelineScriptState}"
+                    }
+                    else {
+                        pipelinesRepo = localConfig.configRepo
+                        pipelineScriptPath = "${config.projectConfigPath}/${pipelineScriptState}"
                     }
                 }
                 if (config.pipeline_script_full) {
-                    pipelineScriptPath = "${config.config_dir}/${config.pipeline_script_full}"
-                }
-                else {
-                    pipelineScriptPath = "${pipelineScriptState}"
+                    pipelineScriptPath = "${config.pipeline_script_full}"
                 }
                 println "pipelinesRepo: ${pipelinesRepo}"
-                println "pipelineScriptPath: ${pipelineScriptState}"
+                println "pipelineScriptPath: ${pipelineScriptPath}"
                 pipelineJob(currentName) {
                     if (config.quietPeriodSeconds) {
                         quietPeriod(config.quietPeriodSeconds)
@@ -188,7 +190,7 @@ def processJob(jobs, currentFolder, config) {
                                     branch(selectedRemoteBranch)
                                     remote {
                                         name('origin')
-                                        url(config.configRepo)
+                                        url(pipelinesRepo)
                                         credentials(config.credentialsId)
                                     }
                                     if (job.value.repoDir) {
@@ -196,7 +198,7 @@ def processJob(jobs, currentFolder, config) {
                                             relativeTargetDirectory(job.value.repoDir)
                                         }
                                     }
-                                    else if (!job.value.configRepo && config.config_version < 2) {
+                                    else if (!job.value.containsKey('configRepo')) {
                                         extensions {
                                             relativeTargetDirectory(config.projectConfigPath)
                                         }
