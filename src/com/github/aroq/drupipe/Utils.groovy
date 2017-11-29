@@ -602,7 +602,10 @@ def unstashList(controller, unstash) {
 def stashList(controller, stash) {
     if (stash.size() > 0) {
         for (stash_item in stash) {
-            def (name, path, exclude) = stash_item.tokenize(":")
+            def parts = stash_item.tokenize(":")
+            def name = parts[0] ? parts[0] : null
+            def path = parts[1] ? parts[1] : null
+            def exclude = parts[2] ? parts[2] : null
             if (name && path) {
                 exclude = exclude == null ? '' : exclude
                 controller.script.stash name: name, includes: path, excludes: exclude
