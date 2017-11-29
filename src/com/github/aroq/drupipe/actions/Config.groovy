@@ -364,26 +364,18 @@ class Config extends BaseAction {
             this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
         }
         else {
-            if (action.pipeline.context.containsKey('job') && action.pipeline.context.job.containsKey('configRepo') && action.pipeline.context.job.configRepo) {
+            if (action.pipeline.context.configRepo) {
                 def sourceObject = [
                     name  : 'project',
                     path  : action.pipeline.context.projectConfig,
                     type  : 'git',
-                    url   : action.pipeline.context.job.configRepo,
+                    url   : action.pipeline.context.configRepo,
                     branch: 'master',
                     mode  : 'shell',
                 ]
                 script.sshagent([action.pipeline.context.credentialsId]) {
                     this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
                 }
-            }
-            else {
-                def sourceObject = [
-                    name  : 'project',
-                    path  : action.pipeline.context.projectConfigPath,
-                    type  : 'dir',
-                ]
-                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], action.pipeline)
             }
         }
         if (action.pipeline.context.configRepo) {
