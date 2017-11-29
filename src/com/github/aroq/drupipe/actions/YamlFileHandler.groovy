@@ -58,7 +58,6 @@ class YamlFileHandler extends BaseAction {
         }
 
         files = script.findFiles(glob: "**/${action.pipeline.context.projectConfigPath}/${action.params.deployFile}")
-        script.drupipeShell("ls -lah ${action.pipeline.context.projectConfigPath}/*", action.params)
         if (files.size() > 0) {
             script.echo files[0].path
             return files[0].path
