@@ -45,23 +45,31 @@ class YamlFileHandler extends BaseAction {
     def findDeployYaml() {
         def file
         def files
-        files = script.findFiles(glob: "**/${action.pipeline.context.projectConfigPath}/.unipipe/${action.params.deployFile}")
+
+        def project_config_dir = utils.sourceDir(action.pipeline.context, 'project');
+
+        utils.log("project_config_dir: ${project_config_dir}")
+
+        script.drupipeShell("ls -lah ${project_config_dir}", action.params)
+
+        files = script.findFiles(glob: "**/${project_config_dir}/.unipipe/${action.params.deployFile}")
         if (files.size() > 0) {
             script.echo files[0].path
             return files[0].path
         }
 
-        files = script.findFiles(glob: "**/${action.pipeline.context.projectConfigPath}/.drupipe/${action.params.deployFile}")
+        files = script.findFiles(glob: "**/${project_config_dir}/.drupipe/${action.params.deployFile}")
         if (files.size() > 0) {
             script.echo files[0].path
             return files[0].path
         }
 
-        files = script.findFiles(glob: "**/${action.pipeline.context.projectConfigPath}/${action.params.deployFile}")
+        files = script.findFiles(glob: "**/${project_config_dir}/${action.params.deployFile}")
         if (files.size() > 0) {
             script.echo files[0].path
             return files[0].path
         }
+
         return false
     }
 

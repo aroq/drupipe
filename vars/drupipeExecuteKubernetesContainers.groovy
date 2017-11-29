@@ -47,7 +47,11 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
     ) {
         node(nodeName) {
             if (unipipe_retrieve_config) {
+                controller.utils.log "Retrieve config."
                 controller.utils.getUnipipeConfig(controller)
+            }
+            else {
+                controller.utils.log "Retrieve config disabled in config."
             }
             controller.utils.unstashList(controller, unstash)
             controller.context.workspace = pwd()
