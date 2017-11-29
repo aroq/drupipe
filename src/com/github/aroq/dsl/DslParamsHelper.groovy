@@ -123,7 +123,7 @@ class DslParamsHelper {
 
     def drupipeParamTagsSelects(context, job, config, name, project) {
         println "Project: ${project.value.name}"
-        def projectRepo = project.value.repo
+        def projectRepo = project.value.type == 'root' ? project.value.repo : project.value.root_repo
         println "Repo: ${projectRepo}"
         drupipeParamChoices(
             context,
