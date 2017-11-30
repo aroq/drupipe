@@ -49,9 +49,6 @@ class Config extends BaseAction {
             [
                 action: "Config.projectConfig"
             ],
-//            [
-//                action: "Config.config_version2"
-//            ],
             [
                 action: "Config.jenkinsConfig"
             ],
@@ -64,6 +61,7 @@ class Config extends BaseAction {
             providers << action.pipeline.context.configProviders
         }
 
+        // TODO: Perform SCM checkout only when really needed.
         this.script.checkout this.script.scm
 
         action.pipeline.executePipelineActionList(providers)
@@ -476,27 +474,22 @@ class Config extends BaseAction {
     }
 
     def config_version2() {
-//        if (action.pipeline.configVersion() > 1) {
-            def providers = [
-                [
-                    action: 'YamlFileConfig.loadFromLibraryResource',
-                    params: [
-                        resource: 'com/github/aroq/drupipe/config_version2.yaml'
-                    ]
-                ],
-                [
-                    action: 'YamlFileConfig.loadFromLibraryResource',
-                    params: [
-                        resource: 'com/github/aroq/drupipe/actions.yaml'
-                    ]
-                ],
-            ]
+        def providers = [
+            [
+                action: 'YamlFileConfig.loadFromLibraryResource',
+                params: [
+                    resource: 'com/github/aroq/drupipe/config_version2.yaml'
+                ]
+            ],
+            [
+                action: 'YamlFileConfig.loadFromLibraryResource',
+                params: [
+                    resource: 'com/github/aroq/drupipe/actions.yaml'
+                ]
+            ],
+        ]
 
-            action.pipeline.executePipelineActionList(providers)
-//        }
-//        else {
-//            [:]
-//        }
+        action.pipeline.executePipelineActionList(providers)
     }
 
 }
