@@ -10,6 +10,12 @@ class DrupipeJob implements Serializable {
 
     String branch
 
+    String state
+
+    String env
+
+    HashMap source
+
     def triggers
 
     def webhooks

@@ -591,6 +591,42 @@ def serializeAndDeserialize(params, mode = 'yaml') {
     result
 }
 
+def unstashList(controller, unstash) {
+    if (unstash.size() > 0) {
+        for (unstash_item in unstash) {
+            controller.script.unstash name: unstash_item
+        }
+    }
+}
+
+def stashList(controller, stash) {
+    if (stash.size() > 0) {
+        for (stash_item in stash) {
+            def parts = stash_item.tokenize(":")
+            def name = parts[0] ? parts[0] : null
+            def path = parts[1] ? parts[1] : null
+            def exclude = parts[2] ? parts[2] : null
+            if (name && path) {
+                exclude = exclude == null ? '' : exclude
+                controller.script.stash name: name, includes: path, excludes: exclude
+            }
+            else {
+                controller.script.echo("Stash item should have form like name:path or name:path:exclude")
+            }
+
+        }
+    }
+}
+
+def getUnipipeConfig(controller) {
+    if (controller.context.containsKey('tags') && controller.context.tags.contains('single')) {
+        controller.scmCheckout()
+    }
+    else {
+        controller.script.unstash name: 'config'
+    }
+}
+
 def stripContext(context) {
     context.remove('pipeline')
     context.remove('stage')
