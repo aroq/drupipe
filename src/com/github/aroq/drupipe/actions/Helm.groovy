@@ -31,6 +31,8 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
     }
 
     def apply() {
+        action.pipeline.executeAction(action: 'Shell.execute', params: [shellCommand: 'pwd'])
+        action.pipeline.executeAction(action: 'Shell.execute', params: [shellCommand: 'ls -al'])
         executeHelmCommand()
     }
 
