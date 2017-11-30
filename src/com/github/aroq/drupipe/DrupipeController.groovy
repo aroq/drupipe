@@ -1,6 +1,5 @@
 package com.github.aroq.drupipe
 
-import com.github.aroq.drupipe.processors.DrupipeProcessor
 import com.github.aroq.drupipe.processors.DrupipeProcessorsController
 
 class DrupipeController implements Serializable {
@@ -392,6 +391,10 @@ class DrupipeController implements Serializable {
 
     def getParam(String param) {
         utils.deepGet(this, 'context.params.pipeline.' + param)
+    }
+
+    def executeAction(action) {
+        (processPipelineAction(action)).execute()
     }
 
 }

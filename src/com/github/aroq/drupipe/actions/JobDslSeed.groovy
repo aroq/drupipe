@@ -12,7 +12,7 @@ class JobDslSeed extends BaseAction {
 
     def info() {
         if (action.pipeline.configVersion() > 1 && action.pipeline.context.tags && action.pipeline.context.tags.contains('docman')) {
-            script.drupipeAction([action: 'Docman.info'], action.pipeline)
+            action.pipeline.executeAction(action: 'Docman.info')
             def stashes = action.pipeline.context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
             stashes = stashes + ", ${action.pipeline.context.docmanDir}/config/config.json"
             script.stash name: 'config', includes: "${stashes}", excludes: '.git, .git/**'
