@@ -367,7 +367,7 @@ class Config extends BaseAction {
             if (action.pipeline.context.configRepo) {
                 def sourceObject = [
                     name  : 'project',
-                    path  : action.pipeline.context.projectConfig,
+                    path  : action.pipeline.context.projectConfigPath,
                     type  : 'git',
                     url   : action.pipeline.context.configRepo,
                     branch: 'master',
