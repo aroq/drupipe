@@ -27,7 +27,7 @@ class DrupipeConfig implements Serializable {
     }
 
     DrupipeProcessorsController initProcessorsController(parent, processorsConfig) {
-//        utils.log "initProcessorsController"
+        utils.log "initProcessorsController"
         ArrayList<DrupipeProcessor> processors = []
         for (processorConfig in processorsConfig) {
             utils.log "Processor: ${processorConfig.className}"
@@ -49,6 +49,7 @@ class DrupipeConfig implements Serializable {
     }
 
     def processItem(item, parentKey, paramsKey = 'params', mode) {
+        utils.log "DrupipeConfig->processItem"
         controller.drupipeProcessorsController.process(controller.context, item, parentKey, paramsKey, mode)
     }
 
