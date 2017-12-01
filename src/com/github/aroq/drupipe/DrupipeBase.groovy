@@ -2,8 +2,12 @@ package com.github.aroq.drupipe
 
 class DrupipeBase implements Serializable {
 
-    boolean from_processed
+    String name
 
-    String from_processed_mode
+    boolean fromProcessed
+
+    String fromProcessed_mode
+
+    ArrayList fromPaths
 
 }

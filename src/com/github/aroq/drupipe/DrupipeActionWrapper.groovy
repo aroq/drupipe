@@ -65,12 +65,15 @@ class DrupipeActionWrapper implements Serializable {
             }
             else if (configVersion == 2) {
                 utils.log("Action config version == 2")
-                if (this.params.containsKey('from_processed') && this.params.from_processed) {
-                    utils.log("Action was processed with 'from' in ${this.params.from_processed_mode}")
+                if (this.params.containsKey('fromProcessed') && this.params.fromProcessed) {
+                    utils.log("Action was processed with 'from' in ${this.params.fromProcessed_mode}")
                 }
                 else {
                     utils.log("Action was processed with 'from'")
                 }
+            }
+            else {
+                utils.log("Action config version is not set.")
             }
 
             if (!this.params) {
