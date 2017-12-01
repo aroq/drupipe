@@ -16,12 +16,15 @@ class DrupipeConfig implements Serializable {
 
     ArrayList<ConfigProvider> configProviders = []
 
+    DrupipeSourcesController drupipeSourcesController
+
     @NonCPS
     def groovyConfig(text) {
         new HashMap<>(ConfigSlurper.newInstance(script.env.drupipeEnvironment).parse(text))
     }
 
     def config(params, parent) {
+        drupipeSourcesController = new DrupipeSourcesController()
         script.node('master') {
 //            utils.log "Executing pipeline"
 
@@ -51,16 +54,7 @@ class DrupipeConfig implements Serializable {
                 config = utils.merge(config, configProvider.provide())
             }
 
-//            config = utils.merge(config, envConfig())
-//            config = utils.merge(config, mothershipConfig())
-//            config = utils.merge(config, configMain())
-//            config = utils.merge(config, projectConfig())
-//            config = utils.merge(config, jenkinsConfig())
-//            config = utils.merge(config, jobConfig())
-            
-
-//            controller.executePipelineActionList(providers)
-
+            // TODO: remove it when all configs are updated to version 2.
             // For compatibility:
             if (config.defaultActionParams) {
                 config.params.action = utils.merge(config.params.action, config.defaultActionParams)
