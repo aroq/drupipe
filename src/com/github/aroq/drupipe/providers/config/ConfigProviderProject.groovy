@@ -3,17 +3,17 @@ package com.github.aroq.drupipe.providers.config
 class ConfigProviderProject extends ConfigProviderBase {
 
     def provide() {
-        utils.debugLog(config, config.configRepo,"projectConfig repo: ${config.configRepo}", [:], [], true)
-        if (config.project_type == 'single') {
+        utils.debugLog(drupipeConfig.config, drupipeConfig.config.configRepo,"projectConfig repo: ${drupipeConfig.config.configRepo}", [:], [], true)
+        if (drupipeConfig.config.project_type == 'single') {
             def sourceObject = [
                 name  : 'project',
-                path  : config.config_dir,
+                path  : drupipeConfig.config.config_dir,
                 type  : 'dir',
             ]
             this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], controller)
         }
         else {
-            if (config.configRepo) {
+            if (drupipeConfig.config.configRepo) {
                 def sourceObject = [
                     name  : 'project',
                     path  : config.projectConfigPath,
@@ -22,12 +22,12 @@ class ConfigProviderProject extends ConfigProviderBase {
                     branch: 'master',
                     mode  : 'shell',
                 ]
-                script.sshagent([config.credentialsId]) {
+                script.sshagent([drupipeConfig.config.credentialsId]) {
                     this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], controller)
                 }
             }
         }
-        if (config.configRepo) {
+        if (drupipeConfig.config.configRepo) {
 //            utils.debugLog(config, config, "config", [debugMode: 'json'], [], true)
 //            utils.debugLog(config, context, "context", [debugMode: 'json'], [], true)
 
@@ -37,13 +37,13 @@ class ConfigProviderProject extends ConfigProviderBase {
                     params: [
                         sourceName: 'project',
                         configType: 'groovy',
-                        configPath: config.projectConfigFile
+                        configPath: drupipeConfig.config.projectConfigFile
                     ]
                 ],
             ]
 
             def fileName = null
-            def sourceDir = utils.sourceDir(config, 'project')
+            def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
             this.script.echo("PROJECTS SOURCE DIR: ${sourceDir}")
 
             def filesToCheck = [
@@ -78,18 +78,18 @@ class ConfigProviderProject extends ConfigProviderBase {
             }
 
             def projectConfig
-            script.sshagent([config.credentialsId]) {
+            script.sshagent([drupipeConfig.config.credentialsId]) {
                 projectConfig = controller.executePipelineActionList(providers)
-                utils.debugLog(config, projectConfig, 'Project config')
+                utils.debugLog(drupipeConfig.config, projectConfig, 'Project config')
             }
 
-            def projectConfigContext = utils.merge(config, projectConfig)
+            def projectConfigContext = utils.merge(drupipeConfig.config, projectConfig)
 
             def sources = [:]
-            if (config.env.containsKey('UNIPIPE_SOURCES')) {
+            if (drupipeConfig.config.env.containsKey('UNIPIPE_SOURCES')) {
                 utils.log "Processing UNIPIPE_SOURCES"
                 def uniconfSourcesKey = utils.deepGet(projectConfigContext, 'uniconf.keys.sources')
-                sources[uniconfSourcesKey] = script.readJSON(text: config.env['UNIPIPE_SOURCES'])
+                sources[uniconfSourcesKey] = script.readJSON(text: drupipeConfig.config.env['UNIPIPE_SOURCES'])
                 if (projectConfig[uniconfSourcesKey]) {
                     projectConfig[uniconfSourcesKey] << sources[uniconfSourcesKey]
                 }
