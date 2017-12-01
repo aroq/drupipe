@@ -229,6 +229,7 @@ class Config extends BaseAction {
             utils.debugLog(action.pipeline.context, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], false)
 
             if (result.config_version > 1) {
+                utils.log "Initialising drupipeProcessorsController"
                 action.pipeline.drupipeProcessorsController = action.pipeline.drupipeConfig.initProcessorsController(this, action.pipeline.context.processors)
             }
         }
