@@ -77,6 +77,8 @@ class DrupipeActionWrapper implements Serializable {
                 }
                 else {
                     utils.log("Action wasn't processed with 'from'")
+                    this.params.from = '.params.actions.' + name + '.' + methodName
+                    this.params = pipeline.drupipeConfig.processItem(this.params, 'actions', 'params', 'execute')
                 }
             }
             else {
