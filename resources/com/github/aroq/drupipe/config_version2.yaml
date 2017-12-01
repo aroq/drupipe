@@ -1,3 +1,4 @@
+config_version: 2
 uniconf:
   keys:
     include: from

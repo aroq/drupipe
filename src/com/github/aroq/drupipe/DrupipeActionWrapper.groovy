@@ -32,6 +32,10 @@ class DrupipeActionWrapper implements Serializable {
     def execute() {
         utils = pipeline.utils
 
+        if (pipeline.configVersion() == 2) {
+            configVersion = 2
+        }
+
         this.script = pipeline.script
 
         try {
