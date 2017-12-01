@@ -228,7 +228,7 @@ class Config extends BaseAction {
             result = utils.merge(result, [jenkinsServers: mothershipServers])
             utils.debugLog(action.pipeline.context, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], false)
 
-            if (action.pipeline.configVersion() > 1) {
+            if (result.confi_version > 1) {
                 action.pipeline.drupipeProcessorsController = action.pipeline.drupipeConfig.initProcessorsController(this, action.pipeline.context.processors)
             }
         }
