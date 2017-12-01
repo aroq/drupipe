@@ -105,6 +105,29 @@ class DrupipeConfig implements Serializable {
         return config
     }
 
+    DrupipeProcessorsController initProcessorsController(parent, processorsConfig) {
+        utils.log "initProcessorsController"
+        ArrayList<DrupipeProcessor> processors = []
+        for (processorConfig in processorsConfig) {
+            utils.log "Processor: ${processorConfig.className}"
+            try {
+                def properties = [utils: utils]
+                if (processorConfig.properties) {
+                    properties << processorConfig.properties
+                }
+                processors << parent.class.classLoader.loadClass("com.github.aroq.drupipe.processors.${processorConfig.className}", true, false)?.newInstance(
+                    properties
+                )
+                utils.log "Processor: ${processorConfig.className} created"
+            }
+            catch (err) {
+                throw err
+            }
+        }
+        new DrupipeProcessorsController(processors: processors, utils: utils)
+    }
+
+
     int configVersion() {
         config.config_version as int
     }

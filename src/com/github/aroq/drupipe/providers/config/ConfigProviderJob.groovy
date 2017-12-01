@@ -37,28 +37,6 @@ class ConfigProviderJob extends ConfigProviderBase {
         result
     }
 
-    DrupipeProcessorsController initProcessorsController(parent, processorsConfig) {
-        utils.log "initProcessorsController"
-        ArrayList<DrupipeProcessor> processors = []
-        for (processorConfig in processorsConfig) {
-            utils.log "Processor: ${processorConfig.className}"
-            try {
-                def properties = [utils: utils]
-                if (processorConfig.properties) {
-                    properties << processorConfig.properties
-                }
-                processors << parent.class.classLoader.loadClass("com.github.aroq.drupipe.processors.${processorConfig.className}", true, false)?.newInstance(
-                    properties
-                )
-                utils.log "Processor: ${processorConfig.className} created"
-            }
-            catch (err) {
-                throw err
-            }
-        }
-        new DrupipeProcessorsController(processors: processors, utils: utils)
-    }
-
     def processItem(item, parentKey, paramsKey = 'params', mode) {
         utils.log "DrupipeConfig->processItem"
         controller.drupipeProcessorsController.process(config, item, parentKey, paramsKey, mode)
