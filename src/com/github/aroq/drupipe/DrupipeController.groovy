@@ -320,7 +320,7 @@ class DrupipeController implements Serializable {
         script.echo actionName
         script.echo actionMethodName
 
-        def actionWrapperParams = []
+        def actionWrapperParams = [:]
         actionWrapperParams << actionParams
         if (drupipeProcessorsController) {
             actionWrapperParams << [from: '.params.actions.' + actionName + '.' + actionMethodName]
