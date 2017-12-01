@@ -3,9 +3,6 @@ package com.github.aroq.drupipe.providers.config
 class ConfigProviderEnv extends ConfigProviderBase {
 
     def provide() {
-        if (config) {
-            script.echo "OK"
-        }
         def result = [:]
         result.workspace = script.pwd()
         result.env = utils.envToMap()
