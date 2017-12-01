@@ -290,7 +290,7 @@ class DrupipeController implements Serializable {
         actions
     }
 
-//    @NonCPS
+    @NonCPS
     DrupipeActionWrapper processPipelineAction(action) {
         def actionName
         def actionMethodName
@@ -327,7 +327,7 @@ class DrupipeController implements Serializable {
         if (drupipeProcessorsController) {
             utils.log "Processing Action: ${actionName}.${actionMethodName}"
             actionWrapperParams << [from: '.params.actions.' + actionName + '.' + actionMethodName]
-            drupipeConfig.processItem(actionWrapperParams, 'actions', 'params', 'execute')
+//            actionWrapperParams = drupipeConfig.processItem(actionWrapperParams, 'actions', 'params', 'execute')
         }
         else {
 //            utils.log "Processing Action: ${actionName}.${actionMethodName} - drupipeProcessorsController is not initialized"
