@@ -489,7 +489,13 @@ class Config extends BaseAction {
             ],
         ]
 
-        action.pipeline.executePipelineActionList(providers)
+        def result = action.pipeline.executePipelineActionList(providers)
+
+        if (action.pipeline.configVersion() > 1) {
+            action.pipeline.drupipeProcessorsController = action.pipeline.drupipeConfig.initProcessorsController(this, action.pipeline.context.processors)
+        }
+
+        result
     }
 
 }
