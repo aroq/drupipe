@@ -35,6 +35,9 @@ class DrupipeActionWrapper implements Serializable {
         if (this.name != 'Config' && pipeline.configVersion() == 2) {
             configVersion = 2
         }
+        else {
+            configVersion = 1
+        }
 
         this.script = pipeline.script
 
