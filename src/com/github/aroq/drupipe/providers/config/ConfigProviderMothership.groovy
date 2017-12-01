@@ -2,7 +2,7 @@ package com.github.aroq.drupipe.providers.config
 
 class ConfigProviderMothership extends ConfigProviderBase {
 
-    def config
+//    def config
 
     def provide() {
         if (config) {
