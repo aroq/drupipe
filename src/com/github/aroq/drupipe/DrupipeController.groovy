@@ -290,7 +290,7 @@ class DrupipeController implements Serializable {
         actions
     }
 
-    @NonCPS
+//    @NonCPS
     DrupipeActionWrapper processPipelineAction(action) {
         def actionName
         def actionMethodName
