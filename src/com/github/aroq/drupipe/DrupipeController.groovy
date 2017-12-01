@@ -322,7 +322,7 @@ class DrupipeController implements Serializable {
 
         def actionWrapperParams = []
         actionWrapperParams << actionParams
-        if (context) {
+        if (drupipeProcessorsController) {
             actionWrapperParams << [from: '.params.actions.' + actionName + '.' + actionMethodName]
             drupipeConfig.processItem(actionWrapperParams, 'actions', 'params', 'execute')
         }
