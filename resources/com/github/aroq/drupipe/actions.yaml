@@ -253,7 +253,7 @@ params:
           release_name:
             type: result
             source: params.release_name
-            destination: context.k8s.selector
+            destination: context.k8s.release_name
 
       init:
         params:
@@ -353,7 +353,7 @@ params:
           release_name: ${actions.Helm_status.release_name}
           jsonpath: '{.items[0].metadata.name}'
           return_stdout: true
-          selector: release=${context.k8s.selector}
+          selector: release=${context.k8s.release_name}
           flags:
             --namespace:
               - ${action.params.namespace}
@@ -372,7 +372,8 @@ params:
           release_name: ${actions.Helm_status.release_name}
           jsonpath: '{.items[0].metadata.name}'
           return_stdout: true
-          selector: release=${context.k8s.selector}
+          # TODO: Redo it.
+          selector: component=${context.k8s.release_name}-jenkins-master
           flags:
             --namespace:
               - ${action.params.namespace}
@@ -402,7 +403,7 @@ params:
           release_name: ${actions.Helm_status.release_name}
           jsonpath: '''{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}'''
           return_stdout: true
-          selector: release=${context.k8s.selector}
+          selector: component=${context.k8s.release_name}-jenkins-master
           flags:
             --namespace:
               - ${action.params.namespace}
