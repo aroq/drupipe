@@ -4,13 +4,13 @@ import com.github.aroq.drupipe.DrupipeController
 
 class ConfigProviderBase implements ConfigProvider, Serializable {
 
-    com.github.aroq.drupipe.Utils utils
+    public com.github.aroq.drupipe.Utils utils
 
-    def script
+    public def script
 
-    def config
+    public def config
 
-    DrupipeController controller
+    public DrupipeController controller
 
     def provide() {
 
