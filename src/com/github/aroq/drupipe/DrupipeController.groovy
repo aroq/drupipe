@@ -322,8 +322,10 @@ class DrupipeController implements Serializable {
 
         def actionWrapperParams = []
         actionWrapperParams << actionParams
-        actionWrapperParams << [from: '.params.actions.' + actionName + '.' + actionMethodName]
-        drupipeConfig.processItem(actionWrapperParams, 'actions', 'params', 'execute')
+        if (context) {
+            actionWrapperParams << [from: '.params.actions.' + actionName + '.' + actionMethodName]
+            drupipeConfig.processItem(actionWrapperParams, 'actions', 'params', 'execute')
+        }
 
         new DrupipeActionWrapper(pipeline: this, name: actionName, methodName: actionMethodName, params: actionWrapperParams)
     }
