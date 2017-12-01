@@ -3,7 +3,7 @@ package com.github.aroq.drupipe.providers.config
 class ConfigProviderEnv extends ConfigProviderBase {
 
     def provide() {
-        if (drupipeConfig.config) {
+        if (config) {
             script.echo "OK"
         }
         def result = [:]
