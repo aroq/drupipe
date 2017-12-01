@@ -9,7 +9,7 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
 
     def script
 
-    DrupipeConfig config
+    DrupipeConfig drupipeConfig
 
     DrupipeController controller
 

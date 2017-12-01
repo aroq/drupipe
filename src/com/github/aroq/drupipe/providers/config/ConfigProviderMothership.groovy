@@ -4,7 +4,7 @@ class ConfigProviderMothership extends ConfigProviderBase {
 
     def provide() {
         def result = [:]
-        if (config.env.MOTHERSHIP_REPO) {
+        if (drupipeConfig.config.env.MOTHERSHIP_REPO) {
             def sourceObject = [
                 name:   'mothership',
                 type:   'git',
