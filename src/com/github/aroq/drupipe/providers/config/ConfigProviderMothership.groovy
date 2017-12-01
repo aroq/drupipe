@@ -2,16 +2,12 @@ package com.github.aroq.drupipe.providers.config
 
 class ConfigProviderMothership extends ConfigProviderBase {
 
-    def config
-
-
-
     def provide() {
         if (config) {
             script.echo "OK"
         }
         def result = [:]
-        if (this.drupipeConfig.config.env.MOTHERSHIP_REPO) {
+        if (config.env.MOTHERSHIP_REPO) {
             def sourceObject = [
                 name:   'mothership',
                 type:   'git',
