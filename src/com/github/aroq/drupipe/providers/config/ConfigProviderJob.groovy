@@ -1,8 +1,98 @@
 package com.github.aroq.drupipe.providers.config
 
+import com.github.aroq.drupipe.processors.DrupipeProcessor
+import com.github.aroq.drupipe.processors.DrupipeProcessorsController
+
 class ConfigProviderJob extends ConfigProviderBase {
 
     def provide() {
+        def result = [:]
+        if (config.jobs) {
+            controller.archiveObjectJsonAndYaml(config, 'context_unprocessed')
+
+            // Performed here as needed later for job processing.
+            controller.drupipeConfig.process()
+
+            utils.log "AFTER jobConfig() controller.drupipeConfig.process()"
+
+            utils.jsonDump(config, config.jobs, 'CONFIG JOBS PROCESSED - BEFORE processJobs', false)
+
+            config.jobs = processJobs(config.jobs)
+
+            utils.jsonDump(config, config.jobs, 'CONFIG JOBS PROCESSED - AFTER processJobs', false)
+
+            result.job = (config.env.JOB_NAME).split('/').drop(1).inject(config, { obj, prop ->
+                obj.jobs[prop]
+            })
+
+            if (result.job) {
+                if (result.job.context) {
+                    result = utils.merge(result, result.job.context)
+                }
+            }
+        }
+        else {
+            utils.log "Config.jobConfig() -> No config.jobs are defined"
+        }
+        result
+    }
+
+    DrupipeProcessorsController initProcessorsController(parent, processorsConfig) {
+        utils.log "initProcessorsController"
+        ArrayList<DrupipeProcessor> processors = []
+        for (processorConfig in processorsConfig) {
+            utils.log "Processor: ${processorConfig.className}"
+            try {
+                def properties = [utils: utils]
+                if (processorConfig.properties) {
+                    properties << processorConfig.properties
+                }
+                processors << parent.class.classLoader.loadClass("com.github.aroq.drupipe.processors.${processorConfig.className}", true, false)?.newInstance(
+                    properties
+                )
+                utils.log "Processor: ${processorConfig.className} created"
+            }
+            catch (err) {
+                throw err
+            }
+        }
+        new DrupipeProcessorsController(processors: processors, utils: utils)
+    }
+
+    def processItem(item, parentKey, paramsKey = 'params', mode) {
+        utils.log "DrupipeConfig->processItem"
+        controller.drupipeProcessorsController.process(config, item, parentKey, paramsKey, mode)
+    }
+
+    def process() {
+        utils.log "DrupipeConfig->process()"
+        if (controller.configVersion() > 1) {
+//            controller.drupipeProcessorsController = initProcessorsController(this, config.processors)
+            config.jobs = processItem(config.jobs, 'context', 'params', 'config')
+            controller.archiveObjectJsonAndYaml(config, 'context_processed')
+        }
+    }
+
+    def processJobs(jobs, parentParams = [:]) {
+        def result = jobs
+        for (job in jobs) {
+            // For compatibility with previous config versions.
+            if (job.value.children) {
+                job.value.jobs = job.value.remove('children')
+            }
+            if (job.value.jobs) {
+                def params = job.value.clone()
+                params.remove('jobs')
+                job.value.jobs = processJobs(job.value.jobs, params)
+            }
+            if (parentParams) {
+                result[job.key] = utils.merge(parentParams, job.value)
+            }
+            else {
+                result[job.key] = job.value
+            }
+        }
+        result
     }
 
 }
