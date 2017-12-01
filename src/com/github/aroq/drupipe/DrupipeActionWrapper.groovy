@@ -32,7 +32,7 @@ class DrupipeActionWrapper implements Serializable {
     def execute() {
         utils = pipeline.utils
 
-        if (pipeline.configVersion() == 2) {
+        if (this.name != 'Config' && pipeline.configVersion() == 2) {
             configVersion = 2
         }
 
