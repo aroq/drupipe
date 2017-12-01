@@ -2,6 +2,7 @@ package com.github.aroq.drupipe
 
 import com.github.aroq.drupipe.processors.DrupipeProcessor
 import com.github.aroq.drupipe.processors.DrupipeProcessorsController
+import com.github.aroq.drupipe.providers.config.ConfigProvider
 
 class DrupipeConfig implements Serializable {
 
@@ -13,14 +14,17 @@ class DrupipeConfig implements Serializable {
 
     def config
 
+    ArrayList<ConfigProvider> configProviders = []
+
     @NonCPS
     def groovyConfig(text) {
         new HashMap<>(ConfigSlurper.newInstance(script.env.drupipeEnvironment).parse(text))
     }
 
-    def config(params) {
+    def config(params, parent) {
         script.node('master') {
 //            utils.log "Executing pipeline"
+
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
             utils.dump(params, params, 'PIPELINE-PARAMS')
             // Get config (context).
@@ -29,16 +33,28 @@ class DrupipeConfig implements Serializable {
             config = groovyConfig(script.libraryResource('com/github/aroq/drupipe/config.groovy'))
             utils.serializeAndDeserialize(config)
 
+            // TODO: Perform SCM checkout only when really needed.
             this.script.checkout this.script.scm
 
-            config = utils.merge(config, envConfig())
-            config = utils.merge(config, mothershipConfig())
-            config = utils.merge(config, configMain())
-            config = utils.merge(config, projectConfig())
-            config = utils.merge(config, jenkinsConfig())
-            config = utils.merge(config, jobConfig())
+            for (def i; i < config.config_providers_list.size(); i++) {
+                def properties = [:]
+                configProviders << parent.class.classLoader.loadClass("com.github.aroq.drupipe.processors.${config.config_providers[config.config_providers_list[i]].class_name}", true, false)?.newInstance(
+                    properties: properties
+                )
+            }
+
+            for (def i; i < configProviders.size(); i++) {
+                ConfigProvider configProvider = configProviders[i]
+                config = utils.merge(config, configProvider.provide())
+            }
+
+//            config = utils.merge(config, envConfig())
+//            config = utils.merge(config, mothershipConfig())
+//            config = utils.merge(config, configMain())
+//            config = utils.merge(config, projectConfig())
+//            config = utils.merge(config, jenkinsConfig())
+//            config = utils.merge(config, jobConfig())
             
-            // TODO: Perform SCM checkout only when really needed.
 
 //            controller.executePipelineActionList(providers)
 
@@ -184,25 +200,6 @@ class DrupipeConfig implements Serializable {
         result
     }
 
-    def envConfig() {
-        def result = [:]
-        result.workspace = this.script.pwd()
-        result.env = this.utils.envToMap()
-        // TODO: Use env vars pattern to override.
-        result.credentialsId = result.env.credentialsId
-        result.environment = result.env.environment
-        result.configRepo = result.env.configRepo
-
-        String jobPath = script.env.BUILD_URL ? script.env.BUILD_URL : script.env.JOB_DISPLAY_URL
-        result.jenkinsFolderName = utils.getJenkinsFolderName(jobPath)
-        result.jenkinsJobName = utils.getJenkinsJobName(jobPath)
-
-        if (script.env.KUBERNETES_PORT) {
-            result.containerMode = 'kubernetes'
-        }
-        utils.serializeAndDeserialize(result)
-    }
-
     def mothershipConfig() {
         def result = [:]
         if (config.env.MOTHERSHIP_REPO) {
@@ -229,7 +226,7 @@ class DrupipeConfig implements Serializable {
                     params: [
                         sourceName: 'mothership',
                         configType: 'groovy',
-                        configPath: action.params.mothershipConfigFile
+                        configPath: 'mothership.config',
                     ]
                 ]
             ]

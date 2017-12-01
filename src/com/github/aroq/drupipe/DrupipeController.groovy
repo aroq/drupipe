@@ -64,7 +64,7 @@ class DrupipeController implements Serializable {
     }
 
     def configuration() {
-        drupipeConfig.config(params)
+        drupipeConfig.config(params, this)
     }
 
     def execute(body = null) {

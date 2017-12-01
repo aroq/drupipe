@@ -13,6 +13,29 @@ defaultDocmanImage = 'michaeltigr/zebra-build-php-drush-docman:latest'
 logRotatorNumToKeep = 5
 drupipeDockerArgs = '--user root:root --net=host'
 
+config_providers_list = ['env', 'mothership', 'config', 'project', 'jenkins', 'job']
+
+config_providers = [
+    env: [
+        class_name: 'ConfigProviderEnv'
+    ],
+    mothership: [
+        class_name: 'ConfigProviderMothership'
+    ],
+    config: [
+        class_name: 'ConfigProviderConfigFile'
+    ],
+    project: [
+        class_name: 'ConfigProviderProject'
+    ],
+    jenkins: [
+        class_name: 'ConfigProviderJenkins'
+    ],
+    job: [
+        class_name: 'ConfigProviderJob'
+    ],
+]
+
 params = [
     pipeline: [
         scripts_library: [
