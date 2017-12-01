@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe
 
-class DrupipeJob implements Serializable {
+class DrupipeJob extends DrupipeBase implements Serializable {
 
     String name
 
