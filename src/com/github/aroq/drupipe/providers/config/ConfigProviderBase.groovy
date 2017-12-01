@@ -1,6 +1,5 @@
 package com.github.aroq.drupipe.providers.config
 
-import com.github.aroq.drupipe.DrupipeConfig
 import com.github.aroq.drupipe.DrupipeController
 
 class ConfigProviderBase implements ConfigProvider, Serializable {
@@ -9,7 +8,7 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
 
     def script
 
-    DrupipeConfig drupipeConfig
+    def config
 
     DrupipeController controller
 
