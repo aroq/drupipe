@@ -36,7 +36,7 @@ class DrupipeConfig implements Serializable {
             // TODO: Perform SCM checkout only when really needed.
             this.script.checkout this.script.scm
 
-            for (def i; i < config.config_providers_list.size(); i++) {
+            for (def i = 0; i < config.config_providers_list.size(); i++) {
                 def properties = [:]
                 def className = "com.github.aroq.drupipe.providers.config.${config.config_providers[config.config_providers_list[i]].class_name}"
                 script.echo "Config Provider class name: ${className}"
@@ -45,7 +45,7 @@ class DrupipeConfig implements Serializable {
                 ))
             }
 
-            for (def i; i < configProviders.size(); i++) {
+            for (def i = 0; i < configProviders.size(); i++) {
                 ConfigProvider configProvider = configProviders[i]
                 config = utils.merge(config, configProvider.provide())
             }
