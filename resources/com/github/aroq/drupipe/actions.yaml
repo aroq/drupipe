@@ -329,7 +329,6 @@ params:
 
       scale_replicaset:
         params:
-          debugEnabled: true
           command: scale replicaset
           replicas: ''
           replicaset_name: ''
@@ -351,6 +350,7 @@ params:
 
       get_replicaset_name:
         params:
+          debugEnabled: true
           command: get replicaset
           release_name: ${actions.Helm_status.release_name}
           jsonpath: '{.items[0].metadata.name}'
