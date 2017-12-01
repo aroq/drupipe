@@ -6,6 +6,12 @@ class DrupipeSourcesController implements Serializable {
 
     ArrayList sourcesList
 
+    def script
+
+    com.github.aroq.drupipe.Utils utils
+
+    DrupipeController controller
+
     def sourceAdd(params) {
         def source = params.source
         def result = [:]
@@ -57,7 +63,7 @@ class DrupipeSourcesController implements Serializable {
     def sourceLoad(params) {
         def result = [:]
         if (params.configPath) {
-            def configFilePath = utils.sourcePath(controller.context, params.sourceName, params.configPath)
+            def configFilePath = sourcePath(controller.context, params.sourceName, params.configPath)
             if (configFilePath) {
                 if (script.fileExists(configFilePath)) {
                     if (params.configType == 'groovy') {
@@ -75,5 +81,20 @@ class DrupipeSourcesController implements Serializable {
 
         result
     }
+
+    def sourcePath(params, sourceName, String path) {
+        utils.debugLog(params, sourceName, 'Source name')
+        if (sourceName in loadedSources) {
+            loadedSources[sourceName].path + '/' + path
+        }
+    }
+
+    def sourceDir(params, sourceName) {
+        utils.debugLog(params, sourceName, 'Source name')
+        if (sourceName in loadedSources) {
+            loadedSources[sourceName].path
+        }
+    }
+
 
 }

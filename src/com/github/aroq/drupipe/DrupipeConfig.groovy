@@ -24,7 +24,7 @@ class DrupipeConfig implements Serializable {
     }
 
     def config(params, parent) {
-        drupipeSourcesController = new DrupipeSourcesController()
+        drupipeSourcesController = new DrupipeSourcesController(script: script, utils: utils, controller: controller)
         script.node('master') {
 //            utils.log "Executing pipeline"
 

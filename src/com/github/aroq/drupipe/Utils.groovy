@@ -372,20 +372,6 @@ def getMothershipServersFile(params) {
     throw new Exception("getMothershipServersFile: servers config file not found.")
 }
 
-def sourcePath(params, sourceName, String path) {
-    debugLog(params, sourceName, 'Source name')
-    if (sourceName in params.loadedSources) {
-        params.loadedSources[sourceName].path + '/' + path
-    }
-}
-
-def sourceDir(params, sourceName) {
-    debugLog(params, sourceName, 'Source name')
-    if (sourceName in params.loadedSources) {
-        params.loadedSources[sourceName].path
-    }
-}
-
 def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], force = false) {
     if (debugEnabled(params) || force) {
         force = true
