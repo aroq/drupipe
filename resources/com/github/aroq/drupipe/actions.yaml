@@ -329,6 +329,7 @@ params:
 
       scale_replicaset:
         params:
+          debug_enabled: true
           command: scale replicaset
           replicas: ''
           replicaset_name: ''
