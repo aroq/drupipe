@@ -73,7 +73,7 @@ class DrupipeActionWrapper implements Serializable {
                     utils.log("Action was processed with 'from' in ${this.params.fromProcessed_mode}")
                 }
                 else {
-                    utils.log("Action was processed with 'from'")
+                    utils.log("Action wasn't processed with 'from'")
                 }
             }
             else {
