@@ -55,11 +55,21 @@ class DrupipeActionWrapper implements Serializable {
             def defaultActionParams = [:]
 
             if (configVersion == 1) {
+                utils.log("Action config version == 1")
                 for (actionName in ['__default', this.name, this.name + '_' + this.methodName]) {
                     if (pipeline.context && pipeline.context.params && pipeline.context.params.action && actionName in pipeline.context.params.action) {
                         defaultActionParams = utils.merge(defaultActionParams, pipeline.context.params.action[actionName])
                         utils.debugLog(defaultActionParams, defaultActionParams, "defaultActionParams after merge from ${actionName} action CONFIG", [debugMode: 'json'], [], this.params && this.params.debugEnabled)
                     }
+                }
+            }
+            else if (configVersion == 2) {
+                utils.log("Action config version == 2")
+                if (this.params.containsKey('from_processed') && this.params.from_processed) {
+                    utils.log("Action was processed with 'from' in ${this.params.from_processed_mode}")
+                }
+                else {
+                    utils.log("Action was processed with 'from'")
                 }
             }
 
