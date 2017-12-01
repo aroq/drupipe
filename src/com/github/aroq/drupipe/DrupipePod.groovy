@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe
 
-class DrupipePod implements Serializable {
+class DrupipePod extends DrupipeBase {
 
     String name
 

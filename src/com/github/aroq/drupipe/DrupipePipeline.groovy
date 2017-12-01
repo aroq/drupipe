@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe
 
-class DrupipePipeline implements Serializable {
+class DrupipePipeline extends DrupipeBase {
 
     String name
 

@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe
 
-class DrupipeContainer implements Serializable {
+class DrupipeContainer extends DrupipeBase {
 
     String name
 
