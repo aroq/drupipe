@@ -11,13 +11,14 @@ class DrupipeConfig implements Serializable {
 
     def utils
 
+    def config
+
     @NonCPS
     def groovyConfig(text) {
         new HashMap<>(ConfigSlurper.newInstance(script.env.drupipeEnvironment).parse(text))
     }
 
     def config(params) {
-        def config
         script.node('master') {
 //            utils.log "Executing pipeline"
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
@@ -42,27 +43,27 @@ class DrupipeConfig implements Serializable {
 //            controller.executePipelineActionList(providers)
 
             // For compatibility:
-            if (controller.context.defaultActionParams) {
-                controller.context.params.action = utils.merge(controller.context.params.action, controller.context.defaultActionParams)
+            if (config.defaultActionParams) {
+                config.params.action = utils.merge(config.params.action, config.defaultActionParams)
             }
 
-            controller.context.environmentParams = [:]
-            if (controller.context.environments) {
-                if (controller.context.environment) {
-                    def environment = controller.context.environments[controller.context.environment]
-                    if (controller.context.servers && environment['server'] && controller.context.servers[environment['server']]) {
-                        def server = controller.context.servers[environment['server']]
-                        controller.context.environmentParams = utils.merge(server, environment)
+            config.environmentParams = [:]
+            if (config.environments) {
+                if (config.environment) {
+                    def environment = config.environments[config.environment]
+                    if (config.servers && environment['server'] && config.servers[environment['server']]) {
+                        def server = config.servers[environment['server']]
+                        config.environmentParams = utils.merge(server, environment)
                     }
                     else {
-                        controller.context.environmentParams = environment
+                        config.environmentParams = environment
                     }
                     // For compatibility:
-                    if (controller.context.environmentParams && controller.context.environmentParams.defaultActionParams) {
-                        controller.context.params.action = utils.merge(controller.context.params.action, controller.context.environmentParams.defaultActionParams)
+                    if (config.environmentParams && config.environmentParams.defaultActionParams) {
+                        config.params.action = utils.merge(config.params.action, config.environmentParams.defaultActionParams)
                     }
 
-                    utils.debugLog(controller.context, controller.context.environmentParams, 'ENVIRONMENT PARAMS', [:], [], true)
+                    utils.debugLog(config, config.environmentParams, 'ENVIRONMENT PARAMS', [:], [], true)
                 }
                 else {
                     script.echo "No context.environment is defined"
@@ -72,21 +73,21 @@ class DrupipeConfig implements Serializable {
                 script.echo "No context.environments are defined"
             }
 
-            utils.debugLog(controller.context, controller.context, 'CONFIG CONTEXT')
+            utils.debugLog(config, config, 'CONFIG CONTEXT')
 
-            def stashes = controller.context.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
+            def stashes = config.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
 
             script.echo "Stashes: ${stashes}"
 
             script.stash name: 'config', includes: "${stashes}", excludes: ".git, .git/**"
 
-            controller.archiveObjectJsonAndYaml(controller.context, 'context')
+            controller.archiveObjectJsonAndYaml(config, 'context')
         }
         return config
     }
 
     int configVersion() {
-        controller.context.config_version as int
+        config.config_version as int
     }
 
     DrupipeProcessorsController initProcessorsController(parent, processorsConfig) {
@@ -113,15 +114,15 @@ class DrupipeConfig implements Serializable {
 
     def processItem(item, parentKey, paramsKey = 'params', mode) {
         utils.log "DrupipeConfig->processItem"
-        controller.drupipeProcessorsController.process(controller.context, item, parentKey, paramsKey, mode)
+        controller.drupipeProcessorsController.process(config, item, parentKey, paramsKey, mode)
     }
 
     def process() {
         utils.log "DrupipeConfig->process()"
         if (controller.configVersion() > 1) {
-//            controller.drupipeProcessorsController = initProcessorsController(this, controller.context.processors)
-            controller.context.jobs = processItem(controller.context.jobs, 'context', 'params', 'config')
-            controller.archiveObjectJsonAndYaml(controller.context, 'context_processed')
+//            controller.drupipeProcessorsController = initProcessorsController(this, config.processors)
+            config.jobs = processItem(config.jobs, 'context', 'params', 'config')
+            controller.archiveObjectJsonAndYaml(config, 'context_processed')
         }
     }
 
@@ -131,21 +132,21 @@ class DrupipeConfig implements Serializable {
 
     def jobConfig() {
         def result = [:]
-        if (controller.context.jobs) {
-            controller.archiveObjectJsonAndYaml(controller.context, 'context_unprocessed')
+        if (config.jobs) {
+            controller.archiveObjectJsonAndYaml(config, 'context_unprocessed')
 
             // Performed here as needed later for job processing.
             controller.drupipeConfig.process()
 
             utils.log "AFTER jobConfig() controller.drupipeConfig.process()"
 
-            utils.jsonDump(controller.context, controller.context.jobs, 'CONFIG JOBS PROCESSED - BEFORE processJobs', false)
+            utils.jsonDump(config, config.jobs, 'CONFIG JOBS PROCESSED - BEFORE processJobs', false)
 
-            controller.context.jobs = processJobs(controller.context.jobs)
+            config.jobs = processJobs(config.jobs)
 
-            utils.jsonDump(controller.context, controller.context.jobs, 'CONFIG JOBS PROCESSED - AFTER processJobs', false)
+            utils.jsonDump(config, config.jobs, 'CONFIG JOBS PROCESSED - AFTER processJobs', false)
 
-            result.job = (controller.context.env.JOB_NAME).split('/').drop(1).inject(controller.context, { obj, prop ->
+            result.job = (config.env.JOB_NAME).split('/').drop(1).inject(config, { obj, prop ->
                 obj.jobs[prop]
             })
 
@@ -156,7 +157,7 @@ class DrupipeConfig implements Serializable {
             }
         }
         else {
-            utils.log "Config.jobConfig() -> No controller.context.jobs are defined"
+            utils.log "Config.jobConfig() -> No config.jobs are defined"
         }
         result
     }
@@ -204,7 +205,7 @@ class DrupipeConfig implements Serializable {
 
     def mothershipConfig() {
         def result = [:]
-        if (controller.context.env.MOTHERSHIP_REPO) {
+        if (config.env.MOTHERSHIP_REPO) {
             def sourceObject = [
                 name:   'mothership',
                 type:   'git',
@@ -213,14 +214,14 @@ class DrupipeConfig implements Serializable {
                 branch: 'master',
             ]
 
-            this.script.drupipeAction([action: "Source.add", params: [credentialsId: controller.context.env.credentialsId, source: sourceObject]], controller)
+            this.script.drupipeAction([action: "Source.add", params: [credentialsId: config.env.credentialsId, source: sourceObject]], controller)
 
             def providers = [
                 [
                     action: 'Source.add',
                     params: [
                         source: sourceObject,
-                        credentialsId: controller.context.env.credentialsId,
+                        credentialsId: config.env.credentialsId,
                     ],
                 ],
                 [
@@ -234,21 +235,21 @@ class DrupipeConfig implements Serializable {
             ]
             result = controller.executePipelineActionList(providers)
             def mothershipConfig = this.utils.getMothershipConfigFile(result)
-            utils.debugLog(controller.context, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], false)
+            utils.debugLog(config, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], false)
             def mothershipServers = this.utils.getMothershipServersFile(result)
-            utils.debugLog(controller.context, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], false)
+            utils.debugLog(config, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], false)
 
-            def mothershipProjectConfig = mothershipConfig[controller.context.jenkinsFolderName]
+            def mothershipProjectConfig = mothershipConfig[config.jenkinsFolderName]
             script.echo "mothershipProjectConfig: ${mothershipProjectConfig}"
 
             result = utils.merge(result, mothershipProjectConfig)
-            utils.debugLog(controller.context, result, 'mothershipServer result after merge', [debugMode: 'json'], [], false)
+            utils.debugLog(config, result, 'mothershipServer result after merge', [debugMode: 'json'], [], false)
             result = utils.merge(result, [jenkinsServers: mothershipServers])
-            utils.debugLog(controller.context, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], false)
+            utils.debugLog(config, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], false)
 
             if (result.config_version > 1) {
                 utils.log "Initialising drupipeProcessorsController"
-                controller.drupipeProcessorsController = controller.drupipeConfig.initProcessorsController(this, controller.context.processors)
+                controller.drupipeProcessorsController = controller.drupipeConfig.initProcessorsController(this, config.processors)
             }
         }
         result
@@ -267,7 +268,7 @@ class DrupipeConfig implements Serializable {
 
         def scenariosConfig = [:]
         if (!tempContext) {
-            tempContext << controller.context
+            tempContext << config
         }
 
         tempContext = utils.merge(tempContext, config)
@@ -292,15 +293,15 @@ class DrupipeConfig implements Serializable {
 //                    utils.log("scenarioSourceName: ${scenarioSourceName}")
 //                    utils.log("scenario.name: ${scenario.name}")
 
-                    utils.debugLog(controller.context, tempContext[uniconfSourcesKey], 'Scenario sources', ['debugMode': 'json'], [], false)
+                    utils.debugLog(config, tempContext[uniconfSourcesKey], 'Scenario sources', ['debugMode': 'json'], [], false)
 
                     if (
                     (scenariosConfig[uniconfSourcesKey] && scenariosConfig[uniconfSourcesKey].containsKey(scenarioSourceName))
                         || (tempContext[uniconfSourcesKey] && tempContext[uniconfSourcesKey].containsKey(scenarioSourceName))
-                        || controller.context.loadedSources.containsKey(scenarioSourceName)
+                        || config.loadedSources.containsKey(scenarioSourceName)
                     )
                     {
-                        if (!controller.context.loadedSources[scenarioSourceName]) {
+                        if (!config.loadedSources[scenarioSourceName]) {
                             utils.log "Adding source: ${scenarioSourceName}"
                             if (tempContext[uniconfSourcesKey].containsKey(scenarioSourceName)) {
                                 scenario.source = tempContext[uniconfSourcesKey][scenarioSourceName]
@@ -309,7 +310,7 @@ class DrupipeConfig implements Serializable {
                                 scenario.source = scenariosConfig[uniconfSourcesKey][scenarioSourceName]
                             }
 
-                            script.sshagent([controller.context.credentialsId]) {
+                            script.sshagent([config.credentialsId]) {
                                 def sourceObject = [
                                     name: scenarioSourceName,
                                     type: 'git',
@@ -324,13 +325,13 @@ class DrupipeConfig implements Serializable {
                             }
                         }
                         else {
-                            utils.debugLog(controller.context, "Source: ${scenarioSourceName} already added")
-                            scenario.source = controller.context.loadedSources[scenarioSourceName]
+                            utils.debugLog(config, "Source: ${scenarioSourceName} already added")
+                            scenario.source = config.loadedSources[scenarioSourceName]
                         }
 
                         def fileName = null
 
-                        def sourceDir = utils.sourceDir(controller.context, scenarioSourceName)
+                        def sourceDir = utils.sourceDir(config, scenarioSourceName)
 
                         def filesToCheck = [
                             "/.unipipe/scenarios/${scenario.name}/config.yaml",
@@ -351,11 +352,11 @@ class DrupipeConfig implements Serializable {
 
                         // Merge scenario if exists.
                         if (fileName != null) {
-                            utils.debugLog(controller.context, "Scenario file name: ${fileName} exists")
+                            utils.debugLog(config, "Scenario file name: ${fileName} exists")
                             def scenarioConfig = mergeScenariosConfigs(context, script.readYaml(file: fileName), tempContext, scenarioSourceName)
-                            utils.debugLog(controller.context, scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
+                            utils.debugLog(config, scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
-                            utils.debugLog(controller.context, scenariosConfig, "Scenarios config")
+                            utils.debugLog(config, scenariosConfig, "Scenarios config")
                         }
                         else {
                             utils.log "Scenario file doesn't found"
@@ -375,33 +376,33 @@ class DrupipeConfig implements Serializable {
     }
 
     def projectConfig() {
-        utils.debugLog(controller.context, controller.context.configRepo,"projectConfig repo: ${controller.context.configRepo}", [:], [], true)
-        if (controller.context.project_type == 'single') {
+        utils.debugLog(config, config.configRepo,"projectConfig repo: ${config.configRepo}", [:], [], true)
+        if (config.project_type == 'single') {
             def sourceObject = [
                 name  : 'project',
-                path  : controller.context.config_dir,
+                path  : config.config_dir,
                 type  : 'dir',
             ]
             this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], controller)
         }
         else {
-            if (controller.context.configRepo) {
+            if (config.configRepo) {
                 def sourceObject = [
                     name  : 'project',
-                    path  : controller.context.projectConfigPath,
+                    path  : config.projectConfigPath,
                     type  : 'git',
-                    url   : controller.context.configRepo,
+                    url   : config.configRepo,
                     branch: 'master',
                     mode  : 'shell',
                 ]
-                script.sshagent([controller.context.credentialsId]) {
+                script.sshagent([config.credentialsId]) {
                     this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], controller)
                 }
             }
         }
-        if (controller.context.configRepo) {
-//            utils.debugLog(controller.context, controller.context, "controller.context", [debugMode: 'json'], [], true)
-//            utils.debugLog(controller.context, context, "context", [debugMode: 'json'], [], true)
+        if (config.configRepo) {
+//            utils.debugLog(config, config, "config", [debugMode: 'json'], [], true)
+//            utils.debugLog(config, context, "context", [debugMode: 'json'], [], true)
 
             def providers = [
                 [
@@ -409,13 +410,13 @@ class DrupipeConfig implements Serializable {
                     params: [
                         sourceName: 'project',
                         configType: 'groovy',
-                        configPath: controller.context.projectConfigFile
+                        configPath: config.projectConfigFile
                     ]
                 ],
             ]
 
             def fileName = null
-            def sourceDir = utils.sourceDir(controller.context, 'project')
+            def sourceDir = utils.sourceDir(config, 'project')
             this.script.echo("PROJECTS SOURCE DIR: ${sourceDir}")
 
             def filesToCheck = [
@@ -450,22 +451,22 @@ class DrupipeConfig implements Serializable {
             }
 
             def projectConfig
-            script.sshagent([controller.context.credentialsId]) {
+            script.sshagent([config.credentialsId]) {
                 projectConfig = controller.executePipelineActionList(providers)
-                utils.debugLog(controller.context, projectConfig, 'Project config')
+                utils.debugLog(config, projectConfig, 'Project config')
 
                 if (projectConfig.config_version > 1 || controller.configVersion() > 1) {
                     projectConfig = utils.merge(config_version2(), projectConfig)
                 }
             }
 
-            def projectConfigContext = utils.merge(controller.context, projectConfig)
+            def projectConfigContext = utils.merge(config, projectConfig)
 
             def sources = [:]
-            if (controller.context.env.containsKey('UNIPIPE_SOURCES')) {
+            if (config.env.containsKey('UNIPIPE_SOURCES')) {
                 utils.log "Processing UNIPIPE_SOURCES"
                 def uniconfSourcesKey = utils.deepGet(projectConfigContext, 'uniconf.keys.sources')
-                sources[uniconfSourcesKey] = script.readJSON(text: controller.context.env['UNIPIPE_SOURCES'])
+                sources[uniconfSourcesKey] = script.readJSON(text: config.env['UNIPIPE_SOURCES'])
                 if (projectConfig[uniconfSourcesKey]) {
                     projectConfig[uniconfSourcesKey] << sources[uniconfSourcesKey]
                 }
