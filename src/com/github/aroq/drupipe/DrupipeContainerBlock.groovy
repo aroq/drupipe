@@ -43,6 +43,10 @@ class DrupipeContainerBlock extends DrupipeBase {
             action.remove('methodName')
             action.remove('configVersion')
 
+            if (controller.configVersion() == 2) {
+                actionWrapper.configVersion = 2
+            }
+
             controller.utils.debugLog(controller.context, actionWrapper, 'ACTION WRAPPER', [debugMode: 'json'], [], false)
             DrupipeActionWrapper drupipeActionWrapper = new DrupipeActionWrapper(actionWrapper)
             drupipeActionWrapper.pipeline = controller
