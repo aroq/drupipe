@@ -81,10 +81,6 @@ class ConfigProviderProject extends ConfigProviderBase {
             script.sshagent([config.credentialsId]) {
                 projectConfig = controller.executePipelineActionList(providers)
                 utils.debugLog(config, projectConfig, 'Project config')
-
-                if (projectConfig.config_version > 1 || controller.configVersion() > 1) {
-                    projectConfig = utils.merge(controller.drupipeConfig.config_version2(), projectConfig)
-                }
             }
 
             def projectConfigContext = utils.merge(config, projectConfig)

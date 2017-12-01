@@ -51,6 +51,11 @@ class ConfigProviderMothership extends ConfigProviderBase {
                 controller.drupipeProcessorsController = controller.drupipeConfig.initProcessorsController(this, config.processors)
             }
         }
+
+        if (result.config_version && result.config_version > 1 || controller.configVersion() > 1) {
+            result = utils.merge(controller.drupipeConfig.config_version2(), result)
+        }
+
         result
     }
 
