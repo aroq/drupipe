@@ -6,6 +6,7 @@ import com.github.aroq.drupipe.processors.DrupipeProcessorsController
 class ConfigProviderJob extends ConfigProviderBase {
 
     def provide() {
+        def config = drupipeConfig.config
         def result = [:]
         if (config.jobs) {
             controller.archiveObjectJsonAndYaml(config, 'context_unprocessed')
