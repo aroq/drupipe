@@ -264,7 +264,7 @@ params:
 
       apply:
         params:
-          debug_enabled: true
+          debugEnabled: true
           command: upgrade
           value_suffix: values.yaml
           timeout: '120'
@@ -329,7 +329,7 @@ params:
 
       scale_replicaset:
         params:
-          debug_enabled: true
+          debugEnabled: true
           command: scale replicaset
           replicas: ''
           replicaset_name: ''
