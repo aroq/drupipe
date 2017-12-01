@@ -330,48 +330,6 @@ def pipelineNotify(context, event) {
     }
 }
 
-def getMothershipConfigFile(params) {
-    def projectsFileName = 'projects'
-    def extensions = ['yaml', 'yml', 'json']
-    def dir = sourceDir(params, 'mothership')
-    for (extension in extensions) {
-        def projectsFile = "${dir}/${projectsFileName}.${extension}"
-        if (fileExists(projectsFile)) {
-            def file = readFile(projectsFile)
-            if (file) {
-                if (extension in ['yaml', 'yml']) {
-//                    echo "getMothershipConfigFile: load file: ${file}"
-                    return readYaml(text: file).projects
-                }
-                else if (extension == 'json') {
-//                    echo "getMothershipConfigFile: load file: ${file}"
-                    return readJSON(text: file).projects
-                }
-            }
-        }
-        else {
-            echo "getMothershipConfigFile: file: ${file} doesn't exist"
-        }
-    }
-    throw new Exception("getMothershipConfigFile: mothership config file not found.")
-}
-
-def getMothershipServersFile(params) {
-    def serversFileName = 'servers'
-    def extensions = ['yaml', 'yml']
-    def dir = sourceDir(params, 'mothership')
-    for (extension in extensions) {
-        def serversFile = "${dir}/${serversFileName}.${extension}"
-        if (fileExists(serversFile)) {
-            def file = readFile(serversFile)
-            if (file) {
-                return readYaml(text: file).servers
-            }
-        }
-    }
-    throw new Exception("getMothershipServersFile: servers config file not found.")
-}
-
 def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], force = false) {
     if (debugEnabled(params) || force) {
         force = true

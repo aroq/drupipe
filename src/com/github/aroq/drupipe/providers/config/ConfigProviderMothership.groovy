@@ -38,9 +38,9 @@ class ConfigProviderMothership extends ConfigProviderBase {
 //                ]
 //            ]
 //            result = controller.executePipelineActionList(providers)
-            def mothershipConfig = this.utils.getMothershipConfigFile(result)
+            def mothershipConfig = getMothershipConfigFile(result)
             utils.debugLog(drupipeConfig.config, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], false)
-            def mothershipServers = this.utils.getMothershipServersFile(result)
+            def mothershipServers = getMothershipServersFile(result)
             utils.debugLog(drupipeConfig.config, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], false)
 
             def mothershipProjectConfig = mothershipConfig[drupipeConfig.config.jenkinsFolderName]
@@ -63,5 +63,49 @@ class ConfigProviderMothership extends ConfigProviderBase {
 
         result
     }
+
+    def getMothershipServersFile(params) {
+        def serversFileName = 'servers'
+        def extensions = ['yaml', 'yml']
+        def dir = drupipeConfig.drupipeSourcesController.sourceDir(params, 'mothership')
+        for (extension in extensions) {
+            def serversFile = "${dir}/${serversFileName}.${extension}"
+            if (script.fileExists(serversFile)) {
+                def file = script.readFile(serversFile)
+                if (file) {
+                    return script.readYaml(text: file).servers
+                }
+            }
+        }
+        throw new Exception("getMothershipServersFile: servers config file not found.")
+    }
+
+    def getMothershipConfigFile(params) {
+        def projectsFileName = 'projects'
+        def extensions = ['yaml', 'yml', 'json']
+        def dir = drupipeConfig.drupipeSourcesController.sourceDir(params, 'mothership')
+        for (extension in extensions) {
+            def projectsFile = "${dir}/${projectsFileName}.${extension}"
+            if (script.fileExists(projectsFile)) {
+                def file = script.readFile(projectsFile)
+                if (file) {
+                    if (extension in ['yaml', 'yml']) {
+//                    echo "getMothershipConfigFile: load file: ${file}"
+                        return script.readYaml(text: file).projects
+                    }
+                    else if (extension == 'json') {
+//                    echo "getMothershipConfigFile: load file: ${file}"
+                        return script.readJSON(text: file).projects
+                    }
+                }
+            }
+            else {
+                echo "getMothershipConfigFile: file: ${file} doesn't exist"
+            }
+        }
+        throw new Exception("getMothershipConfigFile: mothership config file not found.")
+    }
+
+
 
 }
