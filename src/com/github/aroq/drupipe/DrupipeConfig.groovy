@@ -47,6 +47,7 @@ class DrupipeConfig implements Serializable {
 
             for (def i = 0; i < configProviders.size(); i++) {
                 ConfigProvider configProvider = configProviders[i]
+                configProvider.config = config
                 config = utils.merge(config, configProvider.provide())
             }
 
