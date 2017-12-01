@@ -38,7 +38,9 @@ class DrupipeConfig implements Serializable {
 
             for (def i; i < config.config_providers_list.size(); i++) {
                 def properties = [:]
-                configProviders.add(parent.class.classLoader.loadClass("com.github.aroq.drupipe.providers.config.${config.config_providers[config.config_providers_list[i]].class_name}", true, false)?.newInstance(
+                def className = "com.github.aroq.drupipe.providers.config.${config.config_providers[config.config_providers_list[i]].class_name}"
+                script.echo "Config Provider class name: ${className}"
+                configProviders.add(parent.class.classLoader.loadClass(className, true, false)?.newInstance(
                     properties: properties
                 ))
             }
