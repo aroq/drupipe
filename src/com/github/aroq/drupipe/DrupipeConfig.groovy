@@ -139,24 +139,8 @@ class DrupipeConfig implements Serializable {
     }
 
     def config_version2() {
-        def providers = [
-            [
-                action: 'YamlFileConfig.loadFromLibraryResource',
-                params: [
-                    resource: 'com/github/aroq/drupipe/config_version2.yaml'
-                ]
-            ],
-            [
-                action: 'YamlFileConfig.loadFromLibraryResource',
-                params: [
-                    resource: 'com/github/aroq/drupipe/actions.yaml'
-                ]
-            ],
-        ]
-
-        def result = controller.executePipelineActionList(providers)
-
-        result
+        def result = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config_version2.yaml'))
+        utils.merge(result, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
     }
 
 }
