@@ -49,7 +49,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def processFromItem(context, result, String from, String parent, String key = 'params') {
-        utils.log "Process from: ${from}"
+//        utils.log "Process from: ${from}"
 
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         if (processorParams) {
@@ -123,7 +123,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def process(context, obj, parent, key = 'params', mode = 'config') {
-        utils.log "DrupipeFromProcessor->processItem"
+//        utils.log "DrupipeFromProcessor->processItem"
         this.mode = mode
         def result = obj
         if (obj.containsKey(this.include_key)) {
