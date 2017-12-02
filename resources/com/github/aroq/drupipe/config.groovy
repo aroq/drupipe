@@ -474,5 +474,5 @@ params = [
 //                '${action.params.command}',
 //            ],
 //        ],
-    ],
+//    ]
 ]
