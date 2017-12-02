@@ -72,7 +72,7 @@ class ConfigProviderProject extends ConfigProviderBase {
             utils.debugLog(drupipeConfig.config, projectConfig, 'Project config', [debugMode: 'json'], [], true)
 
             if (projectConfig.config_version && projectConfig.config_version > 1 || controller.configVersion() > 1) {
-                result = utils.merge(controller.drupipeConfig.config_version2(), result)
+                projectConfig = utils.merge(controller.drupipeConfig.config_version2(), projectConfig)
             }
 
 //            script.sshagent([drupipeConfig.config.credentialsId]) {
