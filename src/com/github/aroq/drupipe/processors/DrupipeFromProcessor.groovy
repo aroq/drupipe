@@ -45,7 +45,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     def getUnprocessedContext() {
         def filePath = '.unipipe/temp/context_unprocessed.yaml'
-        utils.drupipeReadYaml(filePath)
+        utils.yamlFileLoad(filePath)
     }
 
     def processFromItem(context, result, String from, String parent, String key = 'params') {
@@ -73,6 +73,9 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                 }
                 else {
                     tempContext = context
+                }
+                if (!tempContext) {
+                    throw new Exception("No tempContext is defined.")
                 }
 
                 def fromObject = collectKeyParamsFromJsonPath(tempContext, from, key)

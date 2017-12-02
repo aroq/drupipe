@@ -582,10 +582,6 @@ def stripContext(context) {
     context
 }
 
-def drupipeReadYaml(filePath) {
-    readYaml(file: filePath)
-}
-
 def drupipeExecutionMode() {
     'jenkins'
 }
@@ -600,18 +596,18 @@ def readGroovyConfig(filePath) {
     groovyConfig(text)
 }
 
-def groovyFileLoad(params) {
+def groovyFileLoad(configFileName) {
     def result = [:]
-    if (params.configFileName && fileExists(params.configFileName)) {
-        result = readGroovyConfig(params.configFileName)
+    if (configFileName && fileExists(configFileName)) {
+        result = readGroovyConfig(configFileName)
     }
     serializeAndDeserialize(result)
 }
 
-def yamlFileLoad(params) {
+def yamlFileLoad(configFileName) {
     def result = [:]
-    if (params.configFileName && fileExists(params.configFileName)) {
-        result = readYaml(file: params.configFileName)
+    if (configFileName && fileExists(configFileName)) {
+        result = readYaml(file: configFileName)
     }
     result
 }
