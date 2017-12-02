@@ -9,9 +9,9 @@ class ConfigProviderJob extends ConfigProviderBase {
             controller.archiveObjectJsonAndYaml(config, 'context_unprocessed')
 
             // Performed here as needed later for job processing.
+            utils.log "BEFORE ConfigProviderJob() .rupipeConfig.process()"
             controller.drupipeConfig.process()
-
-            utils.log "AFTER jobConfig() controller.drupipeConfig.process()"
+            utils.log "AFTER ConfigProviderJob() .rupipeConfig.process()"
 
             utils.jsonDump(config, config.jobs, 'CONFIG JOBS PROCESSED - BEFORE processJobs', true)
 
