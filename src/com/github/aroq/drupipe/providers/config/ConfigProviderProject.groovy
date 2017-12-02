@@ -207,7 +207,7 @@ class ConfigProviderProject extends ConfigProviderBase {
                         if (fileName != null) {
                             utils.debugLog(config, "Scenario file name: ${fileName} exists")
                             def scenarioConfig = mergeScenariosConfigs(context, script.readYaml(file: fileName), tempContext, scenarioSourceName)
-                            utils.debugLog(config, scenarioConfig, "Loaded scenario: ${scenarioSourceName}:${scenario.name} config")
+                            utils.log "Loaded scenario: ${scenarioSourceName}:${scenario.name} config"
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
                             utils.debugLog(config, scenariosConfig, "Scenarios config")
                         }
