@@ -29,7 +29,7 @@ class DrupipeConfig implements Serializable {
 
             config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
             utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
-            utils.debugLog(config, config.actions.Helm.apply, 'DrupipeConfig->config (Helm.apply action)', [debugMode: 'json'], [], true)
+            utils.debugLog(config, config.params.actions.Helm.apply, 'DrupipeConfig->config (Helm.apply action)', [debugMode: 'json'], [], true)
 
             // TODO: Perform SCM checkout only when really needed.
             this.script.checkout this.script.scm
