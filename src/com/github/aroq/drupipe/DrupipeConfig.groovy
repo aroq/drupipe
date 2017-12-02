@@ -18,23 +18,16 @@ class DrupipeConfig implements Serializable {
 
     DrupipeSourcesController drupipeSourcesController
 
-    @NonCPS
-    def groovyConfig(text) {
-        new HashMap<>(ConfigSlurper.newInstance(script.env.drupipeEnvironment).parse(text))
-    }
-
     def config(params, parent) {
         drupipeSourcesController = new DrupipeSourcesController(script: script, utils: utils, controller: controller)
         script.node('master') {
-//            utils.log "Executing pipeline"
-
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
             utils.dump(params, params, 'PIPELINE-PARAMS')
-            // Get config (context).
-//            script.drupipeAction([action: 'Config.perform', params: [jenkinsParams: params]], controller)
 
             config = groovyConfig(script.libraryResource('com/github/aroq/drupipe/config.groovy'))
             utils.serializeAndDeserialize(config)
+
+            utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
 
             // TODO: Perform SCM checkout only when really needed.
             this.script.checkout this.script.scm
@@ -139,8 +132,13 @@ class DrupipeConfig implements Serializable {
     }
 
     def config_version2() {
-        def result = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config_version2.yaml'))
-        utils.merge(result, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
+        script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config_version2.yaml'))
     }
+
+    @NonCPS
+    def groovyConfig(text) {
+        new HashMap<>(ConfigSlurper.newInstance(script.env.drupipeEnvironment).parse(text))
+    }
+
 
 }
