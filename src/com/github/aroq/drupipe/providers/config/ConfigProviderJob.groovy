@@ -37,7 +37,7 @@ class ConfigProviderJob extends ConfigProviderBase {
             }
         }
         else {
-            utils.log "ConfigProviderJob->provide: No config.jobs are defined"
+            throw new Exception("ConfigProviderJob->provide: No config.jobs are defined")
         }
         result
     }
