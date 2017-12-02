@@ -134,6 +134,7 @@ class DrupipeConfig implements Serializable {
     }
 
     def config_version2() {
+        utils.log "DrupipeConfig->config_version2()"
         script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config_version2.yaml'))
     }
 
