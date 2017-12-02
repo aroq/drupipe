@@ -57,6 +57,8 @@ class DrupipeSourcesController implements Serializable {
             sourcesList << loadedSources[source.name]
         }
 
+        utils.log "Source is added: ${source.name}"
+
         result
     }
 
@@ -75,6 +77,7 @@ class DrupipeSourcesController implements Serializable {
 //                        result = script.drupipeAction([action: 'YamlFileConfig.load', params: [configFileName: configFilePath]], controller)
                     }
                 }
+                utils.log "Source file is loaded: ${configFilePath}"
             }
             else {
                 script.echo "Config file doesn't exists: ${configFilePath}"

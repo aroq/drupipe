@@ -110,8 +110,8 @@ class ConfigProviderProject extends ConfigProviderBase {
         def uniconfIncludeKey = utils.deepGet(context, 'uniconf.keys.include')
         def uniconfSourcesKey = utils.deepGet(context, 'uniconf.keys.sources')
 
-//        utils.log "uniconfIncludeKey: ${uniconfIncludeKey}"
-//        utils.log "uniconfSourcesKey: ${uniconfSourcesKey}"
+        utils.log "uniconfIncludeKey: ${uniconfIncludeKey}"
+        utils.log "uniconfSourcesKey: ${uniconfSourcesKey}"
 
         if (config.containsKey('scenarios') && uniconfIncludeKey != 'scenarios') {
             config[uniconfIncludeKey] = config['scenarios']
@@ -171,7 +171,9 @@ class ConfigProviderProject extends ConfigProviderBase {
                                     mode: 'shell',
                                 ]
 
-                                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], controller)
+                                drupipeConfig.drupipeSourcesController.sourceAdd(source: sourceObject)
+
+//                                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], controller)
 //                                utils.log "Source added: ${scenarioSourceName}"
                             }
                         }
