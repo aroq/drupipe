@@ -14,13 +14,13 @@ class ConfigProviderJob extends ConfigProviderBase {
             }
 
             // Performed here as needed later for job processing.
-            utils.debugLog(drupipeConfig.config, drupipeConfig.config.jobs, 'ConfigProviderJob->provide() BEFORE controller.drupipeConfig.process()', [debugMode: 'json'], [], false)
+            utils.debugLog(drupipeConfig.config, drupipeConfig.config.jobs, 'ConfigProviderJob->provide() BEFORE controller.drupipeConfig.process()', [debugMode: 'json'], [], true)
             controller.drupipeConfig.process()
-            utils.debugLog(drupipeConfig.config, drupipeConfig.config.jobs, 'ConfigProviderJob->provide() AFTER controller.drupipeConfig.process()', [debugMode: 'json'], [], false)
+            utils.debugLog(drupipeConfig.config, drupipeConfig.config.jobs, 'ConfigProviderJob->provide() AFTER controller.drupipeConfig.process()', [debugMode: 'json'], [], true)
 
             drupipeConfig.config.jobs = processJobs(drupipeConfig.config.jobs)
 
-            utils.debugLog(drupipeConfig.config, drupipeConfig.config.jobs, 'ConfigProviderJob->provide() AFTER processJobs()', [debugMode: 'json'], [], false)
+            utils.debugLog(drupipeConfig.config, drupipeConfig.config.jobs, 'ConfigProviderJob->provide() AFTER processJobs()', [debugMode: 'json'], [], true)
 
             drupipeConfig.config.job = (drupipeConfig.config.env.JOB_NAME).split('/').drop(1).inject(drupipeConfig.config, { obj, prop ->
                 obj.jobs[prop]
