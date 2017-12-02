@@ -29,6 +29,7 @@ class ConfigProviderJob extends ConfigProviderBase {
             })
 
             if (drupipeConfig.config.job) {
+                utils.log "CONFIG JOB is defined"
                 if (drupipeConfig.config.job.context) {
                     drupipeConfig.config = utils.merge(drupipeConfig.config, drupipeConfig.config.job.context)
                 }
