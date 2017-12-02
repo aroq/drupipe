@@ -49,217 +49,217 @@ params = [
         // TODO: remove it after configs update.
         dockerImage: 'aroq/drudock:1.4.0',
     ],
-    action: [
-        // Default action params (merged to all actions params).
-        __default: [
-            action_timeout: 120,
-            store_result: true,
-            dump_result: true,
-            store_action_params: true,
-            store_result_key: 'context.results.action.${action.name}_${action.methodName}',
-            post_process: [
-                result: [
-                    type: 'result',
-                    source: 'result',
-                    destination: '${action.params.store_result_key}',
-                ],
-            ],
-            store_action_params_key: 'actions.${action.name}_${action.methodName}',
-            shell_bash_login: true,
-            return_stdout: false,
-        ],
-        // TODO: add params subsections (that will be containerized inside common config).
-        Config: [
-            post_process: [
-                context: [
-                    type: 'result',
-                    source: 'result',
-                    destination: 'context',
-                ],
-            ],
-        ],
-        Config_perform: [
-            post_process: [
-            ],
-        ],
-        Config_envConfig: [
-        ],
-        JobDslSeed: [
-        ],
-        Config_mothershipConfig: [
-            mothershipConfigFile: 'mothership.config',
-            post_process: [
-                result: [
-                    type: 'result',
-                    source: 'result.configRepo',
-                    destination: 'context.configRepo',
-                ],
-            ],
-        ],
-        Config_projectConfig: [
-        ],
-        Source_add: [
-            post_process: [
-                context: [
-                    type: 'result',
-                    source: 'result',
-                    destination: 'context',
-                ],
-            ],
-        ],
-        YamlFileConfig: [
-        ],
-        GroovyFileConfig: [
-        ],
-        Behat: [
-            masterPath: 'docroot/master',
-            masterRelativePath: '..',
-            behatExecutable: 'bin/behat',
-            pathToEnvironmentConfig: 'code/common',
-            workspaceRelativePath: '../../..',
-            behat_args: '--format=pretty --out=std --format=junit',
-        ],
-        Terraform: [
-            infraSourceName: 'infra-config',
-            shell_bash_login: false,
-        ],
-        Drush: [
-            return_stdout: true,
-        ],
-        DrushFeaturesList: [
-            return_stdout: true,
-        ],
-        Docman: [
-            docmanJsonConfigFile: 'config.json',
-            build_type: 'git_target',
-        ],
-        Docman_stripedBuild: [
-            build_type: 'striped',
-            state: 'stable',
-        ],
-        Docman_releaseBuild: [
-            state: 'stable',
-        ],
-        Gitlab_acceptMR: [
-            message: 'MR merged as pipeline was executed successfully.',
-        ],
-        // TODO: add private (that will not go into common config) params section.
-        Publish_junit: [
-            reportsPath: 'reports/*.xml'
-        ],
-        JobDslSeed_perform: [
-            removedJobAction: 'DELETE',
-            removedViewAction: 'DELETE',
-            lookupStrategy: 'SEED_JOB',
-            additionalClasspath: ['.unipipe/library/src'],
-            // TODO: Need another way of providing dsl scripts.
-            jobsPattern: ['.unipipe/library/jobdsl/seed/*.groovy'],
-        ],
-        Druflow: [
-            druflowDir: 'druflow',
-            druflowRepo: 'https://github.com/aroq/druflow.git',
-            druflowGitReference: 'v0.1.3',
-        ],
-        Druflow_operations: [
-            propertiesFile: 'docroot/master/version.properties',
-            executeCommand: 'deployFlow',
-        ],
-        Druflow_deploy: [
-            propertiesFile: 'docroot/master/version.properties',
-            executeCommand: 'deployTag',
-        ],
-        Druflow_deployFlow: [
-            propertiesFile: 'docroot/master/version.properties',
-            executeCommand: 'deployFlow',
-        ],
-        Druflow_copySite: [
-            executeCommand: 'dbCopyAC',
-        ],
-        Druflow_dbBackupSite: [
-            executeCommand: 'dbBackupSite',
-        ],
-        Druflow_getGitRepo: [
-            executeCommand: 'gitGetRepo',
-        ],
-        Ansible: [
-            playbooksDir: '.unipipe/library/ansible',
-            playbook: 'deployWithAnsistrano.yml',
-            playbookParams: [
-                ansistrano_deploy_via: 'rsync',
-            ],
-        ],
-        Ansible_deployWithGit: [
-            playbook: 'deployWithGit.yml',
-        ],
-        Ansible_deployWithAnsistrano: [
-            playbook: 'deployWithAnsistrano.yml',
-            playbookParams: [
-                ansistrano_deploy_via: 'rsync',
-                ansistrano_deploy_from: 'docroot/master',
-            ],
-        ],
-        Common_confirm: [
-            timeToConfirm: 60,
-        ],
-        PipelineController: [
-            buildHandler: [
-                method: 'build',
-            ],
-            deployHandler: [
-                method: 'deploy',
-            ],
-            artifactHandler: [
-                handler: 'GitArtifact',
-                method: 'retrieve',
-            ],
-            operationsHandler: [
-                method: 'operations',
-            ],
-        ],
-        GitArtifact: [
-            dir: 'artifacts',
-            repoDirName: 'master',
-        ],
-        Git: [
-            singleBranch: true,
-            depth: 1,
-        ],
-        YamlFileHandler: [
-            deployFile: 'unipipe.y*ml',
-        ],
-        GCloud: [
-            debugEnabled: true,
-            dump_result: true,
-            executable: 'gcloud',
-            kubectl_config_file: '.kubeconfig',
-            env: [
-                KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
-            ],
-            access_key_file_id: '',
-            shell_bash_login: false,
-            credentials: [
-                secret_values_file: [
-                    type: 'file',
-                    id: '${action.params.access_key_file_id}',
-                ],
-            ],
-            compute_zone: '',
-            project_name: '',
-            cluster_name: '',
-        ],
-        // Examples of overriding command with jenkins params:
-        // HELM_EXECUTABLE: test
-        // HELM_APPLY_EXECUTABLE: test
-        // HELM_APPLY_HELM_COMMAND: test
-        Jenkins: [
-            shell_bash_login: false,
-        ],
-        Jenkins_build: [
-            shell_bash_login: false,
-            jenkins_user_token_file: '',
-            jenkins_address: '',
-            jenkins_user_token: '',
-        ],
+//    action: [
+//        // Default action params (merged to all actions params).
+//        __default: [
+//            action_timeout: 120,
+//            store_result: true,
+//            dump_result: true,
+//            store_action_params: true,
+//            store_result_key: 'context.results.action.${action.name}_${action.methodName}',
+//            post_process: [
+//                result: [
+//                    type: 'result',
+//                    source: 'result',
+//                    destination: '${action.params.store_result_key}',
+//                ],
+//            ],
+//            store_action_params_key: 'actions.${action.name}_${action.methodName}',
+//            shell_bash_login: true,
+//            return_stdout: false,
+//        ],
+//        // TODO: add params subsections (that will be containerized inside common config).
+//        Config: [
+//            post_process: [
+//                context: [
+//                    type: 'result',
+//                    source: 'result',
+//                    destination: 'context',
+//                ],
+//            ],
+//        ],
+//        Config_perform: [
+//            post_process: [
+//            ],
+//        ],
+//        Config_envConfig: [
+//        ],
+//        JobDslSeed: [
+//        ],
+//        Config_mothershipConfig: [
+//            mothershipConfigFile: 'mothership.config',
+//            post_process: [
+//                result: [
+//                    type: 'result',
+//                    source: 'result.configRepo',
+//                    destination: 'context.configRepo',
+//                ],
+//            ],
+//        ],
+//        Config_projectConfig: [
+//        ],
+//        Source_add: [
+//            post_process: [
+//                context: [
+//                    type: 'result',
+//                    source: 'result',
+//                    destination: 'context',
+//                ],
+//            ],
+//        ],
+//        YamlFileConfig: [
+//        ],
+//        GroovyFileConfig: [
+//        ],
+//        Behat: [
+//            masterPath: 'docroot/master',
+//            masterRelativePath: '..',
+//            behatExecutable: 'bin/behat',
+//            pathToEnvironmentConfig: 'code/common',
+//            workspaceRelativePath: '../../..',
+//            behat_args: '--format=pretty --out=std --format=junit',
+//        ],
+//        Terraform: [
+//            infraSourceName: 'infra-config',
+//            shell_bash_login: false,
+//        ],
+//        Drush: [
+//            return_stdout: true,
+//        ],
+//        DrushFeaturesList: [
+//            return_stdout: true,
+//        ],
+//        Docman: [
+//            docmanJsonConfigFile: 'config.json',
+//            build_type: 'git_target',
+//        ],
+//        Docman_stripedBuild: [
+//            build_type: 'striped',
+//            state: 'stable',
+//        ],
+//        Docman_releaseBuild: [
+//            state: 'stable',
+//        ],
+//        Gitlab_acceptMR: [
+//            message: 'MR merged as pipeline was executed successfully.',
+//        ],
+//        // TODO: add private (that will not go into common config) params section.
+//        Publish_junit: [
+//            reportsPath: 'reports/*.xml'
+//        ],
+//        JobDslSeed_perform: [
+//            removedJobAction: 'DELETE',
+//            removedViewAction: 'DELETE',
+//            lookupStrategy: 'SEED_JOB',
+//            additionalClasspath: ['.unipipe/library/src'],
+//            // TODO: Need another way of providing dsl scripts.
+//            jobsPattern: ['.unipipe/library/jobdsl/seed/*.groovy'],
+//        ],
+//        Druflow: [
+//            druflowDir: 'druflow',
+//            druflowRepo: 'https://github.com/aroq/druflow.git',
+//            druflowGitReference: 'v0.1.3',
+//        ],
+//        Druflow_operations: [
+//            propertiesFile: 'docroot/master/version.properties',
+//            executeCommand: 'deployFlow',
+//        ],
+//        Druflow_deploy: [
+//            propertiesFile: 'docroot/master/version.properties',
+//            executeCommand: 'deployTag',
+//        ],
+//        Druflow_deployFlow: [
+//            propertiesFile: 'docroot/master/version.properties',
+//            executeCommand: 'deployFlow',
+//        ],
+//        Druflow_copySite: [
+//            executeCommand: 'dbCopyAC',
+//        ],
+//        Druflow_dbBackupSite: [
+//            executeCommand: 'dbBackupSite',
+//        ],
+//        Druflow_getGitRepo: [
+//            executeCommand: 'gitGetRepo',
+//        ],
+//        Ansible: [
+//            playbooksDir: '.unipipe/library/ansible',
+//            playbook: 'deployWithAnsistrano.yml',
+//            playbookParams: [
+//                ansistrano_deploy_via: 'rsync',
+//            ],
+//        ],
+//        Ansible_deployWithGit: [
+//            playbook: 'deployWithGit.yml',
+//        ],
+//        Ansible_deployWithAnsistrano: [
+//            playbook: 'deployWithAnsistrano.yml',
+//            playbookParams: [
+//                ansistrano_deploy_via: 'rsync',
+//                ansistrano_deploy_from: 'docroot/master',
+//            ],
+//        ],
+//        Common_confirm: [
+//            timeToConfirm: 60,
+//        ],
+//        PipelineController: [
+//            buildHandler: [
+//                method: 'build',
+//            ],
+//            deployHandler: [
+//                method: 'deploy',
+//            ],
+//            artifactHandler: [
+//                handler: 'GitArtifact',
+//                method: 'retrieve',
+//            ],
+//            operationsHandler: [
+//                method: 'operations',
+//            ],
+//        ],
+//        GitArtifact: [
+//            dir: 'artifacts',
+//            repoDirName: 'master',
+//        ],
+//        Git: [
+//            singleBranch: true,
+//            depth: 1,
+//        ],
+//        YamlFileHandler: [
+//            deployFile: 'unipipe.y*ml',
+//        ],
+//        GCloud: [
+//            debugEnabled: true,
+//            dump_result: true,
+//            executable: 'gcloud',
+//            kubectl_config_file: '.kubeconfig',
+//            env: [
+//                KUBECONFIG: '${context.drupipe_working_dir}/${action.params.kubectl_config_file}'
+//            ],
+//            access_key_file_id: '',
+//            shell_bash_login: false,
+//            credentials: [
+//                secret_values_file: [
+//                    type: 'file',
+//                    id: '${action.params.access_key_file_id}',
+//                ],
+//            ],
+//            compute_zone: '',
+//            project_name: '',
+//            cluster_name: '',
+//        ],
+//        // Examples of overriding command with jenkins params:
+//        // HELM_EXECUTABLE: test
+//        // HELM_APPLY_EXECUTABLE: test
+//        // HELM_APPLY_HELM_COMMAND: test
+//        Jenkins: [
+//            shell_bash_login: false,
+//        ],
+//        Jenkins_build: [
+//            shell_bash_login: false,
+//            jenkins_user_token_file: '',
+//            jenkins_address: '',
+//            jenkins_user_token: '',
+//        ],
 //        Helm: [
 //            executable: 'helm',
 //            chart_name: '', // HELM_CHART_NAME in Jenkins params.
