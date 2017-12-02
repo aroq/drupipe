@@ -1,8 +1,5 @@
 package com.github.aroq.drupipe.providers.config
 
-import com.github.aroq.drupipe.processors.DrupipeProcessor
-import com.github.aroq.drupipe.processors.DrupipeProcessorsController
-
 class ConfigProviderJob extends ConfigProviderBase {
 
     def provide() {

@@ -18,6 +18,8 @@ class ConfigProviderMothership extends ConfigProviderBase {
                 configType: 'groovy',
                 configPath: 'mothership.config',
             )
+            utils.debugLog(drupipeConfig.config, result, 'mothershipConfig: result', [debugMode: 'json'], [], true)
+
 //            this.script.drupipeAction([action: "Source.add", params: [credentialsId: drupipeConfig.config.env.credentialsId, source: sourceObject]], controller)
 
 //            def providers = [
@@ -38,6 +40,7 @@ class ConfigProviderMothership extends ConfigProviderBase {
 //                ]
 //            ]
 //            result = controller.executePipelineActionList(providers)
+
             def mothershipConfig = getMothershipConfigFile(result)
             utils.debugLog(drupipeConfig.config, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], false)
             def mothershipServers = getMothershipServersFile(result)
