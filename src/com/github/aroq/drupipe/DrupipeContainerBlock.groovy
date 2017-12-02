@@ -37,11 +37,11 @@ class DrupipeContainerBlock extends DrupipeBase {
             def actionWrapper = [
                 name: action.name,
                 methodName: action.methodName,
-                configVersion: action.configVersion,
+//                configVersion: action.configVersion,
             ]
             action.remove('name')
             action.remove('methodName')
-            action.remove('configVersion')
+//            action.remove('configVersion')
 
             controller.utils.debugLog(controller.context, actionWrapper, 'ACTION WRAPPER', [debugMode: 'json'], [], false)
             DrupipeActionWrapper drupipeActionWrapper = new DrupipeActionWrapper(actionWrapper)

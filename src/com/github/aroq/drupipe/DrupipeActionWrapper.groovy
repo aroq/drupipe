@@ -23,7 +23,7 @@ class DrupipeActionWrapper implements Serializable {
 
     def utils
 
-    int configVersion = 1
+//    int configVersion = 1
 
     String getFullName() {
         "${this.name}.${this.methodName}"
@@ -32,12 +32,12 @@ class DrupipeActionWrapper implements Serializable {
     def execute() {
         utils = pipeline.utils
 
-        if (this.name != 'Config' && pipeline.configVersion() == 2) {
-            configVersion = 2
-        }
-        else {
-            configVersion = 1
-        }
+//        if (this.name != 'Config' && pipeline.configVersion() == 2) {
+//            configVersion = 2
+//        }
+//        else {
+//            configVersion = 1
+//        }
 
         this.script = pipeline.script
 
@@ -61,17 +61,17 @@ class DrupipeActionWrapper implements Serializable {
             def actionParams = [:]
             def defaultActionParams = [:]
 
-            if (configVersion == 1) {
-                utils.log("Action config version == 1")
-                for (actionName in ['__default', this.name, this.name + '_' + this.methodName]) {
-                    if (pipeline.context && pipeline.context.params && pipeline.context.params.action && actionName in pipeline.context.params.action) {
-                        defaultActionParams = utils.merge(defaultActionParams, pipeline.context.params.action[actionName])
-                        utils.debugLog(defaultActionParams, defaultActionParams, "defaultActionParams after merge from ${actionName} action CONFIG", [debugMode: 'json'], [], this.params && this.params.debugEnabled)
-                    }
-                }
-            }
-            else if (configVersion == 2) {
-                utils.log("Action config version == 2")
+//            if (configVersion == 1) {
+//                utils.log("Action config version == 1")
+//                for (actionName in ['__default', this.name, this.name + '_' + this.methodName]) {
+//                    if (pipeline.context && pipeline.context.params && pipeline.context.params.action && actionName in pipeline.context.params.action) {
+//                        defaultActionParams = utils.merge(defaultActionParams, pipeline.context.params.action[actionName])
+//                        utils.debugLog(defaultActionParams, defaultActionParams, "defaultActionParams after merge from ${actionName} action CONFIG", [debugMode: 'json'], [], this.params && this.params.debugEnabled)
+//                    }
+//                }
+//            }
+//            else if (configVersion == 2) {
+//                utils.log("Action config version == 2")
                 if (this.params && this.params.containsKey('fromProcessed') && this.params.fromProcessed) {
                     utils.log("Action was processed with 'from' in ${this.params.fromProcessed_mode}")
                 }
@@ -80,10 +80,10 @@ class DrupipeActionWrapper implements Serializable {
                     this.params.from = '.params.actions.' + name + '.' + methodName
                     this.params = pipeline.drupipeConfig.processItem(this.params, 'actions', 'params', 'execute')
                 }
-            }
-            else {
-                utils.log("Action config version is not set.")
-            }
+//            }
+//            else {
+//                utils.log("Action config version is not set.")
+//            }
 
             if (!this.params) {
                 this.params = [:]
