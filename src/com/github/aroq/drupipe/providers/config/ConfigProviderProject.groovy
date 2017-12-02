@@ -69,7 +69,7 @@ class ConfigProviderProject extends ConfigProviderBase {
                 ))
             }
 
-            utils.debugLog(drupipeConfig.config, projectConfig, 'Project config')
+            utils.debugLog(drupipeConfig.config, projectConfig, 'Project config', [debugMode: 'json'], [], true)
 
 //            script.sshagent([drupipeConfig.config.credentialsId]) {
 //                projectConfig = controller.executePipelineActionList(providers)
