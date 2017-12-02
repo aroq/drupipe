@@ -7,6 +7,11 @@ class ConfigProviderJob extends ConfigProviderBase {
         if (drupipeConfig.config.jobs) {
             controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'context_unprocessed')
 
+            if (drupipeConfig.config.config_version > 1) {
+                utils.log "Initialising drupipeProcessorsController"
+                controller.drupipeProcessorsController = controller.drupipeConfig.initProcessorsController(this, drupipeConfig.config.processors)
+            }
+
             // Performed here as needed later for job processing.
             utils.jsonDump(drupipeConfig.config, drupipeConfig.config, 'CONFIG - BEFORE processJobs', true)
             controller.drupipeConfig.process()

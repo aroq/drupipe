@@ -35,10 +35,6 @@ class ConfigProviderMothership extends ConfigProviderBase {
             result = utils.merge(result, [jenkinsServers: mothershipServers])
             utils.debugLog(drupipeConfig.config, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], true)
 
-            if (result.config_version > 1) {
-                utils.log "Initialising drupipeProcessorsController"
-                controller.drupipeProcessorsController = controller.drupipeConfig.initProcessorsController(this, drupipeConfig.config.processors)
-            }
         }
 
         result
