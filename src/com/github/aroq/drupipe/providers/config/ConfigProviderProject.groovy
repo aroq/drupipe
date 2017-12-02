@@ -77,11 +77,6 @@ class ConfigProviderProject extends ConfigProviderBase {
                 utils.debugLog(drupipeConfig.config, projectConfig, 'Project config2', [debugMode: 'json'], [], true)
             }
 
-//            script.sshagent([drupipeConfig.config.credentialsId]) {
-//                projectConfig = controller.executePipelineActionList(providers)
-//                utils.debugLog(drupipeConfig.config, projectConfig, 'Project config')
-//            }
-
             def projectConfigContext = utils.merge(drupipeConfig.config, projectConfig)
 
             def sources = [:]

@@ -9,6 +9,10 @@ def log(String message) {
     echo message
 }
 
+def debug(String message) {
+    echo message
+}
+
 def colorEcho(message, color = null) {
     if (!color) {
         color = 'green'
