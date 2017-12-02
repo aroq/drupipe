@@ -6,7 +6,7 @@ import com.github.aroq.drupipe.providers.config.ConfigProvider
 
 class DrupipeConfig implements Serializable {
 
-    def controller
+    DrupipeController controller
 
     def script
 
@@ -23,11 +23,9 @@ class DrupipeConfig implements Serializable {
         script.node('master') {
             this.script.sh("mkdir -p .unipipe")
             this.script.sh("mkdir -p .unipipe/temp")
+
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
             utils.dump(params, params, 'PIPELINE-PARAMS')
-
-//            config = groovyConfig(script.libraryResource('com/github/aroq/drupipe/config.groovy'))
-//            utils.serializeAndDeserialize(config)
 
             config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
             utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
