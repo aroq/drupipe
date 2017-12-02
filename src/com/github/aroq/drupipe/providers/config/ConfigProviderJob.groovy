@@ -2,6 +2,7 @@ package com.github.aroq.drupipe.providers.config
 
 class ConfigProviderJob extends ConfigProviderBase {
 
+    // TODO: check if this is needed as Config Provider or Processor.
     def provide() {
         def result = [:]
         if (drupipeConfig.config.jobs) {
@@ -23,14 +24,15 @@ class ConfigProviderJob extends ConfigProviderBase {
 
             utils.jsonDump(drupipeConfig.config, drupipeConfig.config.jobs, 'CONFIG JOBS PROCESSED - AFTER processJobs', true)
 
-            result.job = (drupipeConfig.config.env.JOB_NAME).split('/').drop(1).inject(drupipeConfig.config, { obj, prop ->
+            drupipeConfig.config.job = (drupipeConfig.config.env.JOB_NAME).split('/').drop(1).inject(drupipeConfig.config, { obj, prop ->
                 obj.jobs[prop]
             })
 
-            if (result.job) {
-                if (result.job.context) {
-                    result = utils.merge(result, result.job.context)
+            if (drupipeConfig.config.job) {
+                if (drupipeConfig.config.job.context) {
+                    drupipeConfig.config = utils.merge(drupipeConfig.config, drupipeConfig.config.job.context)
                 }
+                utils.jsonDump(drupipeConfig.config, drupipeConfig.config,'CONFIG JOBS PROCESSED - AFTER processJobs', true)
             }
             else {
                 throw new Exception("ConfigProviderJob->provide: No job is defined.")
@@ -39,7 +41,7 @@ class ConfigProviderJob extends ConfigProviderBase {
         else {
             throw new Exception("ConfigProviderJob->provide: No config.jobs are defined")
         }
-        result
+       drupipeConfig.config
     }
 
     def processJobs(jobs, parentParams = [:]) {
