@@ -32,9 +32,12 @@ class ConfigProviderJob extends ConfigProviderBase {
                     result = utils.merge(result, result.job.context)
                 }
             }
+            else {
+                throw new Exception("ConfigProviderJob->provide: No job is defined.")
+            }
         }
         else {
-            utils.log "Config.jobConfig() -> No config.jobs are defined"
+            utils.log "ConfigProviderJob->provide: No config.jobs are defined"
         }
         result
     }
