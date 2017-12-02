@@ -94,12 +94,11 @@ class ConfigProviderProject extends ConfigProviderBase {
                 utils.debugLog(projectConfig, sources, 'UNIPIPE_SOURCES sources', ['debugMode': 'json'], [], true)
             }
 
-            def result = mergeScenariosConfigs(projectConfigContext, projectConfig, [:], 'project')
+            projectConfig = mergeScenariosConfigs(projectConfigContext, projectConfig, [:], 'project')
 
-            utils.debugLog(result, 'Project config with scenarios loaded')
-            utils.debugLog(drupipeConfig.config, result, 'Project config after mergeScenariosConfigs', [debugMode: 'json'], [], true)
-            result
+            utils.debugLog(drupipeConfig.config, projectConfig, 'Project config after mergeScenariosConfigs', [debugMode: 'json'], [], true)
         }
+        projectConfig
     }
 
     def mergeScenariosConfigs(context, config, tempContext = [:], currentScenarioSourceName = null) {
