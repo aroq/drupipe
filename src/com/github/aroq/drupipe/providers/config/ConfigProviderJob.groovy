@@ -3,23 +3,22 @@ package com.github.aroq.drupipe.providers.config
 class ConfigProviderJob extends ConfigProviderBase {
 
     def provide() {
-        def config = drupipeConfig.config
         def result = [:]
-        if (config.jobs) {
-            controller.archiveObjectJsonAndYaml(config, 'context_unprocessed')
+        if (drupipeConfig.config.jobs) {
+            controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'context_unprocessed')
 
             // Performed here as needed later for job processing.
-            utils.log "BEFORE ConfigProviderJob() .rupipeConfig.process()"
+            utils.jsonDump(drupipeConfig.config, drupipeConfig.config, 'CONFIG - BEFORE processJobs', true)
             controller.drupipeConfig.process()
-            utils.log "AFTER ConfigProviderJob() .rupipeConfig.process()"
+            utils.log "AFTER ConfigProviderJob() .DrupipeConfig.process()"
 
-            utils.jsonDump(config, config.jobs, 'CONFIG JOBS PROCESSED - BEFORE processJobs', true)
+            utils.jsonDump(drupipeConfig.config, drupipeConfig.config.jobs, 'CONFIG JOBS PROCESSED - BEFORE processJobs', true)
 
-            config.jobs = processJobs(config.jobs)
+            drupipeConfig.config.jobs = processJobs(drupipeConfig.config.jobs)
 
-            utils.jsonDump(config, config.jobs, 'CONFIG JOBS PROCESSED - AFTER processJobs', true)
+            utils.jsonDump(drupipeConfig.config, drupipeConfig.config.jobs, 'CONFIG JOBS PROCESSED - AFTER processJobs', true)
 
-            result.job = (config.env.JOB_NAME).split('/').drop(1).inject(config, { obj, prop ->
+            result.job = (drupipeConfig.config.env.JOB_NAME).split('/').drop(1).inject(drupipeConfig.config, { obj, prop ->
                 obj.jobs[prop]
             })
 
