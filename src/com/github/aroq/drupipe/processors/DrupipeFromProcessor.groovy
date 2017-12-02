@@ -65,8 +65,8 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                 if (mode == 'config') {
                     if (utils.drupipeExecutionMode() == 'jenkins') {
                         tempContext = getUnprocessedContext()
-                        utils.debugLog(context, tempContext, 'tempContext', [debugMode: 'json'], [], true)
-                        throw new Exception("Die.")
+//                        utils.debugLog(context, tempContext, 'tempContext', [debugMode: 'json'], [], true)
+//                        throw new Exception("Die.")
                     }
                     // For local testing.
                     else {
