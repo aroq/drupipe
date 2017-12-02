@@ -20,39 +20,18 @@ class ConfigProviderMothership extends ConfigProviderBase {
             )
             utils.debugLog(drupipeConfig.config, result, 'mothershipConfig: result', [debugMode: 'json'], [], true)
 
-//            this.script.drupipeAction([action: "Source.add", params: [credentialsId: drupipeConfig.config.env.credentialsId, source: sourceObject]], controller)
-
-//            def providers = [
-//                [
-//                    action: 'Source.add',
-//                    params: [
-//                        source: sourceObject,
-//                        credentialsId: drupipeConfig.config.env.credentialsId,
-//                    ],
-//                ],
-//                [
-//                    action: 'Source.loadConfig',
-//                    params: [
-//                        sourceName: 'mothership',
-//                        configType: 'groovy',
-//                        configPath: 'mothership.config',
-//                    ]
-//                ]
-//            ]
-//            result = controller.executePipelineActionList(providers)
-
             def mothershipConfig = getMothershipConfigFile(result)
-            utils.debugLog(drupipeConfig.config, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], false)
+            utils.debugLog(drupipeConfig.config, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], true)
             def mothershipServers = getMothershipServersFile(result)
-            utils.debugLog(drupipeConfig.config, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], false)
+            utils.debugLog(drupipeConfig.config, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], true)
 
             def mothershipProjectConfig = mothershipConfig[drupipeConfig.config.jenkinsFolderName]
             script.echo "mothershipProjectConfig: ${mothershipProjectConfig}"
 
             result = utils.merge(result, mothershipProjectConfig)
-            utils.debugLog(drupipeConfig.config, result, 'mothershipServer result after merge', [debugMode: 'json'], [], false)
+            utils.debugLog(drupipeConfig.config, result, 'mothershipServer result after merge', [debugMode: 'json'], [], true)
             result = utils.merge(result, [jenkinsServers: mothershipServers])
-            utils.debugLog(drupipeConfig.config, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], false)
+            utils.debugLog(drupipeConfig.config, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], true)
 
             if (result.config_version > 1) {
                 utils.log "Initialising drupipeProcessorsController"
