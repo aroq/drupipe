@@ -10,11 +10,6 @@ uniconf:
   include:
     prefix: .params.
 
-processors:
-  - className: DrupipeFromProcessor
-    properties:
-      include_key: from
-
 jobs:
   seed:
     type: seed
