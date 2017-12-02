@@ -586,6 +586,16 @@ def drupipeExecutionMode() {
     'jenkins'
 }
 
+@NonCPS
+def groovyConfig(text) {
+    new HashMap<>(ConfigSlurper.newInstance(env.drupipeEnvironment).parse(text))
+}
+
+def readGroovyConfig(filePath) {
+    def text = readFile(filePath)
+    groovyConfig(text)
+}
+
 def groovyFileLoad(params) {
     def result = [:]
     if (params.configFileName && fileExists(params.configFileName)) {
