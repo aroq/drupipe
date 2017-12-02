@@ -13,9 +13,9 @@ class ConfigProviderJob extends ConfigProviderBase {
             controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'context_unprocessed')
 
             // Performed here as needed later for job processing.
-//            controller.drupipeConfig.process()
+            controller.drupipeConfig.process()
 
-//            drupipeConfig.config.jobs = processJobs(drupipeConfig.config.jobs)
+            drupipeConfig.config.jobs = processJobs(drupipeConfig.config.jobs)
 
 //            drupipeConfig.config.job = (drupipeConfig.config.env.JOB_NAME).split('/').drop(1).inject(drupipeConfig.config, { obj, prop ->
 //                obj.jobs[prop]
