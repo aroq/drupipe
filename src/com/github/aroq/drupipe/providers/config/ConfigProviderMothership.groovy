@@ -18,20 +18,22 @@ class ConfigProviderMothership extends ConfigProviderBase {
                 configType: 'groovy',
                 configPath: 'mothership.config',
             )
-            utils.debugLog(drupipeConfig.config, result, 'mothershipConfig: result', [debugMode: 'json'], [], true)
+            utils.debugLog(drupipeConfig.config, result, 'mothershipConfig: result', [debugMode: 'json'], [], false)
 
             def mothershipConfig = getMothershipConfigFile(result)
-            utils.debugLog(drupipeConfig.config, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], true)
+            utils.debugLog(drupipeConfig.config, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], false)
+
             def mothershipServers = getMothershipServersFile(result)
-            utils.debugLog(drupipeConfig.config, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], true)
+            utils.debugLog(drupipeConfig.config, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], false)
 
             def mothershipProjectConfig = mothershipConfig[drupipeConfig.config.jenkinsFolderName]
             script.echo "mothershipProjectConfig: ${mothershipProjectConfig}"
 
             result = utils.merge(result, mothershipProjectConfig)
-            utils.debugLog(drupipeConfig.config, result, 'mothershipServer result after merge', [debugMode: 'json'], [], true)
+            utils.debugLog(drupipeConfig.config, result, 'mothershipServer result after merge', [debugMode: 'json'], [], false)
+
             result = utils.merge(result, [jenkinsServers: mothershipServers])
-            utils.debugLog(drupipeConfig.config, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], true)
+            utils.debugLog(drupipeConfig.config, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], false)
 
             if (result.config_version > 1) {
                 utils.log "Initialising drupipeProcessorsController"
@@ -72,22 +74,17 @@ class ConfigProviderMothership extends ConfigProviderBase {
                 def file = script.readFile(projectsFile)
                 if (file) {
                     if (extension in ['yaml', 'yml']) {
-//                    echo "getMothershipConfigFile: load file: ${file}"
                         return script.readYaml(text: file).projects
-                    }
-                    else if (extension == 'json') {
-//                    echo "getMothershipConfigFile: load file: ${file}"
+                    } else if (extension == 'json') {
                         return script.readJSON(text: file).projects
                     }
                 }
             }
             else {
-                echo "getMothershipConfigFile: file: ${file} doesn't exist"
+                utils.log "getMothershipConfigFile: file doesn't exist"
             }
         }
         throw new Exception("getMothershipConfigFile: mothership config file not found.")
     }
-
-
 
 }

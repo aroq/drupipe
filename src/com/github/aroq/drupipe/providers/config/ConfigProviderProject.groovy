@@ -4,26 +4,29 @@ class ConfigProviderProject extends ConfigProviderBase {
 
     def provide() {
         utils.debugLog(drupipeConfig.config, drupipeConfig.config.configRepo,"projectConfig repo: ${drupipeConfig.config.configRepo}", [:], [], true)
+
         if (drupipeConfig.config.project_type == 'single') {
             def sourceObject = [
                 name  : 'project',
                 path  : drupipeConfig.config.config_dir,
                 type  : 'dir',
             ]
-            this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], controller)
+            drupipeConfig.drupipeSourcesController.sourceAdd(source: sourceObject)
+//            this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], controller)
         }
         else {
             if (drupipeConfig.config.configRepo) {
                 def sourceObject = [
                     name  : 'project',
-                    path  : config.projectConfigPath,
+                    path  : drupipeConfig.config.projectConfigPath,
                     type  : 'git',
-                    url   : config.configRepo,
+                    url   : drupipeConfig.config.configRepo,
                     branch: 'master',
                     mode  : 'shell',
                 ]
                 script.sshagent([drupipeConfig.config.credentialsId]) {
-                    this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], controller)
+                    drupipeConfig.drupipeSourcesController.sourceAdd(source: sourceObject)
+//                    this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], controller)
                 }
             }
         }
@@ -33,16 +36,14 @@ class ConfigProviderProject extends ConfigProviderBase {
 
             def providers = [
                 [
-                    action: 'Source.loadConfig',
-                    params: [
-                        sourceName: 'project',
-                        configType: 'groovy',
-                        configPath: drupipeConfig.config.projectConfigFile
-                    ]
-                ],
+                    sourceName: 'project',
+                    configType: 'groovy',
+                    configPath: drupipeConfig.config.projectConfigFile
+                ]
             ]
 
             def fileName = null
+            utils.debugLog(drupipeConfig.config, drupipeConfig.drupipeSourcesController.loadedSources, "loadedSources", [debugMode: 'json'], [], true)
             def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
             this.script.echo("PROJECTS SOURCE DIR: ${sourceDir}")
 
