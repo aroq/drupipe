@@ -586,4 +586,20 @@ def drupipeExecutionMode() {
     'jenkins'
 }
 
+def groovyFileLoad(params) {
+    def result = [:]
+    if (params.configFileName && fileExists(params.configFileName)) {
+        result = readGroovyConfig(params.configFileName)
+    }
+    serializeAndDeserialize(result)
+}
+
+def yamlFileLoad(params) {
+    def result = [:]
+    if (params.configFileName && fileExists(params.configFileName)) {
+        result = readYaml(file: params.configFileName)
+    }
+    result
+}
+
 return this
