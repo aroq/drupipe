@@ -17,8 +17,8 @@ class Kubectl extends BaseAction {
     def scale_down_up() {
         def name = action.pipeline.executeAction(action: 'Kubectl.get_replicaset_name').stdout
         script.echo "Replicaset name: ${name}"
-        action.pipeline.executeAction(action: 'Kubectl.scale_replicaset', params: [name: name, replicas: action.params.replicas_down])
-        action.pipeline.executeAction(action: 'Kubectl.scale_replicaset', params: [name: name, replicas: action.params.replicas_up])
+        action.pipeline.executeAction(action: 'Kubectl.scale_replicaset', params: [replicaset_name: name, replicas: action.params.replicas_down])
+        action.pipeline.executeAction(action: 'Kubectl.scale_replicaset', params: [replicaset_name: name, replicas: action.params.replicas_up])
     }
 
     def get_pod_name() {

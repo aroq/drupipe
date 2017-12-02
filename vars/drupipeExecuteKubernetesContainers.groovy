@@ -9,7 +9,7 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
 
     for (def i = 0; i < containers.size(); i++) {
         def container = containers[i]
-        controller.utils.debugLog(controller.context, container, 'CONTAINER TEMPLATE', [debugMode: 'json'], [], true)
+        controller.utils.debugLog(controller.context, container, 'CONTAINER TEMPLATE', [debugMode: 'json'], [], false)
         def containerName = container.name.replaceAll('\\.','-').replaceAll('_','-')
         if (!containerNames.contains(containerName)) {
             echo "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
