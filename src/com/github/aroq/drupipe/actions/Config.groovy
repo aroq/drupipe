@@ -17,8 +17,6 @@ class Config extends BaseAction {
             return
         }
 
-        this.script.sh("mkdir -p .unipipe")
-        this.script.sh("mkdir -p .unipipe/temp")
 
 
 

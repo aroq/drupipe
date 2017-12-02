@@ -1,3 +1,5 @@
+config_version: 1
+
 uniconf:
   keys:
     include: scenarios
@@ -13,5 +15,39 @@ uniconf:
     prefix: .params.
     separator: '|'
 
+environment: ''
+debugEnabled: false
+docrootDir: docroot
 docmanDir: docman
+projectConfigPath: .unipipe/config
+projectConfigFile: docroot.config
+containerMode: docker
+configSeedType: docman
+defaultDocmanImage: michaeltigr/zebra-build-php-drush-docman:latest
+logRotatorNumToKeep: 5
 drupipeDockerArgs: --user root:root --net=host
+
+config_providers_list: ['env', 'mothership', 'config', 'project', 'job']
+
+config_providers:
+  env:
+    class_name: ConfigProviderEnv
+  mothership:
+    class_name: ConfigProviderMothership
+  config:
+    class_name: ConfigProviderConfigFile
+  project:
+    class_name: ConfigProviderProject
+  job:
+    class_name: ConfigProviderJob
+
+params:
+  pipeline:
+    scripts_library:
+      url: https://github.com/aroq/drupipe.git
+      ref: master
+      type: branch
+  block:
+    nodeName: default
+    # TODO: remove it after configs update.
+    dockerImage: aroq/drudock:1.4.0

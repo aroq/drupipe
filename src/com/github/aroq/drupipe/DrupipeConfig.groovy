@@ -21,17 +21,21 @@ class DrupipeConfig implements Serializable {
     def config(params, parent) {
         drupipeSourcesController = new DrupipeSourcesController(script: script, utils: utils, controller: controller)
         script.node('master') {
+            this.script.sh("mkdir -p .unipipe")
+            this.script.sh("mkdir -p .unipipe/temp")
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
             utils.dump(params, params, 'PIPELINE-PARAMS')
 
-            config = groovyConfig(script.libraryResource('com/github/aroq/drupipe/config.groovy'))
-            utils.serializeAndDeserialize(config)
+//            config = groovyConfig(script.libraryResource('com/github/aroq/drupipe/config.groovy'))
+//            utils.serializeAndDeserialize(config)
 
+            config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
             utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
 
             // TODO: Perform SCM checkout only when really needed.
             this.script.checkout this.script.scm
 
+            // Get config from config providers.
             for (def i = 0; i < config.config_providers_list.size(); i++) {
                 def properties = [script: script, utils: utils, drupipeConfig: this, controller: controller]
                 def className = "com.github.aroq.drupipe.providers.config.${config.config_providers[config.config_providers_list[i]].class_name}"
@@ -40,7 +44,6 @@ class DrupipeConfig implements Serializable {
                     properties
                 ))
             }
-
             for (def i = 0; i < configProviders.size(); i++) {
                 ConfigProvider configProvider = configProviders[i]
                 config = utils.merge(config, configProvider.provide())
@@ -52,6 +55,7 @@ class DrupipeConfig implements Serializable {
                 config.params.action = utils.merge(config.params.action, config.defaultActionParams)
             }
 
+            // TODO: Refactor it.
             config.environmentParams = [:]
             if (config.environments) {
                 if (config.environment) {
