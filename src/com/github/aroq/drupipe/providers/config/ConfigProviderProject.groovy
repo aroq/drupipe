@@ -147,10 +147,10 @@ class ConfigProviderProject extends ConfigProviderBase {
                     if (
                     (scenariosConfig[uniconfSourcesKey] && scenariosConfig[uniconfSourcesKey].containsKey(scenarioSourceName))
                         || (tempContext[uniconfSourcesKey] && tempContext[uniconfSourcesKey].containsKey(scenarioSourceName))
-                        || config.loadedSources.containsKey(scenarioSourceName)
+                        || drupipeConfig.drupipeSourcesController.loadedSources.containsKey(scenarioSourceName)
                     )
                     {
-                        if (!config.loadedSources[scenarioSourceName]) {
+                        if (!drupipeConfig.drupipeSourcesController.loadedSources[scenarioSourceName]) {
                             utils.log "Adding source: ${scenarioSourceName}"
                             if (tempContext[uniconfSourcesKey].containsKey(scenarioSourceName)) {
                                 scenario.source = tempContext[uniconfSourcesKey][scenarioSourceName]
@@ -159,7 +159,7 @@ class ConfigProviderProject extends ConfigProviderBase {
                                 scenario.source = scenariosConfig[uniconfSourcesKey][scenarioSourceName]
                             }
 
-                            script.sshagent([config.credentialsId]) {
+                            script.sshagent([drupipeConfig.config.credentialsId]) {
                                 def sourceObject = [
                                     name: scenarioSourceName,
                                     type: 'git',
@@ -175,12 +175,12 @@ class ConfigProviderProject extends ConfigProviderBase {
                         }
                         else {
                             utils.debugLog(config, "Source: ${scenarioSourceName} already added")
-                            scenario.source = config.loadedSources[scenarioSourceName]
+                            scenario.source = drupipeConfig.drupipeSourcesController.loadedSources[scenarioSourceName]
                         }
 
                         def fileName = null
 
-                        def sourceDir = utils.sourceDir(config, scenarioSourceName)
+                        def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(config, scenarioSourceName)
 
                         def filesToCheck = [
                             "/.unipipe/scenarios/${scenario.name}/config.yaml",
