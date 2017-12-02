@@ -14,15 +14,15 @@ class ConfigProviderJob extends ConfigProviderBase {
             }
 
             // Performed here as needed later for job processing.
-            utils.jsonDump(drupipeConfig.config, drupipeConfig.config, 'CONFIG - BEFORE processJobs', true)
+            utils.jsonDump(drupipeConfig.config, drupipeConfig.config, 'CONFIG - BEFORE processJobs', false)
             controller.drupipeConfig.process()
             utils.log "AFTER ConfigProviderJob() .DrupipeConfig.process()"
 
-            utils.jsonDump(drupipeConfig.config, drupipeConfig.config.jobs, 'CONFIG JOBS PROCESSED - BEFORE processJobs', true)
+            utils.jsonDump(drupipeConfig.config, drupipeConfig.config.jobs, 'CONFIG JOBS PROCESSED - BEFORE processJobs', false)
 
             drupipeConfig.config.jobs = processJobs(drupipeConfig.config.jobs)
 
-            utils.jsonDump(drupipeConfig.config, drupipeConfig.config.jobs, 'CONFIG JOBS PROCESSED - AFTER processJobs', true)
+            utils.jsonDump(drupipeConfig.config, drupipeConfig.config.jobs, 'CONFIG JOBS PROCESSED - AFTER processJobs', false)
 
             drupipeConfig.config.job = (drupipeConfig.config.env.JOB_NAME).split('/').drop(1).inject(drupipeConfig.config, { obj, prop ->
                 obj.jobs[prop]
@@ -32,7 +32,7 @@ class ConfigProviderJob extends ConfigProviderBase {
                 if (drupipeConfig.config.job.context) {
                     drupipeConfig.config = utils.merge(drupipeConfig.config, drupipeConfig.config.job.context)
                 }
-                utils.jsonDump(drupipeConfig.config, drupipeConfig.config,'CONFIG JOBS PROCESSED - AFTER processJobs', true)
+                utils.jsonDump(drupipeConfig.config, drupipeConfig.config.job,'CONFIG JOB', true)
             }
             else {
                 throw new Exception("ConfigProviderJob->provide: No job is defined.")
