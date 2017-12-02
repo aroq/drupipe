@@ -28,43 +28,12 @@ class DrupipeController implements Serializable {
 
     DrupipeProcessorsController drupipeProcessorsController
 
-    def serializeObject(path, object, mode = 'yaml') {
-        if (object) {
-            if (script.fileExists(path)) {
-                script.sh("rm -f ${path}")
-            }
-            if (mode == 'yaml') {
-                script.writeYaml(file: path, data: object)
-            }
-            else if (mode == 'json') {
-                def outJson = groovy.json.JsonOutput.toJson(object)
-                script.writeFile file: path, text: outJson, encoding: 'UTF-8'
-            }
-        }
-    }
-
-    def archiveObject(path, object, mode = 'yaml') {
-        if (object) {
-            serializeObject(path, object, mode)
-            this.script.archiveArtifacts artifacts: path
-        }
-    }
-
-    def archiveObjectJsonAndYaml(object, String name, String prefixPath = '.unipipe/temp') {
-        archiveObject("${prefixPath}/${name}.yaml", object)
-        archiveObject("${prefixPath}/${name}.json", object, 'json')
-    }
-
-    def configVersion() {
-        drupipeConfig.configVersion()
-    }
-
     def init() {
         drupipeConfig = new DrupipeConfig(controller: this, script: script, utils: utils)
     }
 
     def configuration() {
-        drupipeConfig.config(params, this)
+        context = drupipeConfig.config(params, this)
     }
 
     def execute(body = null) {
@@ -410,5 +379,37 @@ class DrupipeController implements Serializable {
     def executeAction(action) {
         (processPipelineAction(action)).execute()
     }
+
+    def serializeObject(path, object, mode = 'yaml') {
+        if (object) {
+            if (script.fileExists(path)) {
+                script.sh("rm -f ${path}")
+            }
+            if (mode == 'yaml') {
+                script.writeYaml(file: path, data: object)
+            }
+            else if (mode == 'json') {
+                def outJson = groovy.json.JsonOutput.toJson(object)
+                script.writeFile file: path, text: outJson, encoding: 'UTF-8'
+            }
+        }
+    }
+
+    def archiveObject(path, object, mode = 'yaml') {
+        if (object) {
+            serializeObject(path, object, mode)
+            this.script.archiveArtifacts artifacts: path
+        }
+    }
+
+    def archiveObjectJsonAndYaml(object, String name, String prefixPath = '.unipipe/temp') {
+        archiveObject("${prefixPath}/${name}.yaml", object)
+        archiveObject("${prefixPath}/${name}.json", object, 'json')
+    }
+
+    def configVersion() {
+        drupipeConfig.configVersion()
+    }
+
 
 }
