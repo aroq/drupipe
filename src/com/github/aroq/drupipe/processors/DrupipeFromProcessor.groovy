@@ -123,6 +123,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def process(context, obj, parent, key = 'params', mode = 'config') {
+        utils.log "DrupipeFromProcessor->processItem"
         this.mode = mode
         def result = obj
         if (obj.containsKey(this.include_key)) {
