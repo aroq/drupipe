@@ -97,7 +97,7 @@ class ConfigProviderProject extends ConfigProviderBase {
             def result = mergeScenariosConfigs(projectConfigContext, projectConfig, [:], 'project')
 
             utils.debugLog(result, 'Project config with scenarios loaded')
-            utils.debugLog(drupipeConfig.config, projectConfig, 'Project config after mergeScenariosConfigs', [debugMode: 'json'], [], true)
+            utils.debugLog(drupipeConfig.config, result, 'Project config after mergeScenariosConfigs', [debugMode: 'json'], [], true)
             result
         }
     }
