@@ -69,11 +69,11 @@ class DrupipeSourcesController implements Serializable {
             if (configFilePath) {
                 if (script.fileExists(configFilePath)) {
                     if (params.configType == 'groovy') {
-                        result = utils.groovyFileLoad(configFileName: configFilePath)
+                        result = utils.groovyFileLoad(configFilePath)
 //                        result = script.drupipeAction([action: 'GroovyFileConfig.load', params: [configFileName: configFilePath]], controller)
                     }
                     else if (params.configType == 'yaml') {
-                        result = utils.yamlFileLoad(configFileName: configFilePath)
+                        result = utils.yamlFileLoad(configFilePath)
 //                        result = script.drupipeAction([action: 'YamlFileConfig.load', params: [configFileName: configFilePath]], controller)
                     }
                 }
