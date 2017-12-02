@@ -69,12 +69,12 @@ class ConfigProviderProject extends ConfigProviderBase {
                 ))
             }
 
-            utils.debugLog(drupipeConfig.config, projectConfig, 'Project config', [debugMode: 'json'], [], true)
+            utils.debugLog(drupipeConfig.config, projectConfig, 'Project config', [debugMode: 'json'], [], false)
 
             if (projectConfig.config_version && projectConfig.config_version > 1 || controller.configVersion() > 1) {
                 utils.log "Config version > 1"
                 projectConfig = utils.merge(controller.drupipeConfig.config_version2(), projectConfig)
-                utils.debugLog(drupipeConfig.config, projectConfig, 'Project config2', [debugMode: 'json'], [], true)
+                utils.debugLog(drupipeConfig.config, projectConfig, 'Project config2', [debugMode: 'json'], [], false)
             }
 
             def projectConfigContext = utils.merge(drupipeConfig.config, projectConfig)
@@ -91,12 +91,12 @@ class ConfigProviderProject extends ConfigProviderBase {
                     projectConfig[uniconfSourcesKey] = sources[uniconfSourcesKey]
                 }
 
-                utils.debugLog(projectConfig, sources, 'UNIPIPE_SOURCES sources', ['debugMode': 'json'], [], true)
+                utils.debugLog(projectConfig, sources, 'UNIPIPE_SOURCES sources', ['debugMode': 'json'], [], false)
             }
 
             projectConfig = mergeScenariosConfigs(projectConfigContext, projectConfig, [:], 'project')
 
-            utils.debugLog(drupipeConfig.config, projectConfig, 'Project config after mergeScenariosConfigs', [debugMode: 'json'], [], true)
+            utils.debugLog(drupipeConfig.config, projectConfig, 'Project config after mergeScenariosConfigs', [debugMode: 'json'], [], false)
         }
         projectConfig
     }
