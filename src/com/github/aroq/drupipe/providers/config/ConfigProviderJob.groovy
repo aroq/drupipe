@@ -6,7 +6,7 @@ class ConfigProviderJob extends ConfigProviderBase {
     def provide() {
         def result = [:]
         if (drupipeConfig.config.jobs) {
-            utils.logs "Save unprocessed context"
+            utils.log "Save unprocessed context"
             controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'context_unprocessed')
 
             if (drupipeConfig.config.config_version > 1) {
