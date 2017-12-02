@@ -3,6 +3,7 @@ package com.github.aroq.drupipe.providers.config
 class ConfigProviderProject extends ConfigProviderBase {
 
     def provide() {
+        def projectConfig
         utils.debugLog(drupipeConfig.config, drupipeConfig.config.configRepo,"projectConfig repo: ${drupipeConfig.config.configRepo}", [:], [], true)
 
         if (drupipeConfig.config.project_type == 'single') {
@@ -12,7 +13,6 @@ class ConfigProviderProject extends ConfigProviderBase {
                 type  : 'dir',
             ]
             drupipeConfig.drupipeSourcesController.sourceAdd(source: sourceObject)
-//            this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], controller)
         }
         else {
             if (drupipeConfig.config.configRepo) {
@@ -26,21 +26,15 @@ class ConfigProviderProject extends ConfigProviderBase {
                 ]
                 script.sshagent([drupipeConfig.config.credentialsId]) {
                     drupipeConfig.drupipeSourcesController.sourceAdd(source: sourceObject)
-//                    this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], controller)
                 }
             }
         }
         if (drupipeConfig.config.configRepo) {
-//            utils.debugLog(config, config, "config", [debugMode: 'json'], [], true)
-//            utils.debugLog(config, context, "context", [debugMode: 'json'], [], true)
-
-            def providers = [
-                [
-                    sourceName: 'project',
-                    configType: 'groovy',
-                    configPath: drupipeConfig.config.projectConfigFile
-                ]
-            ]
+            projectConfig = drupipeConfig.drupipeSourcesController.sourceLoad(
+                sourceName: 'project',
+                configType: 'groovy',
+                configPath: drupipeConfig.config.projectConfigFile,
+            )
 
             def fileName = null
             utils.debugLog(drupipeConfig.config, drupipeConfig.drupipeSourcesController.loadedSources, "loadedSources", [debugMode: 'json'], [], true)
@@ -68,21 +62,19 @@ class ConfigProviderProject extends ConfigProviderBase {
             }
 
             if (fileName != null) {
-                providers << [
-                    action: 'Source.loadConfig',
-                    params: [
-                        sourceName: 'project',
-                        configType: 'yaml',
-                        configPath: fileName
-                    ]
-                ]
+                projectConfig = utils.merge(projectConfig, drupipeConfig.drupipeSourcesController.sourceLoad(
+                    sourceName: 'project',
+                    configType: 'yaml',
+                    configPath: fileName,
+                ))
             }
 
-            def projectConfig
-            script.sshagent([drupipeConfig.config.credentialsId]) {
-                projectConfig = controller.executePipelineActionList(providers)
-                utils.debugLog(drupipeConfig.config, projectConfig, 'Project config')
-            }
+            utils.debugLog(drupipeConfig.config, projectConfig, 'Project config')
+
+//            script.sshagent([drupipeConfig.config.credentialsId]) {
+//                projectConfig = controller.executePipelineActionList(providers)
+//                utils.debugLog(drupipeConfig.config, projectConfig, 'Project config')
+//            }
 
             def projectConfigContext = utils.merge(drupipeConfig.config, projectConfig)
 
