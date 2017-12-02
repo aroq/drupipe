@@ -5,8 +5,6 @@ class ConfigProviderJob extends ConfigProviderBase {
     // TODO: check if this is needed as Config Provider or Processor.
     def provide() {
         if (drupipeConfig.config.jobs) {
-            utils.debugLog(drupipeConfig.config, drupipeConfig.config, 'ConfigProviderJob->provide() BEFORE save unprocessed context', [debugMode: 'json'], [], true)
-            utils.log "Save unprocessed context"
             controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'context_unprocessed')
 
             if (drupipeConfig.config.config_version > 1) {
@@ -15,24 +13,19 @@ class ConfigProviderJob extends ConfigProviderBase {
             }
 
             // Performed here as needed later for job processing.
-            utils.debugLog(drupipeConfig.config, drupipeConfig.config.jobs, 'ConfigProviderJob->provide() BEFORE controller.drupipeConfig.process()', [debugMode: 'json'], [], true)
             controller.drupipeConfig.process()
-            utils.debugLog(drupipeConfig.config, drupipeConfig.config.jobs, 'ConfigProviderJob->provide() AFTER controller.drupipeConfig.process()', [debugMode: 'json'], [], true)
 
             drupipeConfig.config.jobs = processJobs(drupipeConfig.config.jobs)
-
-            utils.debugLog(drupipeConfig.config, drupipeConfig.config.jobs, 'ConfigProviderJob->provide() AFTER processJobs()', [debugMode: 'json'], [], true)
 
             drupipeConfig.config.job = (drupipeConfig.config.env.JOB_NAME).split('/').drop(1).inject(drupipeConfig.config, { obj, prop ->
                 obj.jobs[prop]
             })
 
             if (drupipeConfig.config.job) {
-                utils.log "CONFIG JOB is defined"
                 if (drupipeConfig.config.job.context) {
                     drupipeConfig.config = utils.merge(drupipeConfig.config, drupipeConfig.config.job.context)
                 }
-                utils.jsonDump(drupipeConfig.config, drupipeConfig.config.job,'CONFIG JOB', true)
+                utils.jsonDump(drupipeConfig.config, drupipeConfig.config.job,'CONFIG JOB', false)
             }
             else {
                 throw new Exception("ConfigProviderJob->provide: No job is defined.")
