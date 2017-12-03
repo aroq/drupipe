@@ -116,13 +116,14 @@ params:
     JobDslSeed:
       perform:
         params:
-          removedJobAction: DELETE
-          removedViewAction: DELETE
-          lookupStrategy: SEED_JOB
-          additionalClasspath:
-            - .unipipe/library/src
-          jobsPattern:
-            - .unipipe/library/jobdsl/seed/*.groovy
+          dsl_params:
+            removedJobAction: DELETE
+            removedViewAction: DELETE
+            lookupStrategy: SEED_JOB
+            additionalClasspath:
+              - .unipipe/library/src
+            jobsPattern:
+              - .unipipe/library/jobdsl/seed/*.groovy
 
     Druflow:
       params:

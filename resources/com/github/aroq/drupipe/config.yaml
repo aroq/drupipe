@@ -61,12 +61,13 @@ jobs:
               blocks:
                 - actions:
                   - from: .params.actions.JobDslSeed.perform
-                    lookupStrategy: JENKINS_ROOT
-                    jobsPattern: .unipipe/library/jobdsl/job_dsl_mothership.groovy
-#                    override: true
-                    removedJobAction: DELETE
-                    removedViewAction: DELETE
-                    additionalClasspath: ['.unipipe/library/src']
+                    dsl_params:
+                      lookupStrategy: JENKINS_ROOT
+                      jobsPattern: ['.unipipe/library/jobdsl/job_dsl_mothership.groovy']
+                      override: true
+                      removedJobAction: DELETE
+                      removedViewAction: DELETE
+                      additionalClasspath: ['.unipipe/library/src']
 
   seed:
     type: seed

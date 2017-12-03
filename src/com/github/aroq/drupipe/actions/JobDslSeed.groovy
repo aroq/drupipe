@@ -40,13 +40,16 @@ class JobDslSeed extends BaseAction {
     }
 
     def perform() {
+        // Serialize processed context to pass it into Job DSL.
         action.pipeline.serializeObject('.unipipe/temp/context_processed.json', action.pipeline.context, 'json')
+
+        // Load library (drupipe) to have DSL scripts available.
         action.pipeline.scripts_library_load()
 
-//        script.jobDsl targets: action.params.jobsPattern.join('\n'),
-//            removedJobAction: action.params.removedJobAction,
-//            removedViewAction: action.params.removedViewAction,
-//            lookupStrategy: action.params.lookupStrategy,
-//            additionalClasspath: action.params.additionalClasspath.join('\n')
+        script.jobDsl targets: action.params.dsl_params.jobsPattern.join('\n'),
+            removedJobAction: action.params.dsl_params.removedJobAction,
+            removedViewAction: action.params.dsl_params.removedViewAction,
+            lookupStrategy: action.params.dsl_params.lookupStrategy,
+            additionalClasspath: action.params.dsl_params.additionalClasspath.join('\n')
     }
 }
