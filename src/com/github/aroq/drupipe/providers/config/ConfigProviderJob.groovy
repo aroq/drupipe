@@ -17,19 +17,19 @@ class ConfigProviderJob extends ConfigProviderBase {
 
             drupipeConfig.config.jobs = processJobs(drupipeConfig.config.jobs)
 
-            drupipeConfig.config.job = (drupipeConfig.config.env.JOB_NAME).split('/').drop(1).inject(drupipeConfig.config, { obj, prop ->
-                obj.jobs[prop]
-            })
-
-            if (drupipeConfig.config.job) {
-                if (drupipeConfig.config.job.context) {
-                    drupipeConfig.config = utils.merge(drupipeConfig.config, drupipeConfig.config.job.context)
-                }
-                utils.jsonDump(drupipeConfig.config, drupipeConfig.config.job,'CONFIG JOB', false)
-            }
-            else {
-                throw new Exception("ConfigProviderJob->provide: No job is defined.")
-            }
+//            drupipeConfig.config.job = (drupipeConfig.config.env.JOB_NAME).split('/').drop(1).inject(drupipeConfig.config, { obj, prop ->
+//                obj.jobs[prop]
+//            })
+//
+//            if (drupipeConfig.config.job) {
+//                if (drupipeConfig.config.job.context) {
+//                    drupipeConfig.config = utils.merge(drupipeConfig.config, drupipeConfig.config.job.context)
+//                }
+//                utils.jsonDump(drupipeConfig.config, drupipeConfig.config.job,'CONFIG JOB', false)
+//            }
+//            else {
+//                throw new Exception("ConfigProviderJob->provide: No job is defined.")
+//            }
         }
         else {
             throw new Exception("ConfigProviderJob->provide: No config.jobs are defined")
