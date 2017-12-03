@@ -355,19 +355,17 @@ class DrupipeController implements Serializable {
             else {
                 script.echo "ENV variable library.global.version is not set"
             }
-            script.drupipeAction([
-                action: 'Source.add',
-                params: [
-                    source: [
-                        name: 'library',
-                        type: 'git',
-                        path: '.unipipe/library',
-                        url: url,
-                        branch: ref,
-                        refType: type,
-                    ],
-                ],
-            ], this)
+
+            def source = [
+                name: 'library',
+                type: 'git',
+                path: '.unipipe/library',
+                url: url,
+                branch: ref,
+                refType: type,
+            ]
+            drupipeConfig.drupipeSourcesController.sourceAdd(source)
+
             context.scripts_library_loaded = true
         }
     }
