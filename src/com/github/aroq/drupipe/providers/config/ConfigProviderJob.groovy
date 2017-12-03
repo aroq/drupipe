@@ -26,6 +26,7 @@ class ConfigProviderJob extends ConfigProviderBase {
             }
             else {
                 drupipeConfig.config.job = drupipeConfig.config.jobs[drupipeConfig.config.env.JOB_NAME]
+                drupipeConfig.config.config_version = 2
             }
 
             if (drupipeConfig.config.job) {
