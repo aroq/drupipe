@@ -126,6 +126,9 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                     utils.log "DrupipeFromProcessor->processFromItem() FROM ${from} is not found in tempContext"
                 }
                 result.remove(this.include_key)
+                if (from == '.params.actions.JobDslSeed.perform') {
+                    utils.debugLog(tempContext, result, "result", [debugMode: 'json'], [], true)
+                }
             }
             else {
                 if (from == '.params.actions.JobDslSeed.perform') {
