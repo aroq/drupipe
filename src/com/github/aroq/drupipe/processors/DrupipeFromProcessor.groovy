@@ -49,7 +49,9 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def processFromItem(context, result, String from, String parent, String key = 'params') {
-//        utils.log "Process from: ${from}"
+        if (from == '.params.actions.JobDslSeed.perform') {
+            utils.log "Process from: ${from}"
+        }
 
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         if (processorParams) {
@@ -57,7 +59,9 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
             def keyMode = utils.deepGet(processorParams, "${this.include_key}.mode")
 
             if (keyMode == this.mode) {
-//                utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
+                if (from == '.params.actions.JobDslSeed.perform') {
+                    utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
+                }
 
                 def tempContext
 
@@ -82,6 +86,10 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
                 // TODO: Refactor it:
                 if (fromObject) {
+                    if (from == '.params.actions.JobDslSeed.perform') {
+                        utils.log "Action parent: ${parent}"
+                    }
+
                     if (parent == 'job') {
                         fromObject.name = from - '.params.jobs'
                     }
