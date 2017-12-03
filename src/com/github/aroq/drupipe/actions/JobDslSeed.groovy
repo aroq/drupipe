@@ -41,13 +41,12 @@ class JobDslSeed extends BaseAction {
 
     def perform() {
         action.pipeline.serializeObject('.unipipe/temp/context_processed.json', action.pipeline.context, 'json')
-//        utils.dumpConfigFile(action.pipeline.context)
         action.pipeline.scripts_library_load()
 
-        script.jobDsl targets: action.params.jobsPattern.join('\n'),
-            removedJobAction: action.params.removedJobAction,
-            removedViewAction: action.params.removedViewAction,
-            lookupStrategy: action.params.lookupStrategy,
-            additionalClasspath: action.params.additionalClasspath.join('\n')
+//        script.jobDsl targets: action.params.jobsPattern.join('\n'),
+//            removedJobAction: action.params.removedJobAction,
+//            removedViewAction: action.params.removedViewAction,
+//            lookupStrategy: action.params.lookupStrategy,
+//            additionalClasspath: action.params.additionalClasspath.join('\n')
     }
 }
