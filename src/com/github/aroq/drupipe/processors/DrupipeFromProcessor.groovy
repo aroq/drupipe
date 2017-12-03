@@ -51,6 +51,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     def processFromItem(context, result, String from, String parent, String key = 'params') {
         if (from == '.params.actions.JobDslSeed.perform') {
             utils.log "Process from: ${from}"
+            utils.log "Process mode: ${mode}"
         }
 
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
@@ -124,7 +125,9 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                 result.remove(this.include_key)
             }
             else {
-//                utils.log "DrupipeFromProcessor->processFromItem() ${from} skipped as mode is ${keyMode}, include_key: ${this.include_key}"
+                if (from == '.params.actions.JobDslSeed.perform') {
+                    utils.log "DrupipeFromProcessor->processFromItem() ${from} skipped as mode is ${keyMode}, include_key: ${this.include_key}"
+                }
             }
         }
         else {
