@@ -63,7 +63,7 @@ jobs:
                   - from: .params.actions.JobDslSeed.perform
                     lookupStrategy: JENKINS_ROOT
                     jobsPattern: .unipipe/library/jobdsl/job_dsl_mothership.groovy
-                    override: true
+#                    override: true
                     removedJobAction: DELETE
                     removedViewAction: DELETE
                     additionalClasspath: ['.unipipe/library/src']
