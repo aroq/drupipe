@@ -4,9 +4,11 @@ class DrupipeBase implements Serializable {
 
     String name
 
-    boolean fromProcessed
+    boolean from_processed
 
-    String fromProcessed_mode
+    String from_processed_mode
+
+    String from_source
 
     ArrayList fromPaths
 
