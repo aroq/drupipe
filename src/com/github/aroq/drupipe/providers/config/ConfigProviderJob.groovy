@@ -19,10 +19,15 @@ class ConfigProviderJob extends ConfigProviderBase {
 
             utils.log "Job name: " + drupipeConfig.config.env.JOB_NAME
 
-//            drupipeConfig.config.job = (drupipeConfig.config.env.JOB_NAME).split('/').drop(1).inject(drupipeConfig.config, { obj, prop ->
-//                obj.jobs[prop]
-//            })
-//
+            if (drupipeConfig.config.env.JOB_NAME.contains('/')) {
+                drupipeConfig.config.job = (drupipeConfig.config.env.JOB_NAME).split('/').drop(1).inject(drupipeConfig.config, { obj, prop ->
+                    obj.jobs[prop]
+                })
+            }
+            else {
+                drupipeConfig.config.job = drupipeConfig.config.jobs[drupipeConfig.config.env.JOB_NAME]
+            }
+
             if (drupipeConfig.config.job) {
                 if (drupipeConfig.config.job.context) {
                     drupipeConfig.config = utils.merge(drupipeConfig.config, drupipeConfig.config.job.context)
