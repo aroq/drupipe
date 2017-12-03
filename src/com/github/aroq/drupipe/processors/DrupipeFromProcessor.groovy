@@ -49,10 +49,10 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def processFromItem(context, result, String from, String parent, String key = 'params') {
-        if (from == '.params.actions.JobDslSeed.perform') {
-            utils.log "Process from: ${from}"
-            utils.log "Process mode: ${mode}"
-        }
+//        if (from == '.params.actions.JobDslSeed.perform') {
+//            utils.log "Process from: ${from}"
+//            utils.log "Process mode: ${mode}"
+//        }
 
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         if (processorParams) {
@@ -60,9 +60,9 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
             def keyMode = utils.deepGet(processorParams, "${this.include_key}.mode")
 
             if (keyMode == this.mode) {
-                if (from == '.params.actions.JobDslSeed.perform') {
-                    utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
-                }
+//                if (from == '.params.actions.JobDslSeed.perform') {
+//                    utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
+//                }
 
                 def tempContext
 
@@ -87,10 +87,6 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
                 // TODO: Refactor it:
                 if (fromObject) {
-                    if (from == '.params.actions.JobDslSeed.perform') {
-                        utils.log "Action parent: ${parent}"
-                    }
-
                     if (parent == 'job') {
                         fromObject.name = from - '.params.jobs'
                     }
@@ -114,13 +110,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                         }
                     }
                     fromObject = process(context, fromObject, parent, key)
-                    if (from == '.params.actions.JobDslSeed.perform') {
-                        utils.debugLog(tempContext, fromObject, "fromObject", [debugMode: 'json'], [], true)
-                    }
                     result = utils.merge(fromObject, result)
-                    if (from == '.params.actions.JobDslSeed.perform') {
-                        utils.debugLog(tempContext, fromObject, "fromObject after merge", [debugMode: 'json'], [], true)
-                    }
                     result.from_processed = true
                     result.from_processed_mode = this.mode
                     result.from_source = from
@@ -129,14 +119,9 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                     utils.log "DrupipeFromProcessor->processFromItem() FROM ${from} is not found in tempContext"
                 }
                 result.remove(this.include_key)
-                if (from == '.params.actions.JobDslSeed.perform') {
-                    utils.debugLog(tempContext, result, "result", [debugMode: 'json'], [], true)
-                }
             }
             else {
-                if (from == '.params.actions.JobDslSeed.perform') {
-                    utils.log "DrupipeFromProcessor->processFromItem() ${from} skipped as mode is ${keyMode}, include_key: ${this.include_key}"
-                }
+//                utils.log "DrupipeFromProcessor->processFromItem() ${from} skipped as mode is ${keyMode}, include_key: ${this.include_key}"
             }
         }
         else {
