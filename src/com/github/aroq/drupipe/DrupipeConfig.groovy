@@ -29,6 +29,7 @@ class DrupipeConfig implements Serializable {
 
             config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
             config = utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
+            config.jenkinsParams = params
 
             // TODO: remove it when all configs are updated to version 2.
             if (script.env.JOB_NAME == 'mothership') {
