@@ -7,16 +7,16 @@ class ConfigProviderProject extends ConfigProviderBase {
         utils.debugLog(drupipeConfig.config, drupipeConfig.config.configRepo,"projectConfig repo: ${drupipeConfig.config.configRepo}", [:], [], true)
 
         if (drupipeConfig.config.project_type == 'single') {
-            def sourceObject = [
+            def source= [
                 name  : 'project',
                 path  : drupipeConfig.config.config_dir,
                 type  : 'dir',
             ]
-            drupipeConfig.drupipeSourcesController.sourceAdd(source: sourceObject)
+            drupipeConfig.drupipeSourcesController.sourceAdd(source)
         }
         else {
             if (drupipeConfig.config.configRepo) {
-                def sourceObject = [
+                def source= [
                     name  : 'project',
                     path  : drupipeConfig.config.projectConfigPath,
                     type  : 'git',
@@ -25,7 +25,7 @@ class ConfigProviderProject extends ConfigProviderBase {
                     mode  : 'shell',
                 ]
                 script.sshagent([drupipeConfig.config.credentialsId]) {
-                    drupipeConfig.drupipeSourcesController.sourceAdd(source: sourceObject)
+                    drupipeConfig.drupipeSourcesController.sourceAdd(source)
                 }
             }
         }
@@ -157,7 +157,7 @@ class ConfigProviderProject extends ConfigProviderBase {
                             }
 
                             script.sshagent([drupipeConfig.config.credentialsId]) {
-                                def sourceObject = [
+                                def source= [
                                     name: scenarioSourceName,
                                     type: 'git',
                                     path: ".unipipe/scenarios/${scenarioSourceName}",
@@ -166,7 +166,7 @@ class ConfigProviderProject extends ConfigProviderBase {
                                     mode: 'shell',
                                 ]
 
-                                drupipeConfig.drupipeSourcesController.sourceAdd(source: sourceObject)
+                                drupipeConfig.drupipeSourcesController.sourceAdd(source)
 
 //                                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], controller)
 //                                utils.log "Source added: ${scenarioSourceName}"

@@ -5,14 +5,15 @@ class ConfigProviderMothership extends ConfigProviderBase {
     def provide() {
         def result = [:]
         if (drupipeConfig.config.env.MOTHERSHIP_REPO) {
-            def sourceObject = [
-                name:   'mothership',
-                type:   'git',
-                path:   '.unipipe/mothership',
-                url:    drupipeConfig.config.env.MOTHERSHIP_REPO,
-                branch: 'master',
+            def source = [
+                name:          'mothership',
+                type:          'git',
+                path:          '.unipipe/mothership',
+                url:           drupipeConfig.config.env.MOTHERSHIP_REPO,
+                branch:        'master',
+                credentialsId: drupipeConfig.config.env.credentialsId,
             ]
-            drupipeConfig.drupipeSourcesController.sourceAdd(credentialsId: drupipeConfig.config.env.credentialsId, source: sourceObject)
+            drupipeConfig.drupipeSourcesController.sourceAdd(source)
             result = drupipeConfig.drupipeSourcesController.sourceLoad(
                 sourceName: 'mothership',
                 configType: 'groovy',
@@ -34,7 +35,6 @@ class ConfigProviderMothership extends ConfigProviderBase {
 
             result = utils.merge(result, [jenkinsServers: mothershipServers])
             utils.debugLog(drupipeConfig.config, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], false)
-
         }
 
         result

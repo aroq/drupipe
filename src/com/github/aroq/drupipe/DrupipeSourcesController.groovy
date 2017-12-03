@@ -12,8 +12,7 @@ class DrupipeSourcesController implements Serializable {
 
     DrupipeController controller
 
-    def sourceAdd(params) {
-        def source = params.source
+    def sourceAdd(source) {
         def result = [:]
         def path
         switch (source.type) {
@@ -29,9 +28,9 @@ class DrupipeSourcesController implements Serializable {
 
                 if (source.refType == 'branch' && source.mode == 'pipeline') {
                     script.dir(source.path) {
-                        if (params.credentialsId) {
-                            this.script.echo "With credentials: ${params.credentialsId}"
-                            this.script.git credentialsId: params.credentialsId, url: source.url, branch: source.branch
+                        if (source.credentialsId) {
+                            this.script.echo "With credentials: ${source.credentialsId}"
+                            this.script.git credentialsId: source.credentialsId, url: source.url, branch: source.branch
                         } else {
                             this.script.echo "Without credentials"
                             this.script.git url: source.url, branch: source.branch
