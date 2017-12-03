@@ -33,7 +33,7 @@ class DrupipeContainerBlock extends DrupipeBase {
 
     def executeAction(action) {
         if (action) {
-            controller.utils.debugLog(controller.context, action, 'ACTION', [debugMode: 'json'], [], false)
+            controller.utils.debugLog(controller.context, action, 'ACTION', [debugMode: 'json'], [], true)
             def actionWrapper = [
                 name: action.name,
                 methodName: action.methodName,
@@ -43,7 +43,7 @@ class DrupipeContainerBlock extends DrupipeBase {
             action.remove('methodName')
 //            action.remove('configVersion')
 
-            controller.utils.debugLog(controller.context, actionWrapper, 'ACTION WRAPPER', [debugMode: 'json'], [], false)
+            controller.utils.debugLog(controller.context, actionWrapper, 'ACTION WRAPPER', [debugMode: 'json'], [], true)
             DrupipeActionWrapper drupipeActionWrapper = new DrupipeActionWrapper(actionWrapper)
             drupipeActionWrapper.pipeline = controller
             drupipeActionWrapper.params = action
