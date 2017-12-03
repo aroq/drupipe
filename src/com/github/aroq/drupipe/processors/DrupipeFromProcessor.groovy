@@ -118,6 +118,9 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                         utils.debugLog(tempContext, fromObject, "fromObject", [debugMode: 'json'], [], true)
                     }
                     result = utils.merge(fromObject, result)
+                    if (from == '.params.actions.JobDslSeed.perform') {
+                        utils.debugLog(tempContext, fromObject, "fromObject after merge", [debugMode: 'json'], [], true)
+                    }
                     result.from_processed = true
                     result.from_processed_mode = this.mode
                     result.from_source = from
