@@ -25,6 +25,7 @@ class Kubectl extends BaseAction {
             action: 'Kubectl.scale_replicaset',
             params: [replicaset_name: name, replicas: action.params.replicas_up]
         )
+        // TODO: remove it when get pod command will take 'status' field into account (e.g. Running, etc).
         script.drupipeShell("sleep 30", action.params)
     }
 
