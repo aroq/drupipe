@@ -90,22 +90,11 @@ JENKINS_URL=http://${this.action.params.jenkins_address} /jenkins-cli/jenkins-cl
 
     def seedTest() {
         def mothershipConfig = action.pipeline.drupipeConfig.projects
-        def targetEnv = action.pipeline.context.env.drupipeEnvironment
-        if (targetEnv == 'prod' && action.pipeline.context.containerMode == 'kubernetes') {
-            targetEnv = 'k8s-' + targetEnv
-        }
-        def projects = parseProjects(mothershipConfig, 'tests', 'seed', targetEnv)
+        def projects = parseProjects(mothershipConfig, 'tests', 'seed')
 
-        if (projects) {
-            projects = projects.tokenize(',')
-        }
-        else {
-            projects = [:]
-        }
         def builds = [:]
         for (def i = 0; i < projects.size(); i++) {
             this.script.echo projects[i]
-//            this.action.params.jobName = "${projects[i]}/seed"
             builds[i] = buildPrepare("${projects[i]}/seed")
         }
         script.parallel builds
@@ -113,11 +102,10 @@ JENKINS_URL=http://${this.action.params.jenkins_address} /jenkins-cli/jenkins-cl
     }
 
     @NonCPS
-    def parseProjects(def projects, String param, String tag, def drupipeEnv) {
-//        utils.log "DRUPIPE ENVIRONMENT: ${drupipeEnv}"
+    def parseProjects(def projects, String param, String tag) {
         def result = []
         for (project in projects) {
-            if (project.value?.params?.containsKey(param) && project.value.params[param].contains(tag) && project.value.params.containsKey('jenkinsServers') && project.value.params['jenkinsServers'].contains(drupipeEnv) ) {
+            if (project.value?.params?.containsKey(param) && project.value.params[param].contains(tag) ) {
                 result << project.key
             }
         }
