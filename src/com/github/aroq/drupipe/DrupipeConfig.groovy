@@ -18,6 +18,8 @@ class DrupipeConfig implements Serializable {
 
     DrupipeSourcesController drupipeSourcesController
 
+    def projects
+
     def config(params, parent) {
         drupipeSourcesController = new DrupipeSourcesController(script: script, utils: utils, controller: controller)
         script.node('master') {

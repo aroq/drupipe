@@ -10,9 +10,7 @@ class YamlFileHandler extends BaseAction {
 
     def utils
 
-    def deployYaml
-
-    def DrupipeActionWrapper action
+    DrupipeActionWrapper action
 
     def init() {
         if (!action.pipeline.context.tags.contains('docman')) {
@@ -24,7 +22,7 @@ class YamlFileHandler extends BaseAction {
                 repo_url = action.pipeline.context.configRepo
             }
 
-            def branch = 'master'
+            def branch
             if (action.pipeline.context.environmentParams.git_reference) {
                 branch = action.pipeline.context.environmentParams.git_reference
             }
@@ -43,7 +41,6 @@ class YamlFileHandler extends BaseAction {
     }
 
     def findDeployYaml() {
-        def file
         def files
 
         def project_config_dir = action.pipeline.drupipeConfig.drupipeSourcesController.sourceDir(action.pipeline.context, 'project');

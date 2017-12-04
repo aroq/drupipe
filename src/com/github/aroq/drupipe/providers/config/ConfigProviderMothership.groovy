@@ -24,6 +24,8 @@ class ConfigProviderMothership extends ConfigProviderBase {
             def mothershipConfig = getMothershipConfigFile(result)
             utils.debugLog(drupipeConfig.config, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], false)
 
+            drupipeConfig.projects = mothershipConfig
+
             def mothershipServers = getMothershipServersFile(result)
             utils.debugLog(drupipeConfig.config, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], false)
 
