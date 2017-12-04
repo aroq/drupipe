@@ -134,17 +134,23 @@ params:
       operations:
         params:
           propertiesFile: docroot/master/version.properties
+          installDruflow: false
           executeCommand: deployFlow
+          druflowDir: /app/druflow
 
       deploy:
         params:
           propertiesFile: docroot/master/version.properties
+          installDruflow: false
           executeCommand: deployTag
+          druflowDir: /app/druflow
 
       deployFlow:
         params:
           propertiesFile: docroot/master/version.properties
+          installDruflow: false
           executeCommand: deployFlow
+          druflowDir: /app/druflow
 
       copySite:
         params:
@@ -459,4 +465,3 @@ params:
             done'' '
           full_command:
             - ${action.params.command}
-
