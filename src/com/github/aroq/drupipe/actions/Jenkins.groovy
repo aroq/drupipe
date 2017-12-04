@@ -90,7 +90,7 @@ JENKINS_URL=http://${this.action.params.jenkins_address} /jenkins-cli/jenkins-cl
 
     def seedTest() {
         def mothershipConfig = action.pipeline.drupipeConfig.projects
-        def projects = parseProjects(mothershipConfig, 'tests', 'seed').tokenize(',')
+        def projects = parseProjects(mothershipConfig, 'tests', 'seed', action.pipeline.context.env.DRUPIPE_ENVIRONMENT).tokenize(',')
         def builds = [:]
         for (def i = 0; i < projects.size(); i++) {
             this.script.echo projects[i]
@@ -102,10 +102,10 @@ JENKINS_URL=http://${this.action.params.jenkins_address} /jenkins-cli/jenkins-cl
     }
 
     @NonCPS
-    def parseProjects(def projects, String param, String tag) {
+    def parseProjects(def projects, String param, String tag, String drupipeEnv) {
         def result = []
         for (project in projects) {
-            if (project.value?.params?.containsKey(param) && project.value.params[param].contains(tag)) {
+            if (project.value?.params?.containsKey(param) && project.value.params[param].contains(tag) && project.value.params.jenkinsServers.contains(drupipeEnv)) {
                 result << project.key
             }
         }
