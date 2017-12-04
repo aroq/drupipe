@@ -32,6 +32,7 @@ class Druflow extends BaseAction {
             workspace: action.pipeline.context.workspace,
             // TODO: review this parameter handling.
             docrootDir: action.params.docrootDir ? action.params.docrootDir : action.pipeline.context.docrootDir,
+            docrootConfigDir: action.pipeline.drupipeConfig.drupipeSourcesController.sourceDir(action.pipeline.drupipeConfig.config, 'project'),
         ]
         // TODO: review it.
         if (action.pipeline.context.operationsMode) {
@@ -51,7 +52,9 @@ class Druflow extends BaseAction {
 
         def druflowCommand = "cd ${action.params.druflowDir} && ./gradlew app ${options}"
 
-        druflowGet()
+        if (action.params.installDruflow) {
+            druflowGet()
+        }
 
         script.drupipeShell(druflowCommand, action.params)
     }
@@ -108,5 +111,3 @@ class Druflow extends BaseAction {
         action.pipeline.context.debugEnabled && action.pipeline.context.debugEnabled != '0' ? '1' : '0'
     }
 }
-
-
