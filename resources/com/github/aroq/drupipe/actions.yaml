@@ -244,7 +244,7 @@ params:
     Helm:
       params:
         executable: helm
-        chart_name: zebra-cd
+        chart_name: ''
         release_name: ${action.params.chart_name}-${context.environment}
         charts_dir: charts
         kubectl_config_file: .kubeconfig
