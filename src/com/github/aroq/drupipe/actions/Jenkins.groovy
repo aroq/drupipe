@@ -106,7 +106,7 @@ JENKINS_URL=http://${this.action.params.jenkins_address} /jenkins-cli/jenkins-cl
         utils.log "DRUPIPE ENVIRONMENT: ${drupipeEnv}"
         def result = []
         for (project in projects) {
-            if (project.value?.params?.containsKey(param) && project.value.params[param].contains(tag) && project.value.params.containsKey('jenkinsServers') && project.value.params['jenkinsServers'].contains(drupipeEnv)) {
+            if (project.value?.params?.containsKey(param) && project.value.params[param].contains(tag) ) {
                 result << project.key
             }
         }
