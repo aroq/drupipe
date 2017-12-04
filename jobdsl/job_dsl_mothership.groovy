@@ -98,6 +98,9 @@ projects.each { project ->
             pipelineScriptPath = "${subDir}${jenkinsfile}"
         }
 
+        println "subDir: ${subDir}"
+        println "pipelineScriptPath: ${pipelineScriptPath}"
+
         if (config.mothership_job_type == 'Jenkinsfile') {
             String jobName = config.mothership_job_name ? config.mothership_job_name : project.key
             println "JOB NAME: ${jobName}"
