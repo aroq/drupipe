@@ -25,6 +25,7 @@ class Kubectl extends BaseAction {
             action: 'Kubectl.scale_replicaset',
             params: [replicaset_name: name, replicas: action.params.replicas_up]
         )
+        script.drupipeShell("sleep 30", action.params)
     }
 
     def get_pod_name() {
