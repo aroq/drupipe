@@ -90,7 +90,11 @@ JENKINS_URL=http://${this.action.params.jenkins_address} /jenkins-cli/jenkins-cl
 
     def seedTest() {
         def mothershipConfig = action.pipeline.drupipeConfig.projects
-        def projects = parseProjects(mothershipConfig, 'tests', 'seed', action.pipeline.context.env.drupipeEnvironment)
+        def targetEnv = action.pipeline.context.env.drupipeEnvironment
+        if (targetEnv == 'prod' && action.pipeline.context.containerMode == 'kubernetes') {
+            targetEnv = 'k8s-' + targetEnv
+        }
+        def projects = parseProjects(mothershipConfig, 'tests', 'seed', targetEnv)
 
         if (projects) {
             projects = projects.tokenize(',')
