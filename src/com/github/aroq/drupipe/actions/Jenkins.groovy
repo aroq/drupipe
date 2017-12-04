@@ -103,6 +103,7 @@ JENKINS_URL=http://${this.action.params.jenkins_address} /jenkins-cli/jenkins-cl
 
     @NonCPS
     def parseProjects(def projects, String param, String tag, String drupipeEnv) {
+        utils.log "DRUPIPE ENVIRONMENT: ${drupipeEnv}"
         def result = []
         for (project in projects) {
             if (project.value?.params?.containsKey(param) && project.value.params[param].contains(tag) && project.value.params.jenkinsServers.contains(drupipeEnv)) {
