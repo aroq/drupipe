@@ -90,7 +90,7 @@ JENKINS_URL=http://${this.action.params.jenkins_address} /jenkins-cli/jenkins-cl
 
     def seedTest() {
         def mothershipConfig = action.pipeline.drupipeConfig.projects
-        def projects = parseProjects(mothershipConfig, 'tests', 'seed', action.pipeline.context.env.DRUPIPE_ENVIRONMENT).tokenize(',')
+        def projects = parseProjects(mothershipConfig, 'tests', 'seed', action.pipeline.context.env.drupipeEnvironment).tokenize(',')
         def builds = [:]
         for (def i = 0; i < projects.size(); i++) {
             this.script.echo projects[i]
