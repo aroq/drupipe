@@ -85,12 +85,21 @@ projects.each { project ->
 
         String subDir = ''
         if (config.containsKey('config_version') && config.config_version == 2) {
-            pipelineScriptPath = "${config.config_dir}/${jenkinsfile}"
+            if (config.config_dir) {
+                subDir = config.config_dir
+                pipelineScriptPath = "${config.config_dir}/${jenkinsfile}"
+            }
+            else {
+                pipelineScriptPath = "${jenkinsfile}"
+            }
         }
         else {
             subDir = config.projectConfigPath ? config.projectConfigPath.substring(0, config.projectConfigPath.length() - (config.projectConfigPath.endsWith("/") ? 1 : 0)) + '/' : ''
             pipelineScriptPath = "${subDir}${jenkinsfile}"
         }
+
+        println "subDir: ${subDir}"
+        println "pipelineScriptPath: ${pipelineScriptPath}"
 
         if (config.mothership_job_type == 'Jenkinsfile') {
             String jobName = config.mothership_job_name ? config.mothership_job_name : project.key
