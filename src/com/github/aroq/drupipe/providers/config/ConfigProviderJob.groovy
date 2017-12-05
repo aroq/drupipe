@@ -20,13 +20,14 @@ class ConfigProviderJob extends ConfigProviderBase {
             utils.log "Job name: " + drupipeConfig.config.env.JOB_NAME
 
             // TODO: check it will all cases.
-            if (drupipeConfig.config.env.JOB_NAME.contains('/') && drupipeConfig.config.env.JOB_NAME != 'persistent/mothership') {
-                drupipeConfig.config.job = (drupipeConfig.config.env.JOB_NAME).split('/').drop(1).inject(drupipeConfig.config, { obj, prop ->
+            String jobName = drupipeConfig.config.env.JOB_NAME != 'persistent/mothership' ? drupipeConfig.config.env.JOB_NAME : 'mothership'
+            if (jobName.contains('/')) {
+                drupipeConfig.config.job = jobName.split('/').drop(1).inject(drupipeConfig.config, { obj, prop ->
                     obj.jobs[prop]
                 })
             }
             else {
-                drupipeConfig.config.job = drupipeConfig.config.jobs[drupipeConfig.config.env.JOB_NAME]
+                drupipeConfig.config.job = drupipeConfig.config.jobs[jobName]
                 drupipeConfig.config.config_version = 2
             }
 
