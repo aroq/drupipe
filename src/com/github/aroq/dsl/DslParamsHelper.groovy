@@ -113,15 +113,22 @@ class DslParamsHelper {
         }
     }
 
-    def drupipeParamTags(context, job, config) {
-        config.docmanConfig.projects?.each { project ->
-            if (project.value.repo && (project.value.type != 'root')) {
-                drupipeParamTagsSelects(context, job, config, project.value.name, project)
-            }
-        }
+    def drupipeParamTagsSelectsRelease(context, job, config, name, project) {
+        println "Project: ${project.value.name}"
+        def projectRepo = project.value.repo
+        println "Repo: ${projectRepo}"
+        drupipeParamChoices(
+            context,
+            name,
+            'Allows to select tag',
+            'PT_SINGLE_SELECT',
+            activeChoiceGetTagsChoicesScript(projectRepo, '*', 'x.y.z'),
+            false,
+            true
+        )
     }
 
-    def drupipeParamTagsSelects(context, job, config, name, project) {
+    def drupipeParamTagsSelectsDeploy(context, job, config, name, project) {
         println "Project: ${project.value.name}"
         def projectRepo = project.value.type == 'root' ? project.value.repo : project.value.root_repo
         println "Repo: ${projectRepo}"
@@ -136,7 +143,7 @@ class DslParamsHelper {
         )
     }
 
-    def drupipeParamBranchesSelects(context, job, config, name, project) {
+    def drupipeParamBranchesSelectsDeploy(context, job, config, name, project) {
         println "Project: ${project.value.name}"
         def releaseRepo = project.value.type == 'root' ? project.value.repo : project.value.root_repo
         println "Repo: ${releaseRepo}"
