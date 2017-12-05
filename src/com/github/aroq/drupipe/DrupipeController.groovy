@@ -1,6 +1,5 @@
 package com.github.aroq.drupipe
 
-import com.github.aroq.drupipe.processors.DrupipeProcessor
 import com.github.aroq.drupipe.processors.DrupipeProcessorsController
 
 class DrupipeController implements Serializable {
@@ -29,43 +28,12 @@ class DrupipeController implements Serializable {
 
     DrupipeProcessorsController drupipeProcessorsController
 
-    def serializeObject(path, object, mode = 'yaml') {
-        if (object) {
-            if (script.fileExists(path)) {
-                script.sh("rm -f ${path}")
-            }
-            if (mode == 'yaml') {
-                script.writeYaml(file: path, data: object)
-            }
-            else if (mode == 'json') {
-                def outJson = groovy.json.JsonOutput.toJson(object)
-                script.writeFile file: path, text: outJson, encoding: 'UTF-8'
-            }
-        }
-    }
-
-    def archiveObject(path, object, mode = 'yaml') {
-        if (object) {
-            serializeObject(path, object, mode)
-            this.script.archiveArtifacts artifacts: path
-        }
-    }
-
-    def archiveObjectJsonAndYaml(object, String name, String prefixPath = '.unipipe/temp') {
-        archiveObject("${prefixPath}/${name}.yaml", object)
-        archiveObject("${prefixPath}/${name}.json", object, 'json')
-    }
-
-    def configVersion() {
-        drupipeConfig.configVersion()
-    }
-
     def init() {
         drupipeConfig = new DrupipeConfig(controller: this, script: script, utils: utils)
     }
 
     def configuration() {
-        drupipeConfig.config(params)
+        context = drupipeConfig.config(params, this)
     }
 
     def execute(body = null) {
@@ -85,8 +53,8 @@ class DrupipeController implements Serializable {
                         // Secret option for emergency remove workspace.
                         if (context.job) {
                             def jobConfig = context.job
-                            utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [])
                             archiveObjectJsonAndYaml(jobConfig, 'job')
+                            utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [], true)
                             job = new DrupipeJob(jobConfig)
                             job.controller = this
                         }
@@ -313,14 +281,28 @@ class DrupipeController implements Serializable {
             actionName = 'PipelineController'
             actionMethodName = values[0]
         }
-        if (context.params && context.params.action && context.params.action["${actionName}_${actionMethodName}"] && context.params.action["${actionName}_${actionMethodName}"].debugEnabled) {
+        if (context.params && context.params.action && context.params.action[actionName] && context.params.action[actionName][actionMethodName] && context.params.action[actionName][actionMethodName].debugEnabled) {
             utils.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'], [], true)
             utils.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'], [], true)
         }
 
         script.echo actionName
         script.echo actionMethodName
-        new DrupipeActionWrapper(pipeline: this, name: actionName, methodName: actionMethodName, params: actionParams)
+
+        def actionWrapperParams = [:]
+        if (actionParams) {
+            actionWrapperParams = actionParams
+        }
+//        if (drupipeProcessorsController) {
+//            script.echo "Processing Action: ${actionName}.${actionMethodName}"
+//            actionWrapperParams.from = '.params.actions.' + actionName + '.' + actionMethodName
+//            actionWrapperParams = drupipeConfig.processItem(actionWrapperParams, 'actions', 'params', 'execute')
+//        }
+//        else {
+//            utils.log "Processing Action: ${actionName}.${actionMethodName} - drupipeProcessorsController is not initialized"
+//        }
+
+        new DrupipeActionWrapper(pipeline: this, name: actionName, methodName: actionMethodName, params: actionWrapperParams)
     }
 
     def executePipelineActionList(actions) {
@@ -373,19 +355,17 @@ class DrupipeController implements Serializable {
             else {
                 script.echo "ENV variable library.global.version is not set"
             }
-            script.drupipeAction([
-                action: 'Source.add',
-                params: [
-                    source: [
-                        name: 'library',
-                        type: 'git',
-                        path: '.unipipe/library',
-                        url: url,
-                        branch: ref,
-                        refType: type,
-                    ],
-                ],
-            ], this)
+
+            def source = [
+                name: 'library',
+                type: 'git',
+                path: '.unipipe/library',
+                url: url,
+                branch: ref,
+                refType: type,
+            ]
+            drupipeConfig.drupipeSourcesController.sourceAdd(source)
+
             context.scripts_library_loaded = true
         }
     }
@@ -393,5 +373,41 @@ class DrupipeController implements Serializable {
     def getParam(String param) {
         utils.deepGet(this, 'context.params.pipeline.' + param)
     }
+
+    def executeAction(action) {
+        (processPipelineAction(action)).execute()
+    }
+
+    def serializeObject(path, object, mode = 'yaml') {
+        if (object) {
+            if (script.fileExists(path)) {
+                script.sh("rm -f ${path}")
+            }
+            if (mode == 'yaml') {
+                script.writeYaml(file: path, data: object)
+            }
+            else if (mode == 'json') {
+                def outJson = groovy.json.JsonOutput.toJson(object)
+                script.writeFile file: path, text: outJson, encoding: 'UTF-8'
+            }
+        }
+    }
+
+    def archiveObject(path, object, mode = 'yaml') {
+        if (object) {
+            serializeObject(path, object, mode)
+            this.script.archiveArtifacts artifacts: path
+        }
+    }
+
+    def archiveObjectJsonAndYaml(object, String name, String prefixPath = '.unipipe/temp') {
+        archiveObject("${prefixPath}/${name}.yaml", object)
+        archiveObject("${prefixPath}/${name}.json", object, 'json')
+    }
+
+    def configVersion() {
+        drupipeConfig.configVersion()
+    }
+
 
 }

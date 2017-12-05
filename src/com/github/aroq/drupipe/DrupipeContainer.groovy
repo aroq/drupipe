@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe
 
-class DrupipeContainer implements Serializable {
+class DrupipeContainer extends DrupipeBase {
 
     String name
 
@@ -11,6 +11,8 @@ class DrupipeContainer implements Serializable {
     DrupipeController controller
 
     DrupipePod pod
+
+    LinkedHashMap k8s
 
     def execute(body = null) {
         controller.script.echo "DrupipeContainer execute - ${name}"

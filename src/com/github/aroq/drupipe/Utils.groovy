@@ -9,6 +9,10 @@ def log(String message) {
     echo message
 }
 
+def debug(String message) {
+    echo message
+}
+
 def colorEcho(message, color = null) {
     if (!color) {
         color = 'green'
@@ -330,62 +334,6 @@ def pipelineNotify(context, event) {
     }
 }
 
-def getMothershipConfigFile(params) {
-    def projectsFileName = 'projects'
-    def extensions = ['yaml', 'yml', 'json']
-    def dir = sourceDir(params, 'mothership')
-    for (extension in extensions) {
-        def projectsFile = "${dir}/${projectsFileName}.${extension}"
-        if (fileExists(projectsFile)) {
-            def file = readFile(projectsFile)
-            if (file) {
-                if (extension in ['yaml', 'yml']) {
-//                    echo "getMothershipConfigFile: load file: ${file}"
-                    return readYaml(text: file).projects
-                }
-                else if (extension == 'json') {
-//                    echo "getMothershipConfigFile: load file: ${file}"
-                    return readJSON(text: file).projects
-                }
-            }
-        }
-        else {
-            echo "getMothershipConfigFile: file: ${file} doesn't exist"
-        }
-    }
-    throw new Exception("getMothershipConfigFile: mothership config file not found.")
-}
-
-def getMothershipServersFile(params) {
-    def serversFileName = 'servers'
-    def extensions = ['yaml', 'yml']
-    def dir = sourceDir(params, 'mothership')
-    for (extension in extensions) {
-        def serversFile = "${dir}/${serversFileName}.${extension}"
-        if (fileExists(serversFile)) {
-            def file = readFile(serversFile)
-            if (file) {
-                return readYaml(text: file).servers
-            }
-        }
-    }
-    throw new Exception("getMothershipServersFile: servers config file not found.")
-}
-
-def sourcePath(params, sourceName, String path) {
-    debugLog(params, sourceName, 'Source name')
-    if (sourceName in params.loadedSources) {
-        params.loadedSources[sourceName].path + '/' + path
-    }
-}
-
-def sourceDir(params, sourceName) {
-    debugLog(params, sourceName, 'Source name')
-    if (sourceName in params.loadedSources) {
-        params.loadedSources[sourceName].path
-    }
-}
-
 def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], force = false) {
     if (debugEnabled(params) || force) {
         force = true
@@ -570,19 +518,61 @@ def prepareFlags(flags) {
     }.join(' ')
 }
 
-def serializeAndDeserialize(params) {
+def serializeAndDeserialize(params, mode = 'yaml') {
     def result = [:]
-    def yamlFilePath = '.unipipe/temp/serializeAndDeserialize.yaml'
+    def filePath = ".unipipe/temp/serializeAndDeserialize.${mode}"
     if (params) {
-        if (fileExists(yamlFilePath)) {
-            sh("rm -f ${yamlFilePath}")
+        if (fileExists(filePath)) {
+            sh("rm -f ${filePath}")
         }
-        writeYaml(file: yamlFilePath, data: params)
-        if (fileExists(yamlFilePath)) {
-            result = readYaml(file: yamlFilePath)
+        if (mode == 'yaml') {
+            writeYaml(file: filePath, data: params)
+            result = readYaml(file: filePath)
+        }
+        else if (mode == 'json') {
+
+            def outJson = groovy.json.JsonOutput.toJson(params)
+            writeFile file: filePath, text: outJson, encoding: 'UTF-8'
+            result = readJSON(file: filePath)
         }
     }
     result
+}
+
+def unstashList(controller, unstash) {
+    if (unstash.size() > 0) {
+        for (unstash_item in unstash) {
+            controller.script.unstash name: unstash_item
+        }
+    }
+}
+
+def stashList(controller, stash) {
+    if (stash.size() > 0) {
+        for (stash_item in stash) {
+            def parts = stash_item.tokenize(":")
+            def name = parts[0] ? parts[0] : null
+            def path = parts[1] ? parts[1] : null
+            def exclude = parts[2] ? parts[2] : null
+            if (name && path) {
+                exclude = exclude == null ? '' : exclude
+                controller.script.stash name: name, includes: path, excludes: exclude
+            }
+            else {
+                controller.script.echo("Stash item should have form like name:path or name:path:exclude")
+            }
+
+        }
+    }
+}
+
+def getUnipipeConfig(controller) {
+    if (controller.context.containsKey('tags') && controller.context.tags.contains('single')) {
+        controller.scmCheckout()
+    }
+    else {
+        controller.script.unstash name: 'config'
+    }
 }
 
 def stripContext(context) {
@@ -590,6 +580,36 @@ def stripContext(context) {
     context.remove('stage')
     context.remove('block')
     context
+}
+
+def drupipeExecutionMode() {
+    'jenkins'
+}
+
+@NonCPS
+def groovyConfig(text) {
+    new HashMap<>(ConfigSlurper.newInstance(env.drupipeEnvironment).parse(text))
+}
+
+def readGroovyConfig(filePath) {
+    def text = readFile(filePath)
+    groovyConfig(text)
+}
+
+def groovyFileLoad(configFileName) {
+    def result = [:]
+    if (configFileName && fileExists(configFileName)) {
+        result = readGroovyConfig(configFileName)
+    }
+    serializeAndDeserialize(result)
+}
+
+def yamlFileLoad(configFileName) {
+    def result = [:]
+    if (configFileName && fileExists(configFileName)) {
+        result = readYaml(file: configFileName)
+    }
+    result
 }
 
 return this

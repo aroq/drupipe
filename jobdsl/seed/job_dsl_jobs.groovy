@@ -88,6 +88,22 @@ def processJob(jobs, currentFolder, config) {
                 repo = config.configRepo
             }
             if (job.value.type == 'release-build') {
+                def seedRepo = config.configRepo
+                def localConfig = config.clone()
+                if (job.value.context) {
+                    localConfig = config.dslHelper.merge(localConfig, job.value.context)
+                }
+                String pipelineScriptName = config.dslHelper.getPipelineScriptName()
+                String pipelinesRepo = config.dslHelper.getPipelineRepo(localConfig, job)
+                String pipelineScriptDirPath = config.dslHelper.getPipelineScriptDirPath(localConfig, job)
+                String pipelineScriptDirPathPrefix = (pipelineScriptDirPath && pipelineScriptDirPath.length() > 0) ? "${pipelineScriptDirPath}/" : ""
+                String pipelineScriptPath = (config.config_dir && config.config_dir.length() > 0) ? "${pipelineScriptDirPathPrefix}${config.config_dir}/${pipelineScriptName}" : "${pipelineScriptDirPathPrefix}${pipelineScriptName}"
+                if (config.pipeline_script_full) {
+                    pipelineScriptPath = "${config.pipeline_script_full}"
+                }
+                println "pipelinesRepo: ${pipelinesRepo}"
+                println "pipelineScriptPath: ${pipelineScriptPath}"
+                println "pipelineScriptDirPath: ${pipelineScriptDirPath}"
                 pipelineJob(currentName) {
                     concurrentBuild(false)
                     logRotator(-1, config.logRotatorNumToKeep)
@@ -99,16 +115,19 @@ def processJob(jobs, currentFolder, config) {
                         cpsScm {
                             scm {
                                 git() {
+                                    branch('master')
                                     remote {
                                         name('origin')
-                                        url(config.configRepo)
+                                        url(pipelinesRepo)
                                         credentials(config.credentialsId)
                                     }
-                                    extensions {
-                                        relativeTargetDirectory(config.projectConfigPath)
+                                    if (pipelineScriptDirPath && pipelineScriptDirPath.length() > 0) {
+                                        extensions {
+                                            relativeTargetDirectory(pipelineScriptDirPath)
+                                        }
                                     }
                                 }
-                                scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
+                                scriptPath(pipelineScriptPath)
                             }
                         }
                     }
@@ -116,6 +135,12 @@ def processJob(jobs, currentFolder, config) {
 
             }
             else if (job.value.type == 'state') {
+                def seedRepo = config.configRepo
+                def localConfig = config.clone()
+                if (job.value.context) {
+                    localConfig = config.dslHelper.merge(localConfig, job.value.context)
+                }
+//                println "Local config: ${localConfig}"
                 def state = job.value.state
                 def buildEnvironment
                 def jobBranch
@@ -132,6 +157,17 @@ def processJob(jobs, currentFolder, config) {
                     buildEnvironment = job.value.env
                     jobBranch = job.value.branch
                 }
+                String pipelineScriptName = config.dslHelper.getPipelineScriptName()
+                String pipelinesRepo = config.dslHelper.getPipelineRepo(localConfig, job)
+                String pipelineScriptDirPath = config.dslHelper.getPipelineScriptDirPath(localConfig, job)
+                String pipelineScriptDirPathPrefix = (pipelineScriptDirPath && pipelineScriptDirPath.length() > 0) ? "${pipelineScriptDirPath}/" : ""
+                String pipelineScriptPath = (config.config_dir && config.config_dir.length() > 0) ? "${pipelineScriptDirPathPrefix}${config.config_dir}/${pipelineScriptName}" : "${pipelineScriptDirPathPrefix}${pipelineScriptName}"
+                if (config.pipeline_script_full) {
+                    pipelineScriptPath = "${config.pipeline_script_full}"
+                }
+                println "pipelinesRepo: ${pipelinesRepo}"
+                println "pipelineScriptPath: ${pipelineScriptPath}"
+                println "pipelineScriptDirPath: ${pipelineScriptDirPath}"
                 pipelineJob(currentName) {
                     if (config.quietPeriodSeconds) {
                         quietPeriod(config.quietPeriodSeconds)
@@ -152,7 +188,7 @@ def processJob(jobs, currentFolder, config) {
                             scm {
                                 git {
                                     def selectedRemoteBranch = 'master'
-                                    if (config.containsKey('tags') && config.tags.contains('single')) {
+                                    if (config.containsKey('tags') && config.tags.contains('single') && jobBranch != 'state_stable') {
                                         def gitLabBranchResponse = config.gitlabHelper.getBranch(config.configRepo, jobBranch)
                                         if (gitLabBranchResponse && gitLabBranchResponse.containsKey('name')) {
                                             selectedRemoteBranch = gitLabBranchResponse.name
@@ -161,14 +197,16 @@ def processJob(jobs, currentFolder, config) {
                                     branch(selectedRemoteBranch)
                                     remote {
                                         name('origin')
-                                        url(config.configRepo)
+                                        url(pipelinesRepo)
                                         credentials(config.credentialsId)
                                     }
-                                    extensions {
-                                        relativeTargetDirectory(config.projectConfigPath)
+                                    if (pipelineScriptDirPath && pipelineScriptDirPath.length() > 0) {
+                                        extensions {
+                                            relativeTargetDirectory(pipelineScriptDirPath)
+                                        }
                                     }
                                 }
-                                scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
+                                scriptPath(pipelineScriptPath)
                             }
                         }
                     }
@@ -281,6 +319,22 @@ def processJob(jobs, currentFolder, config) {
                 }
             }
             else if (job.value.type == 'release-deploy') {
+                def seedRepo = config.configRepo
+                def localConfig = config.clone()
+                if (job.value.context) {
+                    localConfig = config.dslHelper.merge(localConfig, job.value.context)
+                }
+                String pipelineScriptName = config.dslHelper.getPipelineScriptName()
+                String pipelinesRepo = config.dslHelper.getPipelineRepo(localConfig, job)
+                String pipelineScriptDirPath = config.dslHelper.getPipelineScriptDirPath(localConfig, job)
+                String pipelineScriptDirPathPrefix = (pipelineScriptDirPath && pipelineScriptDirPath.length() > 0) ? "${pipelineScriptDirPath}/" : ""
+                String pipelineScriptPath = (config.config_dir && config.config_dir.length() > 0) ? "${pipelineScriptDirPathPrefix}${config.config_dir}/${pipelineScriptName}" : "${pipelineScriptDirPathPrefix}${pipelineScriptName}"
+                if (config.pipeline_script_full) {
+                    pipelineScriptPath = "${config.pipeline_script_full}"
+                }
+                println "pipelinesRepo: ${pipelinesRepo}"
+                println "pipelineScriptPath: ${pipelineScriptPath}"
+                println "pipelineScriptDirPath: ${pipelineScriptDirPath}"
                 pipelineJob(currentName) {
                     concurrentBuild(false)
                     logRotator(-1, config.logRotatorNumToKeep)
@@ -306,17 +360,19 @@ def processJob(jobs, currentFolder, config) {
                         cpsScm {
                             scm {
                                 git() {
+                                    branch('master')
                                     remote {
                                         name('origin')
-                                        url(config.configRepo)
+                                        url(pipelinesRepo)
                                         credentials(config.credentialsId)
-                                        branch('master')
                                     }
-                                    extensions {
-                                        relativeTargetDirectory(config.projectConfigPath)
+                                    if (pipelineScriptDirPath && pipelineScriptDirPath.length() > 0) {
+                                        extensions {
+                                            relativeTargetDirectory(pipelineScriptDirPath)
+                                        }
                                     }
                                 }
-                                scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
+                                scriptPath(pipelineScriptPath)
                             }
                         }
                     }
@@ -348,13 +404,18 @@ def processJob(jobs, currentFolder, config) {
                         pipelinesRepo = job.value.configRepo
                     }
                 }
-                if (pipelinesRepo == seedRepo) {
-//                    pipelineScriptPath = "${localConfig.projectConfigPath}/${pipelineScript}.groovy"
-                    pipelineScriptPath = "${pipelineScript}.groovy"
+                if (config.pipeline_script_full) {
+                    pipelineScriptPath = "${config.config_dir}/${config.pipeline_script_full}"
                 }
                 else {
-                    configMode = MODE_CONFIG_AND_PROJECT_REPO
-                    pipelineScriptPath = "${pipelineScript}.groovy"
+                    if (pipelinesRepo == seedRepo) {
+//                    pipelineScriptPath = "${localConfig.projectConfigPath}/${pipelineScript}.groovy"
+                        pipelineScriptPath = "${pipelineScript}.groovy"
+                    }
+                    else {
+                        configMode = MODE_CONFIG_AND_PROJECT_REPO
+                        pipelineScriptPath = "${pipelineScript}.groovy"
+                    }
                 }
                 println "pipelinesRepo: ${pipelinesRepo}"
                 println "pipelineScriptPath: ${pipelineScriptPath}"
@@ -481,6 +542,9 @@ def processJob(jobs, currentFolder, config) {
                         }
                         println "Webhook added for project ${config.jenkinsFolderName}/${currentName}"
                     }
+                }
+                else {
+                    println "Webhooks weren't created"
                 }
 
             }

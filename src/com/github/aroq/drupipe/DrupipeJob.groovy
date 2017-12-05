@@ -1,6 +1,6 @@
 package com.github.aroq.drupipe
 
-class DrupipeJob implements Serializable {
+class DrupipeJob extends DrupipeBase {
 
     String name
 
@@ -9,6 +9,12 @@ class DrupipeJob implements Serializable {
     String from
 
     String branch
+
+    String state
+
+    String env
+
+    HashMap source
 
     def triggers
 

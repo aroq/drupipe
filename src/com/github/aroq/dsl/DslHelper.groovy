@@ -73,4 +73,27 @@ class DslHelper {
         println "getServersByTags: ${result}"
         result
     }
+
+    def getPipelineScriptName() {
+        return (config.containsKey('config_version') && config.config_version >= 2) ? 'Jenkinsfile' : "pipeline.groovy"
+    }
+
+    def getPipelineScriptDirPath(localConfig, job) {
+        if (job.value.configRepo || localConfig.project_type == 'single') {
+            return ""
+        }
+        return "${config.projectConfigPath}"
+    }
+
+    def getPipelineRepo(localConfig, job) {
+      if (localConfig.pipelines_repo) {
+          return localConfig.pipelines_repo
+      }
+      else {
+          if (job.value.configRepo) {
+              return job.value.configRepo
+          }
+      }
+      return config.configRepo
+    }
 }

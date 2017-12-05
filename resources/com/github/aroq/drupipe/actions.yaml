@@ -1,6 +1,6 @@
 params:
   actions:
-    processor_params:
+    processors:
       from:
         # defines in which mode 'from' should be processed.
         mode: execute
@@ -116,13 +116,14 @@ params:
     JobDslSeed:
       perform:
         params:
-          removedJobAction: DELETE
-          removedViewAction: DELETE
-          lookupStrategy: SEED_JOB
-          additionalClasspath:
-            - .unipipe/library/src
-          jobsPattern:
-            - .unipipe/library/jobdsl/seed/*.groovy
+          dsl_params:
+            removedJobAction: DELETE
+            removedViewAction: DELETE
+            lookupStrategy: SEED_JOB
+            additionalClasspath:
+              - .unipipe/library/src
+            jobsPattern:
+              - .unipipe/library/jobdsl/seed/*.groovy
 
     Druflow:
       params:
@@ -133,17 +134,23 @@ params:
       operations:
         params:
           propertiesFile: docroot/master/version.properties
+          installDruflow: false
           executeCommand: deployFlow
+          druflowDir: /app/druflow
 
       deploy:
         params:
           propertiesFile: docroot/master/version.properties
+          installDruflow: false
           executeCommand: deployTag
+          druflowDir: /app/druflow
 
       deployFlow:
         params:
           propertiesFile: docroot/master/version.properties
+          installDruflow: false
           executeCommand: deployFlow
+          druflowDir: /app/druflow
 
       copySite:
         params:
@@ -237,7 +244,7 @@ params:
     Helm:
       params:
         executable: helm
-        chart_name: zebra-cd
+        chart_name: ''
         release_name: ${action.params.chart_name}-${context.environment}
         charts_dir: charts
         kubectl_config_file: .kubeconfig
@@ -253,7 +260,7 @@ params:
           release_name:
             type: result
             source: params.release_name
-            destination: context.k8s.selector
+            destination: context.k8s.release_name
 
       init:
         params:
@@ -264,6 +271,7 @@ params:
 
       apply:
         params:
+          debugEnabled: true
           command: upgrade
           value_suffix: values.yaml
           timeout: '120'
@@ -328,6 +336,7 @@ params:
 
       scale_replicaset:
         params:
+          debugEnabled: true
           command: scale replicaset
           replicas: ''
           replicaset_name: ''
@@ -344,16 +353,18 @@ params:
 
       scale_down_up:
         params:
+          debugEnabled: true
           replicas_down: '0'
           replicas_up: '1'
 
       get_replicaset_name:
         params:
+          debugEnabled: true
           command: get replicaset
           release_name: ${actions.Helm_status.release_name}
           jsonpath: '{.items[0].metadata.name}'
           return_stdout: true
-          selector: release=${context.k8s.selector}
+          selector: component=${context.k8s.release_name}-jenkins-master
           flags:
             --namespace:
               - ${action.params.namespace}
@@ -372,7 +383,8 @@ params:
           release_name: ${actions.Helm_status.release_name}
           jsonpath: '{.items[0].metadata.name}'
           return_stdout: true
-          selector: release=${context.k8s.selector}
+          # TODO: Redo it.
+          selector: component=${context.k8s.release_name}-jenkins-master
           flags:
             --namespace:
               - ${action.params.namespace}
@@ -402,7 +414,7 @@ params:
           release_name: ${actions.Helm_status.release_name}
           jsonpath: '''{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}'''
           return_stdout: true
-          selector: release=${context.k8s.selector}
+          selector: component=${context.k8s.release_name}-jenkins-master
           flags:
             --namespace:
               - ${action.params.namespace}
@@ -453,4 +465,3 @@ params:
             done'' '
           full_command:
             - ${action.params.command}
-

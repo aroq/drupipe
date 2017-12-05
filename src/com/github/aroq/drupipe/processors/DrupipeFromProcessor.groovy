@@ -6,7 +6,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     String mode
 
-    String config_key
+    String include_key
 
     def getFromPathItem(object, pathItem, String key) {
         def result = [:]
@@ -18,7 +18,12 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         result
     }
 
-    def getFrom(object, path, key = 'params') {
+    def collectKeyParamsFromJsonPath(object, path, key = 'params') {
+        // Remove first '.' if exists.
+        if (path[0] == '.') {
+            path = path.getAt(1..path.length() - 1)
+        }
+
         def result = [:]
         if (path instanceof CharSequence) {
             path = path.tokenize('.')
@@ -38,36 +43,65 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         result
     }
 
-    def processFromItem(context, result, from, parent, key = 'params') {
-        // TODO: check about .params.
-        from = 'params.' + from
+    def getUnprocessedContext() {
+        def filePath = '.unipipe/temp/context_unprocessed.yaml'
+        utils.yamlFileLoad(filePath)
+    }
 
-//        utils.log "Process from: ${from}"
+    def processFromItem(context, result, String from, String parent, String key = 'params') {
+//        if (from == '.params.actions.JobDslSeed.perform') {
+//            utils.log "Process from: ${from}"
+//            utils.log "Process mode: ${mode}"
+//        }
 
-        def processorParams = getFrom(context, from, 'processor_params')
+        def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         if (processorParams) {
-//            utils.debugLog(context, processorParams, 'processFromItem->processorParams', [debugMode: 'json'], [], true)
-            def keyMode = utils.deepGet(processorParams, "${this.config_key}.mode")
+            utils.debugLog(context, processorParams, 'processFromItem->processorParams', [debugMode: 'json'], [], false)
+            def keyMode = utils.deepGet(processorParams, "${this.include_key}.mode")
 
             if (keyMode == this.mode) {
-//                utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, config_key: ${this.config_key}"
-                def fromObject = getFrom(context, from, key)
+//                if (from == '.params.actions.JobDslSeed.perform') {
+//                    utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
+//                }
+
+                def tempContext
+
+                // TODO: Find cheaper way to make sure context parts were not changed during previous operations.
+                if (mode == 'config') {
+                    if (utils.drupipeExecutionMode() == 'jenkins') {
+                        tempContext = getUnprocessedContext()
+                    }
+                    // For local testing.
+                    else {
+                        tempContext = utils.getUnprocessedContext()
+                    }
+                }
+                else {
+                    tempContext = context
+                }
+                if (!tempContext) {
+                    throw new Exception("No tempContext is defined.")
+                }
+
+                def fromObject = collectKeyParamsFromJsonPath(tempContext, from, key)
+
+                // TODO: Refactor it:
                 if (fromObject) {
                     if (parent == 'job') {
-                        fromObject.name = from
+                        fromObject.name = from - '.params.jobs'
                     }
                     if (parent == 'pipeline') {
-                        fromObject.name = from
+                        fromObject.name = from - '.params.pipelines.'
                     }
                     if (parent == 'containers') {
-                        fromObject.name = from
+                        fromObject.name = from - '.params.containers.' - 'containers.'
                     }
                     if (parent == 'blocks') {
-                        fromObject.name = from
+                        fromObject.name = from - '.params.blocks.'
                     }
                     // Set name to 'from' if parent is 'actions'.
                     if (parent in ['actions', 'pre_actions', 'post_actions']) {
-                        def action = from - 'params.actions.'
+                        def action = from - '.params.actions.'
                         def values = action.split("\\.")
                         if (values.size() > 1) {
                             fromObject.name = values[0]
@@ -77,11 +111,17 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                     }
                     fromObject = process(context, fromObject, parent, key)
                     result = utils.merge(fromObject, result)
+                    result.from_processed = true
+                    result.from_processed_mode = this.mode
+                    result.from_source = from
                 }
-                result.remove(this.config_key)
+                else {
+                    utils.log "DrupipeFromProcessor->processFromItem() FROM ${from} is not found in tempContext"
+                }
+                result.remove(this.include_key)
             }
             else {
-//                utils.log "DrupipeFromProcessor->processFromItem() ${from} skipped as mode is ${keyMode}, config_key: ${this.config_key}"
+//                utils.log "DrupipeFromProcessor->processFromItem() ${from} skipped as mode is ${keyMode}, include_key: ${this.include_key}"
             }
         }
         else {
@@ -92,9 +132,10 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def process(context, obj, parent, key = 'params', mode = 'config') {
+//        utils.log "DrupipeFromProcessor->processItem"
         this.mode = mode
         def result = obj
-        if (obj.containsKey(this.config_key)) {
+        if (obj.containsKey(this.include_key)) {
             if (obj.from instanceof CharSequence) {
                 result = processFromItem(context, result, obj.from, parent, key)
             }
