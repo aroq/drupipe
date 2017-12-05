@@ -75,7 +75,11 @@ class DslHelper {
     }
 
     def getPipelineScriptName() {
-        return (config.containsKey('config_version') && config.config_version >= 2) ? 'Jenkinsfile' : "pipeline.groovy"
+        def pipelineScriptName = 'pipeline'
+        if (config.pipeline_script) {
+            pipelineScriptName = config.pipeline_script
+        }
+        return (config.containsKey('config_version') && config.config_version >= 2) ? 'Jenkinsfile' : "${pipelineScriptName}.groovy"
     }
 
     def getPipelineScriptDirPath(localConfig, job) {
