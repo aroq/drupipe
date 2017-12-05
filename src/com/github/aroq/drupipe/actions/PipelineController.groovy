@@ -52,7 +52,7 @@ class PipelineController extends BaseAction {
     }
 
     def operations() {
-        if (action.pipeline.context.operationsMode == 'no-ops') {
+        if (action.pipeline.context.env.operationsMode == 'no-ops') {
             script.echo "No operations mode (no-ops) is selected"
         }
         else {

@@ -35,8 +35,8 @@ class Druflow extends BaseAction {
             docrootConfigDir: action.pipeline.drupipeConfig.drupipeSourcesController.sourceDir(action.pipeline.drupipeConfig.config, 'project'),
         ]
         // TODO: review it.
-        if (action.pipeline.context.operationsMode) {
-            defaultParams['flowType'] = action.pipeline.context.operationsMode
+        if (action.pipeline.context.env.operationsMode) {
+            defaultParams['flowType'] = action.pipeline.context.env.operationsMode
         }
         else {
             defaultParams['flowType'] = 'full'
