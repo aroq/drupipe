@@ -52,8 +52,8 @@ params:
 
 jobs:
   mothership:
-    context:
-      config_version: 2
+#    context:
+#      config_version: 2
     type: mothership
     pipeline:
       pods:

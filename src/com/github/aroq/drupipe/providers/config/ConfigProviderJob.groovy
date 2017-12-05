@@ -20,7 +20,7 @@ class ConfigProviderJob extends ConfigProviderBase {
             utils.log "Job name: " + drupipeConfig.config.env.JOB_NAME
 
             // TODO: check it will all cases.
-            if (drupipeConfig.config.env.JOB_NAME.contains('/')) {
+            if (drupipeConfig.config.env.JOB_NAME.contains('/') && drupipeConfig.config.env.JOB_NAME != 'persistent/mothership') {
                 drupipeConfig.config.job = (drupipeConfig.config.env.JOB_NAME).split('/').drop(1).inject(drupipeConfig.config, { obj, prop ->
                     obj.jobs[prop]
                 })
