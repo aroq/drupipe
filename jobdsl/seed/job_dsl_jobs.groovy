@@ -108,7 +108,13 @@ def processJob(jobs, currentFolder, config) {
                     concurrentBuild(false)
                     logRotator(-1, config.logRotatorNumToKeep)
                     parameters {
-                        config.dslParamsHelper.drupipeParamTags(delegate, job, config)
+                        config.docmanConfig.projects?.each { project ->
+                            if (project.value.repo && project.value.type != 'root') {
+                                println "Project type: ${project.value.type}"
+                                println "Project repo: ${project.value.repo}"
+                                config.dslParamsHelper.drupipeParamTagsSelectsRelease(delegate, job, config, project.value.name + '_version', project)
+                            }
+                        }
                         config.dslParamsHelper.drupipeParamsDefault(delegate, job, config)
                     }
                     definition {
@@ -343,10 +349,10 @@ def processJob(jobs, currentFolder, config) {
                             if ((project.value.type == 'root' || project.value.type == 'root_chain' || project.value.type == 'single') && (project.value.repo || project.value.root_repo)) {
 
                                 if (job.value.source.type == 'tags') {
-                                    config.dslParamsHelper.drupipeParamTagsSelects(delegate, job, config, 'release', project)
+                                    config.dslParamsHelper.drupipeParamTagsSelectsDeploy(delegate, job, config, 'release', project)
                                 }
                                 else if (job.value.source.type == 'branches') {
-                                    config.dslParamsHelper.drupipeParamBranchesSelects(delegate, job, config, 'release', project)
+                                    config.dslParamsHelper.drupipeParamBranchesSelectsDeploy(delegate, job, config, 'release', project)
                                 }
 
                                 config.dslParamsHelper.drupipeParamOperationsCheckboxes(delegate, job, config)
