@@ -6,7 +6,7 @@ class DrupipeStage implements Serializable {
 
     ArrayList<DrupipeActionWrapper> actions = []
 
-    DrupipePipeline pipeline
+    DrupipeController pipeline
 
     def execute(body = null) {
         def script = pipeline.script

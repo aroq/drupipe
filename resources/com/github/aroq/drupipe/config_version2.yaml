@@ -1,0 +1,13 @@
+config_version: 2
+
+uniconf:
+  keys:
+    include: from
+    sources: sources
+    params: params
+    jobs: jobs
+  dirs:
+    sources: scenarios
+  include:
+    prefix: .params.
+

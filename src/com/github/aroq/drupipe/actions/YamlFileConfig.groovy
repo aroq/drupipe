@@ -20,5 +20,9 @@ class YamlFileConfig extends BaseAction {
         result
     }
 
+    def loadFromLibraryResource() {
+      script.readYaml(text: script.libraryResource(action.params.resource))
+    }
+
 }
 

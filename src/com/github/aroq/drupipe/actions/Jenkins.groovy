@@ -89,12 +89,12 @@ JENKINS_URL=http://${this.action.params.jenkins_address} /jenkins-cli/jenkins-cl
     }
 
     def seedTest() {
-        def mothershipConfig = utils.getMothershipConfigFile(action.pipeline.context)
+        def mothershipConfig = action.pipeline.drupipeConfig.projects
         def projects = parseProjects(mothershipConfig, 'tests', 'seed').tokenize(',')
+
         def builds = [:]
         for (def i = 0; i < projects.size(); i++) {
             this.script.echo projects[i]
-//            this.action.params.jobName = "${projects[i]}/seed"
             builds[i] = buildPrepare("${projects[i]}/seed")
         }
         script.parallel builds
@@ -105,7 +105,7 @@ JENKINS_URL=http://${this.action.params.jenkins_address} /jenkins-cli/jenkins-cl
     def parseProjects(def projects, String param, String tag) {
         def result = []
         for (project in projects) {
-            if (project.value?.params?.containsKey(param) && project.value.params[param].contains(tag)) {
+            if (project.value?.params?.containsKey(param) && project.value.params[param].contains(tag) ) {
                 result << project.key
             }
         }

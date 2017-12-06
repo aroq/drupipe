@@ -1,7 +1,7 @@
 #!groovy
 
-import com.github.aroq.drupipe.DrupipePipeline
+import com.github.aroq.drupipe.DrupipeController
 
 def call() {
-    (new DrupipePipeline([script: this, params: params])).execute()
+    (new DrupipeController([script: this, params: params])).execute()
 }

@@ -12,9 +12,9 @@ class DrupipeBlock implements Serializable {
 
     String dockerImage = 'use_default'
 
-    LinkedHashMap config = [:]
+    def config = [:]
 
-    DrupipePipeline pipeline
+    DrupipeController pipeline
 
     DrupipeStage stage
 

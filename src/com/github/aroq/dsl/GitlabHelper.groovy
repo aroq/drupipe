@@ -13,6 +13,7 @@ class GitlabHelper {
     def config
 
     def setRepoProperties(repo) {
+        config.repoParams = [:]
         config.repoParams.gitlabAddress = repo.substring(repo.indexOf('@') + 1, repo.indexOf(':'));
         config.repoParams.groupName     = repo.substring(repo.indexOf(':') + 1, repo.indexOf('/'));
         config.repoParams.projectName   = repo.substring(repo.indexOf('/') + 1, repo.lastIndexOf("."));

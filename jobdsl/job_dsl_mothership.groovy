@@ -1,8 +1,12 @@
 @Grab(group='org.yaml', module='snakeyaml', version='1.18')
 import org.yaml.snakeyaml.Yaml
 import com.github.aroq.dsl.GitlabHelper
+import com.github.aroq.dsl.DslHelper
 
-def configMain = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
+def dslHelper = new DslHelper(script: this)
+def configMain = dslHelper.readJson(this, '.unipipe/temp/context_processed.json')
+
+println "configMain: ${configMain}"
 
 def projectsFileRead(filePath) {
   try {
@@ -76,8 +80,30 @@ projects.each { project ->
         println "CONFIG projectConfigPath: ${config.projectConfigPath}"
         println "CONFIG mothership_job_name: ${config.mothership_job_name}"
         println "CONFIG mothership_job_jenkinsfile: ${config.mothership_job_jenkinsfile}"
-        String subDir = config.projectConfigPath ? config.projectConfigPath.substring(0, config.projectConfigPath.length() - (config.projectConfigPath.endsWith("/") ? 1 : 0)) + '/' : ''
+
         String jenkinsfile = config.mothership_job_jenkinsfile ? config.mothership_job_jenkinsfile : 'Jenkinsfile'
+
+        String subDir = ''
+        if (config.containsKey('config_version') && config.config_version == 2) {
+            if (config.project_type != 'single') {
+                subDir = config.projectConfigPath
+            }
+        }
+        else {
+            subDir = config.projectConfigPath
+        }
+
+        def pipelineScriptPathPrefix = (subDir.length() > 0) ? "${subDir}/" : ''
+        if (config.config_dir) {
+            pipelineScriptPath = "${pipelineScriptPathPrefix}${config.config_dir}/${jenkinsfile}"
+        }
+        else {
+            pipelineScriptPath = "${pipelineScriptPathPrefix}${jenkinsfile}"
+        }
+
+        println "subDir: ${subDir}"
+        println "pipelineScriptPath: ${pipelineScriptPath}"
+
         if (config.mothership_job_type == 'Jenkinsfile') {
             String jobName = config.mothership_job_name ? config.mothership_job_name : project.key
             println "JOB NAME: ${jobName}"
@@ -127,10 +153,12 @@ projects.each { project ->
                                 }
                                 branch('master')
                                 extensions {
-                                    relativeTargetDirectory(subDir)
+                                    if (subDir) {
+                                        relativeTargetDirectory(subDir)
+                                    }
                                 }
                             }
-                            scriptPath("${subDir}${jenkinsfile}")
+                            scriptPath(pipelineScriptPath)
                         }
                     }
                 }
@@ -247,4 +275,3 @@ def getServersByTags(tags, servers) {
     println "getServersByTags: ${result}"
     result
 }
-

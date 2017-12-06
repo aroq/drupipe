@@ -51,7 +51,7 @@ class Docman extends BaseAction {
 
     def stripedBuild() {
         info()
-        def docrootConfigJson = script.readFile("${action.pipeline.context.projectConfigPath}/${action.params.docmanJsonConfigFile}")
+        def docrootConfigJson = script.readFile("${action.pipeline.context.docmanDir}/config/${action.params.docmanJsonConfigFile}")
         def componentVersions = component_versions(docrootConfigJson, 'nexus')
         script.echo "Component versions:${componentVersions}"
 
@@ -80,7 +80,7 @@ class Docman extends BaseAction {
 
     def releaseBuild() {
         info()
-        def docrootConfigJson = script.readFile("${action.pipeline.context.projectConfigPath}/${action.params.docmanJsonConfigFile}")
+        def docrootConfigJson = script.readFile("${action.pipeline.context.docmanDir}/config/${action.params.docmanJsonConfigFile}")
         def componentVersions = component_versions(docrootConfigJson)
         script.echo "Component versions:${componentVersions}"
 
@@ -114,7 +114,7 @@ class Docman extends BaseAction {
         script.echo "FORCE MODE: ${action.pipeline.context.jenkinsParams.force}"
 
         def configBranch = 'master'
-        if (action.pipeline.context.tags.contains('single')) {
+        if (action.pipeline.context.containsKey('tags') && action.pipeline.context.tags.contains('single')) {
             if (action.pipeline.context.environmentParams && action.pipeline.context.environmentParams.containsKey('git_reference')) {
                 configBranch = action.pipeline.context.environmentParams.git_reference
             }
@@ -163,6 +163,7 @@ class Docman extends BaseAction {
     }
 
     def bumpStable() {
+        script.drupipeShell("git config --global user.email 'drupipe@github.com'; git config --global user.name 'Drupipe'", action.params)
         script.drupipeShell("docman bump stable -n", action.params)
     }
 

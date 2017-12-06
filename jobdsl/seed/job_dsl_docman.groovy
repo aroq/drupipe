@@ -1,9 +1,15 @@
 import com.github.aroq.dsl.DocmanConfig
+import com.github.aroq.dsl.DslHelper
 import com.github.aroq.dsl.GitlabHelper
 
 println "Docman Job DSL processing"
 
-def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
+def dslHelper = new DslHelper(script: this)
+def config = dslHelper.readJson(this, '.unipipe/temp/context_processed.json')
+dslHelper.config = config
+config.dslHelper = dslHelper
+
+//def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
 
 println "Config tags: ${config.tags}"
 
