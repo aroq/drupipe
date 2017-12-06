@@ -58,7 +58,11 @@ class DrupipeConfig implements Serializable {
             // TODO: remove it when all configs are updated to version 2.
             // For compatibility:
             if (config.defaultActionParams) {
-                config.params.actions.params = utils.merge(config.params.actions.params, config.defaultActionParams)
+                config.defaultActionParams.each {k, v ->
+                    config.defaultActionParams[k] = [:]
+                    config.defaultActionParams[k]['params'] = v
+                }​
+                config.params.actions = utils.merge(config.params.actions, config.defaultActionParams)
             }
 
             // TODO: Refactor it.
