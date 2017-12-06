@@ -37,48 +37,50 @@ class DrupipeController implements Serializable {
     }
 
     def execute(body = null) {
-        context.jenkinsParams = params
-        utils = new com.github.aroq.drupipe.Utils()
+        script.ansiColor('xterm') {
+            context.jenkinsParams = params
+            utils = new com.github.aroq.drupipe.Utils()
 
-        notification.name = 'Build'
-        notification.level = 'build'
+            notification.name = 'Build'
+            notification.level = 'build'
 
-        try {
-            script.timestamps {
-                init()
-                configuration()
-                if (configVersion() > 1) {
-                    script.node('master') {
-                        // TODO: Bring it back.
-                        // Secret option for emergency remove workspace.
-                        if (context.job) {
-                            def jobConfig = context.job
-                            archiveObjectJsonAndYaml(jobConfig, 'job')
-                            utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [], true)
-                            job = new DrupipeJob(jobConfig)
-                            job.controller = this
+            try {
+                script.timestamps {
+                    init()
+                    configuration()
+                    if (configVersion() > 1) {
+                        script.node('master') {
+                            // TODO: Bring it back.
+                            // Secret option for emergency remove workspace.
+                            if (context.job) {
+                                def jobConfig = context.job
+                                archiveObjectJsonAndYaml(jobConfig, 'job')
+                                utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [], true)
+                                job = new DrupipeJob(jobConfig)
+                                job.controller = this
+                            }
                         }
+                        job.execute()
                     }
-                    job.execute()
-                }
-                else {
-                    // For version 1 configs.
-                    if (body) {
-                        body(this)
+                    else {
+                        // For version 1 configs.
+                        if (body) {
+                            body(this)
+                        }
+                        executeVersion1()
                     }
-                    executeVersion1()
                 }
             }
-        }
-        catch (e) {
-            notification.status = 'FAILED'
-            throw e
-        }
-        finally {
-            if (notification.status != 'FAILED') {
-                notification.status = 'SUCCESSFUL'
+            catch (e) {
+                notification.status = 'FAILED'
+                throw e
             }
-            utils.pipelineNotify(context, notification)
+            finally {
+                if (notification.status != 'FAILED') {
+                    notification.status = 'SUCCESSFUL'
+                }
+                utils.pipelineNotify(context, notification)
+            }
         }
     }
 
