@@ -1,3 +1,1082 @@
+Version 0.8.1:
+ - Merge pull request #96 from aroq/develop
+ - Merge pull request #95 from michael-molchanov/aroq_develop
+ - Fix default action params merge.
+ - Merge pull request #94 from michael-molchanov/aroq_develop
+ - Fix default action params merge.
+ - Merge pull request #93 from michael-molchanov/aroq_develop
+ - Fix operations mode.
+ - Fix default action params merge.
+ - Merge pull request #92 from michael-molchanov/aroq_develop
+ - Move each to job dsl script.
+ - Merge pull request #91 from michael-molchanov/aroq_develop
+ - Fix pipeline script name.
+ - Fix mothership job config_version to 2
+ - Fix mothership job config_version to 2
+ - Fix mothership job config_version to 2
+ - Fix mothership job config_version to 2
+ - Merge pull request #90 from aroq/refactor-config-version2
+ - Merge pull request #89 from michael-molchanov/aroq_refactor_config_version_2
+ - Fix mothership dsl.
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Merge pull request #88 from michael-molchanov/aroq_refactor_config_version_2
+ - Add debug.
+ - Fix mothership job dsl.
+ - Merge pull request #87 from michael-molchanov/refactor-config-version2
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Don't install druflow, fix config dir.
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Refactor config retrieve
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Debug kubectl copy file
+ - Merge pull request #86 from michael-molchanov/aroq_refactor_config_version_2
+ - Fix dsl.
+ - Test new action execution function
+ - Test new action execution function
+ - Test new action execution function
+ - Test new action execution function
+ - Merge branch 'refactor-config-version2' of github.com:aroq/drupipe into refactor-config-version2
+ - Change config_version2 action
+ - Merge pull request #85 from michael-molchanov/aroq_refactor_config_version_2
+ - Revert to bug, but it works for now.
+ - Merge pull request #84 from michael-molchanov/aroq_refactor_config_version_2
+ - Fix compilation error.
+ - Merge pull request #83 from michael-molchanov/aroq_refactor_config_version_2
+ - Revert "Switch to fork"
+ - Revert "Switch to fork."
+ - Fix project config path.
+ - Fix tags helper script.
+ - Remove debug.
+ - Fix stash.
+ - Fix stash.
+ - Fix stash utils.
+ - Fix pipeline script path.
+ - Remove debug.
+ - Switch to fork
+ - Add debug.
+ - Remove debug.
+ - Fix state dsl.
+ - Remove debug.
+ - Fix config source add.
+ - Debug
+ - Fix project config.
+ - Add stash/unstash.
+ - Add debug.
+ - Revert "Add debug."
+ - Add debug.
+ - Add dsl helper to mothership dsl.
+ - Switch to fork.
+ - Fix config read.
+ - Debug
+ - Merge branch 'refactor-config-version2' of github.com:michael-molchanov/drupipe into refactor-config-version2
+ - Add debug.
+ - Add debug.
+ - Add source field.
+ - Add checks.
+ - Remove debug.
+ - Debug
+ - Add job params.
+ - Merge pull request #82 from michael-molchanov/refactor-config-version2
+ - Fix pipeline file extension.
+ - Merge pull request #81 from michael-molchanov/refactor-config-version2
+ - Use Jenkinsfile for config 2.
+ - Merge pull request #80 from michael-molchanov/refactor-config-version2
+ - Fix pipeline script path.
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Fix confict
+ - Add uniconf config & refactor keys
+ - Merge pull request #79 from michael-molchanov/aroq_dev
+ - Add allure report action.
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Add uniconf config & refactor keys
+ - Refactor config version2 and from processing
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Merge branch 'develop' into refactor-config-version2
+ - Merge pull request #77 from michael-molchanov/aroq_dev
+ - Fix config.json path.
+ - Merge branch 'develop' into refactor-config-version2
+ - Merge pull request #76 from michael-molchanov/aroq_dev
+ - Switch from scriptler to groovy script.
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Refactor config (node->container->block)
+ - Rename DrupipePipeline into DrupipeController
+ - Merge pull request #75 from aroq/develop
+ - Remove disabled notification
+ - Add actions preprocess
+ - Add actions preprocess
+ - Add actions preprocess
+ - Merge branch 'develop' of github.com:aroq/drupipe into develop
+ - Add actions preprocess
+ - Merge pull request #74 from michael-molchanov/aroq_dev
+ - Add actions preprocess
+ - Add actions preprocess
+ - Fix deploy job branch.
+ - Fix condition.
+ - Fix single release deploy.
+ - Add actions preprocess
+ - Add actions preprocess
+ - Add actions preprocess
+ - Add actions preprocess
+ - Add actions preprocess
+ - Add actions preprocess
+ - Add actions preprocess
+ - Add actions preprocess
+ - Add actions preprocess
+ - Disable gcloud auth in k8s mode
+ - Disable gcloud auth in k8s mode
+ - Disable gcloud auth in k8s mode
+ - Disable credentials use in k8s mode
+ - Disable credentials use in k8s mode
+ - Remove gcloud key secret file id
+ - Fix GCloud action fail on k8s
+ - Fix GCloud action fail on k8s
+ - Fix GCloud action fail on k8s
+ - Fix GCloud action fail on k8s
+ - Fix GCloud action fail on k8s
+ - Fix GCloud action fail on k8s
+ - Fix GCloud action fail on k8s
+ - Fix GCloud action fail on k8s
+ - Fix webhooks & mothership
+ - Fix webhooks & mothership
+ - Fix webhooks & mothership
+ - Fix webhooks & mothership
+ - Fix webhooks & mothership
+ - Fix webhooks & mothership
+ - Fix webhooks & mothership
+ - Fix webhooks & mothership
+ - Fix webhooks & mothership
+ - Fix webhooks & mothership
+ - Fix webhooks & mothership
+ - Fix webhooks & mothership
+ - Fix webhooks & mothership
+ - Fix webhooks & mothership
+ - Fix webhooks & mothership
+ - Fix webhooks & mothership
+ - Fix for common job webhooks
+ - Fix for common job webhooks
+ - Fix for common job webhooks
+ - Fix for common job webhooks
+ - Fix for common job webhooks
+ - Fix for common job webhooks
+ - Fix for common job webhooks
+ - Fix for common job webhooks
+ - Fix for common job webhooks
+ - Fix for common job webhooks
+ - Fix for common job webhooks
+ - Fix for common job webhooks
+ - Remove debug.
+ - Merge pull request #73 from aroq/develop
+ - Fix conflict
+ - Merge pull request #72 from michael-molchanov/aroq_dev
+ - Fix vegeta action.
+ - Fix redis action.
+ - Fix drush fl.
+ - Fix drush.
+ - Move dsl isGitlabHelper() into helper class
+ - Merge branch 'develop' of github.com:aroq/drupipe into develop
+ - Move dsl params functions into helper class
+ - Move dsl params functions into helper class
+ - Merge pull request #71 from michael-molchanov/aroq_dev
+ - Move dsl params functions into helper class
+ - Remove debug.
+ - Fix job dsl seed states type, select branch only for single projects.
+ - Move dsl params functions into helper class
+ - Test parallel seedTest
+ - Test parallel seedTest
+ - Test parallel seedTest
+ - Test parallel seedTest
+ - Test parallel seedTest
+ - Fix for k8s mode
+ - Fix for k8s mode
+ - Fix for k8s mode
+ - Fix for k8s mode
+ - Fix for k8s mode
+ - Fix for k8s mode
+ - Fix for k8s mode
+ - Fix for k8s mode
+ - Revert dsl changes & fixed mothership config
+ - Add nodes workspace for k8s mode
+ - Fix taurus
+ - Fix taurus
+ - Fix taurus
+ - Test for projectConfig repo source fix
+ - Move DSL helpers into dsl package
+ - Import GitlabHelper & DocmanConfig as security is turned off for DSLs
+ - Import DocmanConfig as security is turned off for DSLs
+ - Parameter separator
+ - Parameter separator
+ - Parameter separator
+ - Parameter separator
+ - Parameter separator
+ - Parameter separator
+ - Parameter separator
+ - Parameter separator
+ - Parameter separator
+ - Parameter separator
+ - Parameter separator
+ - Parameter separator
+ - Parameter separator
+ - Parameter separator
+ - Parameter separator
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Test remove scriptler scripts
+ - Add pod logs action
+ - Add pod logs action
+ - Add vault pass file handling for ansible in k8s
+ - Add vault pass file handling for ansible in k8s
+ - Add vault pass file handling for ansible in k8s
+ - Add blocks debug messages
+ - Merge branch 'develop' of github.com:aroq/drupipe into develop
+ - Update k8s blocks handling
+ - Update k8s blocks handling
+ - Merge pull request #70 from michael-molchanov/master
+ - Merge branch 'develop'
+ - Fix scenarios merge.
+ - Refactor DrupipeBock
+ - Refactor DrupipeBock
+ - Refactor DrupipeBock
+ - Refactor DrupipeBock
+ - Refactor DrupipeBock
+ - Refactor DrupipeBock
+ - Refactor DrupipeBock
+ - Refactor DrupipeBock
+ - Refactor DrupipeBock
+ - Refactor DrupipeBock
+ - Add k9s support for pipeline blocks
+ - Add nodeName != master check for k8s
+ - Add nodeName != master check for k8s
+ - Merge pull request #69 from michael-molchanov/master
+ - Merge branch 'develop'
+ - Fix conflict
+ - Merge branch 'develop'
+ - Fix pathes and action call.
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - Revert "Switch to fork."
+ - Merge branch 'develop'
+ - Fixes after merge, branches fixes.
+ - Switch to fork.
+ - Add k8s support
+ - Add k8s support
+ - Add k8s support
+ - Add k8s support
+ - Add k8s support
+ - Merge branch 'master' into develop
+ - Add k8s jenkins test procedure (#66)
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - Update pathes. Fix branches.
+ - Merge pull request #65 from aroq/k8s-jenkins-test
+ - Refactor kubectl selector param
+ - Refactor drupipeJobDslSeedSimple
+ - Refactor kubectl selector param
+ - Context & params handling major refactor (#64)
+ - Refactor action params processing & context handling. Add kubectl & gcloud actions features (#63).
+ - Merge pull request #62 from michael-molchanov/fix/artifact
+ - Merge pull request #61 from michael-molchanov/feature/unipipe
+ - Retrieve artifact on operations.
+ - Retrieve artifact on operations.
+ - Move build file to subdirectory.
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - Refactor action params, debug messages & common job configRepo handling. Add config_version=2 checks.
+ - Merge pull request #59 from aroq/develop
+ - Merge pull request #58 from michael-molchanov/master
+ - Add docman image to config.
+ - Change process params from Jenkins params to context.env params
+ - Add docman image to config.
+ - Merge pull request #57 from michael-molchanov/master
+ - Merge branch 'master' into develop
+ - Add Kubectl action
+ - Add Kubectl action
+ - Add force remove dir on force=11 in nodes too
+ - Add terraform init file list debug
+ - Refactor gcloud command
+ - Revert "Switch docman image to develop."
+ - Revert "Switch to fork."
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - Fix config init.
+ - Refactor GCloud action
+ - Refactor GCloud action
+ - Refactor GCloud action
+ - Refactor Helm action
+ - Fix branch reference.
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Fix kubectl config file
+ - Fixed helm secret file param name
+ - Fix helm flags
+ - Fixed helm secret file param name
+ - Add process action params with defaults from jenkins params or env vars
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Add helm status & delete commands
+ - Add helm status & delete commands
+ - Add helm status & delete commands
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Refactor Helm action
+ - Change helm install to helm upgrade --install
+ - Change helm install to helm upgrade --install
+ - Change helm install to helm upgrade --install
+ - Use helm chart dir
+ - Use helm chart dir
+ - Add helm install logic
+ - Add helm install logic
+ - Add helm install logic
+ - Add helm install logic
+ - Add helm install logic
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Add gcloud auth
+ - Add gcloud auth
+ - Add gcloud auth
+ - Add gcloud auth
+ - Add gcloud auth
+ - Add gcloud auth
+ - Add gcloud auth
+ - Add gcloud auth
+ - Add gcloud auth
+ - Add gcloud auth
+ - Add gcloud action
+ - Fix (with TODO) of project.value.repo in DSL webhooks creation
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Add Helm action
+ - Ansible refactor string quotes
+ - Switch docman image to develop.
+ - Remove single dsl.
+ - Allow to use single jobs without docman.
+ - Fix
+ - Switch to tags for single dsl condition.
+ - Allow to override jenkinsfile.
+ - fix
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - Move config to .drupipe subdirectory.
+ - Merge pull request #56 from aroq/develop
+ - Merge pull request #55 from michael-molchanov/aroq_develop
+ - Disable ansible verbose.
+ - Disable ansible verbose.
+ - Fix path.
+ - Remove debug
+ - Fix deploy from path.
+ - Add debug.
+ - Artifact dir.
+ - Add debug.
+ - Change dir to project.
+ - Clone repo.
+ - Add debug.
+ - Execute only operations on remote server.
+ - Add debug.
+ - Clone only if configured.
+ - Fix path.
+ - Remove debug
+ - Fix deploy from path.
+ - Add debug.
+ - Artifact dir.
+ - Add debug.
+ - Change dir to project.
+ - Clone repo.
+ - Add debug.
+ - Execute only operations on remote server.
+ - Add debug.
+ - Clone only if configured.
+ - Skip incoming triggers creation for jenkins jobs.
+ - Add checks.
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - Add throw exceptions.
+ - Merge project config to config to use override parameter properly.
+ - Fix config not defined.
+ - Allow to limit mothersheep seed by jenkins server.
+ - Improve console messages.
+ - Create webhooks for all configured servers. Avoid delete webhooks from another jobs.
+ - Avoid creating and deleting webhooks if not in webhooksEnvironments.
+ - Uncoment delete webhooks http requests.
+ - Fix webhook environments.
+ - Fix config name.
+ - Switch servers to config.
+ - Store servers in config.
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - fix
+ - Merge branch 'develop' of github.com:aroq/drupipe into develop
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - Switch to tags, add delete webhook gitlab helper.
+ - Fix folder & job names retrieve due to first jenksin config save bug
+ - Add debug.
+ - Make sure terraform commands are not executed with bash
+ - Add jenkins cli build args
+ - Add scm checkout for blocks
+ - Move token retrieve from file into cli action for jenkins
+ - Move token retrieve from file into cli action for jenkins
+ - Move token retrieve from file into cli action for jenkins
+ - Move token retrieve from file into cli action for jenkins
+ - Move token retrieve from file into cli action for jenkins
+ - Move token retrieve from file into cli action for jenkins
+ - Add debug info to ansible jenkins
+ - Add ansible -vvv
+ - Add debug to ansible playbook
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - Add debug.
+ - Fix shell action drupipeShell output return and notifications cleanup.
+ - Merge branch 'develop' of github.com:aroq/drupipe into develop
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - Merge branch 'develop' of github.com:aroq/drupipe into develop
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - Use readJSON.
+ - Send drush output if notification turned on (required for notifications).
+ - Fix drush fl action.
+ - Add context switch to return shell command result.
+ - Switch drush output with context flag.
+ - Fix drush command output and exceptions.
+ - Merge branch 'develop' of github.com:aroq/drupipe into develop
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - Drush fix + store result.
+ - Allow interpolation if not disable explicitly
+ - Fix interpolate.
+ - Merge branch 'develop' of github.com:aroq/drupipe into develop
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - Switch active choice param to scriptler script.
+ - Use read json and yaml functions instead of classes.
+ - Remove projects.json hardcode.
+ - Fix config file not found.
+ - Add interpolation params function.
+ - Fix mothership yaml read.
+ - Merge branch 'develop' of github.com:aroq/drupipe into develop
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - Add debug to piplene notify function.
+ - Allow to use Yaml for projects config.
+ - Fix notifications for not manual job triggers.
+ - Disable mute_notifications param for triggered jobs, not manually triggered jobs.
+ - Check that build was triggered by user.
+ - Disable disable_block and disable_trigger params for triggered jobs, not manually started.
+ - Add function to check that build was triggered by user
+ - Fix disable trigger check.
+ - Add cron trigger support for common job.
+ - Merge branch 'feature/mattermost' into develop
+ - Add jenkins params check.
+ - Add check to disable block param.
+ - Fix
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - Merge branch 'develop' of github.com:aroq/drupipe into develop
+ - Fix class name
+ - Add optional match group to match also jobs in root, not only in folder.
+ - Check job in folder.
+ - Allow to select node for pipeline block.
+ - Send mention for build start and stop.
+ - Allow to disable blocks on job start.
+ - Add job triggers support.
+ - Add parameters existance check before length check to avoid errors.
+ - Add iterations support to taurus action.
+ - Add action output to notification.
+ - Refactor to mute notifications config.
+ - Add DrushFeaturesList action.
+ - Add Drush action.
+ - Change message formatting.
+ - Send action and pipeline status to pipelineNotify.
+ - Add notification message support and limit it to 3500 symbols.
+ - Switch to new configuration format with statuses.
+ - Disable block notifications.
+ - Return shell command output from drupipeShell.
+ - Filter job name to use it in job param.
+ - Allow to define params for each triggered job.
+ - Add notify checkboxes to jenkins params.
+ - Escape value to avoid markdown interpretation.
+ - Fix for loop.
+ - Check only port.
+ - Fix comment style.
+ - Merge branch 'feature/redis' into develop
+ - Switch to fork.
+ - Merge branch 'master' into develop
+
 Version 0.7.7:
  - Remove library branch & type params as not needed anymore
 
