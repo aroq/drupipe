@@ -14,6 +14,8 @@ class DrupipeJob extends DrupipeBase {
 
     String env
 
+    String configRepo
+
     HashMap source
 
     def triggers
