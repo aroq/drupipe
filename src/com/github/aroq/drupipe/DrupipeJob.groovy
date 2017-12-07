@@ -24,6 +24,8 @@ class DrupipeJob extends DrupipeBase {
 
     def context
 
+    HashMap params
+
     DrupipePipeline pipeline
 
     DrupipeController controller
