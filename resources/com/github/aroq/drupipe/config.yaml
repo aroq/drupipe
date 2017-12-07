@@ -23,7 +23,7 @@ projectConfigPath: .unipipe/config
 projectConfigFile: docroot.config
 containerMode: docker
 configSeedType: docman
-defaultDocmanImage: michaeltigr/zebra-build-php-drush-docman:latest
+defaultDocmanImage: michaeltigr/zebra-build-php-drush-docman:0.0.84
 logRotatorNumToKeep: 5
 drupipeDockerArgs: --user root:root --net=host
 
@@ -143,7 +143,7 @@ params:
 
   pods:
     params:
-      unipipe_retrieve_config: false
+      unipipe_retrieve_config: true
       containerized: true
 
     master:
@@ -172,4 +172,4 @@ params:
     common:
       params:
         name: common
-        image: michaeltigr/zebra-build-php-drush-docman:develop
+        image: michaeltigr/zebra-build-php-drush-docman:0.0.84
