@@ -6,7 +6,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 def log(String message) {
-    colorEcho message
+    colorEcho message, 'blue'
 }
 
 def debug(String message) {
