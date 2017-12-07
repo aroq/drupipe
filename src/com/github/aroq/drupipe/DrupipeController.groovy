@@ -49,8 +49,11 @@ class DrupipeController implements Serializable {
                 configuration()
                 if (configVersion() > 1) {
                     script.node('master') {
-                        // TODO: Bring it back.
                         // Secret option for emergency remove workspace.
+                        if (context.force == '11') {
+                            script.echo 'FORCE REMOVE WORKSPACE'
+                            script.deleteDir()
+                        }
                         if (context.job) {
                             def jobConfig = context.job
                             archiveObjectJsonAndYaml(jobConfig, 'job')
