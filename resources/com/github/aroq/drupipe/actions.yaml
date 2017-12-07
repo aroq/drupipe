@@ -454,7 +454,6 @@ params:
           full_command:
             - ${action.params.executable}
             - ${action.params.command}
-            - ${action.params.options.tail}
             - ${action.params.pod_name}
             - ${prepareFlags(action.params.flags)}
 
