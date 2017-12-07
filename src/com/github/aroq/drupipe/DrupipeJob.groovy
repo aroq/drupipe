@@ -14,6 +14,8 @@ class DrupipeJob extends DrupipeBase {
 
     String env
 
+    String configRepo
+
     HashMap source
 
     def triggers
@@ -21,6 +23,8 @@ class DrupipeJob extends DrupipeBase {
     def webhooks
 
     def context
+
+    HashMap params
 
     DrupipePipeline pipeline
 
