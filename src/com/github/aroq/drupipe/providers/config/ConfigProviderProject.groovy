@@ -181,6 +181,7 @@ class ConfigProviderProject extends ConfigProviderBase {
 
                         def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(config, scenarioSourceName)
 
+                        // TODO: recheck it.
                         def filesToCheck = [
                             "/.unipipe/scenarios/${scenario.name}/config.yaml",
                             "/.unipipe/scenarios/${scenario.name}/config.yml",
@@ -200,14 +201,14 @@ class ConfigProviderProject extends ConfigProviderBase {
 
                         // Merge scenario if exists.
                         if (fileName != null) {
-                            utils.debugLog(config, "Scenario file name: ${fileName} exists")
+                            utils.debug "Scenario file name: ${fileName} exists"
                             def scenarioConfig = mergeScenariosConfigs(context, script.readYaml(file: fileName), tempContext, scenarioSourceName)
-                            utils.log "Loaded scenario: ${scenarioSourceName}:${scenario.name} config"
+                            utils.debug "Loaded scenario: ${scenarioSourceName}:${scenario.name} config"
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
                             utils.debugLog(config, scenariosConfig, "Scenarios config")
                         }
                         else {
-                            utils.log "Scenario file doesn't found"
+                            utils.warning "Scenario file doesn't found"
                         }
                     }
                     else {
