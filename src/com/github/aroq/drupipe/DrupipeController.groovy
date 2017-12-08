@@ -324,7 +324,7 @@ class DrupipeController implements Serializable {
     }
 
     def scmCheckout(scm = null) {
-        this.script.echo "Pipeline scm checkout: start"
+        utils.collapsedStart "Pipeline scm checkout"
         if (scm) {
             this.script.echo "Pipeline scm checkout: set SCM"
             this.scm = scm
@@ -340,6 +340,7 @@ class DrupipeController implements Serializable {
             }
         }
         this.script.checkout this.scm
+        utils.collapsedEnd()
     }
 
     def scripts_library_load() {

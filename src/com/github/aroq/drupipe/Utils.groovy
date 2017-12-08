@@ -29,6 +29,14 @@ def error(String message) {
     colorEcho '[ERROR] ' + message, 'magenta'
 }
 
+def collapsedStart(String message) {
+    echo '[COLLAPSED-START] ' + message
+}
+
+def collapsedEnd() {
+    echo '[COLLAPSED-END]'
+}
+
 def colorEcho(message, color = null) {
     if (!color) {
         color = 'green'
