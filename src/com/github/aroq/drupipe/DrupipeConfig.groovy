@@ -85,18 +85,18 @@ class DrupipeConfig implements Serializable {
                     utils.debugLog(config, config.environmentParams, 'ENVIRONMENT PARAMS', [:], [], true)
                 }
                 else {
-                    script.echo "No context.environment is defined"
+                    utils.warning "No context.environment is defined"
                 }
             }
             else {
-                script.echo "No context.environments are defined"
+                utils.warning "No context.environments are defined"
             }
 
             utils.debugLog(config, config, 'CONFIG CONTEXT')
 
             def stashes = config.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
 
-            script.echo "Stashes: ${stashes}"
+            utils.debug "Stashes: ${stashes}"
 
             script.stash name: 'config', includes: "${stashes}", excludes: ".git, .git/**"
 
@@ -106,7 +106,7 @@ class DrupipeConfig implements Serializable {
     }
 
     DrupipeProcessorsController initProcessorsController(parent, processorsConfig) {
-        utils.log "initProcessorsController"
+        utils.trace "initProcessorsController"
         ArrayList<DrupipeProcessor> processors = []
         for (processorConfig in processorsConfig) {
             utils.log "Processor: ${processorConfig.className}"
@@ -118,7 +118,7 @@ class DrupipeConfig implements Serializable {
                 processors << parent.class.classLoader.loadClass("com.github.aroq.drupipe.processors.${processorConfig.className}", true, false)?.newInstance(
                     properties
                 )
-                utils.log "Processor: ${processorConfig.className} created"
+                utils.debug "Processor: ${processorConfig.className} created"
             }
             catch (err) {
                 throw err
@@ -128,12 +128,12 @@ class DrupipeConfig implements Serializable {
     }
 
     def processItem(item, parentKey, paramsKey = 'params', mode) {
-        utils.log "DrupipeConfig->processItem"
+        utils.trace "DrupipeConfig->processItem"
         controller.drupipeProcessorsController.process(config, item, parentKey, paramsKey, mode)
     }
 
     def process() {
-        utils.log "DrupipeConfig->process()"
+        utils.trace "DrupipeConfig->process()"
         if (controller.configVersion() > 1) {
 //            controller.drupipeProcessorsController = initProcessorsController(this, config.processors)
             if (config.jobs) {
@@ -148,7 +148,7 @@ class DrupipeConfig implements Serializable {
     }
 
     def config_version2() {
-        utils.log "DrupipeConfig->config_version2()"
+        utils.trace "DrupipeConfig->config_version2()"
         script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config_version2.yaml'))
     }
 
