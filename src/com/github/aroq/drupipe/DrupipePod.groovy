@@ -18,7 +18,7 @@ class DrupipePod extends DrupipeBase {
 
     def execute(body = null) {
         def script = controller.script
-        script.echo "DrupipePod execute - ${name}"
+        controller.utils.trace "DrupipePod execute - ${name}"
 
         script.node(name) {
             if (unipipe_retrieve_config) {
@@ -30,7 +30,7 @@ class DrupipePod extends DrupipeBase {
             }
             controller.utils.unstashList(controller, unstash)
             for (container in containers) {
-//                controller.utils.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], true)
+                controller.utils.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], true)
                 container = new DrupipeContainer(container)
                 container.controller = controller
                 container.pod = this

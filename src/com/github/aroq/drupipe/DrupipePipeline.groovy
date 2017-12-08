@@ -34,7 +34,7 @@ class DrupipePipeline extends DrupipeBase {
 
     def executePod(pod) {
         if (pod) {
-            controller.utils.debugLog(controller.context, pod, 'POD', [debugMode: 'json'], [], false)
+            controller.utils.debugLog(controller.context, pod, 'POD', [debugMode: 'json'], [], true)
 
             if (pod.containerized && controller.context.containerMode == 'kubernetes') {
                 pod = new DrupipeKubernetesPod(pod)

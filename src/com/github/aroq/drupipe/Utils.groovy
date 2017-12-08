@@ -10,7 +10,7 @@ def log(String message) {
 }
 
 def trace(String message) {
-    colorEcho '[INFO] ' + message, 'cyan'
+    colorEcho '[TRACE] ' + message, 'cyan'
 }
 
 def info(String message) {
