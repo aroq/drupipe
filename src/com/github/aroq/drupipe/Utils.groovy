@@ -14,15 +14,15 @@ def info(String message) {
 }
 
 def debug(String message) {
-    colorEcho message, 'yellow'
+    colorEcho '[DEBUG]' + message, 'yellow'
 }
 
 def warning(String message) {
-    colorEcho message, 'red'
+    colorEcho '[WARNING]' + message, 'red'
 }
 
 def error(String message) {
-    colorEcho message, 'magenta'
+    colorEcho '[ERROR]' + message, 'magenta'
 }
 
 def colorEcho(message, color = null) {
