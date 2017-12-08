@@ -203,7 +203,7 @@ class DrupipeActionWrapper implements Serializable {
             }
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
-            this.collapsedEnd()
+            utils.collapsedEnd()
             this.result
         }
         catch (err) {
