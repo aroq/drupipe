@@ -137,7 +137,7 @@ class DslParamsHelper {
             name,
             'Allows to select tag',
             'PT_SINGLE_SELECT',
-            activeChoiceGetTagsChoicesScript(projectRepo, '*', 'x.y.z'),
+            activeChoiceGetTagsChoicesScript(projectRepo, '*', ''),
             false,
             true
         )
@@ -152,7 +152,7 @@ class DslParamsHelper {
             name,
             'Allows to select branch',
             'PT_SINGLE_SELECT',
-            activeChoiceGetBranchesChoicesScript(releaseRepo, job.value.source.pattern, 'x.y.z'),
+            activeChoiceGetBranchesChoicesScript(releaseRepo, job.value.source.pattern),
             false,
             true
         )
@@ -396,7 +396,7 @@ try {
         script
     }
 
-    def activeChoiceGetBranchesChoicesScript(String url, String branchesPattern, String sort) {
+    def activeChoiceGetBranchesChoicesScript(String url, String branchesPattern) {
         def script =
             """
 import jenkins.model.*
