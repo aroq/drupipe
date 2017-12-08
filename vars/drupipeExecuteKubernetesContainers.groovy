@@ -2,7 +2,7 @@ import com.github.aroq.drupipe.DrupipeContainerBlock
 import com.github.aroq.drupipe.DrupipeController
 
 def call(ArrayList containers, DrupipeController controller, ArrayList unstash = [], ArrayList stash = [], unipipe_retrieve_config = false) {
-    echo "Container mode: kubernetes"
+    controller.utils.debug "Container mode: kubernetes"
     def nodeName = 'drupipe'
     def containerNames = []
     def containersToExecute= []
@@ -12,7 +12,7 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
         controller.utils.debugLog(controller.context, container, 'CONTAINER TEMPLATE', [debugMode: 'json'], [], false)
         def containerName = container.name.replaceAll('\\.','-').replaceAll('_','-')
         if (!containerNames.contains(containerName)) {
-            echo "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
+            controller.utils.info "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
             containerNames += containerName
             containersToExecute.add(containerTemplate(
                 name:                  containerName,
@@ -47,11 +47,10 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
     ) {
         node(nodeName) {
             if (unipipe_retrieve_config) {
-                controller.utils.log "Retrieve config."
                 controller.utils.getUnipipeConfig(controller)
             }
             else {
-                controller.utils.log "Retrieve config disabled in config."
+                controller.utils.warning "Retrieve config disabled in config."
             }
             controller.utils.unstashList(controller, unstash)
             controller.context.workspace = pwd()

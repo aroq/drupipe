@@ -22,11 +22,10 @@ class DrupipePod extends DrupipeBase {
 
         script.node(name) {
             if (unipipe_retrieve_config) {
-                controller.utils.log "Retrieve config."
                 controller.utils.getUnipipeConfig(controller)
             }
             else {
-                controller.utils.log "Retrieve config disabled in config."
+                controller.utils.warning "Retrieve config disabled in config."
             }
             controller.utils.unstashList(controller, unstash)
             for (container in containers) {
