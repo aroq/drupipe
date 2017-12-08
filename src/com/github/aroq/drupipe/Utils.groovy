@@ -404,11 +404,12 @@ def echoDelimiter(String message) {
 def jsonDump(params, value, String dumpName = '', force = false) {
     if (debugEnabled(params) || force) {
         if (dumpName) {
-            debug "DUMP START - ${dumpName}:"
+            debug "DUMPING: ${dumpName}"
+            debug "DUMP START"
         }
         debug JsonOutput.prettyPrint(JsonOutput.toJson(value))
         if (dumpName) {
-            debug "DUMP END - ${dumpName}:"
+            debug "DUMP END"
         }
     }
 }
