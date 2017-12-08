@@ -37,7 +37,7 @@ class DrupipeController implements Serializable {
     }
 
     def execute(body = null) {
-//        script.ansiColor('xterm') {
+        script.ansiColor('xterm') {
             context.jenkinsParams = params
             utils = new com.github.aroq.drupipe.Utils()
 
@@ -81,7 +81,7 @@ class DrupipeController implements Serializable {
                 }
                 utils.pipelineNotify(context, notification)
             }
-//        }
+        }
     }
 
     def executeVersion1() {
