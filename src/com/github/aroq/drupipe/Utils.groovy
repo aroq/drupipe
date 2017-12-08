@@ -50,9 +50,9 @@ def colorEcho(message, color = null) {
             break
     }
 
-    ansiColor('xterm') {
+//    ansiColor('xterm') {
         echo "\u001B[${color}m${message}\u001B[0m"
-    }
+//    }
 }
 
 @NonCPS
