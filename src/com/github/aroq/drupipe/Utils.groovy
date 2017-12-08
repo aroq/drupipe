@@ -9,6 +9,10 @@ def log(String message) {
     info(message)
 }
 
+def trace(String message) {
+    colorEcho '[INFO] ' + message, 'cyan'
+}
+
 def info(String message) {
     colorEcho '[INFO] ' + message, 'green'
 }
@@ -404,11 +408,11 @@ def echoDelimiter(String message) {
 def jsonDump(params, value, String dumpName = '', force = false) {
     if (debugEnabled(params) || force) {
         if (dumpName) {
-            debug "DUMP START - ${dumpName}"
+            echo "DUMP START - ${dumpName}"
         }
         debug JsonOutput.prettyPrint(JsonOutput.toJson(value))
         if (dumpName) {
-            debug "DUMP END - ${dumpName}"
+            echo "DUMP END - ${dumpName}"
         }
     }
 }
