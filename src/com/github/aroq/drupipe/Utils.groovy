@@ -22,7 +22,7 @@ def warning(String message) {
 }
 
 def error(String message) {
-    colorEcho message, 'red'
+    colorEcho message, 'magenta'
 }
 
 def colorEcho(message, color = null) {
@@ -50,9 +50,7 @@ def colorEcho(message, color = null) {
             break
     }
 
-//    wrap([$class: 'AnsiColorBuildWrapper']) {
-        echo "\u001B[${color}m${message}\u001B[0m"
-//    }
+    echo "\u001B[${color}m${message}\u001B[0m"
 }
 
 @NonCPS
@@ -359,7 +357,7 @@ def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], force 
         }
 
         if (value instanceof CharSequence) {
-            echo "${dumpName}: ${value}"
+            debug "${dumpName}: ${value}"
         }
         else {
             if (debugParams?.debugMode == 'json' || params.debugMode == 'json') {
@@ -374,8 +372,8 @@ def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], force 
 
 def dump(context, params, String dumpName = '', force = false) {
     if (debugEnabled(context) || force) {
-        colorEcho "Dumping ${dumpName}:"
-        colorEcho collectParams(params)
+        debug "Dumping ${dumpName}:"
+        debug collectParams(params)
     }
 }
 
@@ -406,9 +404,9 @@ def echoDelimiter(String message) {
 def jsonDump(params, value, String dumpName = '', force = false) {
     if (debugEnabled(params) || force) {
         if (dumpName) {
-            echo "Dumping ${dumpName}:"
+            debug "Dumping ${dumpName}:"
         }
-        echo JsonOutput.prettyPrint(JsonOutput.toJson(value))
+        debug JsonOutput.prettyPrint(JsonOutput.toJson(value))
     }
 }
 
