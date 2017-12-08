@@ -33,6 +33,7 @@ class DrupipeActionWrapper implements Serializable {
         this.script = pipeline.script
 
         try {
+            utils.collapsedStart("ACTION: ${this.fullName}")
             // Stage name & echo.
             String drupipeStageName
             if (pipeline.block && pipeline.block.stage) {
@@ -46,7 +47,6 @@ class DrupipeActionWrapper implements Serializable {
             notification.level = "action:${drupipeStageName}"
 
             utils.pipelineNotify(pipeline.context, notification << [status: 'START'])
-            utils.echoDelimiter("-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} start <-")
 
             // Define action params.
             def actionParams = [:]
@@ -203,6 +203,7 @@ class DrupipeActionWrapper implements Serializable {
             }
 
             utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
+            this.collapsedEnd()
             this.result
         }
         catch (err) {
