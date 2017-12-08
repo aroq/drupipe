@@ -1,3 +1,7 @@
+Version 0.8.4:
+ - Merge pull request #102 from michael-molchanov/aroq_develop
+ - Fix tags sort.
+
 Version 0.8.3:
  - Merge pull request #101 from michael-molchanov/aroq_develop
  - Fix defaults.
