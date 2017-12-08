@@ -10,19 +10,19 @@ def log(String message) {
 }
 
 def info(String message) {
-    colorEcho message, 'green'
+    colorEcho '[INFO] ' + message, 'green'
 }
 
 def debug(String message) {
-    colorEcho '[DEBUG]' + message, 'yellow'
+    colorEcho '[DEBUG] ' + message, 'yellow'
 }
 
 def warning(String message) {
-    colorEcho '[WARNING]' + message, 'red'
+    colorEcho '[WARNING] ' + message, 'red'
 }
 
 def error(String message) {
-    colorEcho '[ERROR]' + message, 'magenta'
+    colorEcho '[ERROR] ' + message, 'magenta'
 }
 
 def colorEcho(message, color = null) {
