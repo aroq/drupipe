@@ -6,11 +6,23 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 def log(String message) {
-    colorEcho message, 'blue'
+    info(message)
+}
+
+def info(String message) {
+    colorEcho message, 'green'
 }
 
 def debug(String message) {
-    echo message
+    colorEcho message, 'yellow'
+}
+
+def warning(String message) {
+    colorEcho message, 'red'
+}
+
+def error(String message) {
+    colorEcho message, 'red'
 }
 
 def colorEcho(message, color = null) {
@@ -38,9 +50,9 @@ def colorEcho(message, color = null) {
             break
     }
 
-    wrap([$class: 'AnsiColorBuildWrapper']) {
+//    wrap([$class: 'AnsiColorBuildWrapper']) {
         echo "\u001B[${color}m${message}\u001B[0m"
-    }
+//    }
 }
 
 @NonCPS
