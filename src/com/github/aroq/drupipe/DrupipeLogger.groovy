@@ -31,22 +31,22 @@ class DrupipeLogger implements Serializable {
     }
 
     def collapsedStart(String message) {
-        utils.println '[COLLAPSED-START] ' + message
+        utils.echoMessage '[COLLAPSED-START] ' + message
     }
 
     def collapsedEnd() {
-        utils.println '[COLLAPSED-END]'
+        utils.echoMessage '[COLLAPSED-END]'
     }
 
 
     def jsonDump(params, value, String dumpName = '', force = false) {
         if (debugEnabled(params) || force) {
             if (dumpName) {
-                utils.println "DUMP START - ${dumpName}"
+                utils.echoMessage "DUMP START - ${dumpName}"
             }
             debug JsonOutput.prettyPrint(JsonOutput.toJson(value))
             if (dumpName) {
-                utils.println "DUMP END - ${dumpName}"
+                utils.echoMessage "DUMP END - ${dumpName}"
             }
         }
     }
@@ -100,10 +100,10 @@ class DrupipeLogger implements Serializable {
     def echoDelimiter(String message) {
         if (message) {
             if (message.size() < 80) {
-                utils.println message + '-' * (80 - message.size())
+                utils.echoMessage message + '-' * (80 - message.size())
             }
             else {
-                utils.println message
+                utils.echoMessage message
             }
         }
     }

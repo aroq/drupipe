@@ -4,7 +4,7 @@ import groovy.json.JsonSlurperClassic
 import java.nio.file.Path
 import java.nio.file.Paths
 
-def println(message) {
+def echoMessage(message) {
     echo message
 }
 
