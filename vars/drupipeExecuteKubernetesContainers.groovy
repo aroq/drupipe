@@ -60,7 +60,7 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
                         for (block in containers[i].blocks) {
 //                            controller.drupipeLogger.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
                             executeWithCollapsed(controller, "BLOCK: ${block.name}") {
-                                sshagent([controller.context.credentialsId]) {
+                                controller.script.sshagent([controller.context.credentialsId]) {
                                     def drupipeContainerBlock = new DrupipeContainerBlock(block)
                                     drupipeContainerBlock.controller = controller
                                     drupipeContainerBlock.execute()
