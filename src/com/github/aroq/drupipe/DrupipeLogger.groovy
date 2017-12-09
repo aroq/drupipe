@@ -6,28 +6,34 @@ class DrupipeLogger implements Serializable {
 
     com.github.aroq.drupipe.Utils utils
 
+    def logLevels
+
+    def logMessage(String type, String message) {
+        utils.colorEcho "[${type}] " + message, logLevels[type].color
+    }
+
     def log(String message) {
         info(message)
     }
 
     def trace(String message) {
-        utils.colorEcho '[TRACE] ' + message, 'cyan'
+        logMessage('TRACE', message)
     }
 
     def info(String message) {
-        utils.colorEcho '[INFO] ' + message, 'green'
+        logMessage('INFO', message)
     }
 
     def debug(String message) {
-        utils.colorEcho '[DEBUG] ' + message, 'yellow'
+        logMessage('DEBUG', message)
     }
 
     def warning(String message) {
-        utils.colorEcho '[WARNING] ' + message, 'red'
+        logMessage('WARNING', message)
     }
 
     def error(String message) {
-        utils.colorEcho '[ERROR] ' + message, 'magenta'
+        logMessage('ERROR', message)
     }
 
     def collapsedStart(String message) {
@@ -37,7 +43,6 @@ class DrupipeLogger implements Serializable {
     def collapsedEnd() {
         utils.echoMessage '[COLLAPSED-END]'
     }
-
 
     def jsonDump(params, value, String dumpName = '', force = false) {
         if (debugEnabled(params) || force) {
