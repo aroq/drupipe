@@ -55,13 +55,17 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
             controller.utils.unstashList(controller, unstash)
             controller.context.workspace = pwd()
             for (def i = 0; i < containers.size(); i++) {
-                container(containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
-                    for (block in containers[i].blocks) {
+                executeWithCollapsed(controller, "CONTAINER: ${containers[i].name}") {
+                    container(containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
+                        for (block in containers[i].blocks) {
 //                            controller.drupipeLogger.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
-                        sshagent([controller.context.credentialsId]) {
-                            def drupipeContainerBlock = new DrupipeContainerBlock(block)
-                            drupipeContainerBlock.controller = controller
-                            drupipeContainerBlock.execute()
+                            executeWithCollapsed(controller, "BLOCK: ${block.name}") {
+                                sshagent([controller.context.credentialsId]) {
+                                    def drupipeContainerBlock = new DrupipeContainerBlock(block)
+                                    drupipeContainerBlock.controller = controller
+                                    drupipeContainerBlock.execute()
+                                }
+                            }
                         }
                     }
                 }
@@ -71,4 +75,10 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
     }
 //    }
 
+}
+
+def executeWithCollapsed(controller, message, body) {
+    controller.drupipeLogger.collapsedStart(message)
+    body()
+    controller.drupipeLogger.collapsedEnd()
 }
