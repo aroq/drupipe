@@ -179,7 +179,7 @@ class DrupipeController implements Serializable {
                     }
                     else {
                         script.echo "Triggering trigger name ${trigger_job.name} and job name ${trigger_job.job}"
-                        this.utils.dump(context, trigger_job, "TRIGGER JOB ${i}")
+//                        this.utils.dump(context, trigger_job, "TRIGGER JOB ${i}")
 
                         def params = []
                         def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()

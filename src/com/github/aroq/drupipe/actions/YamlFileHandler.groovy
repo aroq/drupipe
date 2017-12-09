@@ -95,7 +95,7 @@ class YamlFileHandler extends BaseAction {
         def deployYamlFile = findDeployYaml()
         if (deployYamlFile && script.fileExists(deployYamlFile)) {
             def deployYAML = script.readYaml(file: deployYamlFile)
-            utils.dump(action.pipeline.context, deployYAML, 'DEPLOY YAML')
+            action.pipeline.drupipeLogger.dump(action.pipeline.context, deployYAML, 'DEPLOY YAML')
             def commands = []
             if (stage == 'operations') {
                 def root = action.pipeline.context.environmentParams.root
