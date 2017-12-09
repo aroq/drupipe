@@ -32,7 +32,7 @@ class DrupipeParamProcessor implements Serializable {
 
         for (param in params) {
             if (param.value instanceof CharSequence) {
-                param.value = getActionParam(params[param.key], context, prefixes.collect {
+                param.value = overrideWithEnvVarPrefixes(params[param.key], context, prefixes.collect {
                     [it, param.key.toUpperCase()].join('_')
                 })
                 param.value = interpolateCommand(param.value, action, context)
@@ -49,14 +49,20 @@ class DrupipeParamProcessor implements Serializable {
     }
 
     @NonCPS
-    def getActionParam(param, context, prefixes) {
+    def overrideWithEnvVarPrefixes(param, context, prefixes) {
         def result = param
         prefixes.each {
-            if (context.env && context.env?.containsKey(it)) {
-                result = context.env[it]
-            }
+            overrideWithEnvVar(param, context, it)
         }
 
+        result
+    }
+
+    def overrideWithEnvVar(param, context, String envVarName) {
+        def result = param
+        if (context.env && context.env?.containsKey(envVarName)) {
+            result = context.env[envVarName]
+        }
         result
     }
 

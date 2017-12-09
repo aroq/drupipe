@@ -45,7 +45,7 @@ class YamlFileHandler extends BaseAction {
 
         def project_config_dir = action.pipeline.drupipeConfig.drupipeSourcesController.sourceDir(action.pipeline.context, 'project');
 
-        utils.log("project_config_dir: ${project_config_dir}")
+        controller.drupipeLogger.log("project_config_dir: ${project_config_dir}")
 
         script.drupipeShell("ls -lah ${project_config_dir}", action.params)
 

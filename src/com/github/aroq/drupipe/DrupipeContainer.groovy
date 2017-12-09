@@ -45,7 +45,7 @@ class DrupipeContainer extends DrupipeBase {
 
     def executeBlocks() {
         for (block in blocks) {
-//            controller.utils.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
+//            controller.controller.drupipeLogger.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
             block = new DrupipeContainerBlock(block)
             block.controller = controller
             block.execute()

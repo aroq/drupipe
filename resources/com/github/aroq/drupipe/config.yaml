@@ -1,5 +1,14 @@
 config_version: 1
 
+log_level: INFO
+
+log_levels:
+  TRACE:   10
+  DEBUG:   20
+  INFO:    30
+  WARNING: 40
+  ERROR:   50
+
 uniconf:
   keys:
     include: scenarios

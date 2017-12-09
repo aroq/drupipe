@@ -25,11 +25,11 @@ class DrupipePod extends DrupipeBase {
                 controller.utils.getUnipipeConfig(controller)
             }
             else {
-                controller.utils.warning "Retrieve config disabled in config."
+                controller.controller.drupipeLogger.warning "Retrieve config disabled in config."
             }
             controller.utils.unstashList(controller, unstash)
             for (container in containers) {
-                controller.utils.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], true)
+                controller.controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], true)
                 container = new DrupipeContainer(container)
                 container.controller = controller
                 container.pod = this

@@ -7,6 +7,8 @@ import com.github.aroq.drupipe.providers.config.ConfigProvider
 
 class DrupipeConfig implements Serializable {
 
+    final envVarPrefix = 'UNIPIPE_'
+
     DrupipeController controller
 
     def script
@@ -21,8 +23,20 @@ class DrupipeConfig implements Serializable {
 
     def projects
 
-    def get(String name, params = [:]) {
+    def get(String path, params = [:]) {
+        LinkedHashMap defaultParam = [
+            override_with_env_vars: true
+        ]
 
+        params = defaultParam << params
+
+        def param = utils.deepGet(controller.context, path)
+
+        if (params.override_with_env_vars) {
+            def envVarName = envVarPrefix + path.join('_').toUpperCase()
+            controller.drupipeLogger.debug "envVarName: ${envVarName}"
+            controller.drupipeProcessorsController.drupipeParamProcessor.overrideWithEnvVar(param, controller.context, envVarName)
+        }
     }
 
     def config(params, parent) {
@@ -87,21 +101,21 @@ class DrupipeConfig implements Serializable {
                         config.params.action = utils.merge(config.params.action, config.environmentParams.defaultActionParams)
                     }
 
-                    utils.debugLog(config, config.environmentParams, 'ENVIRONMENT PARAMS', [:], [], true)
+                    controller.drupipeLogger.debugLog(config, config.environmentParams, 'ENVIRONMENT PARAMS', [:], [], true)
                 }
                 else {
-                    utils.warning "No context.environment is defined"
+                    controller.drupipeLogger.warning "No context.environment is defined"
                 }
             }
             else {
-                utils.warning "No context.environments are defined"
+                controller.drupipeLogger.warning "No context.environments are defined"
             }
 
-            utils.debugLog(config, config, 'CONFIG CONTEXT')
+            controller.drupipeLogger.debugLog(config, config, 'CONFIG CONTEXT')
 
             def stashes = config.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
 
-            utils.debug "Stashes: ${stashes}"
+            controller.drupipeLogger.debug "Stashes: ${stashes}"
 
             script.stash name: 'config', includes: "${stashes}", excludes: ".git, .git/**"
 
@@ -114,7 +128,7 @@ class DrupipeConfig implements Serializable {
         utils.trace "initProcessorsController"
         ArrayList<DrupipeProcessor> processors = []
         for (processorConfig in processorsConfig) {
-            utils.log "Processor: ${processorConfig.className}"
+            controller.drupipeLogger.log "Processor: ${processorConfig.className}"
             try {
                 def properties = [utils: utils]
                 if (processorConfig.properties) {
@@ -123,7 +137,7 @@ class DrupipeConfig implements Serializable {
                 processors << parent.class.classLoader.loadClass("com.github.aroq.drupipe.processors.${processorConfig.className}", true, false)?.newInstance(
                     properties
                 )
-                utils.debug "Processor: ${processorConfig.className} created"
+                controller.drupipeLogger.debug "Processor: ${processorConfig.className} created"
             }
             catch (err) {
                 throw err
@@ -141,7 +155,6 @@ class DrupipeConfig implements Serializable {
     def process() {
         utils.trace "DrupipeConfig->process()"
         if (controller.configVersion() > 1) {
-//            controller.drupipeProcessorsController = initProcessorsController(this, config.processors)
             if (config.jobs) {
                 config.jobs = processItem(config.jobs, 'context', 'params', 'config')
             }
@@ -162,6 +175,5 @@ class DrupipeConfig implements Serializable {
     def groovyConfig(text) {
         new HashMap<>(ConfigSlurper.newInstance(script.env.drupipeEnvironment).parse(text))
     }
-
 
 }

@@ -4,9 +4,9 @@ class ConfigProviderJob extends ConfigProviderBase {
 
     // TODO: check if this is needed as Config Provider or Processor.
     def provide() {
-        utils.log "ConfigProviderJob->provide()"
+        controller.drupipeLogger.log "ConfigProviderJob->provide()"
 //        if (drupipeConfig.config.config_version > 1) {
-        utils.log "Initialising drupipeProcessorsController"
+        controller.drupipeLogger.log "Initialising drupipeProcessorsController"
         controller.drupipeProcessorsController = controller.drupipeConfig.initProcessorsController(this, drupipeConfig.config.processors)
 //        }
         if (drupipeConfig.config.jobs) {
@@ -22,7 +22,7 @@ class ConfigProviderJob extends ConfigProviderBase {
 
             drupipeConfig.config.jobs = processJobs(drupipeConfig.config.jobs)
 
-            utils.log "Job name: " + drupipeConfig.config.env.JOB_NAME
+            controller.drupipeLogger.log "Job name: " + drupipeConfig.config.env.JOB_NAME
 
             // TODO: check it will all cases.
             if (jobName.contains('/')) {

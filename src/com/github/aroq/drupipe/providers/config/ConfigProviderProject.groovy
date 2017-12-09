@@ -4,7 +4,7 @@ class ConfigProviderProject extends ConfigProviderBase {
 
     def provide() {
         def projectConfig
-        utils.debugLog(drupipeConfig.config, drupipeConfig.config.configRepo,"projectConfig repo: ${drupipeConfig.config.configRepo}", [:], [], true)
+        controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config.configRepo,"projectConfig repo: ${drupipeConfig.config.configRepo}", [:], [], true)
 
         if (drupipeConfig.config.project_type == 'single') {
             def source= [
@@ -37,7 +37,7 @@ class ConfigProviderProject extends ConfigProviderBase {
             )
 
             def fileName = null
-            utils.debugLog(drupipeConfig.config, drupipeConfig.drupipeSourcesController.loadedSources, "loadedSources", [debugMode: 'json'], [], true)
+            controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.drupipeSourcesController.loadedSources, "loadedSources", [debugMode: 'json'], [], true)
             def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
             utils.trace "PROJECTS SOURCE DIR: ${sourceDir}"
 
@@ -69,19 +69,19 @@ class ConfigProviderProject extends ConfigProviderBase {
                 ))
             }
 
-            utils.debugLog(drupipeConfig.config, projectConfig, 'Project config', [debugMode: 'json'], [], false)
+            controller.drupipeLogger.debugLog(drupipeConfig.config, projectConfig, 'Project config', [debugMode: 'json'], [], false)
 
             if (projectConfig.config_version && projectConfig.config_version > 1 || controller.configVersion() > 1) {
-                utils.log "Config version > 1"
+                controller.drupipeLogger.log "Config version > 1"
                 projectConfig = utils.merge(controller.drupipeConfig.config_version2(), projectConfig)
-                utils.debugLog(drupipeConfig.config, projectConfig, 'Project config2', [debugMode: 'json'], [], false)
+                controller.drupipeLogger.debugLog(drupipeConfig.config, projectConfig, 'Project config2', [debugMode: 'json'], [], false)
             }
 
             def projectConfigContext = utils.merge(drupipeConfig.config, projectConfig)
 
             def sources = [:]
             if (drupipeConfig.config.env.containsKey('UNIPIPE_SOURCES')) {
-                utils.log "Processing UNIPIPE_SOURCES"
+                controller.drupipeLogger.log "Processing UNIPIPE_SOURCES"
                 def uniconfSourcesKey = utils.deepGet(projectConfigContext, 'uniconf.keys.sources')
                 sources[uniconfSourcesKey] = script.readJSON(text: drupipeConfig.config.env['UNIPIPE_SOURCES'])
                 if (projectConfig[uniconfSourcesKey]) {
@@ -91,12 +91,12 @@ class ConfigProviderProject extends ConfigProviderBase {
                     projectConfig[uniconfSourcesKey] = sources[uniconfSourcesKey]
                 }
 
-                utils.debugLog(projectConfig, sources, 'UNIPIPE_SOURCES sources', ['debugMode': 'json'], [], false)
+                controller.drupipeLogger.debugLog(projectConfig, sources, 'UNIPIPE_SOURCES sources', ['debugMode': 'json'], [], false)
             }
 
             projectConfig = mergeScenariosConfigs(projectConfigContext, projectConfig, [:], 'project')
 
-            utils.debugLog(drupipeConfig.config, projectConfig, 'Project config after mergeScenariosConfigs', [debugMode: 'json'], [], false)
+            controller.drupipeLogger.debugLog(drupipeConfig.config, projectConfig, 'Project config after mergeScenariosConfigs', [debugMode: 'json'], [], false)
         }
         projectConfig
     }
@@ -119,7 +119,7 @@ class ConfigProviderProject extends ConfigProviderBase {
 
         tempContext = utils.merge(tempContext, config)
         if (config.containsKey(uniconfIncludeKey)) {
-//            utils.log "config.containsKey(uniconfIncludeKey)"
+//            controller.drupipeLogger.log "config.containsKey(uniconfIncludeKey)"
             // Iterate through 'include' keys.
             for (def i = 0; i < config[uniconfIncludeKey].size(); i++) {
                 def s = config[uniconfIncludeKey][i]
@@ -136,10 +136,10 @@ class ConfigProviderProject extends ConfigProviderBase {
                         scenarioSourceName = currentScenarioSourceName
                         scenario.name = values[0]
                     }
-//                    utils.log("scenarioSourceName: ${scenarioSourceName}")
-//                    utils.log("scenario.name: ${scenario.name}")
+//                    controller.drupipeLogger.log("scenarioSourceName: ${scenarioSourceName}")
+//                    controller.drupipeLogger.log("scenario.name: ${scenario.name}")
 
-                    utils.debugLog(config, tempContext[uniconfSourcesKey], 'Scenario sources', ['debugMode': 'json'], [], false)
+                    controller.drupipeLogger.debugLog(config, tempContext[uniconfSourcesKey], 'Scenario sources', ['debugMode': 'json'], [], false)
 
                     if (
                     (scenariosConfig[uniconfSourcesKey] && scenariosConfig[uniconfSourcesKey].containsKey(scenarioSourceName))
@@ -148,7 +148,7 @@ class ConfigProviderProject extends ConfigProviderBase {
                     )
                     {
                         if (!drupipeConfig.drupipeSourcesController.loadedSources[scenarioSourceName]) {
-                            utils.log "Adding source: ${scenarioSourceName}"
+                            controller.drupipeLogger.log "Adding source: ${scenarioSourceName}"
                             if (tempContext[uniconfSourcesKey].containsKey(scenarioSourceName)) {
                                 scenario.source = tempContext[uniconfSourcesKey][scenarioSourceName]
                             }
@@ -169,11 +169,11 @@ class ConfigProviderProject extends ConfigProviderBase {
                                 drupipeConfig.drupipeSourcesController.sourceAdd(source)
 
 //                                this.script.drupipeAction([action: "Source.add", params: [source: sourceObject]], controller)
-//                                utils.log "Source added: ${scenarioSourceName}"
+//                                controller.drupipeLogger.log "Source added: ${scenarioSourceName}"
                             }
                         }
                         else {
-                            utils.debugLog(config, "Source: ${scenarioSourceName} already added")
+                            controller.drupipeLogger.debugLog(config, "Source: ${scenarioSourceName} already added")
                             scenario.source = drupipeConfig.drupipeSourcesController.loadedSources[scenarioSourceName]
                         }
 
@@ -201,14 +201,14 @@ class ConfigProviderProject extends ConfigProviderBase {
 
                         // Merge scenario if exists.
                         if (fileName != null) {
-                            utils.debug "Scenario file name: ${fileName} exists"
+                            controller.drupipeLogger.debug "Scenario file name: ${fileName} exists"
                             def scenarioConfig = mergeScenariosConfigs(context, script.readYaml(file: fileName), tempContext, scenarioSourceName)
-                            utils.debug "Loaded scenario: ${scenarioSourceName}:${scenario.name} config"
+                            controller.drupipeLogger.debug "Loaded scenario: ${scenarioSourceName}:${scenario.name} config"
                             scenariosConfig = utils.merge(scenariosConfig, scenarioConfig)
-                            utils.debugLog(config, scenariosConfig, "Scenarios config")
+                            controller.drupipeLogger.debugLog(config, scenariosConfig, "Scenarios config")
                         }
                         else {
-                            utils.warning "Scenario file doesn't found"
+                            controller.drupipeLogger.warning "Scenario file doesn't found"
                         }
                     }
                     else {

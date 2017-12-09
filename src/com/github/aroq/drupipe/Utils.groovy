@@ -1,40 +1,11 @@
 package com.github.aroq.drupipe
 
 import groovy.json.JsonSlurperClassic
-import groovy.json.JsonOutput
 import java.nio.file.Path
 import java.nio.file.Paths
 
-def log(String message) {
-    info(message)
-}
-
-def trace(String message) {
-    colorEcho '[TRACE] ' + message, 'cyan'
-}
-
-def info(String message) {
-    colorEcho '[INFO] ' + message, 'green'
-}
-
-def debug(String message) {
-    colorEcho '[DEBUG] ' + message, 'yellow'
-}
-
-def warning(String message) {
-    colorEcho '[WARNING] ' + message, 'red'
-}
-
-def error(String message) {
-    colorEcho '[ERROR] ' + message, 'magenta'
-}
-
-def collapsedStart(String message) {
-    echo '[COLLAPSED-START] ' + message
-}
-
-def collapsedEnd() {
-    echo '[COLLAPSED-END]'
+def println(message) {
+    echo message
 }
 
 def colorEcho(message, color = null) {
@@ -352,75 +323,6 @@ def pipelineNotify(context, event) {
                     }
                 }
             }
-        }
-    }
-}
-
-def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], force = false) {
-    if (debugEnabled(params) || force) {
-        force = true
-        if (path) {
-            value = path.inject(value, { obj, prop ->
-                if (obj && obj[prop]) {
-                    obj[prop]
-                }
-                else ''
-            })
-        }
-
-        if (value instanceof CharSequence) {
-            debug "${dumpName}: ${value}"
-        }
-        else {
-            if (debugParams?.debugMode == 'json' || params.debugMode == 'json') {
-                jsonDump(params, value, dumpName, force)
-            }
-            else {
-                dump(params, value, dumpName, force)
-            }
-        }
-    }
-}
-
-def dump(context, params, String dumpName = '', force = false) {
-    if (debugEnabled(context) || force) {
-        debug "Dumping ${dumpName}:"
-        debug collectParams(params)
-    }
-}
-
-def debugEnabled(params) {
-    params.debugEnabled && params.debugEnabled != '0'
-}
-
-@NonCPS
-def collectParams(params) {
-    def String result = ''
-    for (item in params) {
-        result = result + "${item.key} = ${item.value}\r\n"
-    }
-    result
-}
-
-def echoDelimiter(String message) {
-    if (message) {
-        if (message.size() < 80) {
-            echo message + '-' * (80 - message.size())
-        }
-        else {
-            echo message
-        }
-    }
-}
-
-def jsonDump(params, value, String dumpName = '', force = false) {
-    if (debugEnabled(params) || force) {
-        if (dumpName) {
-            echo "DUMP START - ${dumpName}"
-        }
-        debug JsonOutput.prettyPrint(JsonOutput.toJson(value))
-        if (dumpName) {
-            echo "DUMP END - ${dumpName}"
         }
     }
 }

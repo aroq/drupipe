@@ -17,7 +17,7 @@ class DrupipeContainerBlock extends DrupipeBase {
 
         for (phase in phases) {
             if (this."${phase}") {
-                controller.utils.debug "Execute CONTAINER BLOCK phase: ${phase}"
+                controller.controller.drupipeLogger.debug "Execute CONTAINER BLOCK phase: ${phase}"
                 for (action in this."${phase}") {
                     executeAction(processAction(action))
                 }
@@ -31,7 +31,7 @@ class DrupipeContainerBlock extends DrupipeBase {
 
     def executeAction(action) {
         if (action) {
-            controller.utils.debugLog(controller.context, action, 'ACTION', [debugMode: 'json'], [], true)
+            controller.controller.drupipeLogger.debugLog(controller.context, action, 'ACTION', [debugMode: 'json'], [], true)
             def actionWrapper = [
                 name: action.name,
                 methodName: action.methodName,
@@ -39,7 +39,7 @@ class DrupipeContainerBlock extends DrupipeBase {
             action.remove('name')
             action.remove('methodName')
 
-            controller.utils.debugLog(controller.context, actionWrapper, 'ACTION WRAPPER', [debugMode: 'json'], [], true)
+            controller.controller.drupipeLogger.debugLog(controller.context, actionWrapper, 'ACTION WRAPPER', [debugMode: 'json'], [], true)
             DrupipeActionWrapper drupipeActionWrapper = new DrupipeActionWrapper(actionWrapper)
             drupipeActionWrapper.pipeline = controller
             drupipeActionWrapper.params = action
