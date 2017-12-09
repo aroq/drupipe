@@ -39,8 +39,6 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
         }
     }
 
-//    def creds = [string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
-//    withCredentials(creds) {
     podTemplate(
         label: nodeName,
         containers: containersToExecute,
@@ -55,20 +53,23 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
             controller.utils.unstashList(controller, unstash)
             controller.context.workspace = pwd()
             for (def i = 0; i < containers.size(); i++) {
+                controller.drupipeLogger.collapsedStart("CONTAINER: ${containers[i].name}")
                 container(containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
                     for (block in containers[i].blocks) {
-//                            controller.drupipeLogger.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
+                        controller.drupipeLogger.collapsedStart("BLOCK: ${block.name}")
+                        controller.drupipeLogger.debugLog(controller.context, block, 'BLOCK', [debugMode: 'json'])
                         sshagent([controller.context.credentialsId]) {
                             def drupipeContainerBlock = new DrupipeContainerBlock(block)
                             drupipeContainerBlock.controller = controller
                             drupipeContainerBlock.execute()
                         }
+                        controller.drupipeLogger.collapsedEnd()
                     }
                 }
+                controller.drupipeLogger.collapsedEnd()
             }
             controller.utils.stashList(controller, stash)
         }
     }
-//    }
 
 }
