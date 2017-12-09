@@ -31,7 +31,7 @@ class DrupipeController implements Serializable {
     DrupipeProcessorsController drupipeProcessorsController
 
     def init() {
-        drupipeLogger = new DrupipeLogger(utils: utils, logLevels: context.logLevels)
+        drupipeLogger = new DrupipeLogger(utils: utils, logLevels: context.log_levels)
         drupipeConfig = new DrupipeConfig(controller: this, script: script, utils: utils)
     }
 
