@@ -9,7 +9,7 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
 
     for (def i = 0; i < containers.size(); i++) {
         def container = containers[i]
-        controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER TEMPLATE', [debugMode: 'json'], [])
+        controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER TEMPLATE', [debugMode: 'json'], []alse)
         def containerName = container.name.replaceAll('\\.','-').replaceAll('_','-')
         if (!containerNames.contains(containerName)) {
             controller.drupipeLogger.info "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
@@ -55,17 +55,13 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
             controller.utils.unstashList(controller, unstash)
             controller.context.workspace = pwd()
             for (def i = 0; i < containers.size(); i++) {
-                executeWithCollapsed(controller, "CONTAINER: ${containers[i].name}") {
-                    container(containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
-                        for (block in containers[i].blocks) {
+                container(containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
+                    for (block in containers[i].blocks) {
 //                            controller.drupipeLogger.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
-                            executeWithCollapsed(controller, "BLOCK: ${block.name}") {
-                                sshagent([controller.context.credentialsId]) {
-                                    def drupipeContainerBlock = new DrupipeContainerBlock(block)
-                                    drupipeContainerBlock.controller = controller
-                                    drupipeContainerBlock.execute()
-                                }
-                            }
+                        sshagent([controller.context.credentialsId]) {
+                            def drupipeContainerBlock = new DrupipeContainerBlock(block)
+                            drupipeContainerBlock.controller = controller
+                            drupipeContainerBlock.execute()
                         }
                     }
                 }
@@ -75,10 +71,4 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
     }
 //    }
 
-}
-
-def executeWithCollapsed(controller, message, body) {
-    controller.drupipeLogger.collapsedStart(message)
-    body()
-    controller.drupipeLogger.collapsedEnd()
 }
