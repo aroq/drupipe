@@ -39,7 +39,7 @@ class ConfigProviderProject extends ConfigProviderBase {
             def fileName = null
             controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.drupipeSourcesController.loadedSources, "loadedSources", [debugMode: 'json'], [], true)
             def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
-            utils.trace "PROJECTS SOURCE DIR: ${sourceDir}"
+            controller.drupipeLogger.trace "PROJECTS SOURCE DIR: ${sourceDir}"
 
             def filesToCheck = [
                 ".unipipe/config.yaml",
@@ -53,9 +53,9 @@ class ConfigProviderProject extends ConfigProviderBase {
             for (def ifc = 0; ifc < filesToCheck.size(); ifc++) {
                 def fileToCheck = filesToCheck[ifc]
                 def fileNameToCheck = sourceDir + '/' + fileToCheck
-                utils.trace "PROJECT FILE NAME TO CHECK: ${fileNameToCheck}"
+                controller.drupipeLogger.trace "PROJECT FILE NAME TO CHECK: ${fileNameToCheck}"
                 if (this.script.fileExists(fileNameToCheck)) {
-                    utils.trace "SELECTING PROJECT FILE: ${fileNameToCheck}"
+                    controller.drupipeLogger.trace "SELECTING PROJECT FILE: ${fileNameToCheck}"
                     fileName = fileToCheck
                     break
                 }
@@ -105,8 +105,8 @@ class ConfigProviderProject extends ConfigProviderBase {
         def uniconfIncludeKey = utils.deepGet(context, 'uniconf.keys.include')
         def uniconfSourcesKey = utils.deepGet(context, 'uniconf.keys.sources')
 
-        utils.trace "uniconfIncludeKey: ${uniconfIncludeKey}"
-        utils.trace "uniconfSourcesKey: ${uniconfSourcesKey}"
+        controller.drupipeLogger.trace "uniconfIncludeKey: ${uniconfIncludeKey}"
+        controller.drupipeLogger.trace "uniconfSourcesKey: ${uniconfSourcesKey}"
 
         if (config.containsKey('scenarios') && uniconfIncludeKey != 'scenarios') {
             config[uniconfIncludeKey] = config['scenarios']

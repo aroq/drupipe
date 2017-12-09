@@ -31,7 +31,7 @@ class DrupipeJob extends DrupipeBase {
     DrupipeController controller
 
     def execute(body = null) {
-        controller.utils.trace "DrupipeJob execute - ${name}"
+        controller.controller.drupipeLogger.trace "DrupipeJob execute - ${name}"
         pipeline.controller = controller
         pipeline.execute()
     }

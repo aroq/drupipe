@@ -18,7 +18,7 @@ class DrupipePod extends DrupipeBase {
 
     def execute(body = null) {
         def script = controller.script
-        controller.utils.trace "DrupipePod execute - ${name}"
+        controller.controller.drupipeLogger.trace "DrupipePod execute - ${name}"
 
         script.node(name) {
             if (unipipe_retrieve_config) {

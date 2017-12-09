@@ -125,7 +125,7 @@ class DrupipeConfig implements Serializable {
     }
 
     DrupipeProcessorsController initProcessorsController(parent, processorsConfig) {
-        utils.trace "initProcessorsController"
+        controller.drupipeLogger.trace "initProcessorsController"
         ArrayList<DrupipeProcessor> processors = []
         for (processorConfig in processorsConfig) {
             controller.drupipeLogger.log "Processor: ${processorConfig.className}"
@@ -148,12 +148,12 @@ class DrupipeConfig implements Serializable {
     }
 
     def processItem(item, parentKey, paramsKey = 'params', mode) {
-        utils.trace "DrupipeConfig->processItem"
+        controller.drupipeLogger.trace "DrupipeConfig->processItem"
         controller.drupipeProcessorsController.process(config, item, parentKey, paramsKey, mode)
     }
 
     def process() {
-        utils.trace "DrupipeConfig->process()"
+        controller.drupipeLogger.trace "DrupipeConfig->process()"
         if (controller.configVersion() > 1) {
             if (config.jobs) {
                 config.jobs = processItem(config.jobs, 'context', 'params', 'config')
@@ -167,7 +167,7 @@ class DrupipeConfig implements Serializable {
     }
 
     def config_version2() {
-        utils.trace "DrupipeConfig->config_version2()"
+        controller.drupipeLogger.trace "DrupipeConfig->config_version2()"
         script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config_version2.yaml'))
     }
 

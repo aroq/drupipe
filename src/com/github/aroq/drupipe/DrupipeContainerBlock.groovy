@@ -13,7 +13,7 @@ class DrupipeContainerBlock extends DrupipeBase {
     DrupipeController controller
 
     def execute(body = null) {
-        controller.utils.trace "DrupipeContainerBlock execute - ${name}"
+        controller.controller.drupipeLogger.trace "DrupipeContainerBlock execute - ${name}"
 
         for (phase in phases) {
             if (this."${phase}") {
