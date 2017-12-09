@@ -8,10 +8,10 @@ log_levels:
     color: cyan
   DEBUG:
     weight: 20
-    color: green
+    color: yellow
   INFO:
     weight: 30
-    color: yellow
+    color: green
   WARNING:
     weight: 40
     color: red
