@@ -19,24 +19,24 @@ class ConfigProviderMothership extends ConfigProviderBase {
                 configType: 'groovy',
                 configPath: 'mothership.config',
             )
-            controller.drupipeLogger.debugLog(drupipeConfig.config, result, 'mothershipConfig: result', [debugMode: 'json'], [], false)
+            controller.drupipeLogger.debugLog(drupipeConfig.config, result, 'mothershipConfig: result', [debugMode: 'json'])
 
             def mothershipConfig = getMothershipConfigFile(result)
-            controller.drupipeLogger.debugLog(drupipeConfig.config, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], false)
+            controller.drupipeLogger.debugLog(drupipeConfig.config, mothershipConfig, 'mothershipConfig', [debugMode: 'json'])
 
             drupipeConfig.projects = mothershipConfig
 
             def mothershipServers = getMothershipServersFile(result)
-            controller.drupipeLogger.debugLog(drupipeConfig.config, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], false)
+            controller.drupipeLogger.debugLog(drupipeConfig.config, mothershipServers, 'mothershipServers', [debugMode: 'json'])
 
             def mothershipProjectConfig = mothershipConfig[drupipeConfig.config.jenkinsFolderName]
             script.echo "mothershipProjectConfig: ${mothershipProjectConfig}"
 
             result = utils.merge(result, mothershipProjectConfig)
-            controller.drupipeLogger.debugLog(drupipeConfig.config, result, 'mothershipServer result after merge', [debugMode: 'json'], [], false)
+            controller.drupipeLogger.debugLog(drupipeConfig.config, result, 'mothershipServer result after merge', [debugMode: 'json'])
 
             result = utils.merge(result, [jenkinsServers: mothershipServers])
-            controller.drupipeLogger.debugLog(drupipeConfig.config, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], false)
+            controller.drupipeLogger.debugLog(drupipeConfig.config, result, 'mothershipServer result2 after merge', [debugMode: 'json'])
         }
 
         result

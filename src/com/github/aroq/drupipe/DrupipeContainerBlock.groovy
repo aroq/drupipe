@@ -31,7 +31,7 @@ class DrupipeContainerBlock extends DrupipeBase {
 
     def executeAction(action) {
         if (action) {
-            controller.drupipeLogger.debugLog(controller.context, action, 'ACTION', [debugMode: 'json'], [], true)
+            controller.drupipeLogger.debugLog(controller.context, action, 'ACTION', [debugMode: 'json'])
             def actionWrapper = [
                 name: action.name,
                 methodName: action.methodName,
@@ -39,7 +39,7 @@ class DrupipeContainerBlock extends DrupipeBase {
             action.remove('name')
             action.remove('methodName')
 
-            controller.drupipeLogger.debugLog(controller.context, actionWrapper, 'ACTION WRAPPER', [debugMode: 'json'], [], true)
+            controller.drupipeLogger.debugLog(controller.context, actionWrapper, 'ACTION WRAPPER', [debugMode: 'json'])
             DrupipeActionWrapper drupipeActionWrapper = new DrupipeActionWrapper(actionWrapper)
             drupipeActionWrapper.pipeline = controller
             drupipeActionWrapper.params = action

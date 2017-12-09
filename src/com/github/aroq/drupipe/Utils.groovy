@@ -81,7 +81,7 @@ def envToMap() {
 }
 
 def dumpConfigFile(config, fileName = 'config.dump.groovy') {
-    debugLog(config, config, 'dumpConfigFile', [debugMode: 'json'], [], true)
+    debugLog(config, config, 'dumpConfigFile', [debugMode: 'json'])
     echo "Dumping config file: config.dump.groovy"
     writeFile(file: fileName, text: configToSlurperFile(config))
     sh "cat ${fileName}"

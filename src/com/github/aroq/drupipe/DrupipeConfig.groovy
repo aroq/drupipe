@@ -103,7 +103,7 @@ class DrupipeConfig implements Serializable {
                         config.params.action = utils.merge(config.params.action, config.environmentParams.defaultActionParams)
                     }
 
-                    controller.drupipeLogger.debugLog(config, config.environmentParams, 'ENVIRONMENT PARAMS', [:], [], true)
+                    controller.drupipeLogger.debugLog(config, config.environmentParams, 'ENVIRONMENT PARAMS')
                 }
                 else {
                     controller.drupipeLogger.warning "No context.environment is defined"

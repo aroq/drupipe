@@ -29,7 +29,7 @@ class DrupipePod extends DrupipeBase {
             }
             controller.utils.unstashList(controller, unstash)
             for (container in containers) {
-                controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], true)
+                controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'])
                 container = new DrupipeContainer(container)
                 container.controller = controller
                 container.pod = this

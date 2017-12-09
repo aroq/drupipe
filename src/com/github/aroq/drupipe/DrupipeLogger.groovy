@@ -15,8 +15,12 @@ class DrupipeLogger implements Serializable {
 
     int logLevelWeight
 
+    boolean checkLogLevelWeight(String logLevel) {
+        logLevels[logLevel].weight >= logLevelWeight
+    }
+
     def logMessage(String logLevel, String message) {
-        if (logLevels[logLevel].weight >= logLevelWeight) {
+        if (checkLogLevelWeight(logLevel)) {
             utils.colorEcho "[${logLevel}] " + message, logLevels[logLevel].color
         }
     }
@@ -53,8 +57,8 @@ class DrupipeLogger implements Serializable {
         utils.echoMessage '[COLLAPSED-END]'
     }
 
-    def jsonDump(params, value, String dumpName = '', force = false) {
-        if (debugEnabled(params) || force) {
+    def jsonDump(value, String dumpName = '', String logLevel = 'DEBUG') {
+        if (checkLogLevelWeight(logLevel)) {
             if (dumpName) {
                 utils.echoMessage "DUMP START - ${dumpName}"
             }
@@ -65,9 +69,8 @@ class DrupipeLogger implements Serializable {
         }
     }
 
-    def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], force = false) {
-        if (debugEnabled(params) || force) {
-            force = true
+    def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], String logLevel = 'DEBUG') {
+        if (checkLogLevelWeight(logLevel)) {
             if (path) {
                 value = path.inject(value, { obj, prop ->
                     if (obj && obj[prop]) {
@@ -82,24 +85,22 @@ class DrupipeLogger implements Serializable {
             }
             else {
                 if (debugParams?.debugMode == 'json' || params.debugMode == 'json') {
-                    jsonDump(params, value, dumpName, force)
+                    jsonDump(params, value, dumpName, logLevel)
                 }
                 else {
-                    dump(params, value, dumpName, force)
+                    dump(params, value, dumpName, logLevel)
                 }
             }
         }
     }
 
-    def dump(context, params, String dumpName = '', force = false) {
-        if (debugEnabled(context) || force) {
-            debug "Dumping ${dumpName}:"
-            debug collectParams(params)
-        }
-    }
-
-    def debugEnabled(params) {
-        params.debugEnabled && params.debugEnabled != '0'
+    def dump(context, params, String dumpName = '', String logLevel = 'DEBUG') {
+        logMessage(logLevel, "Dumping ${dumpName}:")
+        logMessage(logLevel, collectParams(params))
+//        if (debugEnabled(context) || force) {
+//            debug "Dumping ${dumpName}:"
+//            debug collectParams(params)
+//        }
     }
 
     @NonCPS
