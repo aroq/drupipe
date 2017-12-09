@@ -8,7 +8,7 @@ class DrupipeLogger implements Serializable {
 
     def logLevels
 
-    int logLevel
+    int logLevelWeight
 
     def logMessage(String logLevel, String message) {
         if (logLevels[logLevel].weight >= logLevel) {
