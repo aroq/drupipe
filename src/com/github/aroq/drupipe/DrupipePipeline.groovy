@@ -23,7 +23,7 @@ class DrupipePipeline extends DrupipeBase {
         // TODO: add try/finally for 'final_pods' execution.
         for (phase in phases) {
             if (this."${phase}") {
-                controller.controller.drupipeLogger.trace "Execute PIPELINE phase: ${phase}"
+                controller.drupipeLogger.trace "Execute PIPELINE phase: ${phase}"
                 for (pod in this."${phase}") {
                     executePod(pod)
                 }
@@ -33,7 +33,7 @@ class DrupipePipeline extends DrupipeBase {
 
     def executePod(pod) {
         if (pod) {
-            controller.controller.drupipeLogger.debugLog(controller.context, pod, 'POD', [debugMode: 'json'], [], true)
+            controller.drupipeLogger.debugLog(controller.context, pod, 'POD', [debugMode: 'json'], [], true)
 
             if (pod.containerized && controller.context.containerMode == 'kubernetes') {
                 pod = new DrupipeKubernetesPod(pod)

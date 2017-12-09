@@ -18,18 +18,18 @@ class DrupipePod extends DrupipeBase {
 
     def execute(body = null) {
         def script = controller.script
-        controller.controller.drupipeLogger.trace "DrupipePod execute - ${name}"
+        controller.drupipeLogger.trace "DrupipePod execute - ${name}"
 
         script.node(name) {
             if (unipipe_retrieve_config) {
                 controller.utils.getUnipipeConfig(controller)
             }
             else {
-                controller.controller.drupipeLogger.warning "Retrieve config disabled in config."
+                controller.drupipeLogger.warning "Retrieve config disabled in config."
             }
             controller.utils.unstashList(controller, unstash)
             for (container in containers) {
-                controller.controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], true)
+                controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], true)
                 container = new DrupipeContainer(container)
                 container.controller = controller
                 container.pod = this
