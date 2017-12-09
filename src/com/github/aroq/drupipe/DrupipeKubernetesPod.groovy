@@ -19,7 +19,7 @@ class DrupipeKubernetesPod extends DrupipeBase {
     def execute(body = null) {
         controller.drupipeLogger.collapsedStart("POD EXECUTION START - ${name}")
         controller.script.drupipeExecuteKubernetesContainers(containers, controller, unstash, stash, unipipe_retrieve_config)
-        controller.drupipeLogger.collapsedEnd("POD EXECUTION END - ${name}")
+        controller.drupipeLogger.collapsedEnd()
     }
 
 }
