@@ -8,8 +8,12 @@ class DrupipeLogger implements Serializable {
 
     def logLevels
 
+    String logLevel
+
     def logMessage(String logLevel, String message) {
-        utils.colorEcho "[${logLevel}] " + message, logLevels[logLevel].color
+        if (logLevels[logLevel].weight >= logLevel) {
+            utils.colorEcho "[${logLevel}] " + message, logLevels[logLevel].color
+        }
     }
 
     def log(String message) {
