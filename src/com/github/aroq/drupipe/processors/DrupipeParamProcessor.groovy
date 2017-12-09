@@ -16,7 +16,7 @@ class DrupipeParamProcessor implements Serializable {
         template.toString()
     }
 
-    @NonCPS
+//    @NonCPS
     def processActionParams(action, context, ArrayList prefixes, ArrayList path = []) {
         def params
         if (path) {
