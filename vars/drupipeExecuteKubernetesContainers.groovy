@@ -2,17 +2,17 @@ import com.github.aroq.drupipe.DrupipeContainerBlock
 import com.github.aroq.drupipe.DrupipeController
 
 def call(ArrayList containers, DrupipeController controller, ArrayList unstash = [], ArrayList stash = [], unipipe_retrieve_config = false) {
-    controller.controller.drupipeLogger.debug "Container mode: kubernetes"
+    controller.drupipeLogger.debug "Container mode: kubernetes"
     def nodeName = 'drupipe'
     def containerNames = []
     def containersToExecute= []
 
     for (def i = 0; i < containers.size(); i++) {
         def container = containers[i]
-        controller.controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER TEMPLATE', [debugMode: 'json'], [], false)
+        controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER TEMPLATE', [debugMode: 'json'], [], false)
         def containerName = container.name.replaceAll('\\.','-').replaceAll('_','-')
         if (!containerNames.contains(containerName)) {
-            controller.controller.drupipeLogger.info "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
+            controller.drupipeLogger.info "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
             containerNames += containerName
             containersToExecute.add(containerTemplate(
                 name:                  containerName,
@@ -50,14 +50,14 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
                 controller.utils.getUnipipeConfig(controller)
             }
             else {
-                controller.controller.drupipeLogger.warning "Retrieve config disabled in config."
+                controller.drupipeLogger.warning "Retrieve config disabled in config."
             }
             controller.utils.unstashList(controller, unstash)
             controller.context.workspace = pwd()
             for (def i = 0; i < containers.size(); i++) {
                 container(containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
                     for (block in containers[i].blocks) {
-//                            controller.controller.drupipeLogger.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
+//                            controller.drupipeLogger.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
                         sshagent([controller.context.credentialsId]) {
                             def drupipeContainerBlock = new DrupipeContainerBlock(block)
                             drupipeContainerBlock.controller = controller
