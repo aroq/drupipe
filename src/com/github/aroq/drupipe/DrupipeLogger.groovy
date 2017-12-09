@@ -2,11 +2,16 @@ package com.github.aroq.drupipe
 
 import groovy.json.JsonOutput
 
+class DrupipeLogLevel {
+    int weight
+    String color
+}
+
 class DrupipeLogger implements Serializable {
 
     com.github.aroq.drupipe.Utils utils
 
-    def logLevels
+    LinkedHashMap<String, DrupipeLogLevel> logLevels
 
     int logLevelWeight
 
