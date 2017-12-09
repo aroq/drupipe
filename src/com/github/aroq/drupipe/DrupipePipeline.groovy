@@ -19,7 +19,7 @@ class DrupipePipeline extends DrupipeBase {
     DrupipeController controller
 
     def execute(body = null) {
-        controller.controller.drupipeLogger.trace "DrupipePipeline execute - ${name}"
+        controller.drupipeLogger.trace "DrupipePipeline execute - ${name}"
         // TODO: add try/finally for 'final_pods' execution.
         for (phase in phases) {
             if (this."${phase}") {
