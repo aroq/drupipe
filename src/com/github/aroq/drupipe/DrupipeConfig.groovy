@@ -1,5 +1,6 @@
 package com.github.aroq.drupipe
 
+import com.github.aroq.drupipe.processors.DrupipeParamProcessor
 import com.github.aroq.drupipe.processors.DrupipeProcessor
 import com.github.aroq.drupipe.processors.DrupipeProcessorsController
 import com.github.aroq.drupipe.providers.config.ConfigProvider
@@ -19,6 +20,10 @@ class DrupipeConfig implements Serializable {
     DrupipeSourcesController drupipeSourcesController
 
     def projects
+
+    def get(String name, params = [:]) {
+
+    }
 
     def config(params, parent) {
         drupipeSourcesController = new DrupipeSourcesController(script: script, utils: utils, controller: controller)
@@ -124,7 +129,8 @@ class DrupipeConfig implements Serializable {
                 throw err
             }
         }
-        new DrupipeProcessorsController(processors: processors, utils: utils)
+        DrupipeParamProcessor drupipeParamProcessor = new DrupipeParamProcessor(utils: utils)
+        new DrupipeProcessorsController(processors: processors, utils: utils, drupipeParamProcessor: drupipeParamProcessor)
     }
 
     def processItem(item, parentKey, paramsKey = 'params', mode) {

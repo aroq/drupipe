@@ -4,6 +4,8 @@ class DrupipeProcessorsController implements Serializable {
 
     ArrayList<DrupipeProcessor> processors
 
+    DrupipeParamProcessor drupipeParamProcessor
+
     def utils
 
     def process(context, object, parent, key = 'params', mode = 'config') {
