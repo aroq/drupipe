@@ -10,16 +10,14 @@ class DrupipeKubernetesPod extends DrupipeBase {
 
     ArrayList<DrupipeContainer> containers = []
 
-    DrupipeController controller
-
     boolean containerized = true
 
     boolean unipipe_retrieve_config = false
 
     def execute(body = null) {
-        def script = controller.script
-        script.echo "DrupipePod execute - ${name}"
-        script.drupipeExecuteKubernetesContainers(containers, controller, unstash, stash, unipipe_retrieve_config)
+        executeWithCollapsed("POD: ${name}") {
+            controller.script.drupipeExecuteKubernetesContainers(containers, controller, unstash, stash, unipipe_retrieve_config)
+        }
     }
 
 }

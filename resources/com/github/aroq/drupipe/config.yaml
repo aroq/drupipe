@@ -1,5 +1,24 @@
 config_version: 1
 
+log_level: INFO
+
+log_levels:
+  TRACE:
+    weight: 10
+    color: cyan
+  DEBUG:
+    weight: 20
+    color: yellow
+  INFO:
+    weight: 30
+    color: green
+  WARNING:
+    weight: 40
+    color: red
+  ERROR:
+    weight: 50
+    color: magenta
+
 uniconf:
   keys:
     include: scenarios

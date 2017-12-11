@@ -58,7 +58,7 @@ class Kubectl extends BaseAction {
 
     def executeKubectlCommand() {
         if (!action.params.full_command) {
-            utils.debugLog(action.pipeline.context, action.params, "ACTION PARAMS (full_command is absent)", [debugMode: 'json'], [], true)
+            controller.drupipeLogger.debugLog(action.pipeline.context, action.params, "ACTION PARAMS (full_command is absent)", [debugMode: 'json'])
         }
         script.drupipeShell("${action.params.full_command.join(' ')}", action.params)
     }

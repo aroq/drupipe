@@ -1,8 +1,12 @@
 package com.github.aroq.drupipe.processors
 
+import com.github.aroq.drupipe.DrupipeLogger
+
 class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     com.github.aroq.drupipe.Utils utils
+    
+    DrupipeLogger drupipeLogger
 
     String mode
 
@@ -50,18 +54,18 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     def processFromItem(context, result, String from, String parent, String key = 'params') {
 //        if (from == '.params.actions.JobDslSeed.perform') {
-//            utils.log "Process from: ${from}"
-//            utils.log "Process mode: ${mode}"
+//            drupipeLogger.log "Process from: ${from}"
+//            drupipeLogger.log "Process mode: ${mode}"
 //        }
 
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         if (processorParams) {
-            utils.debugLog(context, processorParams, 'processFromItem->processorParams', [debugMode: 'json'], [], false)
+            drupipeLogger.debugLog(context, processorParams, 'processFromItem->processorParams', [debugMode: 'json'])
             def keyMode = utils.deepGet(processorParams, "${this.include_key}.mode")
 
             if (keyMode == this.mode) {
 //                if (from == '.params.actions.JobDslSeed.perform') {
-//                    utils.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
+//                    drupipeLogger.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
 //                }
 
                 def tempContext
@@ -116,23 +120,23 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                     result.from_source = from
                 }
                 else {
-                    utils.log "DrupipeFromProcessor->processFromItem() FROM ${from} is not found in tempContext"
+                    drupipeLogger.log "DrupipeFromProcessor->processFromItem() FROM ${from} is not found in tempContext"
                 }
                 result.remove(this.include_key)
             }
             else {
-//                utils.log "DrupipeFromProcessor->processFromItem() ${from} skipped as mode is ${keyMode}, include_key: ${this.include_key}"
+//                drupipeLogger.log "DrupipeFromProcessor->processFromItem() ${from} skipped as mode is ${keyMode}, include_key: ${this.include_key}"
             }
         }
         else {
-            utils.log "DrupipeFromProcessor->processFromItem() no processorParams defined"
+            drupipeLogger.log "DrupipeFromProcessor->processFromItem() no processorParams defined"
         }
 
         result
     }
 
     def process(context, obj, parent, key = 'params', mode = 'config') {
-//        utils.log "DrupipeFromProcessor->processItem"
+//        drupipeLogger.log "DrupipeFromProcessor->processItem"
         this.mode = mode
         def result = obj
         if (obj.containsKey(this.include_key)) {

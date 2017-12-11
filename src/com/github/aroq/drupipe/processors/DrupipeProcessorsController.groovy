@@ -4,10 +4,12 @@ class DrupipeProcessorsController implements Serializable {
 
     ArrayList<DrupipeProcessor> processors
 
+    DrupipeParamProcessor drupipeParamProcessor
+
     def utils
 
     def process(context, object, parent, key = 'params', mode = 'config') {
-//        utils.log "DrupipeProcessorsController->processItem"
+//        controller.drupipeLogger.log "DrupipeProcessorsController->processItem"
         if (object instanceof Map) {
             for (DrupipeProcessor processor in processors) {
                 object = processor.process(context, object, parent, key, mode)

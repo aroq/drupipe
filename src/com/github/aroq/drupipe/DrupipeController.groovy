@@ -26,6 +26,8 @@ class DrupipeController implements Serializable {
 
     DrupipeConfig drupipeConfig
 
+    DrupipeLogger drupipeLogger
+
     DrupipeProcessorsController drupipeProcessorsController
 
     def init() {
@@ -56,7 +58,7 @@ class DrupipeController implements Serializable {
                                 def jobConfig = context.job
                                 archiveObjectJsonAndYaml(jobConfig, 'job')
                                 script.echo "Configuration end"
-                                utils.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [], true)
+                                drupipeLogger.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'])
                                 job = new DrupipeJob(jobConfig)
                                 job.controller = this
                             }
@@ -176,7 +178,7 @@ class DrupipeController implements Serializable {
                     }
                     else {
                         script.echo "Triggering trigger name ${trigger_job.name} and job name ${trigger_job.job}"
-                        this.utils.dump(context, trigger_job, "TRIGGER JOB ${i}")
+//                        this.utils.dump(context, trigger_job, "TRIGGER JOB ${i}")
 
                         def params = []
                         def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
@@ -285,8 +287,8 @@ class DrupipeController implements Serializable {
             actionMethodName = values[0]
         }
         if (context.params && context.params.action && context.params.action[actionName] && context.params.action[actionName][actionMethodName] && context.params.action[actionName][actionMethodName].debugEnabled) {
-            utils.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'], [], true)
-            utils.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'], [], true)
+            controller.drupipeLogger.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'])
+            controller.drupipeLogger.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'])
         }
 
         script.echo actionName
@@ -317,7 +319,7 @@ class DrupipeController implements Serializable {
     }
 
     def scmCheckout(scm = null) {
-        utils.collapsedStart "Pipeline scm checkout"
+        drupipeLogger.collapsedStart "Pipeline scm checkout"
         if (scm) {
             this.script.echo "Pipeline scm checkout: set SCM"
             this.scm = scm
@@ -333,7 +335,7 @@ class DrupipeController implements Serializable {
             }
         }
         this.script.checkout this.scm
-        utils.collapsedEnd()
+        drupipeLogger.collapsedEnd()
     }
 
     def scripts_library_load() {

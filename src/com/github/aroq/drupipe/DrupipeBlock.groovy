@@ -60,7 +60,7 @@ class DrupipeBlock implements Serializable {
             pipeline.script.echo "NODE NAME: ${nodeName}"
             pipeline.script.node(nodeName) {
                 pipeline.context.drupipe_working_dir = [pipeline.script.pwd(), '.drupipe'].join('/')
-                utils.dump(this.config, 'BLOCK-CONFIG')
+//                utils.dump(this.config, 'BLOCK-CONFIG')
                 // Secret option for emergency remove workspace.
                 if (pipeline.context.force == '11') {
                     pipeline.script.echo 'FORCE REMOVE DIR'

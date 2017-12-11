@@ -33,7 +33,7 @@ class DrupipeActionWrapper implements Serializable {
         this.script = pipeline.script
 
         try {
-            utils.collapsedStart("ACTION: ${this.fullName}")
+            pipeline.drupipeLogger.collapsedStart("ACTION: ${this.fullName}")
             // Stage name & echo.
             String drupipeStageName
             if (pipeline.block && pipeline.block.stage) {
@@ -53,10 +53,10 @@ class DrupipeActionWrapper implements Serializable {
             def defaultActionParams = [:]
 
             if (this.params && this.params.containsKey('fromProcessed') && this.params.fromProcessed) {
-                utils.debug "Action was processed with 'from' in ${this.params.from_processed_mode}"
+                pipeline.drupipeLogger.debug "Action was processed with 'from' in ${this.params.from_processed_mode}"
             }
             else {
-                utils.debug "Action wasn't processed with 'from'"
+                pipeline.drupipeLogger.debug "Action wasn't processed with 'from'"
                 this.params.from = '.params.actions.' + name + '.' + methodName
                 this.params = pipeline.drupipeConfig.processItem(this.params, 'actions', 'params', 'execute')
             }
@@ -65,7 +65,7 @@ class DrupipeActionWrapper implements Serializable {
                 this.params = [:]
             }
             this.params = utils.merge(defaultActionParams, this.params)
-            utils.debugLog(this.params, this.params, "this.params after merge defaultActionParams with this.params", [debugMode: 'json'], [], this.params && this.params.debugEnabled)
+            pipeline.drupipeLogger.debugLog(this.params, this.params, "this.params after merge defaultActionParams with this.params", [debugMode: 'json'])
 
             def actionInstance
             try {
@@ -82,13 +82,13 @@ class DrupipeActionWrapper implements Serializable {
 
             // Interpolate action params with pipeline.context variables.
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
-                utils.log "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
+                pipeline.drupipeLogger.log "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
             }
             else {
                 this.params = utils.serializeAndDeserialize(this.params)
 
                 try {
-//                    utils.log "Call hook_preprocess()"
+//                    pipeline.drupipeLogger.log "Call hook_preprocess()"
                     actionInstance.hook_preprocess()
                 }
                 catch (err) {
@@ -96,18 +96,18 @@ class DrupipeActionWrapper implements Serializable {
                 }
 
                 try {
-//                    utils.log "Call ${this.methodName}_hook_preprocess()"
+//                    pipeline.drupipeLogger.log "Call ${this.methodName}_hook_preprocess()"
                     actionInstance."${this.methodName}_hook_preprocess"()
                 }
                 catch (err) {
                     // No preprocess defined.
                 }
 
-                utils.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
+                pipeline.drupipeProcessorsController.drupipeParamProcessor.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()])
                 // TODO: Store processed action params in pipeline.context (pipeline.context.actions['action_name']) to allow use it for interpolation in other actions.
             }
 
-            utils.debugLog(this.params, this.params, "this.params PROCESSED", [debugMode: 'json'], [], this.params && this.params.debugEnabled)
+            pipeline.drupipeLogger.debugLog(this.params, this.params, "this.params PROCESSED", [debugMode: 'json'])
 
             actionParams << this.params
 
@@ -134,7 +134,7 @@ class DrupipeActionWrapper implements Serializable {
                         for (def i = 0; i < pipeline.context.sourcesList.size(); i++) {
                             def source = pipeline.context.sourcesList[i]
                             def fileName = utils.sourcePath(pipeline.context, source.name, 'pipelines/actions/' + this.name + '.groovy')
-                            utils.debugLog(actionParams, fileName, "DrupipeActionWrapper file name to check")
+                            pipeline.drupipeLogger.debugLog(actionParams, fileName, "DrupipeActionWrapper file name to check")
                             // To make sure we only check fileExists in Heavyweight executor mode.
                             if (pipeline.context.block?.nodeName && this.script.fileExists(fileName)) {
                                 actionFile = this.script.load(fileName)
@@ -158,7 +158,7 @@ class DrupipeActionWrapper implements Serializable {
                     }
 
                     if (this.params.dump_result) {
-                        utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], this.params.debugEnabled)
+                        pipeline.drupipeLogger.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'])
                     }
 
                     // Results processing.
@@ -180,7 +180,7 @@ class DrupipeActionWrapper implements Serializable {
                                         script.echo "SOURCE: ${result.value.source}"
                                         script.echo "DESTINATION: ${result.value.destination}"
                                         script.echo "deepValue: ${deepValue}"
-                                        utils.debugLog(pipeline.context, context, "Temp context", [debugMode: 'json'], [], this.params.debugEnabled)
+                                        pipeline.drupipeLogger.debugLog(pipeline.context, context, "Temp context", [debugMode: 'json'])
                                     }
                                 }
                             }
@@ -188,13 +188,13 @@ class DrupipeActionWrapper implements Serializable {
                     }
 
                     if (pipeline.context.params && pipeline.context.params.action && pipeline.context.params.action["${name}_${methodName}"] && pipeline.context.params.action["${name}_${methodName}"].debugEnabled) {
-                        utils.debugLog(pipeline.context, pipeline.context, "pipeline.context results", [debugMode: 'json'], [this.params.store_result_key], this.params.debugEnabled)
+                        pipeline.drupipeLogger.debugLog(pipeline.context, pipeline.context, "pipeline.context results", [debugMode: 'json'], [this.params.store_result_key])
                     }
                 }
             }
 
             if (this.params.dump_result) {
-                utils.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'], [], this.params.debugEnabled)
+                pipeline.drupipeLogger.debugLog(pipeline.context, this.result, "action_result", [debugMode: 'json'])
             }
             if (context) {
                 pipeline.context = pipeline.context ? utils.merge(pipeline.context, context) : context
@@ -202,8 +202,8 @@ class DrupipeActionWrapper implements Serializable {
 //                pipeline.archiveObjectJsonAndYaml(pipeline.context.results, 'context_results')
             }
 
-            utils.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
-            utils.collapsedEnd()
+            pipeline.drupipeLogger.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
+            pipeline.drupipeLogger.collapsedEnd()
             this.result
         }
         catch (err) {
