@@ -55,16 +55,16 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
             for (def i = 0; i < containers.size(); i++) {
                 container(containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
                     sshagent([controller.context.credentialsId]) {
-                        controller.drupipeLogger.collapsedStart("CONTAINER: ${containers[i].name}")
+//                        controller.drupipeLogger.collapsedStart("CONTAINER: ${containers[i].name}")
                         for (block in containers[i].blocks) {
-                            controller.drupipeLogger.collapsedStart("BLOCK: ${block.name}")
-                            controller.drupipeLogger.debugLog(controller.context, block, 'BLOCK', [debugMode: 'json'])
+//                            controller.drupipeLogger.collapsedStart("BLOCK: ${block.name}")
+//                            controller.drupipeLogger.debugLog(controller.context, block, 'BLOCK', [debugMode: 'json'])
                             def drupipeContainerBlock = new DrupipeContainerBlock(block)
                             drupipeContainerBlock.controller = controller
                             drupipeContainerBlock.execute()
-                            controller.drupipeLogger.collapsedEnd()
+//                            controller.drupipeLogger.collapsedEnd()
                         }
-                        controller.drupipeLogger.collapsedEnd()
+//                        controller.drupipeLogger.collapsedEnd()
                     }
                 }
             }
