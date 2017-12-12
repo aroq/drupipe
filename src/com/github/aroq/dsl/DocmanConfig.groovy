@@ -37,6 +37,16 @@ class DocmanConfig {
         docmanConfig['environments']
     }
 
+    def getType(project = 'master') {
+        init()
+        if (docmanConfig.projects[project]['type']) {
+            return docmanConfig.projects[project]['type']
+        }
+        else {
+            throw new RuntimeException("There is no project ${project} defined in projects")
+        }
+    }
+
     def getVersionBranch(project, stateName) {
         init()
         if (!project) {
