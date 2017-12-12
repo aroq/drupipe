@@ -30,7 +30,7 @@ class Docman extends BaseAction {
         script.drupipeShell(
             """
         cd ${action.pipeline.context.docmanDir}
-        docman info full config.json
+        docman info full config.json ${debugFlag()}
         """, action.params
         )
         [:]
@@ -51,7 +51,7 @@ class Docman extends BaseAction {
         script.drupipeShell(
             """
             cd ${action.pipeline.context.docmanDir}
-            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag(action.pipeline.context)}
+            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag()} ${debugFlag()}
             """, action.params
         )
         if (!action.pipeline.context['builder']) {
@@ -80,7 +80,7 @@ class Docman extends BaseAction {
         script.drupipeShell(
             """
             cd ${action.pipeline.context.docmanDir}
-            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag()}
+            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag()} ${debugFlag()}
             """, action.params
         )
         action.pipeline.context
@@ -90,9 +90,17 @@ class Docman extends BaseAction {
         script.drupipeShell(
             """
             cd ${action.pipeline.context.docmanDir}
-            docman deploy git_target ${action.pipeline.context.jenkinsParams.projectName} branch ${action.pipeline.context.jenkinsParams.version} ${forceFlag()}
+            docman deploy git_target ${action.pipeline.context.jenkinsParams.projectName} branch ${action.pipeline.context.jenkinsParams.version} ${forceFlag()} ${debugFlag()}
             """, action.params
         )
+    }
+
+    def debugFlag() {
+        def flag = ''
+        if (action.pipeline.context.jenkinsParams.debugEnabled == '1') {
+            flag = '-d'
+        }
+        flag
     }
 
     def forceFlag() {
@@ -107,7 +115,7 @@ class Docman extends BaseAction {
         script.echo "FORCE MODE: ${action.pipeline.context.jenkinsParams.force}"
 
         def configBranch = 'master'
-        if (action.pipeline.context.containsKey('tags') && action.pipeline.context.tags.contains('single')) {
+        if (action.pipeline.context.tags.contains('single')) {
             if (action.pipeline.context.environmentParams && action.pipeline.context.environmentParams.containsKey('git_reference')) {
                 configBranch = action.pipeline.context.environmentParams.git_reference
             }
@@ -119,7 +127,7 @@ class Docman extends BaseAction {
         script.drupipeShell(
         """
         rm -fR ${action.pipeline.context.docmanDir}
-        docman init ${action.pipeline.context.docmanDir} ${action.pipeline.context.configRepo} -s --branch=${configBranch}
+        docman init ${action.pipeline.context.docmanDir} ${action.pipeline.context.configRepo} -s --branch=${configBranch} ${debugFlag()}
         """, action.params
         )
         action.pipeline.context.dir
