@@ -1,3 +1,19 @@
+Version 0.8.4:
+ - Merge pull request #102 from michael-molchanov/aroq_develop
+ - Fix tags sort.
+
+Version 0.8.3:
+ - Merge pull request #101 from michael-molchanov/aroq_develop
+ - Fix defaults.
+ - Merge pull request #100 from michael-molchanov/aroq_develop
+ - Remove workspace secret force.
+
+Version 0.8.2:
+ - Merge pull request #99 from michael-molchanov/aroq_develop
+ - Merge branch 'aroq_develop' of github.com:michael-molchanov/drupipe into aroq_develop
+ - Add params job field.
+ - Add configRepo job field.
+
 Version 0.8.1:
  - Merge pull request #96 from aroq/develop
  - Merge pull request #95 from michael-molchanov/aroq_develop

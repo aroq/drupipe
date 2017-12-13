@@ -150,7 +150,7 @@ def processJob(jobs, currentFolder, config) {
                 def state = job.value.state
                 def buildEnvironment
                 def jobBranch
-                if (config.docmanConfig) {
+                if (config.docmanConfig && config.docmanConfig.getType() != 'root') {
                     buildEnvironment = config.docmanConfig.getEnvironmentByState(state)
                     jobBranch = config.docmanConfig.getVersionBranch('', state)
                 }
