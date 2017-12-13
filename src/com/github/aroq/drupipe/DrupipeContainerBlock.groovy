@@ -13,13 +13,11 @@ class DrupipeContainerBlock extends DrupipeBase {
     DrupipeController controller
 
     def execute(body = null) {
-        def script = controller.script
-
-        script.echo "DrupipeContainerBlock execute - ${name}"
+        controller.drupipeLogger.trace "DrupipeContainerBlock execute - ${name}"
 
         for (phase in phases) {
             if (this."${phase}") {
-                script.echo "Execute CONTAINER BLOCK phase: ${phase}"
+                controller.drupipeLogger.debug "Execute CONTAINER BLOCK phase: ${phase}"
                 for (action in this."${phase}") {
                     executeAction(processAction(action))
                 }
@@ -33,17 +31,15 @@ class DrupipeContainerBlock extends DrupipeBase {
 
     def executeAction(action) {
         if (action) {
-            controller.utils.debugLog(controller.context, action, 'ACTION', [debugMode: 'json'], [], true)
+            controller.drupipeLogger.debugLog(controller.context, action, 'ACTION', [debugMode: 'json'])
             def actionWrapper = [
                 name: action.name,
                 methodName: action.methodName,
-//                configVersion: action.configVersion,
             ]
             action.remove('name')
             action.remove('methodName')
-//            action.remove('configVersion')
 
-            controller.utils.debugLog(controller.context, actionWrapper, 'ACTION WRAPPER', [debugMode: 'json'], [], true)
+            controller.drupipeLogger.debugLog(controller.context, actionWrapper, 'ACTION WRAPPER', [debugMode: 'json'])
             DrupipeActionWrapper drupipeActionWrapper = new DrupipeActionWrapper(actionWrapper)
             drupipeActionWrapper.pipeline = controller
             drupipeActionWrapper.params = action

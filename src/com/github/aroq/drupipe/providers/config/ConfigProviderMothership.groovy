@@ -19,24 +19,24 @@ class ConfigProviderMothership extends ConfigProviderBase {
                 configType: 'groovy',
                 configPath: 'mothership.config',
             )
-            utils.debugLog(drupipeConfig.config, result, 'mothershipConfig: result', [debugMode: 'json'], [], false)
+            controller.drupipeLogger.debugLog(drupipeConfig.config, result, 'mothershipConfig: result', [debugMode: 'json'])
 
             def mothershipConfig = getMothershipConfigFile(result)
-            utils.debugLog(drupipeConfig.config, mothershipConfig, 'mothershipConfig', [debugMode: 'json'], [], false)
+            controller.drupipeLogger.debugLog(drupipeConfig.config, mothershipConfig, 'mothershipConfig', [debugMode: 'json'])
 
             drupipeConfig.projects = mothershipConfig
 
             def mothershipServers = getMothershipServersFile(result)
-            utils.debugLog(drupipeConfig.config, mothershipServers, 'mothershipServers', [debugMode: 'json'], [], false)
+            controller.drupipeLogger.debugLog(drupipeConfig.config, mothershipServers, 'mothershipServers', [debugMode: 'json'])
 
             def mothershipProjectConfig = mothershipConfig[drupipeConfig.config.jenkinsFolderName]
             script.echo "mothershipProjectConfig: ${mothershipProjectConfig}"
 
             result = utils.merge(result, mothershipProjectConfig)
-            utils.debugLog(drupipeConfig.config, result, 'mothershipServer result after merge', [debugMode: 'json'], [], false)
+            controller.drupipeLogger.debugLog(drupipeConfig.config, result, 'mothershipServer result after merge', [debugMode: 'json'])
 
             result = utils.merge(result, [jenkinsServers: mothershipServers])
-            utils.debugLog(drupipeConfig.config, result, 'mothershipServer result2 after merge', [debugMode: 'json'], [], false)
+            controller.drupipeLogger.debugLog(drupipeConfig.config, result, 'mothershipServer result2 after merge', [debugMode: 'json'])
         }
 
         result
@@ -75,7 +75,7 @@ class ConfigProviderMothership extends ConfigProviderBase {
                 }
             }
             else {
-                utils.log "getMothershipConfigFile: file doesn't exist"
+                controller.drupipeLogger.log "getMothershipConfigFile: file doesn't exist"
             }
         }
         throw new Exception("getMothershipConfigFile: mothership config file not found.")

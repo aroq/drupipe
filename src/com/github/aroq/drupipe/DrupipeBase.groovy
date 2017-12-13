@@ -2,14 +2,22 @@ package com.github.aroq.drupipe
 
 class DrupipeBase implements Serializable {
 
-    String name
+    public String name
 
-    boolean from_processed
+    public boolean from_processed
 
-    String from_processed_mode
+    public String from_processed_mode
 
-    String from_source
+    public String from_source
 
-    ArrayList fromPaths
+    public ArrayList fromPaths
+
+    public DrupipeController controller
+
+    def executeWithCollapsed(message, body) {
+        controller.drupipeLogger.collapsedStart(message)
+        body()
+        controller.drupipeLogger.collapsedEnd()
+    }
 
 }

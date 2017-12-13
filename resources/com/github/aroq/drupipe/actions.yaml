@@ -447,6 +447,10 @@ params:
           flags:
             --namespace:
               - ${action.params.namespace}
+            --tail:
+              - ${action.params.options.tail}
+          options:
+            tail: 500
           full_command:
             - ${action.params.executable}
             - ${action.params.command}

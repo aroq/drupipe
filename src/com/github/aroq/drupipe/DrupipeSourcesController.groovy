@@ -56,7 +56,7 @@ class DrupipeSourcesController implements Serializable {
             sourcesList << loadedSources[source.name]
         }
 
-        utils.log "Source is added: ${source.name}"
+        controller.drupipeLogger.log "Source is added: ${source.name}"
 
         result
     }
@@ -76,7 +76,7 @@ class DrupipeSourcesController implements Serializable {
 //                        result = script.drupipeAction([action: 'YamlFileConfig.load', params: [configFileName: configFilePath]], controller)
                     }
                 }
-                utils.log "Source file is loaded: ${configFilePath}"
+                controller.drupipeLogger.log "Source file is loaded: ${configFilePath}"
             }
             else {
                 script.echo "Config file doesn't exists: ${configFilePath}"
@@ -87,14 +87,14 @@ class DrupipeSourcesController implements Serializable {
     }
 
     def sourcePath(params, sourceName, String path) {
-        utils.debugLog(params, sourceName, 'Source name')
+        controller.drupipeLogger.debugLog(params, sourceName, 'Source name')
         if (sourceName in loadedSources) {
             loadedSources[sourceName].path + '/' + path
         }
     }
 
     def sourceDir(params, sourceName) {
-        utils.debugLog(params, sourceName, 'Source name')
+        controller.drupipeLogger.debugLog(params, sourceName, 'Source name')
         if (sourceName in loadedSources) {
             loadedSources[sourceName].path
         }

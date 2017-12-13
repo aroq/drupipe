@@ -45,7 +45,7 @@ class YamlFileHandler extends BaseAction {
 
         def project_config_dir = action.pipeline.drupipeConfig.drupipeSourcesController.sourceDir(action.pipeline.context, 'project');
 
-        utils.log("project_config_dir: ${project_config_dir}")
+        controller.drupipeLogger.log("project_config_dir: ${project_config_dir}")
 
         script.drupipeShell("ls -lah ${project_config_dir}", action.params)
 
@@ -95,7 +95,7 @@ class YamlFileHandler extends BaseAction {
         def deployYamlFile = findDeployYaml()
         if (deployYamlFile && script.fileExists(deployYamlFile)) {
             def deployYAML = script.readYaml(file: deployYamlFile)
-            utils.dump(action.pipeline.context, deployYAML, 'DEPLOY YAML')
+            action.pipeline.drupipeLogger.dump(action.pipeline.context, deployYAML, 'DEPLOY YAML')
             def commands = []
             if (stage == 'operations') {
                 def root = action.pipeline.context.environmentParams.root

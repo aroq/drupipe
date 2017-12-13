@@ -1,15 +1,10 @@
 package com.github.aroq.drupipe
 
 import groovy.json.JsonSlurperClassic
-import groovy.json.JsonOutput
 import java.nio.file.Path
 import java.nio.file.Paths
 
-def log(String message) {
-    echo message
-}
-
-def debug(String message) {
+def echoMessage(message) {
     echo message
 }
 
@@ -38,9 +33,7 @@ def colorEcho(message, color = null) {
             break
     }
 
-    wrap([$class: 'AnsiColorBuildWrapper']) {
-        echo "\u001B[${color}m${message}\u001B[0m"
-    }
+    echo "\u001B[${color}m${message}\u001B[0m"
 }
 
 @NonCPS
@@ -88,7 +81,7 @@ def envToMap() {
 }
 
 def dumpConfigFile(config, fileName = 'config.dump.groovy') {
-    debugLog(config, config, 'dumpConfigFile', [debugMode: 'json'], [], true)
+    debugLog(config, config, 'dumpConfigFile', [debugMode: 'json'])
     echo "Dumping config file: config.dump.groovy"
     writeFile(file: fileName, text: configToSlurperFile(config))
     sh "cat ${fileName}"
@@ -334,72 +327,6 @@ def pipelineNotify(context, event) {
     }
 }
 
-def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], force = false) {
-    if (debugEnabled(params) || force) {
-        force = true
-        if (path) {
-            value = path.inject(value, { obj, prop ->
-                if (obj && obj[prop]) {
-                    obj[prop]
-                }
-                else ''
-            })
-        }
-
-        if (value instanceof CharSequence) {
-            echo "${dumpName}: ${value}"
-        }
-        else {
-            if (debugParams?.debugMode == 'json' || params.debugMode == 'json') {
-                jsonDump(params, value, dumpName, force)
-            }
-            else {
-                dump(params, value, dumpName, force)
-            }
-        }
-    }
-}
-
-def dump(context, params, String dumpName = '', force = false) {
-    if (debugEnabled(context) || force) {
-        colorEcho "Dumping ${dumpName}:"
-        colorEcho collectParams(params)
-    }
-}
-
-def debugEnabled(params) {
-    params.debugEnabled && params.debugEnabled != '0'
-}
-
-@NonCPS
-def collectParams(params) {
-    def String result = ''
-    for (item in params) {
-        result = result + "${item.key} = ${item.value}\r\n"
-    }
-    result
-}
-
-def echoDelimiter(String message) {
-    if (message) {
-        if (message.size() < 80) {
-            echo message + '-' * (80 - message.size())
-        }
-        else {
-            echo message
-        }
-    }
-}
-
-def jsonDump(params, value, String dumpName = '', force = false) {
-    if (debugEnabled(params) || force) {
-        if (dumpName) {
-            echo "Dumping ${dumpName}:"
-        }
-        echo JsonOutput.prettyPrint(JsonOutput.toJson(value))
-    }
-}
-
 @NonCPS
 Map merge(Map[] sources) {
     if (sources.length == 0) return [:]
@@ -439,49 +366,6 @@ def removeDir(dir, context) {
     }
 }
 
-@NonCPS
-def interpolateCommand(String command, action, context) {
-    def prepareFlags = { flags ->
-        prepareFlags(flags)
-    }
-
-    def binding = [context: context, actions: context.actions ? context.actions : [:], action: action, prepareFlags: prepareFlags]
-    def engine = new groovy.text.SimpleTemplateEngine()
-    def template = engine.createTemplate(command).make(binding)
-    template.toString()
-}
-
-@NonCPS
-def processActionParams(action, context, ArrayList prefixes, ArrayList path = []) {
-    def params
-    if (path) {
-        params = path.inject(action.params, { obj, prop ->
-            if (obj && obj[prop]) {
-                obj[prop]
-            }
-        })
-    }
-    else {
-        params = action.params
-    }
-
-    for (param in params) {
-        if (param.value instanceof CharSequence) {
-            param.value = getActionParam(params[param.key], context, prefixes.collect {
-                [it, param.key.toUpperCase()].join('_')
-            })
-            param.value = interpolateCommand(param.value, action, context)
-        } else if (param.value instanceof Map) {
-            processActionParams(action, context, prefixes.collect {
-                [it, param.key.toUpperCase()].join('_')
-            }, path + param.key)
-        } else if (param.value instanceof List) {
-            for (def i = 0; i < param.value.size(); i++) {
-                param.value[i] = interpolateCommand(param.value[i], action, context)
-            }
-        }
-    }
-}
 
 def deepGet(object, path) {
     if (path instanceof CharSequence) {
@@ -495,27 +379,6 @@ def deepGet(object, path) {
             obj[prop]
         }
     })
-}
-
-@NonCPS
-def getActionParam(param, context, prefixes) {
-    def result = param
-    prefixes.each {
-        if (context.env && context.env?.containsKey(it)) {
-            result = context.env[it]
-        }
-    }
-
-    result
-}
-
-@NonCPS
-def prepareFlags(flags) {
-    flags.collect { k, v ->
-        v.collect { subItem ->
-            "${k} ${subItem}".trim()
-        }.join(' ').trim()
-    }.join(' ')
 }
 
 def serializeAndDeserialize(params, mode = 'yaml') {

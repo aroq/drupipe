@@ -1,10 +1,13 @@
 package com.github.aroq.drupipe
 
+import com.github.aroq.drupipe.processors.DrupipeParamProcessor
 import com.github.aroq.drupipe.processors.DrupipeProcessor
 import com.github.aroq.drupipe.processors.DrupipeProcessorsController
 import com.github.aroq.drupipe.providers.config.ConfigProvider
 
 class DrupipeConfig implements Serializable {
+
+    final envVarPrefix = 'UNIPIPE_'
 
     DrupipeController controller
 
@@ -20,6 +23,22 @@ class DrupipeConfig implements Serializable {
 
     def projects
 
+    def get(String path, params = [:]) {
+        LinkedHashMap defaultParam = [
+            override_with_env_vars: true
+        ]
+
+        params = defaultParam << params
+
+        def param = utils.deepGet(controller.context, path)
+
+        if (params.override_with_env_vars) {
+            def envVarName = envVarPrefix + path.join('_').toUpperCase()
+            controller.drupipeLogger.debug "envVarName: ${envVarName}"
+            controller.drupipeProcessorsController.drupipeParamProcessor.overrideWithEnvVar(param, controller.context, envVarName)
+        }
+    }
+
     def config(params, parent) {
         drupipeSourcesController = new DrupipeSourcesController(script: script, utils: utils, controller: controller)
         script.node('master') {
@@ -27,11 +46,13 @@ class DrupipeConfig implements Serializable {
             this.script.sh("mkdir -p .unipipe/temp")
 
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
-            utils.dump(params, params, 'PIPELINE-PARAMS')
+//            utils.dump(params, params, 'PIPELINE-PARAMS')
 
             config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
             config = utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
             config.jenkinsParams = params
+
+            controller.drupipeLogger = new DrupipeLogger(utils: utils, logLevels: config.log_levels, logLevelWeight : config.log_levels[config.log_level].weight)
 
             // TODO: remove it when all configs are updated to version 2.
             if (script.env.JOB_NAME == 'mothership') {
@@ -82,21 +103,21 @@ class DrupipeConfig implements Serializable {
                         config.params.action = utils.merge(config.params.action, config.environmentParams.defaultActionParams)
                     }
 
-                    utils.debugLog(config, config.environmentParams, 'ENVIRONMENT PARAMS', [:], [], true)
+                    controller.drupipeLogger.debugLog(config, config.environmentParams, 'ENVIRONMENT PARAMS')
                 }
                 else {
-                    script.echo "No context.environment is defined"
+                    controller.drupipeLogger.warning "No context.environment is defined"
                 }
             }
             else {
-                script.echo "No context.environments are defined"
+                controller.drupipeLogger.warning "No context.environments are defined"
             }
 
-            utils.debugLog(config, config, 'CONFIG CONTEXT')
+            controller.drupipeLogger.debugLog(config, config, 'CONFIG CONTEXT')
 
             def stashes = config.loadedSources.collect { k, v -> v.path + '/**'}.join(', ')
 
-            script.echo "Stashes: ${stashes}"
+            controller.drupipeLogger.debug "Stashes: ${stashes}"
 
             script.stash name: 'config', includes: "${stashes}", excludes: ".git, .git/**"
 
@@ -106,36 +127,36 @@ class DrupipeConfig implements Serializable {
     }
 
     DrupipeProcessorsController initProcessorsController(parent, processorsConfig) {
-        utils.log "initProcessorsController"
+        controller.drupipeLogger.trace "initProcessorsController"
         ArrayList<DrupipeProcessor> processors = []
         for (processorConfig in processorsConfig) {
-            utils.log "Processor: ${processorConfig.className}"
+            controller.drupipeLogger.log "Processor: ${processorConfig.className}"
             try {
-                def properties = [utils: utils]
+                def properties = [utils: utils, drupipeLogger: controller.drupipeLogger]
                 if (processorConfig.properties) {
                     properties << processorConfig.properties
                 }
                 processors << parent.class.classLoader.loadClass("com.github.aroq.drupipe.processors.${processorConfig.className}", true, false)?.newInstance(
                     properties
                 )
-                utils.log "Processor: ${processorConfig.className} created"
+                controller.drupipeLogger.debug "Processor: ${processorConfig.className} created"
             }
             catch (err) {
                 throw err
             }
         }
-        new DrupipeProcessorsController(processors: processors, utils: utils)
+        DrupipeParamProcessor drupipeParamProcessor = new DrupipeParamProcessor(utils: utils)
+        new DrupipeProcessorsController(processors: processors, utils: utils, drupipeParamProcessor: drupipeParamProcessor)
     }
 
     def processItem(item, parentKey, paramsKey = 'params', mode) {
-        utils.log "DrupipeConfig->processItem"
+        controller.drupipeLogger.trace "DrupipeConfig->processItem"
         controller.drupipeProcessorsController.process(config, item, parentKey, paramsKey, mode)
     }
 
     def process() {
-        utils.log "DrupipeConfig->process()"
+        controller.drupipeLogger.trace "DrupipeConfig->process()"
         if (controller.configVersion() > 1) {
-//            controller.drupipeProcessorsController = initProcessorsController(this, config.processors)
             if (config.jobs) {
                 config.jobs = processItem(config.jobs, 'context', 'params', 'config')
             }
@@ -148,7 +169,7 @@ class DrupipeConfig implements Serializable {
     }
 
     def config_version2() {
-        utils.log "DrupipeConfig->config_version2()"
+        controller.drupipeLogger.trace "DrupipeConfig->config_version2()"
         script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config_version2.yaml'))
     }
 
@@ -156,6 +177,5 @@ class DrupipeConfig implements Serializable {
     def groovyConfig(text) {
         new HashMap<>(ConfigSlurper.newInstance(script.env.drupipeEnvironment).parse(text))
     }
-
 
 }

@@ -2,17 +2,17 @@ import com.github.aroq.drupipe.DrupipeContainerBlock
 import com.github.aroq.drupipe.DrupipeController
 
 def call(ArrayList containers, DrupipeController controller, ArrayList unstash = [], ArrayList stash = [], unipipe_retrieve_config = false) {
-    echo "Container mode: kubernetes"
+    controller.drupipeLogger.debug "Container mode: kubernetes"
     def nodeName = 'drupipe'
     def containerNames = []
     def containersToExecute= []
 
     for (def i = 0; i < containers.size(); i++) {
         def container = containers[i]
-        controller.utils.debugLog(controller.context, container, 'CONTAINER TEMPLATE', [debugMode: 'json'], [], false)
+        controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER TEMPLATE', [debugMode: 'json'], [])
         def containerName = container.name.replaceAll('\\.','-').replaceAll('_','-')
         if (!containerNames.contains(containerName)) {
-            echo "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
+            controller.drupipeLogger.info "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
             containerNames += containerName
             containersToExecute.add(containerTemplate(
                 name:                  containerName,
@@ -39,37 +39,37 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
         }
     }
 
-//    def creds = [string(credentialsId: 'DO_TOKEN', variable: 'DIGITALOCEAN_TOKEN')]
-//    withCredentials(creds) {
     podTemplate(
         label: nodeName,
         containers: containersToExecute,
     ) {
         node(nodeName) {
             if (unipipe_retrieve_config) {
-                controller.utils.log "Retrieve config."
                 controller.utils.getUnipipeConfig(controller)
             }
             else {
-                controller.utils.log "Retrieve config disabled in config."
+                controller.drupipeLogger.warning "Retrieve config disabled in config."
             }
             controller.utils.unstashList(controller, unstash)
             controller.context.workspace = pwd()
             for (def i = 0; i < containers.size(); i++) {
                 container(containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
-                    for (block in containers[i].blocks) {
-//                            controller.utils.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
-                        sshagent([controller.context.credentialsId]) {
+                    sshagent([controller.context.credentialsId]) {
+                        controller.drupipeLogger.collapsedStart("CONTAINER: ${containers[i].name}")
+                        for (block in containers[i].blocks) {
+                            controller.drupipeLogger.collapsedStart("BLOCK: ${block.name}")
+                            controller.drupipeLogger.debugLog(controller.context, block, 'BLOCK', [debugMode: 'json'])
                             def drupipeContainerBlock = new DrupipeContainerBlock(block)
                             drupipeContainerBlock.controller = controller
                             drupipeContainerBlock.execute()
+                            controller.drupipeLogger.collapsedEnd()
                         }
+                        controller.drupipeLogger.collapsedEnd()
                     }
                 }
             }
             controller.utils.stashList(controller, stash)
         }
     }
-//    }
 
 }
