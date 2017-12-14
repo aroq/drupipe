@@ -68,12 +68,24 @@ class DrupipeActionWrapper implements Serializable {
             pipeline.drupipeLogger.debugLog(this.params, this.params, "this.params after merge defaultActionParams with this.params", [debugMode: 'json'])
 
             def actionInstance
+
             try {
-                actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false)?.newInstance(
-                    action: this,
-                    script: this.script,
-                    utils: utils,
-                )
+                try {
+                    Class.forName( "com.github.aroq.drupipe.actions.${this.name}");
+                    actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false)?.newInstance(
+                        action: this,
+                        script: this.script,
+                        utils: utils,
+                    )
+                }
+                catch (ClassNotFoundException e) {
+                    String baseShellActionClass = 'BaseShellAction'
+                    actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${baseShellActionClass}", true, false)?.newInstance(
+                        action: this,
+                        script: this.script,
+                        utils: utils,
+                    )
+                }
             }
             catch (err) {
                 this.script.echo err.toString()
