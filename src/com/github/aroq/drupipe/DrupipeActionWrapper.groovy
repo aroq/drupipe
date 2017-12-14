@@ -101,7 +101,9 @@ class DrupipeActionWrapper implements Serializable {
 
                 try {
 //                    pipeline.drupipeLogger.log "Call hook_preprocess()"
-                    actionInstance.hook_preprocess()
+                    if (actionInstance.metaClass.respondsTo('hook_preprocess')) {
+                        actionInstance.hook_preprocess()
+                    }
                 }
                 catch (err) {
                     // No preprocess defined.
@@ -109,7 +111,9 @@ class DrupipeActionWrapper implements Serializable {
 
                 try {
 //                    pipeline.drupipeLogger.log "Call ${this.methodName}_hook_preprocess()"
-                    actionInstance."${this.methodName}_hook_preprocess"()
+                    if (actionInstance.metaClass.respondsTo("${this.methodName}_hook_preprocess")) {
+                        actionInstance."${this.methodName}_hook_preprocess"()
+                    }
                 }
                 catch (err) {
                     // No preprocess defined.
