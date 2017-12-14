@@ -30,6 +30,8 @@ class Commands extends BaseAction {
                     level++
                     chainCommand = "${action.params.through_ssh_params.executable} ${action.params.through_ssh_params.options} ${sshChainItem} ${prepareSSHChainCommand(chainCommand, level)}"
                 }
+
+                action.pipeline.drupipeLogger.log "Command: ${chainCommand}"
             }
         }
     }
