@@ -479,9 +479,9 @@ params:
           port: 22
           host: ""
           hostport: 22
-          through: ""
+          through_host: ""
           full_command:
             - ${context.executable}
             - ${context.options}
             - ${context.bind_address}:${context.port}:${context.host}:${context.hostport}
-            - ${context.through}"
+            - ${context.through_host}"
