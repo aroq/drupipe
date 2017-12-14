@@ -28,6 +28,7 @@ class DrupipeActionWrapper implements Serializable {
     }
 
     def execute() {
+        def global_log_level = pipeline.context.log_level
         utils = pipeline.utils
 
         this.script = pipeline.script
@@ -59,6 +60,10 @@ class DrupipeActionWrapper implements Serializable {
                 pipeline.drupipeLogger.debug "Action wasn't processed with 'from'"
                 this.params.from = '.params.actions.' + name + '.' + methodName
                 this.params = pipeline.drupipeConfig.processItem(this.params, 'actions', 'params', 'execute')
+            }
+
+            if (this.params.containsKey('log_level')) {
+                pipeline.context.log_level = this.params.log_level
             }
 
             if (!this.params) {
@@ -202,9 +207,7 @@ class DrupipeActionWrapper implements Serializable {
                         }
                     }
 
-                    if (pipeline.context.params && pipeline.context.params.action && pipeline.context.params.action["${name}_${methodName}"] && pipeline.context.params.action["${name}_${methodName}"].debugEnabled) {
-                        pipeline.drupipeLogger.debugLog(pipeline.context, pipeline.context, "pipeline.context results", [debugMode: 'json'], [this.params.store_result_key])
-                    }
+                    pipeline.drupipeLogger.debugLog(pipeline.context, pipeline.context, "pipeline.context results", [debugMode: 'json'], [this.params.store_result_key])
                 }
             }
 
@@ -219,6 +222,7 @@ class DrupipeActionWrapper implements Serializable {
 
             pipeline.drupipeLogger.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
             pipeline.drupipeLogger.collapsedEnd()
+            pipeline.context.log_level = global_log_level
             this.result
         }
         catch (err) {
@@ -239,6 +243,7 @@ class DrupipeActionWrapper implements Serializable {
                 notification.message = notification.message ? notification.message : ''
                 notification.message = notification.message + "\n\n" + this.result.stdout
             }
+
             utils.pipelineNotify(pipeline.context, notification)
         }
     }
