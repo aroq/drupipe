@@ -3,6 +3,7 @@ package com.github.aroq.drupipe.actions
 class Commands extends BaseAction {
 
     def execute() {
+        action.pipeline.drupipeLogger.debugLog(action.pipeline.context, action.params, "ACTION.PARAMS", [debugMode: 'json'])
         def commands = []
         if (action.params.commands.size() == 0) {
             action.pipeline.drupipeLogger.error "Commands are not defined"
