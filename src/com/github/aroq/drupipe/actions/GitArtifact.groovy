@@ -1,14 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionWrapper
-
 class GitArtifact extends BaseAction {
-
-    def script
-
-    def utils
-
-    DrupipeActionWrapper action
 
     def retrieve() {
         script.drupipeAction([action: "Git.clone", params: action.pipeline.context.builder.artifactParams << action.params], action.pipeline)

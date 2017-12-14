@@ -1,14 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionWrapper
-
 class Git extends BaseAction {
-
-    def script
-
-    def utils
-
-    DrupipeActionWrapper action
 
     def clone() {
         script.echo 'Git clone'
@@ -37,5 +29,6 @@ class Git extends BaseAction {
         )
         [:]
     }
+
 }
 

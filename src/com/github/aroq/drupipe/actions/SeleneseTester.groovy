@@ -1,16 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionWrapper
-
 class SeleneseTester extends BaseAction {
-
-    def context
-
-    def script
-
-    def utils
-
-    def DrupipeActionWrapper action
 
     def test() {
         def workspace = script.pwd()

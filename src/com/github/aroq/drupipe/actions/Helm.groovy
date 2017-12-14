@@ -1,19 +1,9 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionWrapper
-
-class Helm extends BaseAction {
-
-    def context
-
-    def script
-
-    def utils
-
-    DrupipeActionWrapper action
+class Helm extends BaseShellAction {
 
     def init() {
-        executeHelmCommand()
+        executeShellCommand()
     }
 
     def apply_hook_preprocess() {
@@ -31,21 +21,15 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
     }
 
     def apply() {
-        action.pipeline.executeAction(action: 'Shell.execute', params: [shellCommand: 'pwd'])
-        action.pipeline.executeAction(action: 'Shell.execute', params: [shellCommand: 'ls -al'])
-        executeHelmCommand()
+        executeShellCommand()
     }
 
     def status() {
-        executeHelmCommand()
+        executeShellCommand()
     }
 
     def delete() {
-        executeHelmCommand()
-    }
-
-    def executeHelmCommand() {
-        script.drupipeShell("${action.params.full_command.join(' ')}", action.params)
+        executeShellCommand()
     }
 
 }

@@ -1,15 +1,8 @@
 package com.github.aroq.drupipe.actions
 
 import groovy.json.JsonOutput
-import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class Ansible extends BaseAction {
-
-    def script
-
-    def utils
-
-    DrupipeActionWrapper action
 
     def init() {
         if (!action.params.playbookParams) {

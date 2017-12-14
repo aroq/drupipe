@@ -1,17 +1,9 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionWrapper
-
-class Kubectl extends BaseAction {
-
-    def script
-
-    def utils
-
-    DrupipeActionWrapper action
+class Kubectl extends BaseShellAction {
 
     def scale_replicaset() {
-        executeKubectlCommand()
+        executeShellCommand()
     }
 
     def scale_down_up() {
@@ -30,37 +22,29 @@ class Kubectl extends BaseAction {
     }
 
     def get_pod_name() {
-        executeKubectlCommand()
+        executeShellCommand()
     }
 
     def get_pod_logs() {
-        executeKubectlCommand()
+        executeShellCommand()
     }
 
     def get_loadbalancer_address() {
         [
-            url: executeKubectlCommand().stdout,
+            url: executeShellCommand().stdout,
         ]
     }
 
     def get_replicaset_name() {
-        executeKubectlCommand()
+        executeShellCommand()
     }
 
     def get_pods() {
-        executeKubectlCommand()
+        executeShellCommand()
     }
 
     def copy_from_pod() {
-        executeKubectlCommand()
-        script.drupipeShell("ls -al", action.params)
-    }
-
-    def executeKubectlCommand() {
-        if (!action.params.full_command) {
-            controller.drupipeLogger.debugLog(action.pipeline.context, action.params, "ACTION PARAMS (full_command is absent)", [debugMode: 'json'])
-        }
-        script.drupipeShell("${action.params.full_command.join(' ')}", action.params)
+        executeShellCommand()
     }
 
 }

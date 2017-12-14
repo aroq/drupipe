@@ -1,14 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionWrapper
-
 class JobDslSeed extends BaseAction {
-
-    def script
-
-    def utils
-
-    DrupipeActionWrapper action
 
     def info() {
         if (action.pipeline.configVersion() > 1 && action.pipeline.context.tags && action.pipeline.context.tags.contains('docman')) {

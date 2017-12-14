@@ -1,14 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionWrapper
-
 class Drush extends BaseAction {
-
-    def script
-
-    def utils
-
-    DrupipeActionWrapper action
 
     def runCommand() {
         def drush_dsn = (action.pipeline.context.env.drush_dsn && action.pipeline.context.env.drush_dsn.length() != 0) ? "${action.pipeline.context.env.drush_dsn}" : null

@@ -1,19 +1,9 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionWrapper
-
 class Nexus extends BaseAction {
 
-    def context
-
-    def script
-
-    def utils
-
-    def DrupipeActionWrapper action
-
     def uploadArtifact() {
-        def builder = context.builder
+        def builder = action.pipeline.builder
         def version = builder['version']
         def artifactId = builder['buildName']
         def fileName = builder['artifactFileName']
@@ -45,7 +35,7 @@ class Nexus extends BaseAction {
             )
         }
 
-        context
+        action.pipeline.context
     }
 }
 

@@ -4,14 +4,6 @@ import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class GCloud extends BaseAction {
 
-    def context
-
-    def script
-
-    def utils
-
-    DrupipeActionWrapper action
-
     def auth() {
         if (action.pipeline.context.containerMode != 'kubernetes') {
 

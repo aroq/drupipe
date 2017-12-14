@@ -4,13 +4,7 @@ import com.github.aroq.drupipe.DrupipeActionWrapper
 
 class DrushFeaturesList extends BaseAction {
 
-    def script
-
-    def utils
-
     String state = 'Overridden'
-
-    DrupipeActionWrapper action
 
     def runCommand() {
         def features = []

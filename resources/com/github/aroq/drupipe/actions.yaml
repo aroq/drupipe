@@ -469,3 +469,19 @@ params:
             done'' '
           full_command:
             - ${action.params.command}
+
+    Ssh:
+      tunnel:
+        params:
+          executable: ssh
+          options: -f -N -L
+          bind_address: 127.0.0.1
+          port: 22
+          host: ""
+          hostport: 22
+          through: ""
+          full_command:
+            - ${context.executable}
+            - ${context.options}
+            - ${context.bind_address}:${context.port}:${context.host}:${context.hostport}
+            - ${context.through}"
