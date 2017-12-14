@@ -3,7 +3,7 @@ package com.github.aroq.drupipe.actions
 class Kubectl extends BaseShellAction {
 
     def scale_replicaset() {
-        executeShellCommand()
+        execute()
     }
 
     def scale_down_up() {
@@ -22,29 +22,29 @@ class Kubectl extends BaseShellAction {
     }
 
     def get_pod_name() {
-        executeShellCommand()
+        execute()
     }
 
     def get_pod_logs() {
-        executeShellCommand()
+        execute()
     }
 
     def get_loadbalancer_address() {
         [
-            url: executeShellCommand().stdout,
+            url: execute().stdout,
         ]
     }
 
     def get_replicaset_name() {
-        executeShellCommand()
+        execute()
     }
 
     def get_pods() {
-        executeShellCommand()
+        execute()
     }
 
     def copy_from_pod() {
-        executeShellCommand()
+        execute()
     }
 
 }

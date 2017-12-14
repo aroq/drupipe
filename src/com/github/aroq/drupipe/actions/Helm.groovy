@@ -3,7 +3,7 @@ package com.github.aroq.drupipe.actions
 class Helm extends BaseShellAction {
 
     def init() {
-        executeShellCommand()
+        execute()
     }
 
     def apply_hook_preprocess() {
@@ -21,15 +21,15 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
     }
 
     def apply() {
-        executeShellCommand()
+        execute()
     }
 
     def status() {
-        executeShellCommand()
+        execute()
     }
 
     def delete() {
-        executeShellCommand()
+        execute()
     }
 
 }
