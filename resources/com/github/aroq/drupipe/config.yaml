@@ -1,6 +1,6 @@
 config_version: 1
 
-log_level: INFO
+log_level: DEBUG
 
 log_levels:
   TRACE:
