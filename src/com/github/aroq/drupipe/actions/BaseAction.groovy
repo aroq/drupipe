@@ -6,8 +6,16 @@ class BaseAction implements Serializable {
 
     public def script
 
-    com.github.aroq.drupipe.Utils utils
+    public com.github.aroq.drupipe.Utils utils
 
     public DrupipeActionWrapper action
+
+    def execute () {
+        action.pipeline.drupipeLogger.warning "Please override base execute action"
+    }
+
+    def methodMissing(String name, args) {
+        execute(args)
+    }
 
 }
