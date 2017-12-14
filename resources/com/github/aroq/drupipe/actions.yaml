@@ -18,6 +18,8 @@ params:
       store_action_params_key: actions.${action.name}_${action.methodName}
       shell_bash_login: true
       return_stdout: false
+      # To be used when specific action's class is not exists.
+      fallback_class_name: BaseShellAction
 
     Config:
       params:

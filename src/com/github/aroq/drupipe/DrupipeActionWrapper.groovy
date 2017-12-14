@@ -79,8 +79,7 @@ class DrupipeActionWrapper implements Serializable {
                     )
                 }
                 catch (ClassNotFoundException e) {
-                    String baseShellActionClass = 'BaseShellAction'
-                    actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${baseShellActionClass}", true, false)?.newInstance(
+                    actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.params.fallback_class_name}", true, false)?.newInstance(
                         action: this,
                         script: this.script,
                         utils: utils,
