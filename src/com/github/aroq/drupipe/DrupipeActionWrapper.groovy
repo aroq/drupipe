@@ -28,7 +28,7 @@ class DrupipeActionWrapper implements Serializable {
     }
 
     def execute() {
-        def global_log_level = pipeline.context.log_level
+        def globalLogLevelWeight = pipeline.drupipeLogger.logLevelWeight
         utils = pipeline.utils
 
         this.script = pipeline.script
@@ -63,7 +63,7 @@ class DrupipeActionWrapper implements Serializable {
             }
 
             if (this.params.containsKey('log_level')) {
-                pipeline.context.log_level = this.params.log_level
+                pipeline.drupipeLogger.logLevelWeight = pipeline.context.log_levels[this.params.log_level].weight
             }
 
             if (!this.params) {
@@ -222,7 +222,7 @@ class DrupipeActionWrapper implements Serializable {
 
             pipeline.drupipeLogger.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
             pipeline.drupipeLogger.collapsedEnd()
-            pipeline.context.log_level = global_log_level
+            pipeline.drupipeLogger.logLevelWeight = globalLogLevelWeight
             this.result
         }
         catch (err) {

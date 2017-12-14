@@ -27,7 +27,7 @@ class Commands extends BaseAction {
                 String chainCommand = command
                 for (String sshChainItem in action.params.through_ssh_chain) {
                     level++
-                    chainCommand = "${action.params.through_ssh_chain.executable} ${action.params.through_ssh_chain.options} ${sshChainItem} ${prepareSSHChainCommand(chainCommand, level)}"
+                    chainCommand = "${action.params.through_ssh_params.executable} ${action.params.through_ssh_params.options} ${sshChainItem} ${prepareSSHChainCommand(chainCommand, level)}"
                 }
             }
         }
