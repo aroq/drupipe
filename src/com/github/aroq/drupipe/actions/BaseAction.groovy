@@ -15,7 +15,7 @@ class BaseAction implements Serializable {
     }
 
     def methodMissing(String name, args) {
-        this.execute(args)
+        this.execute()
     }
 
 }
