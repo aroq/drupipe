@@ -15,7 +15,7 @@ class DrupipePod extends DrupipeBase {
     boolean unipipe_retrieve_config = false
 
     ArrayList<DrupipeContainer> prepareContainers() {
-        ArrayList<DrupipeContainer> result
+        ArrayList<DrupipeContainer> result = []
         for (container in containers) {
             controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'])
             container = new DrupipeContainer(container)
