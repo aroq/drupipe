@@ -14,13 +14,16 @@ class DrupipePod extends DrupipeBase {
 
     boolean unipipe_retrieve_config = false
 
-    def prepareContainers() {
+    ArrayList<DrupipeContainer> prepareContainers() {
+        ArrayList<DrupipeContainer> result
         for (container in containers) {
             controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'])
             container = new DrupipeContainer(container)
             container.controller = controller
             container.pod = this
+            result.add(container)
         }
+        result
     }
 
     def executeContainers() {
@@ -42,7 +45,6 @@ class DrupipePod extends DrupipeBase {
             }
             controller.utils.unstashList(controller, unstash)
 
-            prepareContainers()
             executeContainers()
 
             controller.utils.stashList(controller, stash)
