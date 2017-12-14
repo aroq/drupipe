@@ -484,4 +484,4 @@ params:
             - ${action.params.executable}
             - ${action.params.options}
             - ${action.params.bind_address}:${action.params.port}:${action.params.host}:${action.params.hostport}
-            - ${action.params.through_host}"
+            - ${action.params.through_host}
