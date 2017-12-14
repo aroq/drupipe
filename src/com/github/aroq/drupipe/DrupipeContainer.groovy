@@ -52,14 +52,18 @@ class DrupipeContainer extends DrupipeBase {
     }
 
     def executeBlocks() {
-        for (phase in phases) {
-            if (this."${phase}") {
-                controller.drupipeLogger.trace "Execute CONTAINER phase: ${phase}"
-                for (block in this."${phase}") {
-//            controller.controller.drupipeLogger.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
-                    block = new DrupipeContainerBlock(block)
-                    block.controller = controller
-                    block.execute()
+        executeWithCollapsed("CONTAINER: ${name}") {
+            for (phase in phases) {
+                if (this."${phase}") {
+                    controller.drupipeLogger.trace "Execute CONTAINER phase: ${phase}"
+                    for (block in this."${phase}") {
+                        executeWithCollapsed("BLOCK: ${block.name}") {
+                            controller.drupipeLogger.debugLog(controller.context, block, 'BLOCK', [debugMode: 'json'])
+                            block = new DrupipeContainerBlock(block)
+                            block.controller = controller
+                            block.execute()
+                        }
+                    }
                 }
             }
         }
