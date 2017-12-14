@@ -10,7 +10,6 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
 
     for (def i = 0; i < pod.containers.size(); i++) {
         def container = pod.containers[i]
-        controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER TEMPLATE', [debugMode: 'json'], [])
         def containerName = container.name.replaceAll('\\.','-').replaceAll('_','-')
         if (!containerNames.contains(containerName)) {
             controller.drupipeLogger.info "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
