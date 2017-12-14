@@ -85,16 +85,16 @@ class DrupipeLogger implements Serializable {
             }
             else {
                 if (debugParams?.debugMode == 'json' || params.debugMode == 'json') {
-                    jsonDump(params, value, dumpName, logLevel)
+                    jsonDump(value, dumpName, logLevel)
                 }
                 else {
-                    dump(params, value, dumpName, logLevel)
+                    dump(value, dumpName, logLevel)
                 }
             }
         }
     }
 
-    def dump(context, params, String dumpName = '', String logLevel = 'DEBUG') {
+    def dump(params, String dumpName = '', String logLevel = 'DEBUG') {
         logMessage(logLevel, "Dumping ${dumpName}:")
         logMessage(logLevel, collectParams(params))
 //        if (debugEnabled(context) || force) {
