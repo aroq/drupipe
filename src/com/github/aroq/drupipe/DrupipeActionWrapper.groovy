@@ -71,7 +71,7 @@ class DrupipeActionWrapper implements Serializable {
 
             try {
                 try {
-                    Class.forName( "com.github.aroq.drupipe.actions.${this.name}");
+//                    Class.forName( "com.github.aroq.drupipe.actions.${this.name}");
                     actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false)?.newInstance(
                         action: this,
                         script: this.script,
