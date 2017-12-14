@@ -1,14 +1,16 @@
 import com.github.aroq.drupipe.DrupipeContainer
 import com.github.aroq.drupipe.DrupipeController
+import com.github.aroq.drupipe.DrupipePod
 
-def call(ArrayList<DrupipeContainer> containers, DrupipeController controller, ArrayList unstash = [], ArrayList stash = [], unipipe_retrieve_config = false) {
+def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_retrieve_config = false) {
+    DrupipeController controller = pod.controller
     controller.drupipeLogger.debug "Container mode: kubernetes"
     def nodeName = 'drupipe'
     def containerNames = []
     def containersToExecute= []
 
-    for (def i = 0; i < containers.size(); i++) {
-        def container = containers[i]
+    for (def i = 0; i < pod.containers.size(); i++) {
+        def container = pod.containers[i]
         controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER TEMPLATE', [debugMode: 'json'], [])
         def containerName = container.name.replaceAll('\\.','-').replaceAll('_','-')
         if (!containerNames.contains(containerName)) {
@@ -52,10 +54,10 @@ def call(ArrayList<DrupipeContainer> containers, DrupipeController controller, A
             }
             controller.utils.unstashList(controller, unstash)
             controller.context.workspace = pwd()
-            for (def i = 0; i < containers.size(); i++) {
-                container(containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
+            for (def i = 0; i < pod.containers.size(); i++) {
+                container(pod.containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
                     sshagent([controller.context.credentialsId]) {
-                        containers[i].executeBlocks()
+                        pod.containers[i].executeBlocks()
                     }
                 }
             }
