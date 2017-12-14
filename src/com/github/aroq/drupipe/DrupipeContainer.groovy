@@ -6,7 +6,15 @@ class DrupipeContainer extends DrupipeBase {
 
     String image
 
-    ArrayList blocks = []
+    ArrayList<DrupipeContainerBlock> pre_blocks = []
+
+    ArrayList<DrupipeContainerBlock> blocks = []
+
+    ArrayList<DrupipeContainerBlock> post_blocks = []
+
+    ArrayList<DrupipeContainerBlock> final_blocks = []
+
+    ArrayList phases = ['pre_blocks', 'blocks', 'post_blocks', 'final_blocks']
 
     DrupipeController controller
 
@@ -44,11 +52,16 @@ class DrupipeContainer extends DrupipeBase {
     }
 
     def executeBlocks() {
-        for (block in blocks) {
+        for (phase in phases) {
+            if (this."${phase}") {
+                controller.drupipeLogger.trace "Execute CONTAINER phase: ${phase}"
+                for (block in this."${phase}") {
 //            controller.controller.drupipeLogger.debugLog(controller.context, block, 'CONTAINER BLOCK', [debugMode: 'json'], [], true)
-            block = new DrupipeContainerBlock(block)
-            block.controller = controller
-            block.execute()
+                    block = new DrupipeContainerBlock(block)
+                    block.controller = controller
+                    block.execute()
+                }
+            }
         }
     }
 

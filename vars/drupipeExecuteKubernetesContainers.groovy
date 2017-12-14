@@ -1,7 +1,8 @@
+import com.github.aroq.drupipe.DrupipeContainer
 import com.github.aroq.drupipe.DrupipeContainerBlock
 import com.github.aroq.drupipe.DrupipeController
 
-def call(ArrayList containers, DrupipeController controller, ArrayList unstash = [], ArrayList stash = [], unipipe_retrieve_config = false) {
+def call(ArrayList<DrupipeContainer> containers, DrupipeController controller, ArrayList unstash = [], ArrayList stash = [], unipipe_retrieve_config = false) {
     controller.drupipeLogger.debug "Container mode: kubernetes"
     def nodeName = 'drupipe'
     def containerNames = []
@@ -56,13 +57,18 @@ def call(ArrayList containers, DrupipeController controller, ArrayList unstash =
                 container(containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
                     sshagent([controller.context.credentialsId]) {
                         controller.drupipeLogger.collapsedStart("CONTAINER: ${containers[i].name}")
-                        for (block in containers[i].blocks) {
-                            controller.drupipeLogger.collapsedStart("BLOCK: ${block.name}")
-                            controller.drupipeLogger.debugLog(controller.context, block, 'BLOCK', [debugMode: 'json'])
-                            def drupipeContainerBlock = new DrupipeContainerBlock(block)
-                            drupipeContainerBlock.controller = controller
-                            drupipeContainerBlock.execute()
-                            controller.drupipeLogger.collapsedEnd()
+                        for (phase in containers[i].phases) {
+                            if (containers[i]."${phase}") {
+                                controller.drupipeLogger.trace "Execute CONTAINER phase: ${phase}"
+                                for (block in containers[i]."${phase}") {
+                                    controller.drupipeLogger.collapsedStart("BLOCK: ${block.name}")
+                                    controller.drupipeLogger.debugLog(controller.context, block, 'BLOCK', [debugMode: 'json'])
+                                    def drupipeContainerBlock = new DrupipeContainerBlock(block)
+                                    drupipeContainerBlock.controller = controller
+                                    drupipeContainerBlock.execute()
+                                    controller.drupipeLogger.collapsedEnd()
+                                }
+                            }
                         }
                         controller.drupipeLogger.collapsedEnd()
                     }
