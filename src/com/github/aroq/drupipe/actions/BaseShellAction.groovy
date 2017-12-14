@@ -9,4 +9,8 @@ class BaseShellAction extends BaseAction {
         script.drupipeShell("${action.params.full_command.join(' ')}", action.params)
     }
 
+    def methodMissing() {
+        execute()
+    }
+
 }
