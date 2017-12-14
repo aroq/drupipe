@@ -4,7 +4,7 @@ class Commands extends BaseAction {
 
     def execute() {
         def commands = []
-        if (!action.params.containsKey('commands')) {
+        if (action.params.size() == 0) {
             action.pipeline.drupipeLogger.error "Commands are not defined"
         }
 
