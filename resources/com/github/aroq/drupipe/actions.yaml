@@ -481,7 +481,7 @@ params:
           hostport: 22
           through_host: ""
           full_command:
-            - ${context.executable}
-            - ${context.options}
-            - ${context.bind_address}:${context.port}:${context.host}:${context.hostport}
-            - ${context.through_host}"
+            - ${action.params.executable}
+            - ${action.params.options}
+            - ${action.params.bind_address}:${action.params.port}:${action.params.host}:${action.params.hostport}
+            - ${action.params.through_host}"
