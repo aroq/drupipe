@@ -15,6 +15,7 @@ class BaseAction implements Serializable {
     }
 
     def methodMissing(String name, args) {
+        action.pipeline.drupipeLogger.info "Method missing: ${name}"
         this.execute()
     }
 
