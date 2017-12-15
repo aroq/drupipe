@@ -18,7 +18,8 @@ class Commands extends BaseAction {
         }
 
         def prepareSSHChainCommand = { String command, int level ->
-            return command.replaceAll(/"/, /\\"/ * level)
+            def replaceBy = """\\""" * level + '"'
+            return command.replaceAll(/"/, replaceBy)
         }
 
         for (command in commands) {
@@ -28,6 +29,7 @@ class Commands extends BaseAction {
                 String chainCommand = command
                 for (String sshChainItem in action.params.through_ssh_chain.reverse()) {
                     chainCommand = /${action.params.through_ssh_params.executable} ${action.params.through_ssh_params.options} ${sshChainItem} "${prepareSSHChainCommand(chainCommand, level)}"/
+                    action.pipeline.drupipeLogger.log "Level: ${level}, Command: ${chainCommand}"
                     level--
                 }
 
