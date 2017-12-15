@@ -18,9 +18,8 @@ class Commands extends BaseAction {
         }
 
         def prepareSSHChainCommand = { String command, int level ->
-            def replaceBy = """\\""" * level + '"'
-            action.pipeline.drupipeLogger.log "Level: ${level}, Replace by: ${replaceBy}"
-            return command.replaceAll(/"/, replaceBy)
+            command = command.replaceAll("\\\\", "\\\\\\\\")
+            return command.replaceAll("\"", "\\\\\"")
         }
 
         for (command in commands) {
