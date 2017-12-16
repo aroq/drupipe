@@ -79,9 +79,10 @@ class DrupipeActionWrapper implements Serializable {
 
             try {
                 for (className in classNames.reverse()) {
+                    pipeline.drupipeLogger.log "Try to create class ${className}"
                     try {
                         if (!actionInstance) {
-                            actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false)?.newInstance(
+                            actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${className}", true, false)?.newInstance(
                                 action: this,
                                 script: this.script,
                                 utils: utils,
@@ -89,7 +90,7 @@ class DrupipeActionWrapper implements Serializable {
                         }
                     }
                     catch (ClassNotFoundException e) {
-                        pipeline.drupipeLogger.trace "Class ${className} does not exist"
+                        pipeline.drupipeLogger.log "Class ${className} does not exist"
                     }
                 }
             }
