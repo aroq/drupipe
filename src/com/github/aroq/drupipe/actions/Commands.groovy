@@ -11,7 +11,6 @@ class Commands extends BaseAction {
 
         if (action.params.aggregate_commands) {
             commands.add("cd ${action.params.execution_dir}" + ' && ' + action.params.commands.join(' && '))
-            action.pipeline.drupipeLogger.error "Commands are not defined"
         }
         else {
             commands = action.params.commands.collect("cd {$action.params.execution_dir}" + ' && ' + it)
@@ -25,9 +24,9 @@ class Commands extends BaseAction {
         String chainCommand
         for (command in commands) {
             action.pipeline.drupipeLogger.trace "Execute command: ${command}"
+            chainCommand = command
             if (action.params.containsKey('through_ssh_chain')) {
                 int level = action.params.through_ssh_chain.size()
-                chainCommand = command
                 for (String sshChainItem in action.params.through_ssh_chain.reverse()) {
                     chainCommand = /${action.params.through_ssh_params.executable} ${action.params.through_ssh_params.options} ${sshChainItem} "${prepareSSHChainCommand(chainCommand, level)}"/
                     action.pipeline.drupipeLogger.trace "Level: ${level}, Command: ${chainCommand}"
