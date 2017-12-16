@@ -62,7 +62,7 @@ class DrupipeActionWrapper implements Serializable {
                 pipeline.drupipeLogger.debug "Action wasn't processed with 'from'"
                 this.params.from = '.params.actions.' + name + '.' + methodName
                 this.params = pipeline.drupipeConfig.processItem(this.params, 'actions', 'params', 'execute')
-                classNames.add(name.tokenize('.'))
+                classNames.add(name.split("\\."))
             }
 
             if (this.params.containsKey('log_level')) {
