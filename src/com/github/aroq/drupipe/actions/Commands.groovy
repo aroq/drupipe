@@ -22,18 +22,20 @@ class Commands extends BaseAction {
             return command.replaceAll("\"", "\\\\\"")
         }
 
+        String chainCommand
         for (command in commands) {
-            action.pipeline.drupipeLogger.info "Execute command: ${command}"
+            action.pipeline.drupipeLogger.trace "Execute command: ${command}"
             if (action.params.containsKey('through_ssh_chain')) {
                 int level = action.params.through_ssh_chain.size()
-                String chainCommand = command
+                chainCommand = command
                 for (String sshChainItem in action.params.through_ssh_chain.reverse()) {
                     chainCommand = /${action.params.through_ssh_params.executable} ${action.params.through_ssh_params.options} ${sshChainItem} "${prepareSSHChainCommand(chainCommand, level)}"/
-                    action.pipeline.drupipeLogger.log "Level: ${level}, Command: ${chainCommand}"
+                    action.pipeline.drupipeLogger.trace "Level: ${level}, Command: ${chainCommand}"
                     level--
                 }
 
-                action.pipeline.drupipeLogger.log "Command: ${chainCommand}"
+                action.pipeline.drupipeLogger.trace "Execute command: ${chainCommand}"
+                script.drupipeShell(chainCommand, action.params)
             }
         }
     }
