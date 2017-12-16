@@ -491,10 +491,8 @@ params:
     Commands:
       execute:
         params:
-          log_level: TRACE
           commands: []
           aggregate_commands: true
           through_ssh_params:
             executable: ssh
             options: -T
-
