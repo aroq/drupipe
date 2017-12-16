@@ -280,7 +280,7 @@ class DrupipeController implements Serializable {
         def values = actionName.split("\\.")
         if (values.size() > 1) {
             actionMethodName = values.pop()
-            actionName = actionName - actionMethodName
+            actionName = actionName - ".${actionMethodName}"
         }
         else {
             actionName = 'PipelineController'
