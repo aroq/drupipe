@@ -78,20 +78,19 @@ class DrupipeActionWrapper implements Serializable {
             def actionInstance
 
             try {
-                try {
-//                    Class.forName( "com.github.aroq.drupipe.actions.${this.name}");
-                    actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false)?.newInstance(
-                        action: this,
-                        script: this.script,
-                        utils: utils,
-                    )
-                }
-                catch (ClassNotFoundException e) {
-                    actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.params.fallback_class_name}", true, false)?.newInstance(
-                        action: this,
-                        script: this.script,
-                        utils: utils,
-                    )
+                for (className in classNames.reverse()) {
+                    try {
+                        if (!actionInstance) {
+                            actionInstance = this.class.classLoader.loadClass("com.github.aroq.drupipe.actions.${this.name}", true, false)?.newInstance(
+                                action: this,
+                                script: this.script,
+                                utils: utils,
+                            )
+                        }
+                    }
+                    catch (ClassNotFoundException e) {
+                        pipeline.drupipeLogger.trace "Class ${className} does not exist"
+                    }
                 }
             }
             catch (err) {
