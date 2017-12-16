@@ -146,7 +146,7 @@ class DrupipeConfig implements Serializable {
             }
         }
         DrupipeParamProcessor drupipeParamProcessor = new DrupipeParamProcessor(utils: utils)
-        new DrupipeProcessorsController(processors: processors, utils: utils, drupipeParamProcessor: drupipeParamProcessor)
+        new DrupipeProcessorsController(controller: controller, processors: processors, utils: utils, drupipeParamProcessor: drupipeParamProcessor)
     }
 
     def processItem(item, parentKey, paramsKey = 'params', mode) {

@@ -1,5 +1,6 @@
 package com.github.aroq.drupipe.processors
 
+import com.github.aroq.drupipe.DrupipeController
 import com.github.aroq.drupipe.DrupipeLogger
 
 class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
@@ -11,6 +12,8 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     String mode
 
     String include_key
+
+    DrupipeController controller
 
     def getFromPathItem(object, pathItem, String key) {
         def result = [:]
@@ -53,10 +56,12 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def processFromItem(context, result, String from, String parent, String key = 'params') {
-//        if (from == '.params.actions.JobDslSeed.perform') {
-//            drupipeLogger.log "Process from: ${from}"
-//            drupipeLogger.log "Process mode: ${mode}"
-//        }
+        if (from == '.params.actions.JobDslSeed.perform') {
+            drupipeLogger.trace "Process from: ${from}"
+            drupipeLogger.trace "Process mode: ${mode}"
+        }
+
+        from = controller.drupipeProcessorsController.drupipeParamProcessor.interpolateCommand(from, [:], controller.context)
 
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         if (processorParams) {
@@ -64,9 +69,9 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
             def keyMode = utils.deepGet(processorParams, "${this.include_key}.mode")
 
             if (keyMode == this.mode) {
-//                if (from == '.params.actions.JobDslSeed.perform') {
-//                    drupipeLogger.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
-//                }
+                if (from == '.params.actions.JobDslSeed.perform') {
+                    drupipeLogger.trace "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
+                }
 
                 def tempContext
 
