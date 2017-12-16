@@ -489,11 +489,10 @@ params:
             - ${action.params.through_host}
 
     Commands:
-      execute:
-        params:
-          log_level: TRACE
-          commands: []
-          aggregate_commands: true
-          through_ssh_params:
-            executable: ssh
-            options: -T
+      params:
+        log_level: TRACE
+        commands: []
+        aggregate_commands: true
+        through_ssh_params:
+          executable: ssh
+          options: -T
