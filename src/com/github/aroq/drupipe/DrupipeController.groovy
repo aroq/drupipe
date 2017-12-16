@@ -279,16 +279,12 @@ class DrupipeController implements Serializable {
         }
         def values = actionName.split("\\.")
         if (values.size() > 1) {
-            actionName = values[0]
-            actionMethodName = values[1]
+            actionMethodName = values.pop()
+            actionName = actionName - actionMethodName
         }
         else {
             actionName = 'PipelineController'
             actionMethodName = values[0]
-        }
-        if (context.params && context.params.action && context.params.action[actionName] && context.params.action[actionName][actionMethodName] && context.params.action[actionName][actionMethodName].debugEnabled) {
-            controller.drupipeLogger.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'])
-            controller.drupipeLogger.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'])
         }
 
         script.echo actionName

@@ -53,6 +53,8 @@ class DrupipeActionWrapper implements Serializable {
             def actionParams = [:]
             def defaultActionParams = [:]
 
+            def classNames = ['BaseShellAction']
+
             if (this.params && this.params.containsKey('fromProcessed') && this.params.fromProcessed) {
                 pipeline.drupipeLogger.debug "Action was processed with 'from' in ${this.params.from_processed_mode}"
             }
@@ -60,6 +62,7 @@ class DrupipeActionWrapper implements Serializable {
                 pipeline.drupipeLogger.debug "Action wasn't processed with 'from'"
                 this.params.from = '.params.actions.' + name + '.' + methodName
                 this.params = pipeline.drupipeConfig.processItem(this.params, 'actions', 'params', 'execute')
+                classNames.add(name.tokenize('.'))
             }
 
             if (this.params.containsKey('log_level')) {

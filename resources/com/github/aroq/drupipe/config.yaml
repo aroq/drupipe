@@ -173,7 +173,6 @@ params:
     default:
       params:
         name: default
-        unipipe_retrieve_config: true
 
   containers:
     params:
