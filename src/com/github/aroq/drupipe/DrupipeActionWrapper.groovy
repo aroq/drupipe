@@ -81,9 +81,9 @@ class DrupipeActionWrapper implements Serializable {
             try {
                 for (className in classNames.reverse()) {
                     className = "com.github.aroq.drupipe.actions.${className}"
-                    pipeline.drupipeLogger.log "Try to create class ${className}"
                     try {
                         if (!actionInstance) {
+                            pipeline.drupipeLogger.log "Try to create class ${className}"
                             actionInstance = this.class.classLoader.loadClass(className, true, false)?.newInstance(
                                 action: this,
                                 script: this.script,
