@@ -108,8 +108,9 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                         def action = from - '.params.actions.'
                         def values = action.split("\\.")
                         if (values.size() > 1) {
+                            drupipeLogger.log("Values: ${values}")
                             fromObject.methodName = values.pop()
-                            fromObject.name = action - actionMethodName
+                            fromObject.name = action - fromObject.methodName
                             fromObject.configVersion = 2
                         }
                     }
