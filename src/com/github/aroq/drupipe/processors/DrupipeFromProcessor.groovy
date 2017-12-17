@@ -42,6 +42,9 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         def parentItem = ''
         for (pathItem in path) {
             if (parentItem) {
+                if (!object) {
+                    drupipeLogger.error "collectKeyParamsFromJsonPath is null for pathItem: ${pathItem} in path: ${path}"
+                }
                 object = object[parentItem]
             }
 
