@@ -176,6 +176,7 @@ params:
 
   containers:
     params:
+      execute: true
       k8s:
         ttyEnabled: true
         command: cat

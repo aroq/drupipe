@@ -17,11 +17,16 @@ class DrupipePod extends DrupipeBase {
     ArrayList<DrupipeContainer> prepareContainers() {
         ArrayList<DrupipeContainer> result = []
         for (container in containers) {
-            controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], 'INFO')
-            container = new DrupipeContainer(container)
-            container.controller = controller
-            container.pod = this
-            result.add(container)
+            if (container.execute) {
+                controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], 'INFO')
+                container = new DrupipeContainer(container)
+                container.controller = controller
+                container.pod = this
+                result.add(container)
+            }
+            else {
+                controller.drupipeLogger.debug "Container ${name} 'execute' property is set to false"
+            }
         }
         result
     }
