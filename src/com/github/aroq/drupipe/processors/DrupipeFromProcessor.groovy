@@ -53,7 +53,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                 result = utils.merge(result, from)
             }
             else {
-                drupipeLogger.trace "getFromPathItem is null for pathItem: ${pathItem} in path: ${path}"
+                drupipeLogger.trace "getFromPathItem is null for pathItem: ${pathItem} in path: ${path}, key: ${key}"
             }
             parentItem = pathItem
         }
