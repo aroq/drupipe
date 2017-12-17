@@ -5,15 +5,22 @@ class Commands extends BaseAction {
     def execute() {
         action.pipeline.drupipeLogger.debugLog(action.pipeline.context, action.params, "ACTION.PARAMS", [debugMode: 'json'])
         def commands = []
-        if (action.params.commands.size() == 0) {
+        if (action.params.actions.size() == 0) {
             action.pipeline.drupipeLogger.error "Commands are not defined"
         }
 
+//        for (command in action.params.actions) {
+//            if (command instanceof HashMap) {
+//                def a = action.pipeline.drupipeConfig.processItem(command, 'actions', 'params', 'execute')
+//                command =
+//            }
+//        }
+
         if (action.params.aggregate_commands) {
-            commands.add("cd ${action.params.execution_dir}" + ' && ' + action.params.commands.join(' && '))
+            commands.add("cd ${action.params.execution_dir}" + ' && ' + action.params.actions.join(' && '))
         }
         else {
-            commands = action.params.commands.collect("cd {$action.params.execution_dir}" + ' && ' + it)
+            commands = action.params.actions.collect("cd {$action.params.execution_dir}" + ' && ' + it)
         }
 
         def prepareSSHChainCommand = { String command, int level ->

@@ -4,8 +4,8 @@ class DrupipeContainerBlock extends DrupipeBase {
 
     String name
 
-    ArrayList<DrupipeActionWrapper> actions = []
     ArrayList<DrupipeActionWrapper> pre_actions = []
+    ArrayList<DrupipeActionWrapper> actions = []
     ArrayList<DrupipeActionWrapper> post_actions = []
 
     ArrayList phases = ['pre_actions', 'actions', 'post_actions']

@@ -496,3 +496,14 @@ params:
         through_ssh_params:
           executable: ssh
           options: -T
+
+    Cap:
+      params:
+        executable: bundle exec cap
+        environment: ""
+        branch: ""
+        options: ""
+        full_command: ${action.params.executable} ${action.params.environment} ${action.params.verb_command} ${action.params.branch} ${action.params.options}
+      deploy:
+        params:
+          verb_command: deploy
