@@ -63,17 +63,6 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def processFromItem(context, result, String from, String parent, String key = 'params') {
-        if (from == '.params.containers.common.operations.{$context.operations_type}') {
-            drupipeLogger.info "Process from: ${from}"
-            drupipeLogger.info "Process mode: ${mode}"
-            drupipeLogger.debugLog(context, context, 'controller.context', [debugMode: 'json'], [], 'INFO')
-        }
-
-        from = controller.drupipeProcessorsController.drupipeParamProcessor.interpolateCommand(from, [:], context)
-        if (from == '.params.containers.common.operations.{$context.operations_type}') {
-            drupipeLogger.info "Process from: ${from} AFTER"
-        }
-
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         if (processorParams) {
             drupipeLogger.debugLog(context, processorParams, 'processFromItem->processorParams', [debugMode: 'json'])
@@ -102,6 +91,17 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                 if (!tempContext) {
                     throw new Exception("No tempContext is defined.")
                 }
+
+//                if (from == '.params.containers.common.operations.{$context.operations_type}') {
+//                    drupipeLogger.info "Process from: ${from}"
+//                    drupipeLogger.info "Process mode: ${mode}"
+//                    drupipeLogger.debugLog(context, context, 'processFromItem() - context', [debugMode: 'json'], [], 'INFO')
+//                }
+
+                from = controller.drupipeProcessorsController.drupipeParamProcessor.interpolateCommand(from, [:], tempContext)
+//                if (from == '.params.containers.common.operations.{$context.operations_type}') {
+//                    drupipeLogger.info "Process from: ${from} AFTER"
+//                }
 
                 def fromObject = collectKeyParamsFromJsonPath(tempContext, from, key)
 
