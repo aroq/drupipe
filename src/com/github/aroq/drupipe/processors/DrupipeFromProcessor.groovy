@@ -63,12 +63,16 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def processFromItem(context, result, String from, String parent, String key = 'params') {
-        if (from == '.params.actions.JobDslSeed.perform') {
+        if (from == '.params.containers.common.operations.{$context.operations_type}') {
             drupipeLogger.trace "Process from: ${from}"
             drupipeLogger.trace "Process mode: ${mode}"
+            drupipeLogger.debugLog(context, controller.context, 'controller.context', [debugMode: 'json'], [], 'INFO')
         }
 
         from = controller.drupipeProcessorsController.drupipeParamProcessor.interpolateCommand(from, [:], controller.context)
+        if (from == '.params.containers.common.operations.{$context.operations_type}') {
+            drupipeLogger.trace "Process from: ${from} AFTER"
+        }
 
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         if (processorParams) {
