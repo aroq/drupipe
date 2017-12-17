@@ -18,6 +18,7 @@ class DrupipePod extends DrupipeBase {
         ArrayList<DrupipeContainer> result = []
         for (container in containers) {
             if (container.execute) {
+                container.remove('execute')
                 controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], 'INFO')
                 container = new DrupipeContainer(container)
                 container.controller = controller
