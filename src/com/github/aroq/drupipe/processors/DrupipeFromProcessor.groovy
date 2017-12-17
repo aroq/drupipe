@@ -44,7 +44,14 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
             if (parentItem) {
                 object = object[parentItem]
             }
-            result = utils.merge(result, getFromPathItem(object, pathItem, key))
+
+            def from = getFromPathItem(object, pathItem, key)
+            if (from) {
+                result = utils.merge(result, from)
+            }
+            else {
+                drupipeLogger.warning "getFromPathItem is null for pathItem: ${pathItem} in path: ${path}"
+            }
             parentItem = pathItem
         }
         result
