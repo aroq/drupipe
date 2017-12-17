@@ -62,7 +62,7 @@ class DrupipeLogger implements Serializable {
             if (dumpName) {
                 utils.echoMessage "DUMP START - ${dumpName}"
             }
-            debug JsonOutput.prettyPrint(JsonOutput.toJson(value))
+            utils.echoMessage JsonOutput.prettyPrint(JsonOutput.toJson(value))
             if (dumpName) {
                 utils.echoMessage "DUMP END - ${dumpName}"
             }
