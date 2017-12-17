@@ -93,16 +93,16 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                     throw new Exception("No tempContext is defined.")
                 }
 
-                if (from == '.params.containers.common.operations.{$context.operations_type}') {
-                    drupipeLogger.info "Process from: ${from}"
-                    drupipeLogger.info "Process mode: ${mode}"
-//                    drupipeLogger.debugLog(context, context, 'processFromItem() - context', [debugMode: 'json'], [], 'INFO')
-                }
+//                if (from == '.params.containers.common.operations.{$context.operations_type}') {
+//                    drupipeLogger.info "Process from: ${from}"
+//                    drupipeLogger.info "Process mode: ${mode}"
+//                    drupipeLogger.debugLog(context, context.operations_type, 'processFromItem() - context.operations_type', [debugMode: 'json'], [], 'INFO')
+//                }
 
                 from = controller.drupipeProcessorsController.drupipeParamProcessor.interpolateCommand(from, [:], tempContext)
-                if (from == '.params.containers.common.operations.{commands}') {
-                    drupipeLogger.info "Process from: ${from} AFTER"
-                }
+//                if (from == '.params.containers.common.operations.{commands}') {
+//                    drupipeLogger.info "Process from: ${from} AFTER"
+//                }
 
                 def fromObject = collectKeyParamsFromJsonPath(tempContext, from, key)
 
