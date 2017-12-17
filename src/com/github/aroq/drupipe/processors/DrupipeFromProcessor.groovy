@@ -43,7 +43,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         for (pathItem in path) {
             if (parentItem) {
                 if (!object) {
-                    drupipeLogger.error "collectKeyParamsFromJsonPath is null for pathItem: ${pathItem} in path: ${path}, mode: ${mode}"
+                    drupipeLogger.error "collectKeyParamsFromJsonPath is null for pathItem: ${pathItem} in path: ${path}, mode: ${mode}, key: ${key}"
                 }
                 object = object[parentItem]
             }
