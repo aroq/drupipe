@@ -1,27 +1,16 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionWrapper
-
 class Behat extends BaseAction {
 
-    def context
-
-    def script
-
-    def utils
-
-
-    def DrupipeActionWrapper action
-
     def perform() {
-        def testEnvironment = action.params.testEnvironment ? action.params.testEnvironment : context.environment
+        def testEnvironment = action.params.testEnvironment ? action.params.testEnvironment : action.pipeline.context.environment
         def features = ''
         if (action.params.features) {
             features = action.params.features
         }
         def tags = ''
-        if (context.tags) {
-            tags = "--tags=${context.tags}"
+        if (action.pipeline.context.tags) {
+            tags = "--tags=${action.pipeline.context.tags}"
         }
 
         // TODO: Add settings to exit with error on Behat errors.
@@ -29,7 +18,7 @@ class Behat extends BaseAction {
             if (script.fileExists("${action.params.masterPath}/${action.params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml")) {
                 script.drupipeShell(
                     """
-                cd ${action.params.masterPath}/${context.docrootDir}
+                cd ${action.params.masterPath}/${action.pipeline.context.docrootDir}
                 mkdir -p ${action.params.workspaceRelativePath}/reports
                 ${action.params.masterRelativePath}/${action.params.behatExecutable} --config=${action.params.masterRelativePath}/${action.params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml ${action.params.behat_args} --out=${action.params.workspaceRelativePath}/reports ${tags} ${features}
             """, action.params

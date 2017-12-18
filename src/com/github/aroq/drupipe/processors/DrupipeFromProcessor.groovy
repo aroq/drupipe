@@ -1,5 +1,6 @@
 package com.github.aroq.drupipe.processors
 
+import com.github.aroq.drupipe.DrupipeController
 import com.github.aroq.drupipe.DrupipeLogger
 
 class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
@@ -11,6 +12,8 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     String mode
 
     String include_key
+
+    DrupipeController controller
 
     def getFromPathItem(object, pathItem, String key) {
         def result = [:]
@@ -39,9 +42,23 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         def parentItem = ''
         for (pathItem in path) {
             if (parentItem) {
-                object = object[parentItem]
+                if (!object) {
+                    drupipeLogger.error "collectKeyParamsFromJsonPath is null for pathItem: ${pathItem} in path: ${path}, mode: ${mode}, key: ${key}"
+                }
+                else {
+                    if (object.containsKey(parentItem)) {
+                        object = object[parentItem]
+                    }
+                }
             }
-            result = utils.merge(result, getFromPathItem(object, pathItem, key))
+
+            def from = getFromPathItem(object, pathItem, key)
+            if (from) {
+                result = utils.merge(result, from)
+            }
+            else {
+                drupipeLogger.trace "getFromPathItem is null for pathItem: ${pathItem} in path: ${path}, key: ${key}"
+            }
             parentItem = pathItem
         }
         result
@@ -53,20 +70,13 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def processFromItem(context, result, String from, String parent, String key = 'params') {
-//        if (from == '.params.actions.JobDslSeed.perform') {
-//            drupipeLogger.log "Process from: ${from}"
-//            drupipeLogger.log "Process mode: ${mode}"
-//        }
-
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         if (processorParams) {
             drupipeLogger.debugLog(context, processorParams, 'processFromItem->processorParams', [debugMode: 'json'])
             def keyMode = utils.deepGet(processorParams, "${this.include_key}.mode")
 
             if (keyMode == this.mode) {
-//                if (from == '.params.actions.JobDslSeed.perform') {
-//                    drupipeLogger.log "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
-//                }
+                drupipeLogger.trace "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
 
                 def tempContext
 
@@ -87,6 +97,17 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                     throw new Exception("No tempContext is defined.")
                 }
 
+//                if (from == '.params.containers.common.operations.{$context.operations_type}') {
+//                    drupipeLogger.info "Process from: ${from}"
+//                    drupipeLogger.info "Process mode: ${mode}"
+//                    drupipeLogger.debugLog(context, context.operations_type, 'processFromItem() - context.operations_type', [debugMode: 'json'], [], 'INFO')
+//                }
+
+                from = controller.drupipeProcessorsController.drupipeParamProcessor.interpolateCommand(from, [:], tempContext)
+//                if (from == '.params.containers.common.operations.{commands}') {
+//                    drupipeLogger.info "Process from: ${from} AFTER"
+//                }
+
                 def fromObject = collectKeyParamsFromJsonPath(tempContext, from, key)
 
                 // TODO: Refactor it:
@@ -106,10 +127,11 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                     // Set name to 'from' if parent is 'actions'.
                     if (parent in ['actions', 'pre_actions', 'post_actions']) {
                         def action = from - '.params.actions.'
-                        def values = action.split("\\.")
+                        def values = action.tokenize('.')
                         if (values.size() > 1) {
-                            fromObject.name = values[0]
-                            fromObject.methodName = values[1]
+                            drupipeLogger.log("Values: ${values}")
+                            fromObject.methodName = values.pop()
+                            fromObject.name = action - ".${fromObject.methodName}"
                             fromObject.configVersion = 2
                         }
                     }

@@ -1,16 +1,9 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionWrapper
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurperClassic
 
 class Docman extends BaseAction {
-
-    def script
-
-    def utils
-
-    DrupipeActionWrapper action
 
     // TODO: Refactor all.
 

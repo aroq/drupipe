@@ -31,6 +31,7 @@ class DrupipePipeline extends DrupipeBase {
         }
     }
 
+
     def executePod(pod) {
         if (pod) {
             controller.drupipeLogger.debugLog(controller.context, pod, 'POD', [debugMode: 'json'])
@@ -42,6 +43,7 @@ class DrupipePipeline extends DrupipeBase {
                 pod = new DrupipePod(pod)
             }
             pod.controller = controller
+            pod.containers = pod.prepareContainers()
             pod.execute()
         }
     }

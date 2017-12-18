@@ -1,16 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionWrapper
-
 class GroovyFileConfig extends BaseAction {
-
-    def context
-
-    def script
-
-    def utils
-
-    DrupipeActionWrapper action
 
     def load() {
         def result = [:]

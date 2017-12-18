@@ -58,7 +58,7 @@ class DrupipeController implements Serializable {
                                 def jobConfig = context.job
                                 archiveObjectJsonAndYaml(jobConfig, 'job')
                                 script.echo "Configuration end"
-                                drupipeLogger.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'])
+                                drupipeLogger.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [], 'INFO')
                                 job = new DrupipeJob(jobConfig)
                                 job.controller = this
                             }
@@ -277,18 +277,14 @@ class DrupipeController implements Serializable {
             actionName = action.action
             actionParams = action.params
         }
-        def values = actionName.split("\\.")
+        def values = actionName.tokenize(".")
         if (values.size() > 1) {
-            actionName = values[0]
-            actionMethodName = values[1]
+            actionMethodName = values.pop()
+            actionName = actionName - ".${actionMethodName}"
         }
         else {
             actionName = 'PipelineController'
             actionMethodName = values[0]
-        }
-        if (context.params && context.params.action && context.params.action[actionName] && context.params.action[actionName][actionMethodName] && context.params.action[actionName][actionMethodName].debugEnabled) {
-            controller.drupipeLogger.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'])
-            controller.drupipeLogger.debugLog(context, actionParams, "ACTION ${actionName}.${actionMethodName} processPipelineAction()", [debugMode: 'json'])
         }
 
         script.echo actionName

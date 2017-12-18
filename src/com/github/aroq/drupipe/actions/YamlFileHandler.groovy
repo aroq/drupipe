@@ -1,16 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionWrapper
-
 class YamlFileHandler extends BaseAction {
-
-    def context
-
-    def script
-
-    def utils
-
-    DrupipeActionWrapper action
 
     def init() {
         if (!action.pipeline.context.tags.contains('docman')) {
@@ -45,7 +35,7 @@ class YamlFileHandler extends BaseAction {
 
         def project_config_dir = action.pipeline.drupipeConfig.drupipeSourcesController.sourceDir(action.pipeline.context, 'project');
 
-        controller.drupipeLogger.log("project_config_dir: ${project_config_dir}")
+        action.pipeline.drupipeLogger.log("project_config_dir: ${project_config_dir}")
 
         script.drupipeShell("ls -lah ${project_config_dir}", action.params)
 

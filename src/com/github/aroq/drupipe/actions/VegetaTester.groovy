@@ -1,16 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionWrapper
-
 class VegetaTester extends BaseAction {
-
-    def context
-
-    def script
-
-    def utils
-
-    def DrupipeActionWrapper action
 
     def prepare() {
         if (action.pipeline.context.env.vegeta_prepare_command && action.pipeline.context.env.vegeta_prepare_command.length() != 0) {
