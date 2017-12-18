@@ -76,7 +76,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
             def keyMode = utils.deepGet(processorParams, "${this.include_key}.mode")
 
             if (keyMode == this.mode) {
-                drupipeLogger.info "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
+                drupipeLogger.trace "DrupipeFromProcessor->processFromItem() ${from} processed as mode is ${keyMode}, include_key: ${this.include_key}"
 
                 def tempContext
 
