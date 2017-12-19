@@ -106,7 +106,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                     logResult = true
                 }
 
-                from = controller.drupipeProcessorsController.drupipeParamProcessor.interpolateCommand(from, [:], tempContext)
+                from = controller.drupipeProcessorsController.drupipeParamProcessor.interpolateCommand(from, [:], tempContext, logResult)
 
                 def fromObject = collectKeyParamsFromJsonPath(tempContext, from, key)
 
