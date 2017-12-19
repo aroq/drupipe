@@ -11,7 +11,7 @@ class DrupipeParamProcessor implements Serializable {
         }
 
         if (debugFlag) {
-            utils.echoMessage(command)
+//            utils.echoMessage(command)
         }
 
         def binding = [context: context, actions: context.actions ? context.actions : [:], action: action, prepareFlags: prepareFlags]
