@@ -100,16 +100,19 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                 drupipeLogger.trace "Process from: ${from}"
                 drupipeLogger.trace "Process mode: ${mode}"
 
+                def logResult = false
                 if (from == '.params.containers.common.artifact.${context.container_types.artifact.release-deploy-preprod.type}.release-deploy-preprod') {
                     drupipeLogger.debugLog(context, tempContext, 'processFromItem() - tempContext', [debugMode: 'json'], [], 'INFO')
+                    logResult = true
                 }
 
                 from = controller.drupipeProcessorsController.drupipeParamProcessor.interpolateCommand(from, [:], tempContext)
-//                if (from == '.params.containers.common.operations.{commands}') {
-//                    drupipeLogger.info "Process from: ${from} AFTER"
-//                }
 
                 def fromObject = collectKeyParamsFromJsonPath(tempContext, from, key)
+
+                if (logResult) {
+                    drupipeLogger.debugLog(context, fromObject, 'fromObject', [debugMode: 'json'], [], 'INFO')
+                }
 
                 // TODO: Refactor it:
                 if (fromObject) {
