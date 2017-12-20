@@ -132,7 +132,7 @@ class DrupipeConfig implements Serializable {
         for (processorConfig in processorsConfig) {
             controller.drupipeLogger.log "Processor: ${processorConfig.className}"
             try {
-                def properties = [utils: utils, drupipeLogger: controller.drupipeLogger]
+                def properties = [controller: controller, utils: utils, drupipeLogger: controller.drupipeLogger]
                 if (processorConfig.properties) {
                     properties << processorConfig.properties
                 }

@@ -1,16 +1,6 @@
 package com.github.aroq.drupipe.actions
 
-import com.github.aroq.drupipe.DrupipeActionWrapper
-
 class YamlFileConfig extends BaseAction {
-
-    def context
-
-    def script
-
-    def utils
-
-    def DrupipeActionWrapper action
 
     def load() {
         def result = [:]
@@ -21,7 +11,7 @@ class YamlFileConfig extends BaseAction {
     }
 
     def loadFromLibraryResource() {
-      script.readYaml(text: script.libraryResource(action.params.resource))
+        script.readYaml(text: script.libraryResource(action.params.resource))
     }
 
 }

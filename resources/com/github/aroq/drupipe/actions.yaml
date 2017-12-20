@@ -18,6 +18,8 @@ params:
       store_action_params_key: actions.${action.name}_${action.methodName}
       shell_bash_login: true
       return_stdout: false
+      # To be used when specific action's class is not exists.
+      fallback_class_name: BaseShellAction
 
     Config:
       params:
@@ -469,3 +471,39 @@ params:
             done'' '
           full_command:
             - ${action.params.command}
+
+    Ssh:
+      tunnel:
+        params:
+          executable: ssh
+          options: -f -N -L
+          bind_address: 127.0.0.1
+          port: 22
+          host: ""
+          hostport: 22
+          through_host: ""
+          full_command:
+            - ${action.params.executable}
+            - ${action.params.options}
+            - ${action.params.bind_address}:${action.params.port}:${action.params.host}:${action.params.hostport}
+            - ${action.params.through_host}
+
+    Commands:
+      params:
+        log_level: TRACE
+        actions: []
+        aggregate_commands: true
+        through_ssh_params:
+          executable: ssh
+          options: -T
+
+    Cap:
+      params:
+        executable: bundle exec cap
+        environment: ""
+        branch: ""
+        options: ""
+        full_command: ${action.params.executable} ${action.params.environment} ${action.params.verb_command} ${action.params.branch} ${action.params.options}
+      deploy:
+        params:
+          verb_command: deploy

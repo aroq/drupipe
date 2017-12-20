@@ -130,32 +130,48 @@ class DslParamsHelper {
 
     def drupipeParamTagsSelectsDeploy(context, job, config, name, project) {
         println "Project: ${project.value.name}"
-        def projectRepo = project.value.type == 'root' ? project.value.repo : project.value.root_repo
-        println "Repo: ${projectRepo}"
-        drupipeParamChoices(
-            context,
-            name,
-            'Allows to select tag',
-            'PT_SINGLE_SELECT',
-            activeChoiceGetTagsChoicesScript(projectRepo, '*', ''),
-            false,
-            true
-        )
+        def releaseRepo
+        if (job.value.containsKey('source') && job.value.source.containsKey('version_source')) {
+            releaseRepo = job.value.source.version_source
+        }
+        else {
+            releaseRepo = project.value.type == 'root' ? project.value.repo : project.value.root_repo
+        }
+        println "Repo: ${releaseRepo}"
+        if (releaseRepo) {
+            drupipeParamChoices(
+                context,
+                name,
+                'Allows to select tag',
+                'PT_SINGLE_SELECT',
+                activeChoiceGetTagsChoicesScript(releaseRepo, '*', ''),
+                false,
+                true
+            )
+        }
     }
 
     def drupipeParamBranchesSelectsDeploy(context, job, config, name, project) {
         println "Project: ${project.value.name}"
-        def releaseRepo = project.value.type == 'root' ? project.value.repo : project.value.root_repo
+        def releaseRepo
+        if (job.value.containsKey('source') && job.value.source.containsKey('version_source')) {
+            releaseRepo = job.value.source.version_source
+        }
+        else {
+            releaseRepo = project.value.type == 'root' ? project.value.repo : project.value.root_repo
+        }
         println "Repo: ${releaseRepo}"
-        drupipeParamChoices(
-            context,
-            name,
-            'Allows to select branch',
-            'PT_SINGLE_SELECT',
-            activeChoiceGetBranchesChoicesScript(releaseRepo, job.value.source.pattern),
-            false,
-            true
-        )
+        if (releaseRepo) {
+            drupipeParamChoices(
+                context,
+                name,
+                'Allows to select branch',
+                'PT_SINGLE_SELECT',
+                activeChoiceGetBranchesChoicesScript(releaseRepo, job.value.source.pattern),
+                false,
+                true
+            )
+        }
     }
 
     def drupipeParamOperationsCheckboxes(context, job, config) {

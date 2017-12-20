@@ -173,10 +173,10 @@ params:
     default:
       params:
         name: default
-        unipipe_retrieve_config: true
 
   containers:
     params:
+      execute: true
       k8s:
         ttyEnabled: true
         command: cat
@@ -192,3 +192,9 @@ params:
       params:
         name: common
         image: michaeltigr/zebra-build-php-drush-docman:0.0.84
+    options:
+      ssh_tunnel:
+        params:
+          pre_blocks:
+            - actions:
+              - from: .params.actions.Ssh.tunnel

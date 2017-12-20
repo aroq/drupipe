@@ -5,9 +5,13 @@ class DrupipeParamProcessor implements Serializable {
     com.github.aroq.drupipe.Utils utils
 
     @NonCPS
-    def interpolateCommand(String command, action, context) {
+    def interpolateCommand(String command, action, context, debugFlag = 'false') {
         def prepareFlags = { flags ->
             prepareFlags(flags)
+        }
+
+        if (debugFlag) {
+//            utils.echoMessage(command)
         }
 
         def binding = [context: context, actions: context.actions ? context.actions : [:], action: action, prepareFlags: prepareFlags]
