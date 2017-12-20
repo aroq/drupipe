@@ -273,7 +273,7 @@ params:
 
       apply:
         params:
-          debugEnabled: true
+          log_level: TRACE
           command: upgrade
           value_suffix: values.yaml
           timeout: '120'
