@@ -134,7 +134,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                         def values = action.tokenize('.')
                         if (values.size() > 1) {
                             drupipeLogger.log("Values: ${values}")
-                            fromObject.methodName = values.pop()
+                            fromObject.methodName = values.last()
                             fromObject.name = action - ".${fromObject.methodName}"
                             fromObject.configVersion = 2
                         }
