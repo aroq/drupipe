@@ -101,17 +101,19 @@ class DrupipeActionWrapper implements Serializable {
                 throw err
             }
 
+
             // Interpolate action params with pipeline.context variables.
             if (this.params.containsKey('interpolate') && (this.params.interpolate == 0 || this.params.interpolate == '0')) {
                 pipeline.drupipeLogger.log "Action ${this.fullName}: Interpolation disabled by interpolate config directive."
             }
             else {
+                def classMethods = actionInstance.metaClass.methods*.name.sort().unique()
                 this.params = utils.serializeAndDeserialize(this.params)
 
                 try {
                     pipeline.drupipeLogger.log "Class ${actionInstance.getClass().toString()} methods: ${actionInstance.metaClass.methods*.name.sort().unique().join(', ')}"
                     pipeline.drupipeLogger.log "Check if ${actionInstance.getClass().toString()}.hook_preprocess() exists..."
-                    if (actionInstance.metaClass.respondsTo('hook_preprocess')) {
+                    if (classMethods.contains('hook_preprocess')) {
                         pipeline.drupipeLogger.log "...and call ${actionInstance.getClass().toString()}.hook_preprocess()"
                         actionInstance.hook_preprocess()
                     }
@@ -125,7 +127,7 @@ class DrupipeActionWrapper implements Serializable {
 
                 try {
                     pipeline.drupipeLogger.log "Check if ${actionInstance.getClass().toString()}.${this.methodName}_hook_preprocess() exists..."
-                    if (actionInstance.metaClass.respondsTo("${this.methodName.toString()}_hook_preprocess")) {
+                    if (classMethods.contains("${this.methodName}_hook_preprocess")) {
                         pipeline.drupipeLogger.log "...and call ${actionInstance.getClass().toString()}.${this.methodName}_hook_preprocess()"
                         actionInstance."${this.methodName}_hook_preprocess"()
                     }
