@@ -112,6 +112,8 @@ class DrupipeActionWrapper implements Serializable {
 
                 try {
                     pipeline.drupipeLogger.log "Class ${actionInstance.getClass().toString()} methods: ${actionInstance.metaClass.methods*.name.sort().unique().join(', ')}"
+                    pipeline.drupipeLogger.log "methodName class: ${methodName.getClass().toString()}"
+
                     pipeline.drupipeLogger.log "Check if ${actionInstance.getClass().toString()}.hook_preprocess() exists..."
                     if (classMethods.contains('hook_preprocess')) {
                         pipeline.drupipeLogger.log "...and call ${actionInstance.getClass().toString()}.hook_preprocess()"
