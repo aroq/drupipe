@@ -53,9 +53,10 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
             controller.context.workspace = pwd()
             for (def i = 0; i < pod.containers.size(); i++) {
                 container(pod.containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
-//                    sshagent([controller.context.credentialsId]) {
+                    sh "ssh-add -l"
+                    sshagent([controller.context.credentialsId]) {
                         pod.containers[i].executeBlocks()
-//                    }
+                    }
                 }
             }
             controller.utils.stashList(controller, stash)
