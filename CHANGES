@@ -1,3 +1,6 @@
+Version 0.8.7:
+ - Fix preprocess hooks
+
 Version 0.8.6:
  - Update common container image tag to 0.0.87
  - Merge pull request #107 from aroq/develop
