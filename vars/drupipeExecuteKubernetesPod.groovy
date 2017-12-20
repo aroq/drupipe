@@ -29,7 +29,6 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
                     envVar(key: 'TF_VAR_consul_address', value: controller.context.env.TF_VAR_consul_address),
                     envVar(key: 'UNIPIPE_SOURCES', value: controller.context.env.UNIPIPE_SOURCES),
                     secretEnvVar(key: 'DIGITALOCEAN_TOKEN', secretName: 'zebra-keys', secretKey: 'zebra_do_token'),
-//                  secretEnvVar(key: 'CONSUL_ACCESS_TOKEN', secretName: 'zebra-keys', secretKey: 'zebra_consul_access_token'),
                     secretEnvVar(key: 'ANSIBLE_VAULT_PASS_FILE', secretName: 'zebra-keys', secretKey: 'zebra_ansible_vault_pass'),
                     secretEnvVar(key: 'GITLAB_API_TOKEN_TEXT', secretName: 'zebra-keys', secretKey: 'zebra_gitlab_api_token'),
                     secretEnvVar(key: 'GCLOUD_ACCESS_KEY', secretName: 'zebra-keys', secretKey: 'zebra_gcloud_key'),
