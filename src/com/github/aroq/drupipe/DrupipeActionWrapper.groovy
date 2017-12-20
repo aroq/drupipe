@@ -109,7 +109,7 @@ class DrupipeActionWrapper implements Serializable {
                 this.params = utils.serializeAndDeserialize(this.params)
 
                 try {
-//                    pipeline.drupipeLogger.log "Call hook_preprocess()"
+                    pipeline.drupipeLogger.log "Call hook_preprocess()"
                     if (actionInstance.metaClass.respondsTo('hook_preprocess')) {
                         actionInstance.hook_preprocess()
                     }
@@ -119,7 +119,7 @@ class DrupipeActionWrapper implements Serializable {
                 }
 
                 try {
-//                    pipeline.drupipeLogger.log "Call ${this.methodName}_hook_preprocess()"
+                    pipeline.drupipeLogger.log "Call ${this.methodName}_hook_preprocess()"
                     if (actionInstance.metaClass.respondsTo("${this.methodName}_hook_preprocess")) {
                         actionInstance."${this.methodName}_hook_preprocess"()
                     }
