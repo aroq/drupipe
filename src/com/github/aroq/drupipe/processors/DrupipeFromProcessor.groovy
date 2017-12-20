@@ -131,10 +131,10 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                     // Set name to 'from' if parent is 'actions'.
                     if (parent in ['actions', 'pre_actions', 'post_actions']) {
                         def action = from - '.params.actions.'
-                        def values = action.tokenize('.')
+                        ArrayList<String> values = action.tokenize('.')
                         if (values.size() > 1) {
                             drupipeLogger.log("Values: ${values}")
-                            fromObject.methodName = values.pop()
+                            fromObject.methodName = values.last()
                             fromObject.name = action - ".${fromObject.methodName}"
                             fromObject.configVersion = 2
                         }

@@ -277,9 +277,9 @@ class DrupipeController implements Serializable {
             actionName = action.action
             actionParams = action.params
         }
-        def values = actionName.tokenize(".")
+        ArrayList<String> values = action.tokenize('.')
         if (values.size() > 1) {
-            actionMethodName = values.pop()
+            actionMethodName = values.last()
             actionName = actionName - ".${actionMethodName}"
         }
         else {
