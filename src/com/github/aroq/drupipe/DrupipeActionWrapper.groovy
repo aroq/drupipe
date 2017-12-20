@@ -109,9 +109,10 @@ class DrupipeActionWrapper implements Serializable {
                 this.params = utils.serializeAndDeserialize(this.params)
 
                 try {
+                    pipeline.drupipeLogger.log "Class ${actionInstance.getClass().toString()} methods: ${actionInstance.metaClass.methods*.name.sort().unique().join(', ')}"
                     pipeline.drupipeLogger.log "Check if ${actionInstance.getClass().toString()}.hook_preprocess() exists..."
                     if (actionInstance.metaClass.respondsTo('hook_preprocess')) {
-                        pipeline.drupipeLogger.log "Call hook_preprocess()"
+                        pipeline.drupipeLogger.log "...and call ${actionInstance.getClass().toString()}.hook_preprocess()"
                         actionInstance.hook_preprocess()
                     }
                 }
@@ -122,11 +123,11 @@ class DrupipeActionWrapper implements Serializable {
                 try {
                     pipeline.drupipeLogger.log "Check if ${actionInstance.getClass().toString()}.${this.methodName}_hook_preprocess() exists..."
                     if (actionInstance.metaClass.respondsTo("${this.methodName}_hook_preprocess")) {
-                        pipeline.drupipeLogger.log "...and call ${this.name}.${this.methodName}_hook_preprocess()"
+                        pipeline.drupipeLogger.log "...and call ${actionInstance.getClass().toString()}.${this.methodName}_hook_preprocess()"
                         actionInstance."${this.methodName}_hook_preprocess"()
                     }
                     else {
-                        pipeline.drupipeLogger.log "${this.name}.${this.methodName}_hook_preprocess() does not exists"
+                        pipeline.drupipeLogger.log "${actionInstance.getClass().toString()}.${this.methodName}_hook_preprocess() does not exists"
                     }
                 }
                 catch (err) {

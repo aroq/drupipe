@@ -2,6 +2,10 @@ package com.github.aroq.drupipe.actions
 
 class Helm extends BaseShellAction {
 
+    def hook_preprocess() {
+        action.pipeline.drupipeLogger.log "Inside hook_preprocess()"
+    }
+
     def apply_hook_preprocess() {
         action.pipeline.drupipeLogger.log "Inside hook_preprocess()"
         if (action.pipeline.context.containerMode == 'kubernetes') {
