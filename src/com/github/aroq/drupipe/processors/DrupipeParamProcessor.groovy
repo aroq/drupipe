@@ -37,7 +37,7 @@ class DrupipeParamProcessor implements Serializable {
         for (param in params) {
             def processParamFlag = true
             if (params.containsKey('params_processing') && params.params_processing.containsKey(param.key)) {
-                if (mode != params.params_processing[param.key]) {
+                if (!params.params_processing[param.key].contains(mode)) {
                     utils.echo "Disable param processing: ${param.key}"
                     processParamFlag = false
                 }
