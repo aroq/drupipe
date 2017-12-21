@@ -13,6 +13,7 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
         }
 
         action.params.namespace = action.params.namespace.replaceAll('/', '-')
+        action.pipeline.drupipeLogger.debugLog(action.params, action.params, "action.params in Helm.apply_hook_preprocess()", [debugMode: 'json'])
     }
 
 }
