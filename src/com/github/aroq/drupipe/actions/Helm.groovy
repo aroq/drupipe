@@ -12,6 +12,9 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
             action.params.secret_values_file = action.params.workingDir != '.' ? '.secret_values_file_id' : '.secret_values_file_id'
         }
 
+    }
+
+    def apply_hook_postprocess() {
         action.params.namespace = action.params.namespace.replaceAll('/', '-')
         action.pipeline.drupipeLogger.debugLog(action.params, action.params, "action.params in Helm.apply_hook_preprocess()", [debugMode: 'json'])
     }
