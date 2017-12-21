@@ -167,6 +167,8 @@ class DrupipeActionWrapper implements Serializable {
                         // No preprocess defined.
                     }
 
+                    pipeline.drupipeLogger.debugLog(this.params, this.params, "Action.params AFTER PREPROCESS", [debugMode: 'json'])
+
                     // Execute action from file if exist in sources...
                     if (pipeline.context.sourcesList) {
                         for (def i = 0; i < pipeline.context.sourcesList.size(); i++) {
