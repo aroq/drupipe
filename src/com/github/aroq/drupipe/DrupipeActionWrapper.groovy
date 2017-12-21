@@ -115,11 +115,11 @@ class DrupipeActionWrapper implements Serializable {
 
                 pipeline.drupipeLogger.debugLog(this.params, this.params, "action.params BEFORE processActionParams", [debugMode: 'json'], [], 'TRACE')
 
-                pipeline.drupipeProcessorsController.drupipeParamProcessor.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()], 'pre_process')
+                pipeline.drupipeProcessorsController.drupipeParamProcessor.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()], [], 'pre_process')
 
                 callHook(actionInstance, 'hook_post_process')
 
-                pipeline.drupipeProcessorsController.drupipeParamProcessor.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()], 'post_process')
+                pipeline.drupipeProcessorsController.drupipeParamProcessor.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()], [], 'post_process')
 
                 // TODO: Store processed action params in pipeline.context (pipeline.context.actions['action_name']) to allow use it for interpolation in other actions.
             }
