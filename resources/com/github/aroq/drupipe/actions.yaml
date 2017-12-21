@@ -375,7 +375,7 @@ params:
           release_name: ${actions.Helm_status.release_name}
           jsonpath: '{.items[0].metadata.name}'
           return_stdout: true
-          selector: component=${context.k8s.release_name}-${context.k8s.template_name}
+          selector: component=${context.k8s.release_name}-${action.params.template_name}
           flags:
             --namespace:
               - ${action.params.namespace}
@@ -395,7 +395,7 @@ params:
           jsonpath: '{.items[0].metadata.name}'
           return_stdout: true
           # TODO: Redo it.
-          selector: component=${context.k8s.release_name}-${context.k8s.template_name}
+          selector: component=${context.k8s.release_name}-${action.params.template_name}
           flags:
             --namespace:
               - ${action.params.namespace}
@@ -425,7 +425,7 @@ params:
           release_name: ${actions.Helm_status.release_name}
           jsonpath: '''{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}'''
           return_stdout: true
-          selector: component=${context.k8s.release_name}-${context.k8s.template_name}
+          selector: component=${context.k8s.release_name}-${action.params.template_name}
 
           flags:
             --namespace:
