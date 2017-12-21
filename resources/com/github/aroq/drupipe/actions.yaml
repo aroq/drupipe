@@ -277,6 +277,8 @@ params:
 
       apply:
         params:
+          params_processing:
+            values_file: ['post_process']
           log_level: TRACE
           command: upgrade
           value_suffix: values.yaml
