@@ -250,6 +250,7 @@ params:
 
     Helm:
       params:
+        log_level: TRACE
         executable: helm
         chart: ''
         release_name: ${action.params.chart}-${context.environment}
@@ -279,7 +280,6 @@ params:
         params:
           params_processing:
             values_file: ['post_process']
-          log_level: TRACE
           command: upgrade
           value_suffix: values.yaml
           timeout: '120'
