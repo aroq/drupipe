@@ -10,11 +10,13 @@ params:
       dump_result: true
       store_action_params: true
       store_result_key: context.results.action.${action.name}_${action.methodName}
+      # Result post process
       post_process:
         result:
           type: result
           source: result
           destination: ${action.params.store_result_key}
+      # Action params processing
       params_processing:
         flags: ['post_process']
         full_command: ['post_process']
