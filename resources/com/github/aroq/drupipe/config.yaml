@@ -193,6 +193,13 @@ params:
         name: common
         image: michaeltigr/zebra-build-php-drush-docman:0.0.87
     options:
+      ssh_tunnel:
+        params:
+          pre_blocks:
+            - actions:
+              - from: .params.actions.Ssh.tunnel
+  options:
+    containers:
       build:
         tools:
           params:
@@ -205,7 +212,6 @@ params:
               resourceLimitCpu: 500m
               resourceRequestMemory: 250Mi
               resourceLimitMemory: 1000Mi
-              alwaysPullImage: true
         medium:
           params:
             k8s:
@@ -220,8 +226,11 @@ params:
               resourceLimitCpu: 2000m
               resourceRequestMemory: 1000Mi
               resourceLimitMemory: 2000Mi
-      ssh_tunnel:
-        params:
-          pre_blocks:
-            - actions:
-              - from: .params.actions.Ssh.tunnel
+    actions:
+      pre:
+        ssh_tunnel:
+          params:
+            pre_blocks:
+              - actions:
+                - from: .params.actions.Ssh.tunnel
+      post:
