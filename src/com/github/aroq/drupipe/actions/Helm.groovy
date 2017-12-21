@@ -17,6 +17,15 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
         action.params.namespace = action.params.namespace.replaceAll('/', '-')
         action.params.release_name = action.params.release_name.replaceAll('/', '-')
         action.params.values_file = action.params.values_file.replaceAll('/', '-')
+
+        def files = []
+        for (fileName in action.params.flags['-f']) {
+            if (script.fileExists(fileName)) {
+                files.add fileName
+            }
+        }
+        action.params.flags['-f'] = files
+
         action.pipeline.drupipeLogger.debugLog(action.params, action.params, "action.params in Helm.apply_hook_preprocess()", [debugMode: 'json'])
     }
 
