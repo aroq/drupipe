@@ -248,7 +248,6 @@ params:
         executable: helm
         chart_name: ''
         release_name: ${action.params.chart_name}-${context.environment}
-        charts_dir: charts
         kubectl_config_file: .kubeconfig
         shell_bash_login: false
         namespace: ${action.params.chart_name}-${context.environment}
@@ -281,7 +280,6 @@ params:
           env_values_file: ${context.environment}.${action.params.values_file}
           secret_values_file_id: HELM_ZEBRA_SECRETS_FILE
           secret_values_file: \$${action.params.secret_values_file_id}
-          chart_dir: ${action.params.charts_dir}/${action.params.chart_name}
           credentials:
             secret_values_file:
               type: file
@@ -304,7 +302,11 @@ params:
             - ${action.params.command}
             - ${prepareFlags(action.params.flags)}
             - ${action.params.release_name}
-            - ${action.params.chart_dir}
+            - ${action.params.chart_name}
+        chart_dir:
+          params:
+            charts_dir: charts
+            chart_name: ${action.params.charts_dir}/${action.params.chart_name}
 
       status:
         params:
