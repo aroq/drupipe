@@ -18,6 +18,11 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
         action.params.release_name = action.params.release_name.replaceAll('/', '-')
     }
 
+    def delete_hook_post_process() {
+        action.params.namespace = action.params.namespace.replaceAll('/', '-')
+        action.params.release_name = action.params.release_name.replaceAll('/', '-')
+    }
+
     def apply_hook_post_process() {
         action.params.namespace = action.params.namespace.replaceAll('/', '-')
         action.params.release_name = action.params.release_name.replaceAll('/', '-')
