@@ -4,7 +4,7 @@ import com.github.aroq.drupipe.DrupipePod
 def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_retrieve_config = false) {
     DrupipeController controller = pod.controller
     controller.drupipeLogger.debug "Container mode: kubernetes"
-    def nodeName = 'drupipe'
+    def nodeName = controller.context.env.BUILD_TAG
     def containerNames = []
     def containersToExecute= []
 
