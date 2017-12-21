@@ -21,7 +21,7 @@ class DrupipeParamProcessor implements Serializable {
     }
 
 //    @NonCPS
-    def processActionParams(action, context, ArrayList prefixes, ArrayList path = []) {
+    def processActionParams(action, context, ArrayList prefixes, ArrayList path = [], String mode = 'pre_process') {
         def params
         if (path) {
             params = path.inject(action.params, { obj, prop ->
@@ -35,18 +35,26 @@ class DrupipeParamProcessor implements Serializable {
         }
 
         for (param in params) {
-            if (param.value instanceof CharSequence) {
-                param.value = overrideWithEnvVarPrefixes(params[param.key], context, prefixes.collect {
-                    [it, param.key.toUpperCase()].join('_')
-                })
-                param.value = interpolateCommand(param.value, action, context)
-            } else if (param.value instanceof Map) {
-                processActionParams(action, context, prefixes.collect {
-                    [it, param.key.toUpperCase()].join('_')
-                }, path + param.key)
-            } else if (param.value instanceof List) {
-                for (def i = 0; i < param.value.size(); i++) {
-                    param.value[i] = interpolateCommand(param.value[i], action, context)
+            def processParamFlag = true
+            if (params.params_processing.containsKey(param.key)) {
+                if (mode != params.params_processing[param.key]) {
+                    processParamFlag = false
+                }
+            }
+            if (processParamFlag) {
+                if (param.value instanceof CharSequence) {
+                    param.value = overrideWithEnvVarPrefixes(params[param.key], context, prefixes.collect {
+                        [it, param.key.toUpperCase()].join('_')
+                    })
+                    param.value = interpolateCommand(param.value, action, context)
+                } else if (param.value instanceof Map) {
+                    processActionParams(action, context, prefixes.collect {
+                        [it, param.key.toUpperCase()].join('_')
+                    }, path + param.key, mode)
+                } else if (param.value instanceof List) {
+                    for (def i = 0; i < param.value.size(); i++) {
+                        param.value[i] = interpolateCommand(param.value[i], action, context)
+                    }
                 }
             }
         }

@@ -15,6 +15,9 @@ params:
           type: result
           source: result
           destination: ${action.params.store_result_key}
+      params_processing:
+        flag: ['post_process']
+        full_command: ['post_process']
       store_action_params_key: actions.${action.name}_${action.methodName}
       shell_bash_login: true
       return_stdout: false
