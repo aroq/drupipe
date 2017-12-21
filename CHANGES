@@ -1,3 +1,6 @@
+Version 0.8.8:
+ - Fix nodeName for k8s module to the env.BUILD_TAG value
+
 Version 0.8.7:
  - Fix preprocess hooks
 
