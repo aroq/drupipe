@@ -11,25 +11,28 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
             )
             action.params.secret_values_file = action.params.workingDir != '.' ? '.secret_values_file_id' : '.secret_values_file_id'
         }
-        if (action.params.containsKey('charts_dir')) {
-            action.params.chart = action.params.charts_dir + '/' + action.params.chart
-        }
     }
 
     def status_hook_post_process() {
-        action.params.namespace = action.params.namespace.replaceAll('/', '-')
-        action.params.release_name = action.params.release_name.replaceAll('/', '-')
+        if (!action.params.containsKey('charts_dir')) {
+            action.params.namespace = action.params.namespace.replaceAll('/', '-')
+            action.params.release_name = action.params.release_name.replaceAll('/', '-')
+        }
     }
 
     def delete_hook_post_process() {
-        action.params.namespace = action.params.namespace.replaceAll('/', '-')
-        action.params.release_name = action.params.release_name.replaceAll('/', '-')
+        if (!action.params.containsKey('charts_dir')) {
+            action.params.namespace = action.params.namespace.replaceAll('/', '-')
+            action.params.release_name = action.params.release_name.replaceAll('/', '-')
+        }
     }
 
     def apply_hook_post_process() {
-        action.params.namespace = action.params.namespace.replaceAll('/', '-')
-        action.params.release_name = action.params.release_name.replaceAll('/', '-')
-        action.params.values_file = action.params.values_file.replaceAll('/', '-')
+        if (!action.params.containsKey('charts_dir')) {
+            action.params.namespace = action.params.namespace.replaceAll('/', '-')
+            action.params.release_name = action.params.release_name.replaceAll('/', '-')
+            action.params.values_file = action.params.values_file.replaceAll('/', '-')
+        }
 
         def files = []
         for (fileName in action.params.flags['-f']) {
