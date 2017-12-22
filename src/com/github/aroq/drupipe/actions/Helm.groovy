@@ -18,12 +18,18 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
             action.params.namespace = action.params.namespace.replaceAll('/', '-')
             action.params.release_name = action.params.release_name.replaceAll('/', '-')
         }
+        else {
+            action.params.chart = action.params.charts_dir + '/' + action.params.chart
+        }
     }
 
     def delete_hook_post_process() {
         if (!action.params.containsKey('charts_dir')) {
             action.params.namespace = action.params.namespace.replaceAll('/', '-')
             action.params.release_name = action.params.release_name.replaceAll('/', '-')
+        }
+        else {
+            action.params.chart = action.params.charts_dir + '/' + action.params.chart
         }
     }
 
@@ -32,6 +38,9 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
             action.params.namespace = action.params.namespace.replaceAll('/', '-')
             action.params.release_name = action.params.release_name.replaceAll('/', '-')
             action.params.values_file = action.params.values_file.replaceAll('/', '-')
+        }
+        else {
+            action.params.chart = action.params.charts_dir + '/' + action.params.chart
         }
 
         def files = []
