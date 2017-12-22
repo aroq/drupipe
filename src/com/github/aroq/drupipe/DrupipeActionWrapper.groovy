@@ -34,6 +34,7 @@ class DrupipeActionWrapper implements Serializable {
         this.script = pipeline.script
 
         try {
+            pipeline.drupipeLogger.debugLog(this.params, this.params, "action.params INIT", [debugMode: 'json'], [], 'TRACE')
             pipeline.drupipeLogger.collapsedStart("ACTION: ${this.fullName}")
             // Stage name & echo.
             String drupipeStageName
