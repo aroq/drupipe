@@ -11,6 +11,9 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
             )
             action.params.secret_values_file = action.params.workingDir != '.' ? '.secret_values_file_id' : '.secret_values_file_id'
         }
+        if (action.params.containsKey('charts_dir')) {
+            action.params.chart = action.params.charts_dir + '/' + action.params.chart
+        }
     }
 
     def status_hook_post_process() {

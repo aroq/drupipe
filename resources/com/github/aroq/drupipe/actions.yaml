@@ -310,10 +310,10 @@ params:
             - ${prepareFlags(action.params.flags)}
             - ${action.params.release_name}
             - ${action.params.chart}
-        chart_dir:
-          params:
-            charts_dir: charts
-            chart: ${action.params.charts_dir}/${action.params.chart}
+#        chart_dir:
+#          params:
+#            charts_dir: charts
+#            chart: ${action.params.charts_dir}/${action.params.chart}
 
       status:
         params:
