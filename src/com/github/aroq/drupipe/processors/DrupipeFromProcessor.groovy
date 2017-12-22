@@ -106,7 +106,14 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                     logResult = true
                 }
 
-                from = controller.drupipeProcessorsController.drupipeParamProcessor.interpolateCommand(from, [:], tempContext, logResult)
+                try {
+                    from = controller.drupipeProcessorsController.drupipeParamProcessor.interpolateCommand(from, [:], tempContext, logResult)
+                }
+                catch (Exception e) {
+                    drupipeLogger.error "Error during processing ${from}"
+                    drupipeLogger.debugLog(context, tempContext, 'processFromItem() - tempContext', [debugMode: 'json'], [], 'ERROR')
+                    throw e
+                }
 
                 def fromObject = collectKeyParamsFromJsonPath(tempContext, from, key)
 
