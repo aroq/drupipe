@@ -313,7 +313,7 @@ params:
         chart_dir:
           params:
             charts_dir: charts
-            chart_name: ${action.params.charts_dir}/${action.params.chart}
+            chart: ${action.params.charts_dir}/${action.params.chart}
 
       status:
         params:
