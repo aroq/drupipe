@@ -346,6 +346,7 @@ params:
           KUBECONFIG: ${context.drupipe_working_dir}/${action.params.kubectl_config_file}
 
       scale_replicaset:
+        log_level: TRACE
         params:
           debugEnabled: true
           command: scale replicaset
