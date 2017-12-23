@@ -248,7 +248,7 @@ class DrupipeActionWrapper implements Serializable {
                 pipeline.drupipeLogger.trace "methodName class: ${methodName.getClass().toString()}"
 
                 pipeline.drupipeLogger.trace "Check if ${actionInstance.getClass().toString()}.${hook}() exists..."
-                if (classMethods.contains(hookName)) {
+                if (classMethods.contains(hook)) {
                     pipeline.drupipeLogger.trace "...and call ${actionInstance.getClass().toString()}.${hook}()"
                     actionInstance."${hookName}"()
                 }
