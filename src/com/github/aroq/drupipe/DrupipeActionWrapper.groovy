@@ -113,17 +113,12 @@ class DrupipeActionWrapper implements Serializable {
                 pipeline.drupipeLogger.debugLog(this.params, this.params, "action.params BEFORE hook_pre_process", [debugMode: 'json'], [], 'TRACE')
 
                 callHook(actionInstance, 'hook_pre_process')
-
-                pipeline.drupipeLogger.debugLog(this.params, this.params, "action.params BEFORE processActionParams", [debugMode: 'json'], [], 'TRACE')
-
                 pipeline.drupipeProcessorsController.drupipeParamProcessor.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()], [], 'pre_process')
 
                 callHook(actionInstance, 'hook_post_process')
-
                 pipeline.drupipeProcessorsController.drupipeParamProcessor.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()], [], 'post_process')
 
                 callHook(actionInstance, 'hook_final_process')
-
                 pipeline.drupipeProcessorsController.drupipeParamProcessor.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()], [], 'final_process')
 
                 // TODO: Store processed action params in pipeline.context (pipeline.context.actions['action_name']) to allow use it for interpolation in other actions.
@@ -271,10 +266,10 @@ class DrupipeActionWrapper implements Serializable {
         }
 
         try {
-            pipeline.drupipeLogger.trace "Check if ${actionInstance.getClass().toString()}.${this.methodName}${hookName}() exists..."
+            pipeline.drupipeLogger.trace "Check if ${actionInstance.getClass().toString()}.${this.methodName}_${hookName}() exists..."
             def hookMethod = this.methodName + '_' + hookName
             if (classMethods.contains(hookMethod)) {
-                pipeline.drupipeLogger.trace "...and call ${actionInstance.getClass().toString()}.${this.methodName}_${hookName}()"
+                pipeline.drupipeLogger.trace "...and call ${actionInstance.getClass().toString()}.${hookMethod}()"
                 actionInstance."${hookMethod}"()
             }
             else {
