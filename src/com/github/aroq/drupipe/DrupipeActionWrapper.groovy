@@ -34,7 +34,7 @@ class DrupipeActionWrapper implements Serializable {
         this.script = pipeline.script
 
         try {
-            pipeline.drupipeLogger.debugLog(this.params, this.params, "action.params INIT", [debugMode: 'json'], [], 'TRACE')
+            pipeline.drupipeLogger.debugLog(this.params, this.params, "action.params ${name}.${methodName} INIT", [debugMode: 'json'], [], 'TRACE')
             pipeline.drupipeLogger.collapsedStart("ACTION: ${this.fullName}")
             // Stage name & echo.
             String drupipeStageName
@@ -62,7 +62,7 @@ class DrupipeActionWrapper implements Serializable {
             else {
                 pipeline.drupipeLogger.debug "Action wasn't processed with 'from'"
                 this.params.from = '.params.actions.' + name + '.' + methodName
-                this.params = pipeline.drupipeConfig.processItem(this.params, 'actions', 'params', 'execute')
+                this.params = utils.merge(pipeline.drupipeConfig.processItem(this.params, 'actions', 'params', 'execute'), this.params)
             }
 
             classNames += name.tokenize(".")
