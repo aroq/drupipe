@@ -277,6 +277,7 @@ params:
 
       apply:
         params:
+          log_level: TRACE
           params_processing:
             values_file: ['post_process']
           command: upgrade
