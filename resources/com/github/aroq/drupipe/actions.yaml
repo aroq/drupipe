@@ -250,7 +250,6 @@ params:
 
     Helm:
       params:
-        log_level: TRACE
         executable: helm
         chart: ''
         release_name: ${action.params.chart}-${context.environment}
@@ -346,9 +345,7 @@ params:
           KUBECONFIG: ${context.drupipe_working_dir}/${action.params.kubectl_config_file}
 
       scale_replicaset:
-        log_level: TRACE
         params:
-          debugEnabled: true
           command: scale replicaset
           replicas: ''
           replicaset_name: ''
@@ -365,13 +362,11 @@ params:
 
       scale_down_up:
         params:
-          debugEnabled: true
           replicas_down: '0'
           replicas_up: '1'
 
       get_replicaset_name:
         params:
-          debugEnabled: true
           command: get replicaset
           release_name: ${actions.Helm_status.release_name}
           jsonpath: '{.items[0].metadata.name}'
@@ -473,14 +468,12 @@ params:
     HealthCheck:
       wait_http_ok:
         params:
+          log_level: true
           action_timeout: 5
           url: ''
           http_code: '200'
           interval: '5'
-          command: |-
-            bash -c ''while [[ "\\\$(curl -s -o /dev/null -w ''''%{http_code}''''
-            ${action.params.url})" != "${action.params.http_code}" ]]; do sleep ${action.params.interval};
-            done''
+          command: while [[ "\\\$(curl -s -o /dev/null -w ''''%{http_code}'''' ${action.params.url})" != "${action.params.http_code}" ]]; do sleep ${action.params.interval}; done
           full_command:
             - ${action.params.command}
 
