@@ -185,12 +185,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                 }
             }
         }
-        if (parent == 'actions') {
-            obj.remove('name')
-            obj.remove('methodName')
-        }
-        obj.remove('from')
-        utils.merge(result, obj)
+        result
     }
 
 }

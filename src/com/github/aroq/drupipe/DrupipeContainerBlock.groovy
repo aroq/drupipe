@@ -26,7 +26,7 @@ class DrupipeContainerBlock extends DrupipeBase {
     }
 
     def processAction(action) {
-        controller.drupipeConfig.processItem(action, 'actions', 'params', 'execute')
+        controller.utils.merge(controller.drupipeConfig.processItem(action, 'actions', 'params', 'execute'), action)
     }
 
     def executeAction(action) {
