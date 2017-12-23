@@ -240,17 +240,16 @@ class DrupipeActionWrapper implements Serializable {
     }
 
     def callHook(def actionInstance, String hookName) {
-        def classMethods = actionInstance.metaClass.methods*.name.sort().unique()
+//        def classMethods = actionInstance.metaClass.methods*.name.sort().unique()
+        pipeline.drupipeLogger.trace "Class ${actionInstance.getClass().toString()} methods: ${actionInstance.metaClass.methods*.name.sort().unique().join(', ')}"
 
         for (hook in ['hook_' + hookName, this.methodName + '_hook_' + hookName]) {
             try {
-                pipeline.drupipeLogger.trace "Class ${actionInstance.getClass().toString()} methods: ${actionInstance.metaClass.methods*.name.sort().unique().join(', ')}"
-                pipeline.drupipeLogger.trace "methodName class: ${methodName.getClass().toString()}"
-
+                pipeline.drupipeLogger.trace "hook class: ${hook.getClass().toString()}"
                 pipeline.drupipeLogger.trace "Check if ${actionInstance.getClass().toString()}.${hook}() exists..."
-                if (classMethods.contains(hook.toString())) {
+                if (actionInstance.metaClass.respondsTo(hook.toString())) {
                     pipeline.drupipeLogger.trace "...and call ${actionInstance.getClass().toString()}.${hook}()"
-                    actionInstance."${hookName}"()
+                    actionInstance."${hook}"()
                 }
                 else {
                     pipeline.drupipeLogger.trace "Method of ${actionInstance.getClass().toString()}.${hook}() does not exists"
