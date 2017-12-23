@@ -17,9 +17,9 @@ params:
           source: result
           destination: ${action.params.store_result_key}
       # Action params processing
-      params_processing:
-        flags: ['post_process']
-        full_command: ['final_process']
+#      params_processing:
+#        flags: ['post_process']
+#        full_command: ['final_process']
       store_action_params_key: actions.${action.name}_${action.methodName}
       shell_bash_login: true
       return_stdout: false
@@ -280,9 +280,9 @@ params:
 
       apply:
         params:
-          params_processing:
-            values_file: ['post_process']
-            env_values_file: ['post_process']
+#          params_processing:
+#            values_file: ['post_process']
+#            env_values_file: ['post_process']
           command: upgrade
           value_suffix: values.yaml
           timeout: '120'
