@@ -53,8 +53,19 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
             }
         }
         action.params.flags['-f'] = files
+    }
 
-        action.pipeline.drupipeLogger.debugLog(action.params, action.params, "action.params in Helm.apply_hook_preprocess()", [debugMode: 'json'])
+    def apply_hook_final_process() {
+        def files = []
+        for (fileName in action.params.flags['-f']) {
+            if (script.fileExists(fileName)) {
+                files.add fileName
+            }
+            else {
+                action.pipeline.drupipeLogger.warning "Helm values file does not exists: ${fileName}"
+            }
+        }
+        action.params.flags['-f'] = files
     }
 
 }
