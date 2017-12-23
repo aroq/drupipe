@@ -254,7 +254,7 @@ params:
         executable: helm
         chart_name: ''
         chart_prefix: ''
-        chart: ${chart_prefix}/${chart}
+        chart: ${action.params.chart_prefix}/${action.params.chart}
         release_name: ${action.params.chart_name}-${context.environment}
         kubectl_config_file: .kubeconfig
         shell_bash_login: false
