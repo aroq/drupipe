@@ -19,7 +19,7 @@ params:
       # Action params processing
       params_processing:
         flags: ['post_process']
-        full_command: ['post_process']
+        full_command: ['final']
       store_action_params_key: actions.${action.name}_${action.methodName}
       shell_bash_login: true
       return_stdout: false
