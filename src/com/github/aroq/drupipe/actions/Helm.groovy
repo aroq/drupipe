@@ -42,17 +42,6 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
         else {
             action.params.chart = action.params.charts_dir + '/' + action.params.chart
         }
-
-        def files = []
-        for (fileName in action.params.flags['-f']) {
-            if (script.fileExists(fileName)) {
-                files.add fileName
-            }
-            else {
-                action.pipeline.drupipeLogger.warning "Helm values file does not exists: ${fileName}"
-            }
-        }
-        action.params.flags['-f'] = files
     }
 
     def apply_hook_final_process() {
