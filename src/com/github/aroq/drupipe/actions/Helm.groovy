@@ -47,6 +47,7 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
     def apply_hook_final_process() {
         def files = []
         for (fileName in action.params.flags['-f']) {
+            fileName = fileName - 'charts/'
             if (script.fileExists(fileName)) {
                 files.add fileName
             }
