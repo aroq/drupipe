@@ -48,6 +48,9 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
             if (script.fileExists(fileName)) {
                 files.add fileName
             }
+            else {
+                action.pipeline.drupipeLogger.warning "Helm values file does not exists: ${fileName}"
+            }
         }
         action.params.flags['-f'] = files
 
