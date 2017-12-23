@@ -110,21 +110,15 @@ class DrupipeActionWrapper implements Serializable {
             else {
                 this.params = utils.serializeAndDeserialize(this.params)
 
-                pipeline.drupipeLogger.debugLog(this.params, this.params, "action.params BEFORE hook_pre_process", [debugMode: 'json'], [], 'TRACE')
-
-                callHook(actionInstance, 'hook_pre_process')
-                pipeline.drupipeProcessorsController.drupipeParamProcessor.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()], [], 'pre_process')
-
-                callHook(actionInstance, 'hook_post_process')
-                pipeline.drupipeProcessorsController.drupipeParamProcessor.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()], [], 'post_process')
-
-                callHook(actionInstance, 'hook_final_process')
-                pipeline.drupipeProcessorsController.drupipeParamProcessor.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()], [], 'final_process')
-
-                // TODO: Store processed action params in pipeline.context (pipeline.context.actions['action_name']) to allow use it for interpolation in other actions.
+                // Process with hooks.
+                pipeline.drupipeLogger.debugLog(this.params, this.params, "action.params BEFORE hooks", [debugMode: 'json'], [], 'TRACE')
+                for (hookType in ['pre_process', 'post_process', 'final_process']) {
+                    callHook(actionInstance, hookType)
+                    pipeline.drupipeProcessorsController.drupipeParamProcessor.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()], [], hookType)
+                    pipeline.drupipeLogger.debugLog(this.params, this.params, "action.params AFTER ${hookType}", [debugMode: 'json'], [], 'TRACE')
+                }
+                pipeline.drupipeLogger.debugLog(this.params, this.params, "action.params AFTER hooks", [debugMode: 'json'], [], 'TRACE')
             }
-
-            pipeline.drupipeLogger.debugLog(this.params, this.params, "action.params AFTER PROCESSING", [debugMode: 'json'], [], 'TRACE')
 
             actionParams << this.params
 
@@ -248,36 +242,23 @@ class DrupipeActionWrapper implements Serializable {
     def callHook(def actionInstance, String hookName) {
         def classMethods = actionInstance.metaClass.methods*.name.sort().unique()
 
-        try {
-            pipeline.drupipeLogger.trace "Class ${actionInstance.getClass().toString()} methods: ${actionInstance.metaClass.methods*.name.sort().unique().join(', ')}"
-            pipeline.drupipeLogger.trace "methodName class: ${methodName.getClass().toString()}"
+        for (hook in ['hook_' + hookName, this.methodName + '_hook_' + hookName]) {
+            try {
+                pipeline.drupipeLogger.trace "Class ${actionInstance.getClass().toString()} methods: ${actionInstance.metaClass.methods*.name.sort().unique().join(', ')}"
+                pipeline.drupipeLogger.trace "methodName class: ${methodName.getClass().toString()}"
 
-            pipeline.drupipeLogger.trace "Check if ${actionInstance.getClass().toString()}.${hookName}() exists..."
-            if (classMethods.contains(hookName)) {
-                pipeline.drupipeLogger.trace "...and call ${actionInstance.getClass().toString()}.${hookName}()"
-                actionInstance."${hookName}"()
+                pipeline.drupipeLogger.trace "Check if ${actionInstance.getClass().toString()}.${hook}() exists..."
+                if (classMethods.contains(hookName)) {
+                    pipeline.drupipeLogger.trace "...and call ${actionInstance.getClass().toString()}.${hook}()"
+                    actionInstance."${hookName}"()
+                }
+                else {
+                    pipeline.drupipeLogger.trace "Method of ${actionInstance.getClass().toString()}.${hook}() does not exists"
+                }
             }
-            else {
-                pipeline.drupipeLogger.trace "Method of ${actionInstance.getClass().toString()}.${hookName}() does not exists"
+            catch (err) {
+                // No preprocess defined.
             }
-        }
-        catch (err) {
-            // No preprocess defined.
-        }
-
-        try {
-            pipeline.drupipeLogger.trace "Check if ${actionInstance.getClass().toString()}.${this.methodName}_${hookName}() exists..."
-            def hookMethod = this.methodName + '_' + hookName
-            if (classMethods.contains(hookMethod)) {
-                pipeline.drupipeLogger.trace "...and call ${actionInstance.getClass().toString()}.${hookMethod}()"
-                actionInstance."${hookMethod}"()
-            }
-            else {
-                pipeline.drupipeLogger.trace "Method of ${actionInstance.getClass().toString()}.${this.methodName}_${hookName}() does not exists"
-            }
-        }
-        catch (err) {
-            // No preprocess defined.
         }
     }
 
