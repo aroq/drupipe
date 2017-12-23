@@ -11,43 +11,10 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
             )
             action.params.secret_values_file = action.params.workingDir != '.' ? '.secret_values_file_id' : '.secret_values_file_id'
         }
-    }
 
-    def status_hook_post_process() {
-        if (!action.params.containsKey('charts_dir')) {
-            action.params.namespace = action.params.namespace.replaceAll('/', '-')
-            action.params.release_name = action.params.release_name.replaceAll('/', '-')
-        }
-        else {
-            action.params.chart = action.params.charts_dir + '/' + action.params.chart
-        }
-    }
-
-    def delete_hook_post_process() {
-        if (!action.params.containsKey('charts_dir')) {
-            action.params.namespace = action.params.namespace.replaceAll('/', '-')
-            action.params.release_name = action.params.release_name.replaceAll('/', '-')
-        }
-        else {
-            action.params.chart = action.params.charts_dir + '/' + action.params.chart
-        }
-    }
-
-    def apply_hook_post_process() {
-        if (!action.params.containsKey('charts_dir')) {
-            action.params.namespace = action.params.namespace.replaceAll('/', '-')
-            action.params.release_name = action.params.release_name.replaceAll('/', '-')
-            action.params.values_file = action.params.values_file.replaceAll('/', '-')
-        }
-        else {
-            action.params.chart = action.params.charts_dir + '/' + action.params.chart
-        }
-    }
-
-    def apply_hook_final_process() {
         def files = []
         for (fileName in action.params.flags['-f']) {
-            fileName = fileName - 'charts/'
+//            fileName = fileName - 'charts/'
             if (script.fileExists(fileName)) {
                 files.add fileName
             }
@@ -57,6 +24,40 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
         }
         action.params.flags['-f'] = files
     }
+
+//    def status_hook_post_process() {
+//        if (!action.params.containsKey('charts_dir')) {
+//            action.params.namespace = action.params.namespace.replaceAll('/', '-')
+//            action.params.release_name = action.params.release_name.replaceAll('/', '-')
+//        }
+//        else {
+//            action.params.chart = action.params.charts_dir + '/' + action.params.chart
+//        }
+//    }
+//
+//    def delete_hook_post_process() {
+//        if (!action.params.containsKey('charts_dir')) {
+//            action.params.namespace = action.params.namespace.replaceAll('/', '-')
+//            action.params.release_name = action.params.release_name.replaceAll('/', '-')
+//        }
+//        else {
+//            action.params.chart = action.params.charts_dir + '/' + action.params.chart
+//        }
+//    }
+//
+//    def apply_hook_post_process() {
+//        if (!action.params.containsKey('charts_dir')) {
+//            action.params.namespace = action.params.namespace.replaceAll('/', '-')
+//            action.params.release_name = action.params.release_name.replaceAll('/', '-')
+//            action.params.values_file = action.params.values_file.replaceAll('/', '-')
+//        }
+//        else {
+//            action.params.chart = action.params.charts_dir + '/' + action.params.chart
+//        }
+//    }
+
+//    def apply_hook_final_process() {
+//    }
 
 }
 

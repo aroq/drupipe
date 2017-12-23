@@ -252,11 +252,13 @@ params:
       params:
         log_level: TRACE
         executable: helm
-        chart: ''
-        release_name: ${action.params.chart}-${context.environment}
+        chart_name: ''
+        chart_prefix: ''
+        chart: ${chart_prefix}/${chart}
+        release_name: ${action.params.chart_name}-${context.environment}
         kubectl_config_file: .kubeconfig
         shell_bash_login: false
-        namespace: ${action.params.chart}-${context.environment}
+        namespace: ${action.params.chart_name}-${context.environment}
         env:
           KUBECONFIG: ${context.drupipe_working_dir}/${action.params.kubectl_config_file}
         post_process:
@@ -280,10 +282,11 @@ params:
         params:
           params_processing:
             values_file: ['post_process']
+            env_values_file: ['post_process']
           command: upgrade
           value_suffix: values.yaml
           timeout: '120'
-          values_file: ${action.params.chart}.${action.params.value_suffix}
+          values_file: ${action.params.chart_name}.${action.params.value_suffix}
           env_values_file: ${context.environment}.${action.params.values_file}
           secret_values_file_id: HELM_ZEBRA_SECRETS_FILE
           secret_values_file: \$${action.params.secret_values_file_id}
