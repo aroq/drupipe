@@ -5,8 +5,8 @@ class Helm extends BaseShellAction {
     def apply_hook_pre_params() {
         action.pipeline.drupipeLogger.trace "Inside appy_hook_preprocess()"
         if (action.pipeline.context.containerMode == 'kubernetes') {
-            def secretValues = action.pipeline.context.env."${action.params.secret_values_file_id}"
-            this.script.drupipeShell("""echo "${secretValues}" > .secret_values_file_id""", this.action.params)
+//            def secretValues = action.pipeline.context.env."${action.params.secret_values_file_id}"
+            this.script.drupipeShell("""echo "\$${action.params.secret_values_file_id}" > .secret_values_file_id""", this.action.params)
             action.params.secret_values_file = '.secret_values_file_id'
         }
     }
