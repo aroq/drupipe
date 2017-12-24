@@ -12,14 +12,14 @@ params:
       store_result_key: context.results.action.${action.name}_${action.methodName}
       hooks: ['params']
       # Result post process
-      post_process:
+      result_post_process:
         result:
           type: result
           source: result
           destination: ${action.params.store_result_key}
       # Action params processing
 #      params_processing:
-#        flags: ['post_process']
+#        flags: ['result_post_process']
 #        full_command: ['final_process']
       store_action_params_key: actions.${action.name}_${action.methodName}
       shell_bash_login: true
@@ -29,7 +29,7 @@ params:
 
     Config:
       params:
-        post_process:
+        result_post_process:
           context:
             type: result
             source: result
@@ -39,12 +39,12 @@ params:
 
       perform:
         params:
-          post_process: []
+          result_post_process: []
 
       mothershipConfig:
         params:
           mothershipConfigFile: mothership.config
-          post_process:
+          result_post_process:
             result:
               type: result
               source: result.configRepo
@@ -52,24 +52,24 @@ params:
 
     GroovyFileConfig:
       params:
-        post_process:
+        result_post_process:
           # Unset parent params.
           result:
 
     YamlFileConfig:
       params:
-        post_process:
+        result_post_process:
           # Unset parent params.
           result:
 
     Source:
       params:
-        post_process:
+        result_post_process:
           # Unset parent params.
           result:
       add:
         params:
-          post_process:
+          result_post_process:
             context:
               type: result
               source: result
@@ -262,7 +262,7 @@ params:
         namespace: ${action.params.chart_name}-${context.environment}
         env:
           KUBECONFIG: ${context.drupipe_working_dir}/${action.params.kubectl_config_file}
-        post_process:
+        result_post_process:
           namespace:
             type: result
             source: params.namespace
@@ -280,13 +280,9 @@ params:
             - ${action.params.command}
 
       apply:
-#        post_process_params:
         params:
           hooks: ['process']
           params_processing:
-#            values_file: ['post_process']
-#            env_values_file: ['post_process']
-#            flags: ['pre_params2']
             full_command: ['post_process']
           command: upgrade
           value_suffix: values.yaml
@@ -342,6 +338,7 @@ params:
 
     Kubectl:
       params:
+        log_level: TRACE
         executable: kubectl
         kubectl_config_file: .kubeconfig
         shell_bash_login: false
