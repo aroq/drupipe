@@ -26,6 +26,7 @@ class DrupipeParamProcessor implements Serializable {
 
 //    @NonCPS
     def processActionParams(action, context, ArrayList prefixes, ArrayList path = [], String mode = 'params', String keyPrefix = '') {
+        controller.drupipeLogger.trace "keyPrefix: ${keyPrefix}"
         def params
         if (path) {
             params = path.inject(action.params, { obj, prop ->
@@ -63,9 +64,11 @@ class DrupipeParamProcessor implements Serializable {
                         param.value = interpolateCommand(param.value, action, context)
                         controller.drupipeLogger.trace "Process param ${keyPrefix}${param.key}, processed value: ${param.value}"
                     } else if (param.value instanceof Map) {
+                        controller.drupipeLogger.trace "Process param map - ${keyPrefix}${param.key}, processed value: ${param.value}"
+                        controller.drupipeLogger.trace "keyPrefix: ${keyPrefix}"
                         processActionParams(action, context, prefixes.collect {
                             [it, param.key.toUpperCase()].join('_')
-                        }, path + param.key, mode, param.key + '_')
+                        }, path + param.key, mode, keyPrefix + '_' + param.key + '_')
                     } else if (param.value instanceof List) {
                         for (def i = 0; i < param.value.size(); i++) {
                             param.value[i] = interpolateCommand(param.value[i], action, context)
