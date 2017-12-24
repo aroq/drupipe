@@ -34,10 +34,6 @@ class DrupipeParamProcessor implements Serializable {
             params = action.params
         }
 
-        if (!action.containsKey('processed_params')) {
-            action.processed_params = []
-        }
-
         for (param in params) {
             // TODO: Refactor it.
             def processParamFlag = true

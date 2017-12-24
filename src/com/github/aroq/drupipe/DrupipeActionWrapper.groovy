@@ -23,6 +23,8 @@ class DrupipeActionWrapper implements Serializable {
 
     def utils
 
+    ArrayList<String> processedParams = []
+
     String getFullName() {
         "${this.name}.${this.methodName}"
     }
