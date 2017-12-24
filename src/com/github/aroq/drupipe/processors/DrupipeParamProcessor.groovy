@@ -21,7 +21,7 @@ class DrupipeParamProcessor implements Serializable {
     }
 
 //    @NonCPS
-    def processActionParams(action, context, ArrayList prefixes, ArrayList path = [], String mode = 'params') {
+    def processActionParams(action, context, ArrayList prefixes, ArrayList path = [], String mode = 'params', String prefix = '') {
         def params
         if (path) {
             params = path.inject(action.params, { obj, prop ->
@@ -46,7 +46,7 @@ class DrupipeParamProcessor implements Serializable {
                     }
                 }
             }
-            if (processParamFlag && !action.processedParams.contains(param.key)) {
+            if (processParamFlag && !action.processedParams.contains(prefix + param.key)) {
                 if (!action.processedParams.contains(param.key)) {
                     if (param.value instanceof CharSequence) {
                         param.value = overrideWithEnvVarPrefixes(params[param.key], context, prefixes.collect {
@@ -57,13 +57,13 @@ class DrupipeParamProcessor implements Serializable {
                     } else if (param.value instanceof Map) {
                         processActionParams(action, context, prefixes.collect {
                             [it, param.key.toUpperCase()].join('_')
-                        }, path + param.key, mode)
+                        }, path + param.key, mode, param.key + '_')
                     } else if (param.value instanceof List) {
                         for (def i = 0; i < param.value.size(); i++) {
                             param.value[i] = interpolateCommand(param.value[i], action, context)
                         }
                     }
-                    action.processedParams.add(param.key)
+                    action.processedParams.add(prefix + param.key)
                 }
                 else {
                     utils.echo "Skip param ${param.key} as already processed"
