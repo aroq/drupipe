@@ -39,29 +39,29 @@ class DrupipeParamProcessor implements Serializable {
         }
 
         for (param in params) {
-            controller.drupipeLogger.trace "Process param ${param.key} with initial value ${param.value}"
+            controller.drupipeLogger.trace "Process param ${keyPrefix}${param.key} with initial value ${param.value}"
             // TODO: Refactor it.
             def processParamFlag = true
             if (params.containsKey('params_processing')) {
                 if (params.params_processing.containsKey(param.key)) {
                     if (!params.params_processing[param.key].contains(mode)) {
-                        controller.drupipeLogger.trace "Disable param processing: ${param.key}, mode: ${mode}"
+                        controller.drupipeLogger.trace "Disable param processing: ${keyPrefix}${param.key}, mode: ${mode}"
                         processParamFlag = false
                     }
                 }
             }
-            controller.drupipeLogger.trace "Process param ${param.key}, processed value: ${param.value} - 1"
+            controller.drupipeLogger.trace "Process param ${keyPrefix}${param.key}, processed value: ${param.value} - 1"
             if (processParamFlag) {
-                controller.drupipeLogger.trace "Process param ${param.key}, processed value: ${param.value} - 2"
+                controller.drupipeLogger.trace "Process param ${keyPrefix}${param.key}, processed value: ${param.value} - 2"
                 if (!action.processedParams.contains(keyPrefix + param.key)) {
                     if (param.value instanceof CharSequence) {
-                        controller.drupipeLogger.trace "Process param ${param.key}, processed value: ${param.value} - 3"
+                        controller.drupipeLogger.trace "Process param ${keyPrefix}${param.key}, processed value: ${param.value} - 3"
                         param.value = overrideWithEnvVarPrefixes(params[param.key], context, prefixes.collect {
                             [it, param.key.toUpperCase()].join('_')
                         })
-                        controller.drupipeLogger.trace "Process param ${param.key}, processed value: ${param.value} - 4"
+                        controller.drupipeLogger.trace "Process param ${keyPrefix}${param.key}, processed value: ${param.value} - 4"
                         param.value = interpolateCommand(param.value, action, context)
-                        controller.drupipeLogger.trace "Process param ${param.key}, processed value: ${param.value}"
+                        controller.drupipeLogger.trace "Process param ${keyPrefix}${param.key}, processed value: ${param.value}"
                     } else if (param.value instanceof Map) {
                         processActionParams(action, context, prefixes.collect {
                             [it, param.key.toUpperCase()].join('_')
