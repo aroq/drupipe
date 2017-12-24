@@ -281,9 +281,12 @@ params:
 
       apply:
         params:
-#          params_processing:
-#            values_file: ['post_process']
-#            env_values_file: ['post_process']
+          hooks: ['pre_process', 'post_process']
+          params_processing:
+            values_file: ['post_process']
+            env_values_file: ['post_process']
+            flags: ['post_process']
+            full_command: ['post_process']
           command: upgrade
           value_suffix: values.yaml
           timeout: '120'
