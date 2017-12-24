@@ -68,7 +68,7 @@ class DrupipeParamProcessor implements Serializable {
                         controller.drupipeLogger.trace "keyPrefix: ${keyPrefix}"
                         processActionParams(action, context, prefixes.collect {
                             [it, param.key.toUpperCase()].join('_')
-                        }, path + param.key, mode, keyPrefix + '_' + param.key + '_')
+                        }, path + param.key, mode, keyPrefix + param.key + '_')
                     } else if (param.value instanceof List) {
                         for (def i = 0; i < param.value.size(); i++) {
                             param.value[i] = interpolateCommand(param.value[i], action, context)
