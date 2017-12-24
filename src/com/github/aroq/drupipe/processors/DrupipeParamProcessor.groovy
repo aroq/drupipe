@@ -46,25 +46,27 @@ class DrupipeParamProcessor implements Serializable {
                 }
             }
             if (processParamFlag && !action.processedParams.contains(param.key)) {
-                if (param.value instanceof CharSequence) {
-                    param.value = overrideWithEnvVarPrefixes(params[param.key], context, prefixes.collect {
-                        [it, param.key.toUpperCase()].join('_')
-                    })
-                    param.value = interpolateCommand(param.value, action, context)
-                    utils.echo "Process param ${param.key}, processed value: ${param.value}"
-                } else if (param.value instanceof Map) {
-                    processActionParams(action, context, prefixes.collect {
-                        [it, param.key.toUpperCase()].join('_')
-                    }, path + param.key, mode)
-                } else if (param.value instanceof List) {
-                    for (def i = 0; i < param.value.size(); i++) {
-                        param.value[i] = interpolateCommand(param.value[i], action, context)
+                if (!action.processedParams.contains(param.key)) {
+                    if (param.value instanceof CharSequence) {
+                        param.value = overrideWithEnvVarPrefixes(params[param.key], context, prefixes.collect {
+                            [it, param.key.toUpperCase()].join('_')
+                        })
+                        param.value = interpolateCommand(param.value, action, context)
+                        utils.echo "Process param ${param.key}, processed value: ${param.value}"
+                    } else if (param.value instanceof Map) {
+                        processActionParams(action, context, prefixes.collect {
+                            [it, param.key.toUpperCase()].join('_')
+                        }, path + param.key, mode)
+                    } else if (param.value instanceof List) {
+                        for (def i = 0; i < param.value.size(); i++) {
+                            param.value[i] = interpolateCommand(param.value[i], action, context)
+                        }
                     }
+                    action.processedParams.add(param.key)
                 }
-                action.processedParams.add(param.key)
-            }
-            else {
-                utils.echo "Skip param ${param.key} as already processed"
+                else {
+                    utils.echo "Skip param ${param.key} as already processed"
+                }
             }
         }
     }
