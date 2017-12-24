@@ -1,8 +1,12 @@
 package com.github.aroq.drupipe.processors
 
+import com.github.aroq.drupipe.DrupipeController
+
 class DrupipeParamProcessor implements Serializable {
 
     com.github.aroq.drupipe.Utils utils
+
+    DrupipeController controller
 
     @NonCPS
     def interpolateCommand(String command, action, context, debugFlag = 'false') {
@@ -35,13 +39,13 @@ class DrupipeParamProcessor implements Serializable {
         }
 
         for (param in params) {
-            utils.echo "Process param ${param.key} with initial value ${param.value}"
+            controller.drupipeLogger.trace "Process param ${param.key} with initial value ${param.value}"
             // TODO: Refactor it.
             def processParamFlag = true
             if (params.containsKey('params_processing')) {
                 if (params.params_processing.containsKey(param.key)) {
                     if (!params.params_processing[param.key].contains(mode)) {
-                        utils.echo "Disable param processing: ${param.key}, mode: ${mode}"
+                        controller.drupipeLogger.trace "Disable param processing: ${param.key}, mode: ${mode}"
                         processParamFlag = false
                     }
                 }
@@ -53,7 +57,7 @@ class DrupipeParamProcessor implements Serializable {
                             [it, param.key.toUpperCase()].join('_')
                         })
                         param.value = interpolateCommand(param.value, action, context)
-                        utils.echo "Process param ${param.key}, processed value: ${param.value}"
+                        controller.drupipeLogger.trace "Process param ${param.key}, processed value: ${param.value}"
                     } else if (param.value instanceof Map) {
                         processActionParams(action, context, prefixes.collect {
                             [it, param.key.toUpperCase()].join('_')
@@ -66,7 +70,7 @@ class DrupipeParamProcessor implements Serializable {
                     action.processedParams.add(prefix + param.key)
                 }
                 else {
-                    utils.echo "Skip param ${param.key} as already processed"
+                    controller.drupipeLogger.trace "Skip param ${param.key} as already processed"
                 }
             }
         }

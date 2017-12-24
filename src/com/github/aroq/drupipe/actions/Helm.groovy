@@ -9,9 +9,11 @@ class Helm extends BaseShellAction {
 echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
 """, this.action.params
             )
-            action.params.secret_values_file = action.params.workingDir != '.' ? '.secret_values_file_id' : '.secret_values_file_id'
+            action.params.secret_values_file = '.secret_values_file_id'
         }
+    }
 
+    def apply_hook_pre_process() {
         def files = []
         for (fileName in action.params.flags['-f']) {
 //            fileName = fileName - 'charts/'
@@ -23,6 +25,7 @@ echo "\${${action.params.secret_values_file_id}}" > .secret_values_file_id
             }
         }
         action.params.flags['-f'] = files
+
     }
 
 //    def status_hook_post_process() {
