@@ -21,7 +21,7 @@ class DrupipeParamProcessor implements Serializable {
     }
 
 //    @NonCPS
-    def processActionParams(action, context, ArrayList prefixes, ArrayList path = [], String mode = 'pre_process') {
+    def processActionParams(action, context, ArrayList prefixes, ArrayList path = [], String mode = 'params') {
         def params
         if (path) {
             params = path.inject(action.params, { obj, prop ->
@@ -37,19 +37,18 @@ class DrupipeParamProcessor implements Serializable {
         for (param in params) {
             // TODO: Refactor it.
             def processParamFlag = true
-            if (params.containsKey('params_processing') && params.params_processing.containsKey(param.key)) {
-                if (!params.params_processing[param.key].contains(mode)) {
-                    utils.echo "Disable param processing: ${param.key}"
-                    processParamFlag = false
+            if (!action.params.containsKey('processed_params')) {
+                action.params.processed_params = []
+            }
+            if (params.containsKey('params_processing')) {
+                if (params.params_processing.containsKey(param.key)) {
+                    if (!params.params_processing[param.key].contains(mode)) {
+                        utils.echo "Disable param processing: ${param.key}"
+                        processParamFlag = false
+                    }
                 }
             }
-            if (mode != 'pre_process') {
-                if (!(params.containsKey('params_processing') && params.params_processing.containsKey(param.key))) {
-                    utils.echo "Disable param processing: ${param.key}"
-                    processParamFlag = false
-                }
-            }
-            if (processParamFlag) {
+            if (processParamFlag && !action.params.processed_params.contains(param.key)) {
                 if (param.value instanceof CharSequence) {
                     param.value = overrideWithEnvVarPrefixes(params[param.key], context, prefixes.collect {
                         [it, param.key.toUpperCase()].join('_')
@@ -64,6 +63,7 @@ class DrupipeParamProcessor implements Serializable {
                         param.value[i] = interpolateCommand(param.value[i], action, context)
                     }
                 }
+                action.params.processed_params.add(param.key)
             }
         }
     }

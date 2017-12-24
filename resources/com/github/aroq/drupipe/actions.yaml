@@ -10,7 +10,7 @@ params:
       dump_result: true
       store_action_params: true
       store_result_key: context.results.action.${action.name}_${action.methodName}
-      hooks: ['pre_process']
+      hooks: ['params']
       # Result post process
       post_process:
         result:
@@ -280,12 +280,13 @@ params:
             - ${action.params.command}
 
       apply:
+#        post_process_params:
         params:
-          hooks: ['pre_process', 'post_process']
+          hooks: ['process']
           params_processing:
-            values_file: ['post_process']
-            env_values_file: ['post_process']
-            flags: ['post_process']
+#            values_file: ['post_process']
+#            env_values_file: ['post_process']
+#            flags: ['pre_params2']
             full_command: ['post_process']
           command: upgrade
           value_suffix: values.yaml

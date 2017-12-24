@@ -113,8 +113,9 @@ class DrupipeActionWrapper implements Serializable {
                 // Process with hooks.
                 pipeline.drupipeLogger.debugLog(this.params, this.params, "action.params BEFORE hooks", [debugMode: 'json'], [], 'TRACE')
                 for (hookType in this.params.hooks) {
-                    callHook(actionInstance, hookType)
+                    callHook(actionInstance, 'pre' + hookType)
                     pipeline.drupipeProcessorsController.drupipeParamProcessor.processActionParams(this, pipeline.context, [this.name.toUpperCase(), (this.name + '_' + this.methodName).toUpperCase()], [], hookType)
+                    callHook(actionInstance, 'post' + hookType)
                     pipeline.drupipeLogger.debugLog(this.params, this.params, "action.params AFTER ${hookType}", [debugMode: 'json'], [], 'TRACE')
                 }
                 pipeline.drupipeLogger.debugLog(this.params, this.params, "action.params AFTER hooks", [debugMode: 'json'], [], 'TRACE')
