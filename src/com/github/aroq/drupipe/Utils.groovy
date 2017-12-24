@@ -89,7 +89,6 @@ def dumpConfigFile(config, fileName = 'config.dump.groovy') {
 
 @NonCPS
 def envTextToMap(env) {
-    echo "ENV: ${env}"
     def result = [:]
     env.split("\r?\n").each {
         if (it.indexOf('=') > 0) {
