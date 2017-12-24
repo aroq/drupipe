@@ -25,7 +25,7 @@ class DrupipeParamProcessor implements Serializable {
     }
 
 //    @NonCPS
-    def processActionParams(action, context, ArrayList prefixes, ArrayList path = [], String mode = 'params', String prefix = '') {
+    def processActionParams(action, context, ArrayList prefixes, ArrayList path = [], String mode = 'params', String keyPrefix = '') {
         def params
         if (path) {
             params = path.inject(action.params, { obj, prop ->
@@ -50,8 +50,8 @@ class DrupipeParamProcessor implements Serializable {
                     }
                 }
             }
-            if (processParamFlag && !action.processedParams.contains(prefix + param.key)) {
-                if (!action.processedParams.contains(param.key)) {
+            if (processParamFlag && !action.processedParams.contains(keyPrefix + param.key)) {
+                if (!action.processedParams.contains(keyPrefix + param.key)) {
                     if (param.value instanceof CharSequence) {
                         param.value = overrideWithEnvVarPrefixes(params[param.key], context, prefixes.collect {
                             [it, param.key.toUpperCase()].join('_')
@@ -67,10 +67,10 @@ class DrupipeParamProcessor implements Serializable {
                             param.value[i] = interpolateCommand(param.value[i], action, context)
                         }
                     }
-                    action.processedParams.add(prefix + param.key)
+                    action.processedParams.add(keyPrefix + param.key)
                 }
                 else {
-                    controller.drupipeLogger.trace "Skip param ${param.key} as already processed"
+                    controller.drupipeLogger.trace "Skip param ${keyPrefix}${param.key} as already processed"
                 }
             }
         }
