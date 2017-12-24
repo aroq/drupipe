@@ -251,7 +251,6 @@ params:
 
     Helm:
       params:
-        log_level: TRACE
         executable: helm
         chart_name: ''
         chart_prefix: ''
@@ -338,7 +337,6 @@ params:
 
     Kubectl:
       params:
-        log_level: TRACE
         executable: kubectl
         kubectl_config_file: .kubeconfig
         shell_bash_login: false
