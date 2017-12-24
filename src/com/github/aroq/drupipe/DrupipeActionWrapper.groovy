@@ -181,7 +181,7 @@ class DrupipeActionWrapper implements Serializable {
                         contextStoreResult(this.params.store_action_params_key.tokenize('.'), pipeline.context, this.params)
                     }
                     if (this.params.store_result) {
-                        if (this.params.post_process) {
+                        if (this.params.result_post_process) {
                             for (result in this.params.result_post_process) {
                                 def deepValue
                                 if (result.value.type == 'result') {
@@ -200,6 +200,12 @@ class DrupipeActionWrapper implements Serializable {
                                 }
                             }
                         }
+                        else {
+                            pipeline.drupipeLogger.trace('action.params.result_post_process is not set')
+                        }
+                    }
+                    else {
+                        pipeline.drupipeLogger.trace('action.params.result_post_process is not set')
                     }
 
                     pipeline.drupipeLogger.debugLog(pipeline.context, pipeline.context, "pipeline.context results", [debugMode: 'json'], [this.params.store_result_key])
