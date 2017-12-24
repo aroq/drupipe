@@ -54,7 +54,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
             for (def i = 0; i < pod.containers.size(); i++) {
                 container(pod.containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
                     sshagent([controller.context.credentialsId]) {
-                        controller.context.env = controller.utils.envToMap
+                        controller.context.env = controller.utils.envToMap()
                         pod.containers[i].executeBlocks()
                     }
                 }
