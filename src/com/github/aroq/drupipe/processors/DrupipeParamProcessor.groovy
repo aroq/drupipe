@@ -34,12 +34,13 @@ class DrupipeParamProcessor implements Serializable {
             params = action.params
         }
 
+        if (!action.containsKey('processed_params')) {
+            action.processed_params = []
+        }
+
         for (param in params) {
             // TODO: Refactor it.
             def processParamFlag = true
-            if (!action.params.containsKey('processed_params')) {
-                action.params.processed_params = []
-            }
             if (params.containsKey('params_processing')) {
                 if (params.params_processing.containsKey(param.key)) {
                     if (!params.params_processing[param.key].contains(mode)) {
@@ -48,7 +49,7 @@ class DrupipeParamProcessor implements Serializable {
                     }
                 }
             }
-            if (processParamFlag && !params.processed_params.contains(param.key)) {
+            if (processParamFlag && !action.processed_params.contains(param.key)) {
                 if (param.value instanceof CharSequence) {
                     param.value = overrideWithEnvVarPrefixes(params[param.key], context, prefixes.collect {
                         [it, param.key.toUpperCase()].join('_')
@@ -63,7 +64,7 @@ class DrupipeParamProcessor implements Serializable {
                         param.value[i] = interpolateCommand(param.value[i], action, context)
                     }
                 }
-                params.processed_params.add(param.key)
+                action.processedParams.add(param.key)
             }
         }
     }
