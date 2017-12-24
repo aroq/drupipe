@@ -27,7 +27,7 @@ class DrupipePod extends DrupipeBase {
                 for (container in this."${phase}") {
                     if (container.execute) {
                         container.remove('execute')
-                        controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], 'INFO')
+                        controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], 'DEBUG')
                         container = new DrupipeContainer(container)
                         container.controller = controller
                         container.pod = this
