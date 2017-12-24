@@ -45,7 +45,7 @@ class DrupipeParamProcessor implements Serializable {
                     }
                 }
             }
-            if (processParamFlag && !action.processed_params.contains(param.key)) {
+            if (processParamFlag && !action.processedParams.contains(param.key)) {
                 if (param.value instanceof CharSequence) {
                     param.value = overrideWithEnvVarPrefixes(params[param.key], context, prefixes.collect {
                         [it, param.key.toUpperCase()].join('_')
