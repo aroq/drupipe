@@ -69,7 +69,7 @@ def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName
 
 def envToMap() {
     def result = [:]
-    sh '{ env > env.txt } &> /dev/null'
+    sh "#!/bin/bash -e\n{ env > env.txt } &> /dev/null"
     if (fileExists('env.txt')) {
         result = envTextToMap(readFile('env.txt'))
         sh 'rm -fR env.txt'
