@@ -51,6 +51,7 @@ class DrupipeParamProcessor implements Serializable {
                         [it, param.key.toUpperCase()].join('_')
                     })
                     param.value = interpolateCommand(param.value, action, context)
+                    utils.echo "Process param ${param.key}, processed value: ${param.value}"
                 } else if (param.value instanceof Map) {
                     processActionParams(action, context, prefixes.collect {
                         [it, param.key.toUpperCase()].join('_')
@@ -61,6 +62,9 @@ class DrupipeParamProcessor implements Serializable {
                     }
                 }
                 action.processedParams.add(param.key)
+            }
+            else {
+                utils.echo "Skip param ${param.key} as already processed"
             }
         }
     }
