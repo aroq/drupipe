@@ -50,14 +50,16 @@ class DrupipeParamProcessor implements Serializable {
                     }
                 }
             }
-            if (processParamFlag && !action.processedParams.contains(keyPrefix + param.key)) {
+            controller.drupipeLogger.trace "Process param ${param.key}, processed value: ${param.value} - 1"
+            if (processParamFlag) {
+                controller.drupipeLogger.trace "Process param ${param.key}, processed value: ${param.value} - 2"
                 if (!action.processedParams.contains(keyPrefix + param.key)) {
                     if (param.value instanceof CharSequence) {
-                        controller.drupipeLogger.trace "Process param ${param.key}, processed value: ${param.value} - 1"
+                        controller.drupipeLogger.trace "Process param ${param.key}, processed value: ${param.value} - 3"
                         param.value = overrideWithEnvVarPrefixes(params[param.key], context, prefixes.collect {
                             [it, param.key.toUpperCase()].join('_')
                         })
-                        controller.drupipeLogger.trace "Process param ${param.key}, processed value: ${param.value} - 2"
+                        controller.drupipeLogger.trace "Process param ${param.key}, processed value: ${param.value} - 4"
                         param.value = interpolateCommand(param.value, action, context)
                         controller.drupipeLogger.trace "Process param ${param.key}, processed value: ${param.value}"
                     } else if (param.value instanceof Map) {
