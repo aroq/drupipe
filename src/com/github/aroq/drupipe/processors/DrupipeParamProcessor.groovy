@@ -48,7 +48,7 @@ class DrupipeParamProcessor implements Serializable {
                     }
                 }
             }
-            if (processParamFlag && !action.params.processed_params.contains(param.key)) {
+            if (processParamFlag && !params.processed_params.contains(param.key)) {
                 if (param.value instanceof CharSequence) {
                     param.value = overrideWithEnvVarPrefixes(params[param.key], context, prefixes.collect {
                         [it, param.key.toUpperCase()].join('_')
@@ -63,7 +63,7 @@ class DrupipeParamProcessor implements Serializable {
                         param.value[i] = interpolateCommand(param.value[i], action, context)
                     }
                 }
-                action.params.processed_params.add(param.key)
+                params.processed_params.add(param.key)
             }
         }
     }
