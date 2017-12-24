@@ -283,7 +283,7 @@ params:
         params:
           hooks: ['process']
           params_processing:
-            full_command: ['post_process']
+            full_command: ['process']
           command: upgrade
           value_suffix: values.yaml
           timeout: '120'
