@@ -4,7 +4,9 @@ class Helm extends BaseShellAction {
 
     def apply_hook_pre_params() {
         if (action.pipeline.context.containerMode == 'kubernetes') {
-            this.script.drupipeShell("""echo "\$${action.params.secret_values_file_id}" > .secret_values_file_id""", this.action.params)
+            if (action.params.secret_values_file_id) {
+                this.script.drupipeShell("""echo "\$${action.params.secret_values_file_id}" > .secret_values_file_id""", this.action.params)
+            }
             action.params.secret_values_file = '.secret_values_file_id'
         }
         else {
