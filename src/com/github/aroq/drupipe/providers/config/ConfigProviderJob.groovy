@@ -55,19 +55,21 @@ class ConfigProviderJob extends ConfigProviderBase {
         def result = jobs
         for (job in jobs) {
             // For compatibility with previous config versions.
-            if (job.value.children) {
-                job.value.jobs = job.value.remove('children')
-            }
-            if (job.value.jobs) {
-                def params = job.value.clone()
-                params.remove('jobs')
-                job.value.jobs = processJobs(job.value.jobs, params)
-            }
-            if (parentParams) {
-                result[job.key] = utils.merge(parentParams, job.value)
-            }
-            else {
-                result[job.key] = job.value
+            if (job.value) {
+                if (job.value.children) {
+                    job.value.jobs = job.value.remove('children')
+                }
+                if (job.value.jobs) {
+                    def params = job.value.clone()
+                    params.remove('jobs')
+                    job.value.jobs = processJobs(job.value.jobs, params)
+                }
+                if (parentParams) {
+                    result[job.key] = utils.merge(parentParams, job.value)
+                }
+                else {
+                    result[job.key] = job.value
+                }
             }
         }
         result
