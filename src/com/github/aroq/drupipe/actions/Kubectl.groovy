@@ -16,11 +16,5 @@ class Kubectl extends BaseShellAction {
         script.drupipeShell("sleep 30", action.params)
     }
 
-    def get_loadbalancer_address() {
-        [
-            url: execute().stdout,
-        ]
-    }
-
 }
 

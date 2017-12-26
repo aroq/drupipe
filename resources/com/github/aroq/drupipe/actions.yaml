@@ -415,7 +415,7 @@ params:
             - ${action.params.command}
             - ${prepareFlags(action.params.flags)}
 
-      get_loadbalancer_address:
+      get_address_lb:
         params:
           command: get service
           release_name: ${actions.Helm_status.release_name}
@@ -425,13 +425,34 @@ params:
           result_post_process:
             jenkins_address:
               type: result
-              source: result.url
+              source: result
               destination: context.jenkins.address
           flags:
             --namespace:
               - ${action.params.namespace}
             --selector:
               - ${action.params.selector}
+            -o:
+              - jsonpath=${action.params.jsonpath}
+          full_command:
+            - ${action.params.executable}
+            - ${action.params.command}
+            - ${prepareFlags(action.params.flags)}
+
+      get_address_ingress:
+        params:
+          command: get ingress
+          release_name: ${actions.Helm_status.release_name}
+          jsonpath: '''{.items[0].spec.rules[0].host}'''
+          return_stdout: true
+          result_post_process:
+            jenkins_address:
+              type: result
+              source: result
+              destination: context.jenkins.address
+          flags:
+            --namespace:
+              - ${action.params.namespace}
             -o:
               - jsonpath=${action.params.jsonpath}
           full_command:
