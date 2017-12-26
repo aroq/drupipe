@@ -426,7 +426,7 @@ params:
             jenkins_address:
               type: result
               source: result.stdout
-              destination: context.jenkins.address
+              destination: context.k8s.address
           flags:
             --namespace:
               - ${action.params.namespace}
@@ -450,7 +450,7 @@ params:
             jenkins_address:
               type: result
               source: result.stdout
-              destination: context.jenkins.address
+              destination: context.k8s.address
           flags:
             --namespace:
               - ${action.params.namespace}
