@@ -425,7 +425,7 @@ params:
           result_post_process:
             jenkins_address:
               type: result
-              source: result
+              source: result.stdout
               destination: context.jenkins.address
           flags:
             --namespace:
@@ -448,7 +448,7 @@ params:
           result_post_process:
             jenkins_address:
               type: result
-              source: result
+              source: result.stdout
               destination: context.jenkins.address
           flags:
             --namespace:
