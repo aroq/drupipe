@@ -191,12 +191,15 @@ class DrupipeActionWrapper implements Serializable {
                                     if (result.value.destination) {
                                         contextStoreResult(result.value.destination.tokenize('.'), this, deepValue)
                                     }
-                                    if (this.params.dump_result && this.params.debugEnabled) {
-                                        script.echo "SOURCE: ${result.value.source}"
-                                        script.echo "DESTINATION: ${result.value.destination}"
-                                        script.echo "deepValue: ${deepValue}"
+                                    if (this.params.dump_result) {
+                                        pipeline.drupipeLogger.trace "SOURCE: ${result.value.source}"
+                                        pipeline.drupipeLogger.trace "DESTINATION: ${result.value.destination}"
+                                        pipeline.drupipeLogger.trace "deepValue: ${deepValue}"
                                         pipeline.drupipeLogger.debugLog(pipeline.context, context, "Temp context", [debugMode: 'json'])
                                     }
+                                }
+                                else {
+                                    pipeline.drupipeLogger.trace('deepValue is not set')
                                 }
                             }
                         }
