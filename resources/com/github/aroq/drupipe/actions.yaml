@@ -422,7 +422,11 @@ params:
           jsonpath: '''{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}'''
           return_stdout: true
           selector: component=${context.k8s.release_name}-${action.params.template_name}
-
+          result_post_process:
+            jenkins_address:
+              type: result
+              source: result.url
+              destination: context.jenkins.address
           flags:
             --namespace:
               - ${action.params.namespace}
