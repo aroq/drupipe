@@ -246,7 +246,9 @@ params:
         params:
           shell_bash_login: false
           jenkins_user_token_file: ''
-          jenkins_address: ''
+          jenkins_address_prefix: ''
+          jenkins_address_host: ''
+          jenkins_address: ${action.params.jenkins_address_prefix}://${action.params.jenkins_address_host}
           jenkins_user_token: ''
 
     Helm:
