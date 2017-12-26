@@ -445,7 +445,6 @@ params:
         params:
           command: get ingress
           release_name: ${actions.Helm_status.release_name}
-          service_name: ${action.params.release_name}-${action.params.template_name}
           jsonpath: '''{.items[0].spec.rules[0].host}'''
           return_stdout: true
           result_post_process:
@@ -461,7 +460,6 @@ params:
           full_command:
             - ${action.params.executable}
             - ${action.params.command}
-            - ${action.params.service_name}
             - ${prepareFlags(action.params.flags)}
 
       get_address_cluster_ip:
@@ -470,7 +468,7 @@ params:
           release_name: ${actions.Helm_status.release_name}
           jsonpath: '''{.spec.clusterIP}'''
           return_stdout: true
-          selector: component=${context.k8s.release_name}-${action.params.template_name}
+          service_name: ${action.params.release_name}-${action.params.template_name}
           result_post_process:
             jenkins_address:
               type: result
@@ -479,13 +477,12 @@ params:
           flags:
             --namespace:
               - ${action.params.namespace}
-            --selector:
-              - ${action.params.selector}
             -o:
               - jsonpath=${action.params.jsonpath}
           full_command:
             - ${action.params.executable}
             - ${action.params.command}
+            - ${action.params.service_name}
             - ${prepareFlags(action.params.flags)}
 
       copy_from_pod:
