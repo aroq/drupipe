@@ -493,7 +493,6 @@ params:
     HealthCheck:
       wait_http_ok:
         params:
-          log_level: TRACE
           action_timeout: 5
           url: ''
           http_code: '200'
