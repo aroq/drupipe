@@ -466,7 +466,7 @@ params:
         params:
           command: get service
           release_name: ${actions.Helm_status.release_name}
-          jsonpath: '''{.spec.clusterIP}::{.spec.ports[?(@.name=="http")].port'''
+          jsonpath: '''{.spec.clusterIP}:{.spec.ports[?(@.name=="http")].port'''
           return_stdout: true
           service_name: ${action.params.release_name}-${action.params.template_name}
           result_post_process:
