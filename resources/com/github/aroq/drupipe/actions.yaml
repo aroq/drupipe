@@ -443,7 +443,6 @@ params:
 
       get_address_ingress:
         params:
-          log_level: TRACE
           command: get ingress
           release_name: ${actions.Helm_status.release_name}
           jsonpath: '''{.items[0].spec.rules[0].host}'''
