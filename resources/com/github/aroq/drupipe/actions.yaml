@@ -463,6 +463,30 @@ params:
             - ${action.params.command}
             - ${prepareFlags(action.params.flags)}
 
+      get_address_cluster_ip:
+        params:
+          command: get service
+          release_name: ${actions.Helm_status.release_name}
+          jsonpath: ''''{.spec.clusterIP}''''
+          return_stdout: true
+          selector: component=${context.k8s.release_name}-${action.params.template_name}
+          result_post_process:
+            jenkins_address:
+              type: result
+              source: result.stdout
+              destination: context.k8s.address
+          flags:
+            --namespace:
+              - ${action.params.namespace}
+            --selector:
+              - ${action.params.selector}
+            -o:
+              - jsonpath=${action.params.jsonpath}
+          full_command:
+            - ${action.params.executable}
+            - ${action.params.command}
+            - ${prepareFlags(action.params.flags)}
+
       copy_from_pod:
         params:
           command: cp
