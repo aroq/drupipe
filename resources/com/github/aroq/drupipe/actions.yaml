@@ -467,7 +467,7 @@ params:
         params:
           command: get service
           release_name: ${actions.Helm_status.release_name}
-          jsonpath: ''''{.spec.clusterIP}''''
+          jsonpath: '''{.spec.clusterIP}'''
           return_stdout: true
           selector: component=${context.k8s.release_name}-${action.params.template_name}
           result_post_process:
