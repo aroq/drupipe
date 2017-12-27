@@ -264,7 +264,7 @@ class DrupipeController implements Serializable {
         actions
     }
 
-    @NonCPS
+//    @NonCPS
     DrupipeActionWrapper processPipelineAction(action) {
         def actionName
         def actionMethodName
@@ -277,7 +277,7 @@ class DrupipeController implements Serializable {
             actionName = action.action
             actionParams = action.params
         }
-        def values = actionName.tokenize(".")
+        def values = actionName.split("\\.")
         if (values.size() > 1) {
             actionMethodName = values.last()
             actionName = actionName - ".${actionMethodName}"

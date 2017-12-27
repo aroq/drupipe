@@ -8,7 +8,12 @@ class DrupipePod extends DrupipeBase {
 
     ArrayList stash = []
 
+    ArrayList<DrupipeContainer> pre_containers = []
     ArrayList<DrupipeContainer> containers = []
+    ArrayList<DrupipeContainer> post_containers = []
+    ArrayList<DrupipeContainer> final_containers = []
+
+    ArrayList phases = ['pre_containers', 'containers', 'post_containers', 'final_containers']
 
     boolean containerized = true
 
@@ -16,17 +21,22 @@ class DrupipePod extends DrupipeBase {
 
     ArrayList<DrupipeContainer> prepareContainers() {
         ArrayList<DrupipeContainer> result = []
-        for (container in containers) {
-            if (container.execute) {
-                container.remove('execute')
-                controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], 'INFO')
-                container = new DrupipeContainer(container)
-                container.controller = controller
-                container.pod = this
-                result.add(container)
-            }
-            else {
-                controller.drupipeLogger.debug "Container ${name} 'execute' property is set to false"
+        for (phase in phases) {
+            if (this."${phase}") {
+                controller.drupipeLogger.trace "Execute POD phase: ${phase}"
+                for (container in this."${phase}") {
+                    if (container.execute) {
+                        container.remove('execute')
+                        controller.drupipeLogger.debugLog(controller.context, container, 'CONTAINER', [debugMode: 'json'], [], 'DEBUG')
+                        container = new DrupipeContainer(container)
+                        container.controller = controller
+                        container.pod = this
+                        result.add(container)
+                    }
+                    else {
+                        controller.drupipeLogger.debug "Container ${name} 'execute' property is set to false"
+                    }
+                }
             }
         }
         result

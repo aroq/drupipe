@@ -48,18 +48,18 @@ class Jenkins extends BaseAction {
             action.params.jenkins_address = "${getJenkinsAddress()}:${this.action.params.port}"
         }
         if (action.params.jenkins_user_token) {
-            def envvars = ["JENKINS_URL=http://${action.params.jenkins_address}", "JENKINS_API_TOKEN=${action.params.jenkins_user_token}"]
+            def envvars = ["JENKINS_URL=${action.params.jenkins_address}", "JENKINS_API_TOKEN=${action.params.jenkins_user_token}"]
             this.script.withEnv(envvars) {
                 this.script.drupipeShell(
 """
-JENKINS_URL=http://${this.action.params.jenkins_address} /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:${this.action.params.jenkins_user_token} ${cli_command}
+JENKINS_URL=${this.action.params.jenkins_address} /jenkins-cli/jenkins-cli-wrapper.sh -auth ${this.action.params.user}:${this.action.params.jenkins_user_token} ${cli_command}
 """, this.action.params)
             }
         }
         else {
             def creds = [this.script.string(credentialsId: 'JENKINS_API_TOKEN', variable: 'JENKINS_API_TOKEN')]
             this.script.withCredentials(creds) {
-                def envvars = ["JENKINS_URL=http://${getJenkinsAddress()}:${this.action.params.port}"]
+                def envvars = ["JENKINS_URL=${getJenkinsAddress()}:${this.action.params.port}"]
                 this.script.withEnv(envvars) {
                     this.script.drupipeShell(
 """
