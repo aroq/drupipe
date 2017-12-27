@@ -69,7 +69,7 @@ def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName
 
 def envToMap() {
     def result = [:]
-    sh 'env > env.txt'
+    sh "#!/bin/sh -e\nenv > env.txt"
     if (fileExists('env.txt')) {
         result = envTextToMap(readFile('env.txt'))
         sh 'rm -fR env.txt'
@@ -89,7 +89,6 @@ def dumpConfigFile(config, fileName = 'config.dump.groovy') {
 
 @NonCPS
 def envTextToMap(env) {
-    echo "ENV: ${env}"
     def result = [:]
     env.split("\r?\n").each {
         if (it.indexOf('=') > 0) {

@@ -145,7 +145,7 @@ class DrupipeConfig implements Serializable {
                 throw err
             }
         }
-        DrupipeParamProcessor drupipeParamProcessor = new DrupipeParamProcessor(utils: utils)
+        DrupipeParamProcessor drupipeParamProcessor = new DrupipeParamProcessor(utils: utils, controller: controller)
         new DrupipeProcessorsController(processors: processors, utils: utils, drupipeParamProcessor: drupipeParamProcessor)
     }
 

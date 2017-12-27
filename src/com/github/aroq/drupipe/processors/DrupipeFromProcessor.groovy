@@ -6,7 +6,7 @@ import com.github.aroq.drupipe.DrupipeLogger
 class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     com.github.aroq.drupipe.Utils utils
-    
+
     DrupipeLogger drupipeLogger
 
     String mode
@@ -106,7 +106,14 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                     logResult = true
                 }
 
-                from = controller.drupipeProcessorsController.drupipeParamProcessor.interpolateCommand(from, [:], tempContext, logResult)
+                try {
+                    from = controller.drupipeProcessorsController.drupipeParamProcessor.interpolateCommand(from, [:], tempContext, logResult)
+                }
+                catch (Exception e) {
+                    drupipeLogger.error "Error during processing ${from}"
+                    drupipeLogger.debugLog(context, tempContext, 'processFromItem() - tempContext', [debugMode: 'json'], [], 'ERROR')
+                    throw e
+                }
 
                 def fromObject = collectKeyParamsFromJsonPath(tempContext, from, key)
 
@@ -139,8 +146,11 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                             fromObject.configVersion = 2
                         }
                     }
+                    if (from.startsWith('.params.options')) {
+                        fromObject.remove('name')
+                    }
                     fromObject = process(context, fromObject, parent, key)
-                    result = utils.merge(fromObject, result)
+                    result = utils.merge(result, fromObject)
                     result.from_processed = true
                     result.from_processed_mode = this.mode
                     result.from_source = from

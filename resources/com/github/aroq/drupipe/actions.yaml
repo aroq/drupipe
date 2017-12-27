@@ -10,11 +10,17 @@ params:
       dump_result: true
       store_action_params: true
       store_result_key: context.results.action.${action.name}_${action.methodName}
-      post_process:
+      hooks: ['params']
+      # Result post process
+      result_post_process:
         result:
           type: result
           source: result
           destination: ${action.params.store_result_key}
+      # Action params processing
+#      params_processing:
+#        flags: ['result_post_process']
+#        full_command: ['final_process']
       store_action_params_key: actions.${action.name}_${action.methodName}
       shell_bash_login: true
       return_stdout: false
@@ -23,7 +29,7 @@ params:
 
     Config:
       params:
-        post_process:
+        result_post_process:
           context:
             type: result
             source: result
@@ -33,12 +39,12 @@ params:
 
       perform:
         params:
-          post_process: []
+          result_post_process: []
 
       mothershipConfig:
         params:
           mothershipConfigFile: mothership.config
-          post_process:
+          result_post_process:
             result:
               type: result
               source: result.configRepo
@@ -46,24 +52,24 @@ params:
 
     GroovyFileConfig:
       params:
-        post_process:
+        result_post_process:
           # Unset parent params.
           result:
 
     YamlFileConfig:
       params:
-        post_process:
+        result_post_process:
           # Unset parent params.
           result:
 
     Source:
       params:
-        post_process:
+        result_post_process:
           # Unset parent params.
           result:
       add:
         params:
-          post_process:
+          result_post_process:
             context:
               type: result
               source: result
@@ -238,23 +244,32 @@ params:
 
       build:
         params:
-          shell_bash_login: false
           jenkins_user_token_file: ''
-          jenkins_address: ''
+          jenkins_address_prefix: 'http'
+          jenkins_address_host: ''
+          jenkins_address: ${action.params.jenkins_address_prefix}://${action.params.jenkins_address_host}
+          jenkins_user_token: ''
+      seedTest:
+        params:
+          jenkins_user_token_file: ''
+          jenkins_address_prefix: 'http'
+          jenkins_address_host: ''
+          jenkins_address: ${action.params.jenkins_address_prefix}://${action.params.jenkins_address_host}
           jenkins_user_token: ''
 
     Helm:
       params:
         executable: helm
         chart_name: ''
+        chart_prefix: ''
+        chart: ${action.params.chart_prefix}/${action.params.chart_name}
         release_name: ${action.params.chart_name}-${context.environment}
-        charts_dir: charts
         kubectl_config_file: .kubeconfig
         shell_bash_login: false
         namespace: ${action.params.chart_name}-${context.environment}
         env:
           KUBECONFIG: ${context.drupipe_working_dir}/${action.params.kubectl_config_file}
-        post_process:
+        result_post_process:
           namespace:
             type: result
             source: params.namespace
@@ -273,15 +288,16 @@ params:
 
       apply:
         params:
-          log_level: TRACE
+          hooks: ['process']
+          params_processing:
+            full_command: ['process']
           command: upgrade
           value_suffix: values.yaml
           timeout: '120'
           values_file: ${action.params.chart_name}.${action.params.value_suffix}
           env_values_file: ${context.environment}.${action.params.values_file}
-          secret_values_file_id: HELM_ZEBRA_SECRETS_FILE
-          secret_values_file: \$${action.params.secret_values_file_id}
-          chart_dir: ${action.params.charts_dir}/${action.params.chart_name}
+          secret_values_file_id: ''
+          secret_values_file: ''
           credentials:
             secret_values_file:
               type: file
@@ -304,7 +320,7 @@ params:
             - ${action.params.command}
             - ${prepareFlags(action.params.flags)}
             - ${action.params.release_name}
-            - ${action.params.chart_dir}
+            - ${action.params.chart}
 
       status:
         params:
@@ -338,7 +354,6 @@ params:
 
       scale_replicaset:
         params:
-          debugEnabled: true
           command: scale replicaset
           replicas: ''
           replicaset_name: ''
@@ -355,18 +370,16 @@ params:
 
       scale_down_up:
         params:
-          debugEnabled: true
           replicas_down: '0'
           replicas_up: '1'
 
       get_replicaset_name:
         params:
-          debugEnabled: true
           command: get replicaset
           release_name: ${actions.Helm_status.release_name}
           jsonpath: '{.items[0].metadata.name}'
           return_stdout: true
-          selector: component=${context.k8s.release_name}-jenkins-master
+          selector: component=${context.k8s.release_name}-${action.params.template_name}
           flags:
             --namespace:
               - ${action.params.namespace}
@@ -386,7 +399,7 @@ params:
           jsonpath: '{.items[0].metadata.name}'
           return_stdout: true
           # TODO: Redo it.
-          selector: component=${context.k8s.release_name}-jenkins-master
+          selector: component=${context.k8s.release_name}-${action.params.template_name}
           flags:
             --namespace:
               - ${action.params.namespace}
@@ -410,13 +423,18 @@ params:
             - ${action.params.command}
             - ${prepareFlags(action.params.flags)}
 
-      get_loadbalancer_address:
+      get_address_lb:
         params:
           command: get service
           release_name: ${actions.Helm_status.release_name}
           jsonpath: '''{.items[0].status.loadBalancer.ingress[0].ip}:{.items[0].spec.ports[?(@.name=="http")].port}'''
           return_stdout: true
-          selector: component=${context.k8s.release_name}-jenkins-master
+          selector: component=${context.k8s.release_name}-${action.params.template_name}
+          result_post_process:
+            jenkins_address:
+              type: result
+              source: result.stdout
+              destination: context.k8s.address
           flags:
             --namespace:
               - ${action.params.namespace}
@@ -427,6 +445,50 @@ params:
           full_command:
             - ${action.params.executable}
             - ${action.params.command}
+            - ${prepareFlags(action.params.flags)}
+
+      get_address_ingress:
+        params:
+          command: get ingress
+          release_name: ${actions.Helm_status.release_name}
+          jsonpath: '''{.items[0].spec.rules[0].host}'''
+          return_stdout: true
+          result_post_process:
+            jenkins_address:
+              type: result
+              source: result.stdout
+              destination: context.k8s.address
+          flags:
+            --namespace:
+              - ${action.params.namespace}
+            -o:
+              - jsonpath=${action.params.jsonpath}
+          full_command:
+            - ${action.params.executable}
+            - ${action.params.command}
+            - ${prepareFlags(action.params.flags)}
+
+      get_address_cluster_ip:
+        params:
+          command: get service
+          release_name: ${actions.Helm_status.release_name}
+          jsonpath: '''{.spec.clusterIP}:{.spec.ports[?(@.name=="http")].port}'''
+          return_stdout: true
+          service_name: ${action.params.release_name}-${action.params.template_name}
+          result_post_process:
+            jenkins_address:
+              type: result
+              source: result.stdout
+              destination: context.k8s.address
+          flags:
+            --namespace:
+              - ${action.params.namespace}
+            -o:
+              - jsonpath=${action.params.jsonpath}
+          full_command:
+            - ${action.params.executable}
+            - ${action.params.command}
+            - ${action.params.service_name}
             - ${prepareFlags(action.params.flags)}
 
       copy_from_pod:
@@ -467,8 +529,8 @@ params:
           http_code: '200'
           interval: '5'
           command: 'bash -c ''while [[ "\$(curl -s -o /dev/null -w ''''%{http_code}''''
-            ${action.params.url})" != "${action.params.http_code}" ]]; do sleep ${action.params.interval};
-            done'' '
+                   ${action.params.url})" != "${action.params.http_code}" ]]; do sleep ${action.params.interval};
+                   done'' '
           full_command:
             - ${action.params.command}
 
