@@ -18,6 +18,7 @@ class Helm extends BaseShellAction {
         def files = []
         for (fileName in action.params.flags['-f']) {
             if (script.fileExists(fileName)) {
+                script.sh("cat ${fileName}")
                 files.add fileName
             }
             else {
