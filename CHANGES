@@ -1,3 +1,36 @@
+Version 0.8.9:
+ - Merge pull request #113 from aroq/develop
+ - Remove tracings
+ - Refactor helm & kubectl actions
+ - Merge branch 'master' into develop
+ - Merge branch 'develop' of github.com:aroq/drupipe into develop
+ - Merge pull request #110 from michael-molchanov/adev
+ - Fix options merge.
+ - Merge branch 'master' into develop
+ - Merge pull request #109 from michael-molchanov/adev
+ - Add options for containers.
+ - Revert params for Helm secret_values_file
+ - Fix conflict
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Zebra secrets file handling
+ - Zebra secrets file handling
+ - Zebra secrets file handling
+ - Set log_level to TRACE for Helm.apply
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - Version bump to 0.8.5
+
 Version 0.8.8:
  - Fix nodeName for k8s module to the env.BUILD_TAG value
 
