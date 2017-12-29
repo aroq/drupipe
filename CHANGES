@@ -1,3 +1,8 @@
+Version 0.9.0:
+ - Merge pull request #115 from aroq/develop
+ - Merge pull request #114 from michael-molchanov/adev
+ - Fix dump.
+
 Version 0.8.9:
  - Merge pull request #113 from aroq/develop
  - Remove tracings
