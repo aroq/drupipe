@@ -105,7 +105,7 @@ class Ansible extends BaseAction {
         }
 
         def command =
-            """pwd && ls -lah && ansible-playbook ${action.params.playbooksDir}/${action.params.playbook} \
+            """ANSIBLE_SSH_ARGS="-o ControlMaster=auto -o ControlPersist=60s -o ControlPath=/tmp/ansible-ssh-%h-%p-%r -o ForwardAgent=yes" ansible-playbook ${action.params.playbooksDir}/${action.params.playbook} \
             -i ${action.params.inventoryArgument} \
             --vault-password-file ${vaultPassFile} \
             -e '${joinParams(action.params.playbookParams, 'json')}'"""
