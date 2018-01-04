@@ -55,6 +55,17 @@ class Ansible extends BaseAction {
         script.drupipeShell("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback", action.params)
     }
 
+    def deployWithAnsistranoGit() {
+        init()
+        script.drupipeAction([action: "PipelineController.artifactParams"], action.pipeline)
+        action.params.playbookParams << [
+            ansistrano_git_repo: action.pipeline.context.builder.artifactParams.repoAddress,
+            ansistrano_git_branch: action.pipeline.context.builder.artifactParams.reference,
+            ansistrano_deploy_to: action.pipeline.context.environmentParams.root,
+        ]
+        deployWithAnsistrano()
+    }
+
     def deployWithAnsistrano() {
         installAnsistranoRole()
 

@@ -190,6 +190,12 @@ params:
             ansistrano_deploy_via: rsync
             ansistrano_deploy_from: docroot/master
 
+      deployWithAnsistranoGit:
+        params:
+          playbook: deployWithAnsistrano.yml
+          playbookParams:
+            ansistrano_deploy_via: git
+
     Common:
       confirm:
         params:
