@@ -1,3 +1,10 @@
+Version 0.9.1:
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Merge pull request #117 from aroq/develop
+ - Merge pull request #116 from michael-molchanov/adev
+ - Docman 0.0.89.
+ - Deploy with git.
+
 Version 0.9.0:
  - Merge pull request #115 from aroq/develop
  - Merge pull request #114 from michael-molchanov/adev
