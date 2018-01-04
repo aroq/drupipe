@@ -42,7 +42,7 @@ projectConfigPath: .unipipe/config
 projectConfigFile: docroot.config
 containerMode: docker
 configSeedType: docman
-defaultDocmanImage: michaeltigr/zebra-build-php-drush-docman:0.0.87
+defaultDocmanImage: michaeltigr/zebra-build-php-drush-docman:0.0.89
 logRotatorNumToKeep: 5
 drupipeDockerArgs: --user root:root --net=host
 
@@ -191,7 +191,7 @@ params:
     common:
       params:
         name: common
-        image: michaeltigr/zebra-build-php-drush-docman:0.0.87
+        image: michaeltigr/zebra-build-php-drush-docman:0.0.89
     options:
       ssh_tunnel:
         params:
@@ -203,7 +203,7 @@ params:
       build:
         tools:
           params:
-            image: michaeltigr/zebra-build-php-drush-docman-tools:0.0.87
+            image: michaeltigr/zebra-build-php-drush-docman-tools:0.0.89
       k8s:
         small:
           params:
