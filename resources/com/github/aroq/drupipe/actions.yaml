@@ -178,6 +178,7 @@ params:
         playbook: deployWithAnsistrano.yml
         playbookParams:
           ansistrano_deploy_via: rsync
+          ansistrano_keep_releases: 3
 
       deployWithGit:
         params:
