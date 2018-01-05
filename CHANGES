@@ -1,3 +1,9 @@
+Version 0.9.2:
+ - Set ansistrano_keep_releases to 3
+ - Revert "Revert "Try to pass ssh args to ansible""
+ - Revert "Try to pass ssh args to ansible"
+ - Try to pass ssh args to ansible
+
 Version 0.9.1:
  - Merge branch 'master' of github.com:aroq/drupipe
  - Merge pull request #117 from aroq/develop
