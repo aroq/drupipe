@@ -3,6 +3,7 @@ package com.github.aroq.drupipe
 import groovy.json.JsonSlurperClassic
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.security.MessageDigest
 
 def echoMessage(message) {
     echo message
@@ -34,6 +35,13 @@ def colorEcho(message, color = null) {
     }
 
     echo "\u001B[${color}m${message}\u001B[0m"
+}
+
+@NonCPS
+def getSHA1(source) {
+  def messageDigest = MessageDigest.getInstance("SHA1")
+  messageDigest.update(source.getBytes())
+  return new BigInteger(1, messageDigest.digest()).toString(16).padLeft(40, '0')
 }
 
 @NonCPS

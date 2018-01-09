@@ -1,10 +1,14 @@
 import com.github.aroq.drupipe.DrupipeController
 import com.github.aroq.drupipe.DrupipePod
+import java.security.*
 
 def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_retrieve_config = false) {
     DrupipeController controller = pod.controller
     controller.drupipeLogger.debug "Container mode: kubernetes"
-    def nodeName = controller.context.env.BUILD_TAG
+
+    // SHA1 hash of job BUILD_TAG to make pod name unique.
+    def sha = controller.utils.getSHA1(controller.context.env.BUILD_TAG)
+    def nodeName = "${controller.context.env.BUILD_TAG.take(45)}-${sha.take(8)}"
     def containerNames = []
     def containersToExecute= []
 
