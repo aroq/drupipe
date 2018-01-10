@@ -112,9 +112,18 @@ def processJob(jobs, currentFolder, config) {
                             if (project.value.repo && project.value.type != 'root') {
                                 println "Project type: ${project.value.type}"
                                 println "Project repo: ${project.value.repo}"
-                                config.dslParamsHelper.drupipeParamTagsSelectsRelease(delegate, job, config, project.value.name + '_version', project)
+                                config.dslParamsHelper.drupipeParamSelectsRelease(delegate, job, config, project.value.name + '_version', project)
                             }
                         }
+                        ArrayList<String> states_choices = config.docmanConfig.getStates().keySet() as ArrayList
+                        String default_state = states_choices.first()
+                        config.dslParamsHelper.drupipeParamChoices(
+                            delegate,
+                            'state',
+                            'Alows to select release state.',
+                            'PT_SINGLE_SELECT',
+                            config.dslParamsHelper.activeChoiceGetChoicesScript(states_choices, default_state)
+                        )
                         config.dslParamsHelper.drupipeParamsDefault(delegate, job, config)
                     }
                     definition {
