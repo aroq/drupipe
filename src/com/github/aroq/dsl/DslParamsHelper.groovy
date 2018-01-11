@@ -113,7 +113,7 @@ class DslParamsHelper {
         }
     }
 
-    def drupipeParamTagsSelectsRelease(context, job, config, name, project) {
+    def drupipeParamSelectsRelease(context, job, config, name, project) {
         println "Project: ${project.value.name}"
         def projectRepo = project.value.repo
         println "Repo: ${projectRepo}"
@@ -122,7 +122,7 @@ class DslParamsHelper {
             name,
             'Allows to select tag',
             'PT_SINGLE_SELECT',
-            activeChoiceGetTagsChoicesScript(projectRepo, '*', 'x.y.z'),
+            activeChoiceGetReleasesChoicesScript(projectRepo, '*', 'x.y.z'),
             false,
             true
         )
@@ -290,38 +290,38 @@ import java.util.regex.Pattern
  */
 class Version {
 
-  static def pattern3 = Pattern.compile("(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)")
+    static def pattern3 = Pattern.compile("(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)")
     static def pattern4 = Pattern.compile("(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)")
     static def pattern5 = Pattern.compile("(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)")
     static def pattern6 = Pattern.compile("(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)")
 
-  /** parse version from text */
-  static def from(text){
-    def matcher3 = pattern3.matcher(text);
+    /** parse version from text */
+    static def from(text) {
+        def matcher3 = pattern3.matcher(text);
         def matcher4 = pattern4.matcher(text);
         def matcher5 = pattern5.matcher(text);
         def matcher6 = pattern6.matcher(text);
-    if (matcher6.find()) {
-      new Version( major:matcher6.group(1), minor:matcher6.group(2), patch:matcher6.group(3), patch2:matcher6.group(4), patch3:matcher6.group(5), patch4:matcher6.group(6)  )
-    }
+        if (matcher6.find()) {
+            new Version( major:matcher6.group(1), minor:matcher6.group(2), patch:matcher6.group(3), patch2:matcher6.group(4), patch3:matcher6.group(5), patch4:matcher6.group(6)  )
+        }
         else if(matcher5.find()) {
-      new Version( major:matcher5.group(1), minor:matcher5.group(2), patch:matcher5.group(3), patch2:matcher5.group(4), patch3:matcher5.group(5)  )
-    }
+            new Version( major:matcher5.group(1), minor:matcher5.group(2), patch:matcher5.group(3), patch2:matcher5.group(4), patch3:matcher5.group(5)  )
+        }
         else if(matcher4.find()) {
-      new Version( major:matcher4.group(1), minor:matcher4.group(2), patch:matcher4.group(3), patch2:matcher4.group(4)  )
-    }
+            new Version( major:matcher4.group(1), minor:matcher4.group(2), patch:matcher4.group(3), patch2:matcher4.group(4)  )
+        }
         else if(matcher3.find()) {
-      new Version( major:matcher3.group(1), minor:matcher3.group(2), patch:matcher3.group(3)  )
-    }
+            new Version( major:matcher3.group(1), minor:matcher3.group(2), patch:matcher3.group(3)  )
+        }
         else {
-      new Version( major:"0", minor:"0", patch:"0" )
+            new Version( major:"0", minor:"0", patch:"0" )
+        }
     }
-  }
 
-  String prefix, major, minor, patch, patch2, patch3, patch4
+    String prefix, major, minor, patch, patch2, patch3, patch4
 
-  /** padded form for alpha sort */
-  def String toString() {
+    /** padded form for alpha sort */
+    def String toString() {
         if (patch4) {
             String.format('%010d-%010d-%010d-%010d-%010d-%010d', major.toInteger(), minor.toInteger(), patch.toInteger(), patch2.toInteger(), patch3.toInteger(), patch4.toInteger())
         }
@@ -334,10 +334,7 @@ class Version {
         else {
             String.format('%010d-%010d-%010d', major.toInteger(), minor.toInteger(), patch.toInteger())
         }
-
-
-  }
-
+    }
 }
 
 /**
@@ -472,6 +469,149 @@ GitClient git = Git.with(TaskListener.NULL, environment)
 git.addDefaultCredentials(credentials);
 
 return getTags(git, '${url}', '${branchesPattern}')
+
+"""
+        script
+    }
+
+    def activeChoiceGetReleasesChoicesScript(String url, String tagPattern, String sort) {
+        def script =
+            """
+import jenkins.model.*
+import hudson.model.*
+import hudson.EnvVars
+import com.cloudbees.plugins.credentials.*
+import com.cloudbees.plugins.credentials.domains.*
+import static com.cloudbees.plugins.credentials.CredentialsMatchers.withId
+import static com.cloudbees.plugins.credentials.CredentialsMatchers.firstOrNull
+import org.jenkinsci.plugins.gitclient.Git
+import org.jenkinsci.plugins.gitclient.GitClient
+import hudson.plugins.git.*
+import java.util.regex.Pattern
+/**
+ * version number model: prefix-X.Y.Z
+ */
+class Version {
+    static def pattern3 = Pattern.compile("(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)")
+    static def pattern4 = Pattern.compile("(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)")
+    static def pattern5 = Pattern.compile("(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)")
+    static def pattern6 = Pattern.compile("(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)\\\\.(\\\\d+)")
+    /** parse version from text */
+    static def from(text) {
+        def matcher3 = pattern3.matcher(text);
+        def matcher4 = pattern4.matcher(text);
+        def matcher5 = pattern5.matcher(text);
+        def matcher6 = pattern6.matcher(text);
+        if (matcher6.find()) {
+            new Version( major:matcher6.group(1), minor:matcher6.group(2), patch:matcher6.group(3), patch2:matcher6.group(4), patch3:matcher6.group(5), patch4:matcher6.group(6)  )
+        }
+        else if(matcher5.find()) {
+            new Version( major:matcher5.group(1), minor:matcher5.group(2), patch:matcher5.group(3), patch2:matcher5.group(4), patch3:matcher5.group(5)  )
+        }
+        else if(matcher4.find()) {
+            new Version( major:matcher4.group(1), minor:matcher4.group(2), patch:matcher4.group(3), patch2:matcher4.group(4)  )
+        }
+        else if(matcher3.find()) {
+            new Version( major:matcher3.group(1), minor:matcher3.group(2), patch:matcher3.group(3)  )
+        }
+        else {
+            new Version( major:"0", minor:"0", patch:"0" )
+        }
+    }
+
+    String prefix, major, minor, patch, patch2, patch3, patch4
+
+    /** padded form for alpha sort */
+    def String toString() {
+        if (patch4) {
+            String.format('%010d-%010d-%010d-%010d-%010d-%010d', major.toInteger(), minor.toInteger(), patch.toInteger(), patch2.toInteger(), patch3.toInteger(), patch4.toInteger())
+        }
+        else if (patch3) {
+            String.format('%010d-%010d-%010d-%010d-%010d', major.toInteger(), minor.toInteger(), patch.toInteger(), patch2.toInteger(), patch3.toInteger())
+        }
+        else if (patch2) {
+            String.format('%010d-%010d-%010d-%010d', major.toInteger(), minor.toInteger(), patch.toInteger(), patch2.toInteger())
+        }
+        else {
+            String.format('%010d-%010d-%010d', major.toInteger(), minor.toInteger(), patch.toInteger())
+        }
+    }
+}
+/**
+ * Util method to find credential by id in jenkins
+ *
+ * @param credentialsId credentials to find in jenkins
+ *
+ * @return {@link CertificateCredentials} or {@link StandardUsernamePasswordCredentials} expected
+ */
+def Credentials lookupSystemCredentials(String credentialsId) {
+    return firstOrNull(
+        com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials(
+            Credentials.class,
+            Jenkins.getInstance(),
+            null,
+            Collections.<DomainRequirement>emptyList()
+        ),
+        withId(credentialsId)
+    );
+}
+def getTags(GitClient gitClient, String gitUrl, tagPattern) {
+    def tagSet = []
+    try {
+        def tags = gitClient.getRemoteReferences(gitUrl, tagPattern, false, true);
+        for (String tagName : tags.keySet()) {
+            tagSet << tagName.replaceFirst(".*refs/tags/", "");
+        }
+    } catch (GitException e) {
+        tagSet = ['failed']
+    }
+    return tagSet.sort().reverse();
+}
+def getBranches(GitClient gitClient, String gitUrl) {
+    def branchesSet = []
+    try {
+        def branches = gitClient.getRemoteReferences(gitUrl, '*', true, false);
+        for (String branchName : branches.keySet()) {
+            branchesSet << branchName.replaceFirst(".*refs/heads/", "");
+        }
+    } catch (GitException e) {
+        branchesSet = ['failed']
+    }
+    return branchesSet.sort().reverse();
+}
+Credentials credentials = lookupSystemCredentials('zebra')
+// get git executable on master
+EnvVars environment;
+final Jenkins jenkins = Jenkins.getActiveInstance();
+environment = jenkins.toComputer().buildEnvironment(TaskListener.NULL);
+GitClient git = Git.with(TaskListener.NULL, environment)
+    .using(GitTool.getDefaultInstallation().getGitExe())
+    .getClient();
+git.addDefaultCredentials(credentials);
+/**
+ * @return sorted tag list as script result
+ */
+try {
+    def gitRepoUrl = '${url}'
+    def tagPattern = '${tagPattern}'
+    def sortPattern = '${sort}'
+    def tagList = getTags(git, gitRepoUrl, '*')
+    if (sortPattern == 'x.y.z') {
+        if (tagList) {
+            tagList.sort{ tag -> Version.from(tag).toString() }.reverse()
+        } else {
+            [ 'master' ] // no tags in git repo
+        }
+    }
+    else {
+        tagList
+    }
+    def branchesList = getBranches(git, gitRepoUrl)
+    branchesList.addAll(tagList)
+    return branchesList
+} catch( e )  {
+    [ e.toString() ]
+}
 
 """
         script
