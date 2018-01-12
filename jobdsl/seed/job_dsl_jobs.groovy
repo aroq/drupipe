@@ -130,7 +130,8 @@ def processJob(jobs, currentFolder, config) {
                         cpsScm {
                             scm {
                                 git() {
-                                    branch('master')
+                                    def configBranch = config.config_branch ? config.config_branch : 'master'
+                                    branch(configBranch)
                                     remote {
                                         name('origin')
                                         url(pipelinesRepo)
@@ -202,7 +203,7 @@ def processJob(jobs, currentFolder, config) {
                         cpsScm {
                             scm {
                                 git {
-                                    def selectedRemoteBranch = 'master'
+                                    def selectedRemoteBranch = config.config_branch ? config.config_branch : 'master'
                                     if (config.containsKey('tags') && config.tags.contains('single') && jobBranch != 'state_stable') {
                                         def gitLabBranchResponse = config.gitlabHelper.getBranch(config.configRepo, jobBranch)
                                         if (gitLabBranchResponse && gitLabBranchResponse.containsKey('name')) {
@@ -375,7 +376,8 @@ def processJob(jobs, currentFolder, config) {
                         cpsScm {
                             scm {
                                 git() {
-                                    branch('master')
+                                    def configBranch = config.config_branch ? config.config_branch : 'master'
+                                    branch(configBranch)
                                     remote {
                                         name('origin')
                                         url(pipelinesRepo)
