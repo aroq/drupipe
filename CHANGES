@@ -1,3 +1,11 @@
+Version 0.9.3:
+ - Merge pull request #121 from michael-molchanov/amaster
+ - Release build all states.
+ - Merge pull request #120 from michael-molchanov/master
+ - Fix pod label to meet k8s requirements.
+ - Merge pull request #119 from michael-molchanov/amaster
+ - Limit pod name to 62 symbols.
+
 Version 0.9.2:
  - Set ansistrano_keep_releases to 3
  - Revert "Revert "Try to pass ssh args to ansible""
