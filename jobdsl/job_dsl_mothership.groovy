@@ -151,7 +151,7 @@ projects.each { project ->
                                     url(config.configRepo)
                                     credentials(config.credentialsId)
                                 }
-                                branch('master')
+                                branch(config.config_branch)
                                 extensions {
                                     if (subDir) {
                                         relativeTargetDirectory(subDir)
