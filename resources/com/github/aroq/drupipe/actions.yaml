@@ -192,6 +192,8 @@ params:
 
       deployWithAnsistranoGit:
         params:
+          env:
+            ANSIBLE_SSH_ARGS: "-o ForwardAgent=yes"
           playbook: deployWithAnsistrano.yml
           playbookParams:
             ansistrano_deploy_via: git
