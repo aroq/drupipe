@@ -116,20 +116,28 @@ projects.each { project ->
                 println "USERS: ${users}"
             }
 
-            println "FOLDER: ${project.key}"
-            folder(project.key) {
-                authorization {
-                    users.each { user ->
-                        // TODO: make permissions configurable.
-                        if (user.value > 10) {
-                            permission('hudson.model.Item.Read', user.key)
-                            println "Added READ permissions for user:${user.key}, folder: ${project.key}"
-                        }
-                        if (user.value > 30) {
-                            permission('hudson.model.Run.Update', user.key)
-                            permission('hudson.model.Item.Build', user.key)
-                            permission('hudson.model.Item.Cancel', user.key)
-                            println "Added UPDATE/BUILD/CANCEL permissions for user:${user.key}, folder: ${project.key}"
+            println "PROJECT FOLDER: ${project.key}"
+            def breadcrumb = []
+            def project_folders = project.key.tokenize('/').collect { part ->
+                breadcrumb.add(part)
+                breadcrumb.join('/')
+            }
+            println "PROJECT FOLDERS: ${project_folders}"
+            project_folders.each { project_folder ->
+                folder(project_folder) {
+                    authorization {
+                        users.each { user ->
+                            // TODO: make permissions configurable.
+                            if (user.value > 10) {
+                                permission('hudson.model.Item.Read', user.key)
+                                println "Added READ permissions for user:${user.key}, folder: ${project.key}"
+                            }
+                            if (user.value > 30) {
+                                permission('hudson.model.Run.Update', user.key)
+                                permission('hudson.model.Item.Build', user.key)
+                                permission('hudson.model.Item.Cancel', user.key)
+                                println "Added UPDATE/BUILD/CANCEL permissions for user:${user.key}, folder: ${project.key}"
+                            }
                         }
                     }
                 }

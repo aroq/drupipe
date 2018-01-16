@@ -12,7 +12,7 @@ class ConfigProviderJob extends ConfigProviderBase {
         if (drupipeConfig.config.jobs) {
             controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'context_unprocessed')
 
-            String jobName = drupipeConfig.config.env.JOB_NAME != 'persistent/mothership' ? drupipeConfig.config.env.JOB_NAME : 'mothership'
+            String jobName = drupipeConfig.config.env.JOB_NAME != 'persistent/mothership' ? drupipeConfig.config.jenkinsJobName : 'mothership'
 
             if (jobName == 'mothership') {
                 drupipeConfig.config.config_version = 2
@@ -22,11 +22,8 @@ class ConfigProviderJob extends ConfigProviderBase {
 
             drupipeConfig.config.jobs = processJobs(drupipeConfig.config.jobs)
 
-            controller.drupipeLogger.log "Job name: " + drupipeConfig.config.env.JOB_NAME
-
-            // TODO: check it will all cases.
             if (jobName.contains('/')) {
-                drupipeConfig.config.job = jobName.split('/').drop(1).inject(drupipeConfig.config, { obj, prop ->
+                drupipeConfig.config.job = jobName.tokenize('/').inject(drupipeConfig.config, { obj, prop ->
                     obj.jobs[prop]
                 })
             }

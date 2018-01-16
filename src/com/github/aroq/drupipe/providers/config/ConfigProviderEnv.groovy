@@ -12,9 +12,10 @@ class ConfigProviderEnv extends ConfigProviderBase {
         result.environment = result.env.environment
         result.configRepo = result.env.configRepo
 
-        String jobPath = script.env.BUILD_URL ? script.env.BUILD_URL : script.env.JOB_DISPLAY_URL
-        result.jenkinsFolderName = utils.getJenkinsFolderName(jobPath)
-        result.jenkinsJobName = utils.getJenkinsJobName(jobPath)
+        // controller.drupipeLogger.log "JOB_NAME: " + script.env.JOB_NAME
+        // String jobPath = script.env.BUILD_URL ? script.env.BUILD_URL : script.env.JOB_DISPLAY_URL
+        // result.jenkinsFolderName = utils.getJenkinsFolderName(jobPath)
+        // result.jenkinsJobName = utils.getJenkinsJobName(jobPath)
 
         if (script.env.KUBERNETES_PORT) {
           result.containerMode = 'kubernetes'
