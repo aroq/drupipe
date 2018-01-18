@@ -125,12 +125,14 @@ String getJenkinsFolderName(String jobName, projects) {
         def result = ''
         def jobParts = jobName.tokenize('/')
         def jobPartsCount = jobParts.size()
-        for (def i = 0; i < jobPartsCount; i++) {
-            def projectSearchString = jobParts.dropRight(i).join('/')
-            if (projects.contains(projectSearchString)) {
-                result = projectSearchString
-                break
-            }
+        if (jobPartsCount > 1) {
+			for (def i = 0; i < jobPartsCount; i++) {
+				def projectSearchString = jobParts.dropRight(i).join('/')
+				if (projects.contains(projectSearchString)) {
+					result = projectSearchString
+					break
+				}
+			}
         }
         if (result && result.length() != 0) {
             return result
@@ -150,13 +152,18 @@ String getJenkinsJobName(String jobName, projects) {
         def result = ''
         def jobParts = jobName.tokenize('/')
         def jobPartsCount = jobParts.size()
-        for (def i = 0; i < jobPartsCount; i++) {
-            def projectSearchString = jobParts.dropRight(i).join('/')
-            if (projects.contains(projectSearchString)) {
-                result = jobName.substring(projectSearchString.size())
-                result = result.startsWith('/') ? result.substring(1) : result
-                break
-            }
+        if (jobPartsCount > 1) {
+			for (def i = 0; i < jobPartsCount; i++) {
+				def projectSearchString = jobParts.dropRight(i).join('/')
+				if (projects.contains(projectSearchString)) {
+					result = jobName.substring(projectSearchString.size())
+					result = result.startsWith('/') ? result.substring(1) : result
+					break
+				}
+			}
+        }
+        else if (jobPartsCount == 1) {
+            result = jobName
         }
         if (result && result.length() != 0) {
             return result

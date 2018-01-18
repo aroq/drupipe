@@ -26,9 +26,7 @@ class ConfigProviderMothership extends ConfigProviderBase {
 
             drupipeConfig.projects = mothershipConfig
 
-            controller.drupipeLogger.log "Projects: " + drupipeConfig.projects
             def projectNames = drupipeConfig.projects.keySet() as ArrayList
-            controller.drupipeLogger.log "Projects names: " + projectNames
             String jobName = script.env.JOB_NAME
             result['jenkinsFolderName'] = utils.getJenkinsFolderName(jobName, projectNames)
             result['jenkinsJobName'] = utils.getJenkinsJobName(jobName, projectNames)
