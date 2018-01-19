@@ -40,6 +40,25 @@ for (extension in fileExtensions) {
     }
 }
 
+for (extension in fileExtensions) {
+    def projectsFile = configMain.env.drupipeEnvironment + '.' + projectsFileName + '.' + extension
+    def file = projectsFileRead(projectsFile)
+    if (file) {
+        println "Using ${projectsFile}"
+        println file
+        if (extension in ['yaml', 'yml']) {
+            Yaml yaml = new Yaml()
+            def config = yaml.load(file)
+            projects = dslHelper.merge(projects, config.projects)
+            break
+        }
+        else if (extension == 'json') {
+            projects = dslHelper.merge(projects, JsonSlurper.newInstance().parseText(json_file).projects)
+            break
+        }
+    }
+}
+
 if (projects.size() == 0) {
     println "Projects empty. Check configuration file projects.(yaml|yml|json)."
 }
