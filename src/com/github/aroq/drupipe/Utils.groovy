@@ -120,11 +120,22 @@ String configToSlurperFile(config) {
     sw.toString()
 }
 
-String getJenkinsFolderName(String buildUrl) {
-    if (buildUrl && buildUrl instanceof CharSequence && buildUrl.length() > 0) {
-        def result = (buildUrl =~ $/(job/(.+?)/)?job/(.+?)/.*/$)
-        if (result && result[0] && result[0][2]) {
-            return result[0][2]
+String getJenkinsFolderName(String jobName, projects) {
+    if (jobName && jobName instanceof CharSequence && jobName.length() > 0) {
+        def result = ''
+        def jobParts = jobName.tokenize('/')
+        def jobPartsCount = jobParts.size()
+        if (jobPartsCount > 1) {
+			for (def i = 0; i < jobPartsCount; i++) {
+				def projectSearchString = jobParts.dropRight(i).join('/')
+				if (projects.contains(projectSearchString)) {
+					result = projectSearchString
+					break
+				}
+			}
+        }
+        if (result && result.length() != 0) {
+            return result
         }
         else {
             echo "Job not in folder."
@@ -132,15 +143,30 @@ String getJenkinsFolderName(String buildUrl) {
         }
     }
     else {
-        throw new Exception("getJenkinsFolderName: buildUrl is empty or null.")
+        throw new Exception("getJenkinsFolderName: jobName is empty or null.")
     }
 }
 
-String getJenkinsJobName(String buildUrl) {
-    if (buildUrl && buildUrl instanceof CharSequence && buildUrl.length() > 0) {
-        def result = (buildUrl =~ $/(job/(.+?)/)?job/(.+?)/.*/$)
-        if (result && result[0] && result[0][3]) {
-            return result[0][3]
+String getJenkinsJobName(String jobName, projects) {
+    if (jobName && jobName instanceof CharSequence && jobName.length() > 0) {
+        def result = ''
+        def jobParts = jobName.tokenize('/')
+        def jobPartsCount = jobParts.size()
+        if (jobPartsCount > 1) {
+			for (def i = 0; i < jobPartsCount; i++) {
+				def projectSearchString = jobParts.dropRight(i).join('/')
+				if (projects.contains(projectSearchString)) {
+					result = jobName.substring(projectSearchString.size())
+					result = result.startsWith('/') ? result.substring(1) : result
+					break
+				}
+			}
+        }
+        else if (jobPartsCount == 1) {
+            result = jobName
+        }
+        if (result && result.length() != 0) {
+            return result
         }
         else {
             echo "Empty job name."
@@ -148,7 +174,7 @@ String getJenkinsJobName(String buildUrl) {
         }
     }
     else {
-        throw new Exception("getJenkinsJobName: buildUrl is empty or null.")
+        throw new Exception("getJenkinsJobName: jobName is empty or null.")
     }
 }
 

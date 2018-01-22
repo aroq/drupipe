@@ -119,7 +119,7 @@ class Docman extends BaseAction {
     def prepare() {
         script.echo "FORCE MODE: ${action.pipeline.context.jenkinsParams.force}"
 
-        def configBranch = 'master'
+        def configBranch = action.pipeline.context.config_branch ? action.pipeline.context.config_branch : 'master'
         if (action.pipeline.context.tags.contains('single')) {
             if (action.pipeline.context.environmentParams && action.pipeline.context.environmentParams.containsKey('git_reference')) {
                 configBranch = action.pipeline.context.environmentParams.git_reference
