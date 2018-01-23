@@ -216,7 +216,7 @@ class DrupipeController implements Serializable {
 
     def executeBlocks() {
         for (def i = 0; i < blocks.size(); i++) {
-            blocks[i].name = "blocks-${i}"
+            blocks[i].name = blocks[i].name ? blocks[i].name : "blocks-${i}"
             blocks[i].pipeline = this
             script.echo "BLOCK EXECUTE START - ${blocks[i].name}"
             (new DrupipeBlock(blocks[i])).execute()

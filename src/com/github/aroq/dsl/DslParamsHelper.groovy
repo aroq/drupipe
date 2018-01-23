@@ -10,18 +10,17 @@ class DslParamsHelper {
 
     ArrayList getNodeParams(job, config) {
         ArrayList result = []
-        def jenkins = Jenkins.instance
-        def labels = jenkins.model.Jenkins.instance.getLabels()
         if (job.value.containsKey('pipeline') && job.value.pipeline.containsKey('blocks')) {
             for (pipeline_block in job.value.pipeline.blocks) {
                 def entry = [:]
                 if (config.blocks.containsKey(pipeline_block)) {
                     def block_config = config.blocks[pipeline_block]
                     if (block_config.containsKey('nodeName')) {
-                        entry.nodeName = block_config['nodeName']
-                        println "Default nodeName for ${pipeline_block}: ${entry.node_name}"
+                        def nodeNames = block_config.nodeName.tokenize('|')
+                        entry.nodeName = nodeNames.first()
+                        println "Default nodeName for ${pipeline_block}: ${entry.nodeName}"
                         entry.nodeParamName = pipeline_block.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase() + '_' + 'node_name'
-                        entry.labels = labels
+                        entry.labels = nodeNames
                         result += entry
                     }
                 }
