@@ -20,7 +20,7 @@ class Commands extends BaseAction {
             commands.add("cd ${action.params.execution_dir}" + ' && ' + action.params.actions.join(' && '))
         }
         else {
-            commands = action.params.actions.collect("cd {$action.params.execution_dir}" + ' && ' + it)
+            commands = action.params.actions.collect {it -> "cd {$action.params.execution_dir} && ${it}"}
         }
 
         def prepareSSHChainCommand = { String command, int level ->
