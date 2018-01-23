@@ -1,3 +1,17 @@
+Version 0.9.4:
+ - Merge pull request #124 from aroq/revert-123-amaster
+ - Revert "Fix agregate commands false config."
+ - Merge pull request #123 from michael-molchanov/amaster
+ - Fix agregate commands false config.
+ - Remove log_level=TRACE for Commands action
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Merge pull request #122 from michael-molchanov/amaster
+ - Fix jobs not in folder.
+ - Add projects folders support.
+ - Add config branch support.
+ - Merge branch 'master' of github.com:aroq/drupipe into amaster
+ - Add config branch support.
+
 Version 0.9.3:
  - Merge pull request #121 from michael-molchanov/amaster
  - Release build all states.
