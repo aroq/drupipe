@@ -21,7 +21,7 @@ class ConfigProviderProject extends ConfigProviderBase {
                     path  : drupipeConfig.config.projectConfigPath,
                     type  : 'git',
                     url   : drupipeConfig.config.configRepo,
-                    branch: 'master',
+                    branch: drupipeConfig.config.config_branch ? drupipeConfig.config.config_branch : 'master',
                     mode  : 'shell',
                 ]
                 script.sshagent([drupipeConfig.config.credentialsId]) {

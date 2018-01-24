@@ -178,6 +178,7 @@ params:
         playbook: deployWithAnsistrano.yml
         playbookParams:
           ansistrano_deploy_via: rsync
+          ansistrano_keep_releases: 3
 
       deployWithGit:
         params:
@@ -189,6 +190,12 @@ params:
           playbookParams:
             ansistrano_deploy_via: rsync
             ansistrano_deploy_from: docroot/master
+
+      deployWithAnsistranoGit:
+        params:
+          playbook: deployWithAnsistrano.yml
+          playbookParams:
+            ansistrano_deploy_via: git
 
     Common:
       confirm:
@@ -552,7 +559,6 @@ params:
 
     Commands:
       params:
-        log_level: TRACE
         actions: []
         aggregate_commands: true
         through_ssh_params:

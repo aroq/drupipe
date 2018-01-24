@@ -55,6 +55,17 @@ class Ansible extends BaseAction {
         script.drupipeShell("ansible-galaxy install carlosbuenosvinos.ansistrano-deploy carlosbuenosvinos.ansistrano-rollback", action.params)
     }
 
+    def deployWithAnsistranoGit() {
+        init()
+        script.drupipeAction([action: "PipelineController.artifactParams"], action.pipeline)
+        action.params.playbookParams << [
+            ansistrano_git_repo: action.pipeline.context.builder.artifactParams.repoAddress,
+            ansistrano_git_branch: action.pipeline.context.builder.artifactParams.reference,
+            ansistrano_deploy_to: action.pipeline.context.environmentParams.root,
+        ]
+        deployWithAnsistrano()
+    }
+
     def deployWithAnsistrano() {
         installAnsistranoRole()
 
@@ -94,7 +105,7 @@ class Ansible extends BaseAction {
         }
 
         def command =
-            """pwd && ls -lah && ansible-playbook ${action.params.playbooksDir}/${action.params.playbook} \
+            """ANSIBLE_SSH_ARGS="-o ControlMaster=auto -o ControlPersist=60s -o ControlPath=/tmp/ansible-ssh-%h-%p-%r -o ForwardAgent=yes" ansible-playbook ${action.params.playbooksDir}/${action.params.playbook} \
             -i ${action.params.inventoryArgument} \
             --vault-password-file ${vaultPassFile} \
             -e '${joinParams(action.params.playbookParams, 'json')}'"""

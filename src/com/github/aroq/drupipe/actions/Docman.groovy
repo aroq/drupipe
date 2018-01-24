@@ -77,10 +77,15 @@ class Docman extends BaseAction {
         def componentVersions = component_versions(docrootConfigJson)
         script.echo "Component versions:${componentVersions}"
 
+        def state = action.params.state
+        if (action.pipeline.context.jenkinsParams.containsKey('state')) {
+            state = action.pipeline.context.jenkinsParams.state
+        }
+
         script.drupipeShell(
             """
             cd ${action.pipeline.context.docmanDir}
-            docman build ${action.params.build_type} ${action.params.state} ${componentVersions} ${forceFlag()} ${debugFlag()}
+            docman build ${action.params.build_type} ${state} ${componentVersions} ${forceFlag()} ${debugFlag()}
             """, action.params
         )
         action.pipeline.context
@@ -114,7 +119,7 @@ class Docman extends BaseAction {
     def prepare() {
         script.echo "FORCE MODE: ${action.pipeline.context.jenkinsParams.force}"
 
-        def configBranch = 'master'
+        def configBranch = action.pipeline.context.config_branch ? action.pipeline.context.config_branch : 'master'
         if (action.pipeline.context.tags.contains('single')) {
             if (action.pipeline.context.environmentParams && action.pipeline.context.environmentParams.containsKey('git_reference')) {
                 configBranch = action.pipeline.context.environmentParams.git_reference
@@ -137,11 +142,15 @@ class Docman extends BaseAction {
     def component_versions(docrootConfigJson, mode = 'default') {
         def docmanConfig = JsonSlurperClassic.newInstance().parseText(docrootConfigJson)
         def result = ''
+        def state = action.params.state
+        if (action.pipeline.context.jenkinsParams.containsKey('state')) {
+            state = action.pipeline.context.jenkinsParams.state
+        }
         if (mode == 'nexus') {
             def versions = []
             docmanConfig.projects.each { project ->
-                if (action.pipeline.context["${project.key}_version"]) {
-                    versions << /"${project.key}": / + action.pipeline.context["${project.key}_version"]
+                if (action.pipeline.context.env["${project.key}_version"]) {
+                    versions << /"${project.key}": / + action.pipeline.context.env["${project.key}_version"]
                 }
             }
             if (versions) {
@@ -151,8 +160,8 @@ class Docman extends BaseAction {
         else if (mode == 'default') {
             def projects = [:]
             docmanConfig.projects.each { project ->
-                if (action.pipeline.context["${project.key}_version"]) {
-                    projects[project.key] = [states: [stable: [type: 'branch', version: action.pipeline.context["${project.key}_version"]]]]
+                if (action.pipeline.context.env["${project.key}_version"]) {
+                    projects[project.key] = [states: ["${state}": [type: 'branch', version: action.pipeline.context.env["${project.key}_version"]]]]
                 }
             }
             if (projects) {

@@ -1,3 +1,82 @@
+Version 0.9.5:
+ - Merge pull request #125 from michael-molchanov/amaster
+ - Merge pull request #126 from michael-molchanov/amaster_node_select
+ - Fix collect.
+ - Add node select support.
+
+Version 0.9.4:
+ - Merge pull request #124 from aroq/revert-123-amaster
+ - Revert "Fix agregate commands false config."
+ - Merge pull request #123 from michael-molchanov/amaster
+ - Fix agregate commands false config.
+ - Remove log_level=TRACE for Commands action
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Merge pull request #122 from michael-molchanov/amaster
+ - Fix jobs not in folder.
+ - Add projects folders support.
+ - Add config branch support.
+ - Merge branch 'master' of github.com:aroq/drupipe into amaster
+ - Add config branch support.
+
+Version 0.9.3:
+ - Merge pull request #121 from michael-molchanov/amaster
+ - Release build all states.
+ - Merge pull request #120 from michael-molchanov/master
+ - Fix pod label to meet k8s requirements.
+ - Merge pull request #119 from michael-molchanov/amaster
+ - Limit pod name to 62 symbols.
+
+Version 0.9.2:
+ - Set ansistrano_keep_releases to 3
+ - Revert "Revert "Try to pass ssh args to ansible""
+ - Revert "Try to pass ssh args to ansible"
+ - Try to pass ssh args to ansible
+
+Version 0.9.1:
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Merge pull request #117 from aroq/develop
+ - Merge pull request #116 from michael-molchanov/adev
+ - Docman 0.0.89.
+ - Deploy with git.
+
+Version 0.9.0:
+ - Merge pull request #115 from aroq/develop
+ - Merge pull request #114 from michael-molchanov/adev
+ - Fix dump.
+
+Version 0.8.9:
+ - Merge pull request #113 from aroq/develop
+ - Remove tracings
+ - Refactor helm & kubectl actions
+ - Merge branch 'master' into develop
+ - Merge branch 'develop' of github.com:aroq/drupipe into develop
+ - Merge pull request #110 from michael-molchanov/adev
+ - Fix options merge.
+ - Merge branch 'master' into develop
+ - Merge pull request #109 from michael-molchanov/adev
+ - Add options for containers.
+ - Revert params for Helm secret_values_file
+ - Fix conflict
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Debug hook_preprocess call
+ - Zebra secrets file handling
+ - Zebra secrets file handling
+ - Zebra secrets file handling
+ - Set log_level to TRACE for Helm.apply
+ - Merge branch 'master' of github.com:aroq/drupipe into develop
+ - Version bump to 0.8.5
+
 Version 0.8.8:
  - Fix nodeName for k8s module to the env.BUILD_TAG value
 

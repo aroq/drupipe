@@ -4,13 +4,16 @@ import com.github.aroq.drupipe.DrupipePod
 def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_retrieve_config = false) {
     DrupipeController controller = pod.controller
     controller.drupipeLogger.debug "Container mode: kubernetes"
-    def nodeName = controller.context.env.BUILD_TAG
+
+    // SHA1 hash of job BUILD_TAG to make pod name unique.
+    def sha = controller.utils.getSHA1(controller.context.env.BUILD_TAG)
+    def nodeName = "${controller.context.env.BUILD_TAG.take(45).replaceAll(/^[^a-zA-Z0-9]/, "").replaceAll(/[^a-zA-Z0-9]$/, "")}-${sha.take(8).replaceAll(/^[^a-zA-Z0-9]/, "").replaceAll(/[^a-zA-Z0-9]$/, "")}"
     def containerNames = []
     def containersToExecute= []
 
     for (def i = 0; i < pod.containers.size(); i++) {
         def container = pod.containers[i]
-        def containerName = container.name.replaceAll('\\.','-').replaceAll('_','-')
+        def containerName = container.name.replaceAll('\\.','-').replaceAll('_','-').take(30).replaceAll(/^[^a-zA-Z0-9]/, "").replaceAll(/[^a-zA-Z0-9]$/, "")
         if (!containerNames.contains(containerName)) {
             controller.drupipeLogger.info "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
             containerNames += containerName
@@ -52,7 +55,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
             controller.utils.unstashList(controller, unstash)
             controller.context.workspace = pwd()
             for (def i = 0; i < pod.containers.size(); i++) {
-                container(pod.containers[i].name.replaceAll('\\.','-').replaceAll('_','-')) {
+                container(pod.containers[i].name.replaceAll('\\.','-').replaceAll('_','-').take(30).replaceAll(/^[^a-zA-Z0-9]/, "").replaceAll(/[^a-zA-Z0-9]$/, "")) {
                     sshagent([controller.context.credentialsId]) {
                         // To have k8s envVars & secretEnvVars as well.
                         controller.context.env = controller.utils.merge(controller.context.env, controller.utils.envToMap())
