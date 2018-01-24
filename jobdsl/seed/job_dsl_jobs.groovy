@@ -115,20 +115,23 @@ def processJob(jobs, currentFolder, config) {
                                 config.dslParamsHelper.drupipeParamSelectsRelease(delegate, job, config, project.value.name + '_version', project)
                             }
                         }
+                        ArrayList<String> states_choices
+                        String default_state
                         if (job.value.state) {
-                            stringParam('state', job.value.state)
+                            states_choices = [job.value.state]
+                            default_state = job.value.state
                         }
                         else {
-							ArrayList<String> states_choices = config.docmanConfig.getStates().keySet() as ArrayList
-							String default_state = states_choices.first()
-							config.dslParamsHelper.drupipeParamChoices(
-								delegate,
-								'state',
-								'Alows to select release state.',
-								'PT_SINGLE_SELECT',
-								config.dslParamsHelper.activeChoiceGetChoicesScript(states_choices, default_state)
-							)
+							states_choices = config.docmanConfig.getStates().keySet() as ArrayList
+							default_state = states_choices.first()
                         }
+						config.dslParamsHelper.drupipeParamChoices(
+							delegate,
+							'state',
+							'Alows to select release state.',
+							'PT_SINGLE_SELECT',
+							config.dslParamsHelper.activeChoiceGetChoicesScript(states_choices, default_state)
+						)
                         config.dslParamsHelper.drupipeParamsDefault(delegate, job, config)
                     }
                     definition {
