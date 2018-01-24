@@ -18,6 +18,8 @@ class DrupipeJob extends DrupipeBase {
 
     HashMap source
 
+    def pattern
+
     def triggers
 
     def webhooks
