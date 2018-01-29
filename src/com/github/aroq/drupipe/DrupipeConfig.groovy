@@ -45,7 +45,7 @@ class DrupipeConfig implements Serializable {
             this.script.sh("mkdir -p .unipipe")
             this.script.sh("mkdir -p .unipipe/temp")
 
-            this.script.sh(returnStdout: falase, script: "#!/bin/sh -e\n" + 'ls -al /')
+            this.script.sh(returnStdout: false, script: "#!/bin/sh -e\n" + 'ls -al /')
 
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 //            utils.dump(params, params, 'PIPELINE-PARAMS')
