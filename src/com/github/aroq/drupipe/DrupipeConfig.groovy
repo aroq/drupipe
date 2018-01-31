@@ -45,13 +45,14 @@ class DrupipeConfig implements Serializable {
             this.script.sh("mkdir -p .unipipe")
             this.script.sh("mkdir -p .unipipe/temp")
 
-            def result = this.script.sh(returnStdout: true, script: "#!/bin/sh -e\n" + '/uniconf/uniconf')
+            def uniconf = this.script.sh(returnStdout: true, script: "#!/bin/sh -e\n" + '/uniconf/uniconf')
+            config = script.readYaml(text: uniconf)
 
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 //            utils.dump(params, params, 'PIPELINE-PARAMS')
 
-            config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
-            config = utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
+//            config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
+//            config = utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
             config.jenkinsParams = params
 
             controller.drupipeLogger = new DrupipeLogger(utils: utils, logLevels: config.log_levels, logLevelWeight : config.log_levels[config.log_level].weight)
