@@ -18,6 +18,22 @@ log_levels:
   ERROR:
     weight: 50
     color: magenta
+
+config_providers_list:
+  - env
+#  - mothership
+#  - project
+#  - job
+
+config_providers:
+  env:
+    class_name: ConfigProviderEnv
+#  mothership:
+#    class_name: ConfigProviderMothership
+#  project:
+#    class_name: ConfigProviderProject
+#  job¨:
+#    class_name: ConfigProviderJob
 #
 #uniconf:
 #  keys:
@@ -51,21 +67,6 @@ log_levels:
 #    properties:
 #      include_key: from
 #
-#config_providers_list:
-#  - env
-#  - mothership
-#  - project
-#  - job
-#
-#config_providers:
-#  env:
-#    class_name: ConfigProviderEnv
-#  mothership:
-#    class_name: ConfigProviderMothership
-#  project:
-#    class_name: ConfigProviderProject
-#  job:
-#    class_name: ConfigProviderJob
 #
 #params:
 #

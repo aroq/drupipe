@@ -66,18 +66,18 @@ class DrupipeConfig implements Serializable {
             this.script.checkout this.script.scm
 
             // Get config from config providers.
-//            for (def i = 0; i < config.config_providers_list.size(); i++) {
-//                def properties = [script: script, utils: utils, drupipeConfig: this, controller: controller]
-//                def className = "com.github.aroq.drupipe.providers.config.${config.config_providers[config.config_providers_list[i]].class_name}"
-//                script.echo "Config Provider class name: ${className}"
-//                configProviders.add(parent.class.classLoader.loadClass(className, true, false)?.newInstance(
-//                    properties
-//                ))
-//            }
-//            for (def i = 0; i < configProviders.size(); i++) {
-//                ConfigProvider configProvider = configProviders[i]
-//                config = utils.merge(config, configProvider.provide())
-//            }
+            for (def i = 0; i < config.config_providers_list.size(); i++) {
+                def properties = [script: script, utils: utils, drupipeConfig: this, controller: controller]
+                def className = "com.github.aroq.drupipe.providers.config.${config.config_providers[config.config_providers_list[i]].class_name}"
+                script.echo "Config Provider class name: ${className}"
+                configProviders.add(parent.class.classLoader.loadClass(className, true, false)?.newInstance(
+                    properties
+                ))
+            }
+            for (def i = 0; i < configProviders.size(); i++) {
+                ConfigProvider configProvider = configProviders[i]
+                config = utils.merge(config, configProvider.provide())
+            }
 
             // TODO: remove it when all configs are updated to version 2.
             // For compatibility:
