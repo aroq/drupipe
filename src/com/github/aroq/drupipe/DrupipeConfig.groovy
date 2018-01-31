@@ -51,7 +51,7 @@ class DrupipeConfig implements Serializable {
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 //            utils.dump(params, params, 'PIPELINE-PARAMS')
 
-            config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
+            config = util.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml')))
 //            config = utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
             config.jenkinsParams = params
 
