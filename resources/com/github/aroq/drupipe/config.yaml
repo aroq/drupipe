@@ -25,6 +25,11 @@ config_providers_list:
 #  - project
 #  - job
 
+processors:
+  - className: DrupipeFromProcessor
+    properties:
+      include_key: from
+
 config_providers:
   env:
     class_name: ConfigProviderEnv
