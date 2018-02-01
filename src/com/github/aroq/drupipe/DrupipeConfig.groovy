@@ -45,15 +45,16 @@ class DrupipeConfig implements Serializable {
             this.script.sh("mkdir -p .unipipe")
             this.script.sh("mkdir -p .unipipe/temp")
 
+            config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
+
             script.sshagent([this.script.env.credentialsId]) {
                 def uniconf = this.script.sh(returnStdout: true, script: "#!/bin/sh -e\n" + '/unipipe/unipipe job --name dev.status')
-                config = script.readYaml(text: uniconf)
+                config = utils.merge(config, script.readYaml(text: uniconf))
             }
 
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 //            utils.dump(params, params, 'PIPELINE-PARAMS')
 
-            config = utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml')))
 //            config = utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
             config.jenkinsParams = params
 

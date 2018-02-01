@@ -66,6 +66,7 @@ class DrupipeController implements Serializable {
                         job.execute()
                     }
                     else {
+                        script.echo "Config version == 1 or less"
                         // For version 1 configs.
                         if (body) {
                             body(this)
