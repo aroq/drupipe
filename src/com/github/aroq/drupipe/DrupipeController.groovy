@@ -54,8 +54,8 @@ class DrupipeController implements Serializable {
                         script.node('master') {
                             // TODO: Bring it back.
                             // Secret option for emergency remove workspace.
-                            if (context.job) {
-                                def jobConfig = context.job
+                            if (context.contexts.job) {
+                                def jobConfig = context.contexts.job
                                 archiveObjectJsonAndYaml(jobConfig, 'job')
                                 script.echo "Configuration end"
                                 drupipeLogger.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [], 'INFO')
