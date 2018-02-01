@@ -46,7 +46,7 @@ class DrupipeConfig implements Serializable {
             this.script.sh("mkdir -p .unipipe/temp")
 
             script.sshagent([this.script.env.credentialsId]) {
-                def uniconf = this.script.sh(returnStdout: true, script: "#!/bin/sh -e\n" + '/unipipe/unipipe job --name dev.install')
+                def uniconf = this.script.sh(returnStdout: true, script: "#!/bin/sh -e\n" + '/unipipe/unipipe job --name dev.status')
                 config = script.readYaml(text: uniconf)
             }
 
