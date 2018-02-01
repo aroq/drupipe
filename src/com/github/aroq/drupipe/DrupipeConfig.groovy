@@ -45,8 +45,10 @@ class DrupipeConfig implements Serializable {
             this.script.sh("mkdir -p .unipipe")
             this.script.sh("mkdir -p .unipipe/temp")
 
-            def uniconf = this.script.sh(returnStdout: true, script: "#!/bin/sh -e\n" + '/unipipe/unipipe job --name dev.install')
-            config = script.readYaml(text: uniconf)
+            script.sshagent([this.script.env.credentialsId]) {
+                def uniconf = this.script.sh(returnStdout: true, script: "#!/bin/sh -e\n" + '/unipipe/unipipe job --name dev.install')
+                config = script.readYaml(text: uniconf)
+            }
 
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
 //            utils.dump(params, params, 'PIPELINE-PARAMS')
