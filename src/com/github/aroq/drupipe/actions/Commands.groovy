@@ -29,6 +29,7 @@ class Commands extends BaseAction {
         }
 
         String chainCommand
+        def results = []
         for (command in commands) {
             action.pipeline.drupipeLogger.trace "Execute command: ${command}"
             chainCommand = command
@@ -41,8 +42,21 @@ class Commands extends BaseAction {
                 }
 
                 action.pipeline.drupipeLogger.trace "Execute command: ${chainCommand}"
-                script.drupipeShell(chainCommand, action.params)
+                if (action.params.store_result || action.pipeline.context.job.notify) {
+                    results.add(script.drupipeShell(chainCommand, action.params << [return_stdout: true]))
+                }
+                else {
+                    script.drupipeShell(chainCommand, action.params)
+                }
             }
+        }
+
+        if (action.params.store_result || action.pipeline.context.job.notify) {
+            def result = [:]
+            results = results.collect {it -> it.stdout}
+            result.stdout = results.join("\n\n")
+            result.result = commands.join("\n")
+            return result
         }
     }
 }

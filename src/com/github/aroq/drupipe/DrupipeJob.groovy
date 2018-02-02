@@ -22,6 +22,8 @@ class DrupipeJob extends DrupipeBase {
 
     def triggers
 
+    def notify
+
     def webhooks
 
     def context
