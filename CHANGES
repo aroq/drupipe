@@ -1,3 +1,10 @@
+Version 0.9.7:
+ - Merge pull request #129 from michael-molchanov/amaster
+ - Fix triggers.
+ - Fix trigger.
+ - Fix notify not found.
+ - Add dslHelper usage to job dsl.
+
 Version 0.9.6:
  - Merge pull request #128 from michael-molchanov/amaster
  - Make single state param select with single choice.
