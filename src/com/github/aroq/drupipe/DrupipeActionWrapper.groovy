@@ -47,8 +47,8 @@ class DrupipeActionWrapper implements Serializable {
                 drupipeStageName = 'config'
             }
             pipeline.context.drupipeStageName = drupipeStageName
-            notification.name = "Action ${name}"
-            notification.level = "action:${drupipeStageName}"
+            notification.name = "ACTION: ${name}"
+            notification.level = "action:${name}"
 
             utils.pipelineNotify(pipeline.context, notification << [status: 'START'])
 
@@ -67,7 +67,12 @@ class DrupipeActionWrapper implements Serializable {
                 this.params = utils.merge(pipeline.drupipeConfig.processItem(this.params, 'actions', 'params', 'execute'), this.params)
             }
 
-            classNames += name.tokenize(".")
+            def name_parts = name.tokenize(".")
+            def name_path = []
+            for (name_part in name_parts) {
+                name_path << name_part
+                classNames << name_path.join('.')
+            }
 
             if (this.params.containsKey('log_level')) {
                 pipeline.drupipeLogger.logLevelWeight = pipeline.context.log_levels[this.params.log_level].weight
@@ -80,6 +85,8 @@ class DrupipeActionWrapper implements Serializable {
             pipeline.drupipeLogger.debugLog(this.params, this.params, "this.params after merge defaultActionParams with this.params", [debugMode: 'json'])
 
             def actionInstance
+
+            pipeline.drupipeLogger.log "classNames: ${classNames.reverse()}"
 
             try {
                 for (className in classNames.reverse()) {

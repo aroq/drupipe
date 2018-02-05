@@ -409,43 +409,17 @@ def processJob(jobs, currentFolder, config) {
                 if (job.value.context) {
                     localConfig = config.dslHelper.merge(localConfig, job.value.context)
                 }
-//                println "Local config: ${localConfig}"
-                // Define repository that will be used for pipelines retrieve and execution.
-                String pipelinesRepo = localConfig.configRepo
-                // Define path to pipeline script.
-                String pipelineScriptPath
-                final MODE_CONFIG_ONLY_REPO = 1
-                final MODE_CONFIG_AND_PROJECT_REPO = 2
-                final MODE_PROJECT_ONLY_REPO = 3
-                String configMode = MODE_CONFIG_ONLY_REPO
-
-                println "LOCAL CONFIG pipelines_repo: ${localConfig.pipelines_repo}"
-                if (localConfig.pipelines_repo) {
-                    pipelinesRepo = localConfig.pipelines_repo
-                    pipelineScriptPath = "${pipelineScript}.groovy"
-                }
-                else {
-                    if (job.value.configRepo) {
-                        pipelinesRepo = job.value.configRepo
-                    }
-                }
+                String pipelineScriptName = config.dslHelper.getPipelineScriptName()
+                String pipelinesRepo = config.dslHelper.getPipelineRepo(localConfig, job)
+                String pipelineScriptDirPath = config.dslHelper.getPipelineScriptDirPath(localConfig, job)
+                String pipelineScriptDirPathPrefix = (pipelineScriptDirPath && pipelineScriptDirPath.length() > 0) ? "${pipelineScriptDirPath}/" : ""
+                String pipelineScriptPath = (config.config_dir && config.config_dir.length() > 0) ? "${pipelineScriptDirPathPrefix}${config.config_dir}/${pipelineScriptName}" : "${pipelineScriptDirPathPrefix}${pipelineScriptName}"
                 if (config.pipeline_script_full) {
-                    pipelineScriptPath = "${config.config_dir}/${config.pipeline_script_full}"
-                }
-                else {
-                    if (pipelinesRepo == seedRepo) {
-//                    pipelineScriptPath = "${localConfig.projectConfigPath}/${pipelineScript}.groovy"
-                        pipelineScriptPath = "${pipelineScript}.groovy"
-                    }
-                    else {
-                        configMode = MODE_CONFIG_AND_PROJECT_REPO
-                        pipelineScriptPath = "${pipelineScript}.groovy"
-                    }
+                    pipelineScriptPath = "${config.pipeline_script_full}"
                 }
                 println "pipelinesRepo: ${pipelinesRepo}"
                 println "pipelineScriptPath: ${pipelineScriptPath}"
-
-                def br = job.value.branch ? job.value.branch : 'master'
+                println "pipelineScriptDirPath: ${pipelineScriptDirPath}"
 
                 pipelineJob("${currentName}") {
                     concurrentBuild(false)
@@ -469,16 +443,12 @@ def processJob(jobs, currentFolder, config) {
                                         url(pipelinesRepo)
                                         credentials(config.credentialsId)
                                     }
-                                    if (job.value.repoDir) {
+                                    if (pipelineScriptDirPath && pipelineScriptDirPath.length() > 0) {
                                         extensions {
-                                            relativeTargetDirectory(job.value.repoDir)
+                                            relativeTargetDirectory(pipelineScriptDirPath)
                                         }
                                     }
-                                    else if (!job.value.configRepo && config.config_version < 2) {
-                                        extensions {
-                                            relativeTargetDirectory(config.projectConfigPath)
-                                        }
-                                    }
+                                    def br = job.value.branch ? job.value.branch : 'master'
                                     branch(br)
                                 }
                                 scriptPath(pipelineScriptPath)

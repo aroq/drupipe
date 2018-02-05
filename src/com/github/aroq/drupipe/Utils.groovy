@@ -223,7 +223,7 @@ def isEventInNotificationLevels(event, levels) {
                 echo "Notifications: Matched ${event.level} with ${level}"
                 return true
             }
-            else if (level.name == 'action' && event.level.startsWith(level.name) && event.status in level.status) {
+            else if (level.name.startsWith('action') && event.level.startsWith(level.name) && event.status in level.status) {
                 echo "Notifications: Matched ${event.level} with ${level}"
                 return true
             }
@@ -239,12 +239,14 @@ def paramsMarkdownTable(jenkinsParams) {
 
   if (jenkinsParams) {
 
-      table = table + "|Parameter|Value|\n"
-      table = table + "|:---|:---|\n"
+        table = table + "|Parameter|Value|\n"
+        table = table + "|:---|:---|\n"
 
-      jenkinsParams.each {param, value ->
-          table = table + "|${param}|`${value}`|\n"
-      }
+        jenkinsParams.each {param, value ->
+            if (!param.startsWith('separator-')) {
+                table = table + "|${param}|`${value}`|\n"
+            }
+        }
   }
 
   return table
