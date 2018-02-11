@@ -83,6 +83,9 @@ class DrupipeConfig implements Serializable {
                 config = utils.merge(config, configProvider.provide())
             }
 
+            controller.drupipeLogger.log "Initialising drupipeProcessorsController"
+            controller.drupipeProcessorsController = controller.drupipeConfig.initProcessorsController(this, config.processors)
+
             // TODO: remove it when all configs are updated to version 2.
             // For compatibility:
 //            if (config.defaultActionParams) {

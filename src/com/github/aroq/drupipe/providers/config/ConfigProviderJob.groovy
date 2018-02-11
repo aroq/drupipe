@@ -6,8 +6,6 @@ class ConfigProviderJob extends ConfigProviderBase {
     def provide() {
         controller.drupipeLogger.log "ConfigProviderJob->provide()"
 //        if (drupipeConfig.config.config_version > 1) {
-        controller.drupipeLogger.log "Initialising drupipeProcessorsController"
-        controller.drupipeProcessorsController = controller.drupipeConfig.initProcessorsController(this, drupipeConfig.config.processors)
 //        }
         if (drupipeConfig.config.jobs) {
             controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'context_unprocessed')
