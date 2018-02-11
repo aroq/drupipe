@@ -56,10 +56,6 @@ class DrupipeController implements Serializable {
                             // Secret option for emergency remove workspace.
                             if (context.contexts.job) {
                                 def jobConfig = context.contexts.job
-                                if (jobConfig.context) {
-                                    script.echo "Merge Job context into config"
-                                    drupipeConfig.config = utils.merge(drupipeConfig.config, jobConfig.context)
-                                }
                                 archiveObjectJsonAndYaml(jobConfig, 'job')
                                 script.echo "Configuration end"
                                 drupipeLogger.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [], 'INFO')
