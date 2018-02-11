@@ -256,14 +256,14 @@ class DrupipeController implements Serializable {
         }
     }
 
-    @NonCPS
-    List processPipelineActionList(actionList) {
-        List actions = []
-        for (action in actionList) {
-            actions << processPipelineAction(action)
-        }
-        actions
-    }
+//    @NonCPS
+//    List processPipelineActionList(actionList) {
+//        List actions = []
+//        for (action in actionList) {
+//            actions << processPipelineAction(action)
+//        }
+//        actions
+//    }
 
 //    @NonCPS
     DrupipeActionWrapper processPipelineAction(action) {
@@ -299,21 +299,21 @@ class DrupipeController implements Serializable {
         new DrupipeActionWrapper(pipeline: this, name: actionName, methodName: actionMethodName, params: actionWrapperParams)
     }
 
-    def executePipelineActionList(actions) {
-        def result = [:]
-        def actionList = processPipelineActionList(actions)
-        try {
-            for (action in actionList) {
-                def actionResult = action.execute()
-                result = utils.merge(result, actionResult)
-            }
-            result
-        }
-        catch (err) {
-            script.echo err.toString()
-            throw err
-        }
-    }
+//    def executePipelineActionList(actions) {
+//        def result = [:]
+//        def actionList = processPipelineActionList(actions)
+//        try {
+//            for (action in actionList) {
+//                def actionResult = action.execute()
+//                result = utils.merge(result, actionResult)
+//            }
+//            result
+//        }
+//        catch (err) {
+//            script.echo err.toString()
+//            throw err
+//        }
+//    }
 
     def scmCheckout(scm = null) {
         drupipeLogger.collapsedStart "Pipeline scm checkout"
