@@ -57,6 +57,7 @@ class DrupipeController implements Serializable {
                             if (context.contexts.job) {
                                 def jobConfig = context.contexts.job
                                 if (jobConfig.context) {
+                                    script.echo "Merge Job context into config"
                                     drupipeConfig.config = utils.merge(drupipeConfig.config, jobConfig.context)
                                 }
                                 archiveObjectJsonAndYaml(jobConfig, 'job')
