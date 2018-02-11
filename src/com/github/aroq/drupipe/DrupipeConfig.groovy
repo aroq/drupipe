@@ -48,7 +48,7 @@ class DrupipeConfig implements Serializable {
             config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
 
             script.sshagent([this.script.env.credentialsId]) {
-                def uniconf = this.script.sh(returnStdout: true, script: "#!/bin/sh -e\n" + '/unipipe/unipipe job --name dev.status')
+                def uniconf = this.script.sh(returnStdout: true, script: "#!/bin/sh -e\n" + '/uniconf/uniconf entity --name=job --id=dev.status')
                 config = utils.merge(config, script.readYaml(text: uniconf))
             }
 
@@ -84,13 +84,13 @@ class DrupipeConfig implements Serializable {
 
             // TODO: remove it when all configs are updated to version 2.
             // For compatibility:
-            if (config.defaultActionParams) {
-                config.defaultActionParams.each {k, v ->
-                    config.defaultActionParams[k] = [:]
-                    config.defaultActionParams[k]['params'] = v
-                }​
-                config.params.actions = utils.merge(config.params.actions, config.defaultActionParams)
-            }
+//            if (config.defaultActionParams) {
+//                config.defaultActionParams.each { k, v ->
+//                    config.defaultActionParams[k] = [:]
+//                    config.defaultActionParams[k]['params'] = v
+//                }​
+//                config.params.actions = utils.merge(config.params.actions, config.defaultActionParams)
+//            }
 
             // TODO: Refactor it.
             config.environmentParams = [:]
