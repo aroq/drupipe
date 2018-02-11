@@ -9,7 +9,9 @@ class ConfigProviderEnv extends ConfigProviderBase {
 
         // TODO: Use env vars pattern to override.
         result.credentialsId = result.env.credentialsId
-        result.environment = result.env.environment
+        if (result.env.environment) {
+            result.environment = result.env.environment
+        }
         result.configRepo = result.env.configRepo
 
         if (script.env.KUBERNETES_PORT) {
