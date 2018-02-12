@@ -33,6 +33,7 @@ class Druflow extends BaseAction {
             workspace: context.workspace,
             // TODO: review this parameter handling.
             docrootDir: action.params.docrootDir ? action.params.docrootDir : context.docrootDir,
+            docrootConfigDir: utils.sourceDir(context, 'project'),
         ]
         // TODO: review it.
         if (context.operationsMode) {
