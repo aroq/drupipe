@@ -1,3 +1,8 @@
+Version 0.9.8:
+ - Merge pull request #130 from michael-molchanov/amaster
+ - Fix config dir prefix.
+ - Fix bad character
+
 Version 0.9.7:
  - Merge pull request #129 from michael-molchanov/amaster
  - Fix triggers.
