@@ -83,10 +83,11 @@ class DslHelper {
     }
 
     def getPipelineScriptDirPath(localConfig, job) {
+        def prefixDir = localConfig.config_dir ? "${localConfig.config_dir}" : ""
         if (job.value.configRepo || localConfig.project_type == 'single') {
-            return ""
+            return "${prefixDir}"
         }
-        return "${config.projectConfigPath}"
+        return "${config.projectConfigPath}/${prefixDir}"
     }
 
     def getPipelineRepo(localConfig, job) {
