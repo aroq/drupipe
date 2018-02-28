@@ -79,15 +79,21 @@ class DslHelper {
         if (config.pipeline_script) {
             pipelineScriptName = config.pipeline_script
         }
-        return (config.containsKey('config_version') && config.config_version >= 2) ? 'Jenkinsfile' : "${pipelineScriptName}.groovy"
+        pipelineScriptName = (config.containsKey('config_version') && config.config_version >= 2) ? 'Jenkinsfile' : "${pipelineScriptName}.groovy"
+        def nameParts = [config.config_dir, pipelineScriptName]
+        nameParts.removeAll(['', null])
+        return nameParts.join('/')
+
     }
 
     def getPipelineScriptDirPath(localConfig, job) {
-        def prefixDir = localConfig.config_dir ? "${localConfig.config_dir}" : ""
+        def dirParts = []
         if (job.value.configRepo || localConfig.project_type == 'single') {
-            return "${prefixDir}"
+            return ""
         }
-        return "${config.projectConfigPath}/${prefixDir}"
+        else {
+            return config.projectConfigPath
+        }
     }
 
     def getPipelineRepo(localConfig, job) {

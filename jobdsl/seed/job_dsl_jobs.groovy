@@ -409,17 +409,24 @@ def processJob(jobs, currentFolder, config) {
                 if (job.value.context) {
                     localConfig = config.dslHelper.merge(localConfig, job.value.context)
                 }
-                String pipelineScriptName = config.dslHelper.getPipelineScriptName()
-                String pipelinesRepo = config.dslHelper.getPipelineRepo(localConfig, job)
-                String pipelineScriptDirPath = config.dslHelper.getPipelineScriptDirPath(localConfig, job)
-                String pipelineScriptDirPathPrefix = (pipelineScriptDirPath && pipelineScriptDirPath.length() > 0) ? "${pipelineScriptDirPath}/" : ""
-                String pipelineScriptPath = (config.config_dir && config.config_dir.length() > 0) ? "${pipelineScriptDirPathPrefix}${config.config_dir}/${pipelineScriptName}" : "${pipelineScriptDirPathPrefix}${pipelineScriptName}"
+                def pipelineScriptName = config.dslHelper.getPipelineScriptName()
+                def pipelinesRepo = config.dslHelper.getPipelineRepo(localConfig, job)
+                def pipelineScriptDirPath = config.dslHelper.getPipelineScriptDirPath(localConfig, job)
+                def pipelineScriptPath
                 if (config.pipeline_script_full) {
                     pipelineScriptPath = "${config.pipeline_script_full}"
+                    println "config.pipeline_script_full: ${config.pipeline_script_full}"
+                }
+                else {
+                    def pipelineScriptPathParts = [pipelineScriptDirPath, pipelineScriptName]
+                    pipelineScriptPathParts.removeAll(['', null])
+                    pipelineScriptPath = pipelineScriptPathParts.join('/')
+                    println "pipelineScriptPathParts: ${pipelineScriptPathParts}"
                 }
                 println "pipelinesRepo: ${pipelinesRepo}"
-                println "pipelineScriptPath: ${pipelineScriptPath}"
+                println "pipelineScriptName: ${pipelineScriptName}"
                 println "pipelineScriptDirPath: ${pipelineScriptDirPath}"
+                println "pipelineScriptPath: ${pipelineScriptPath}"
 
                 pipelineJob("${currentName}") {
                     concurrentBuild(false)
