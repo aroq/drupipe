@@ -1,3 +1,7 @@
+Version 0.9.5.1:
+ - Merge pull request #133 from michael-molchanov/v0.9.5-fix
+ - Add jmeter report support.
+
 Version 0.9.5:
  - Merge pull request #125 from michael-molchanov/amaster
  - Merge pull request #126 from michael-molchanov/amaster_node_select
