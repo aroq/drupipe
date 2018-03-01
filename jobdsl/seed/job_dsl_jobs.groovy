@@ -455,7 +455,13 @@ def processJob(jobs, currentFolder, config) {
                                             relativeTargetDirectory(pipelineScriptDirPath)
                                         }
                                     }
-                                    def br = job.value.branch ? job.value.branch : 'master'
+                                    def br = 'master'
+                                    if (job.value.branch) {
+                                        br = job.value.branch
+                                    }
+                                    else if (config.config_branch) {
+                                        br = config.config_branch
+                                    }
                                     branch(br)
                                 }
                                 scriptPath(pipelineScriptPath)
