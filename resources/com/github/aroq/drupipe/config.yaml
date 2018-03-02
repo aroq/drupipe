@@ -34,6 +34,7 @@ uniconf:
     prefix: .params.
     separator: '|'
 
+cleanup_success_jobs_workspace: 1
 environment: ''
 debugEnabled: false
 docrootDir: docroot
@@ -66,8 +67,6 @@ config_providers:
     class_name: ConfigProviderProject
   job:
     class_name: ConfigProviderJob
-
-params:
 
 jobs:
   mothership:
