@@ -115,7 +115,7 @@ class DrupipeController implements Serializable {
                                 }
                             }
                         }
-                        if (context.cleanup_success_jobs_workspace == '1') {
+                        if (context.cleanup_success_jobs_workspace == 1 || context.cleanup_success_jobs_workspace == '1' || context.cleanup_success_jobs_workspace == true || context.cleanup_success_jobs_workspace == 'true') {
                             script.echo 'CLEANUP SUCCESS JOB WORKSPACE'
                             script.deleteDir()
                         }
