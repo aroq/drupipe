@@ -1,3 +1,9 @@
+Version 0.10.1:
+ - Merge pull request #136 from michael-molchanov/amaster
+ - Allow to use different positive values in cleanup derective.
+ - Publish HTML reports.
+ - Cleanup workspaces for succes jobs.
+
 Version 0.10.0:
  - Merge pull request #135 from michael-molchanov/amaster
  - Fix branch name for common jobs.
