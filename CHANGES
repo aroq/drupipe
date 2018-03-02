@@ -1,3 +1,8 @@
+Version 0.9.5.2:
+ - Merge branch 'v0.9.5-fix' of github.com:aroq/drupipe into v0.9.5-fix
+ - Merge pull request #137 from michael-molchanov/v0.9.5-fix
+ - Publish HTML reports.
+
 Version 0.9.5.1:
  - Merge pull request #133 from michael-molchanov/v0.9.5-fix
  - Add jmeter report support.
