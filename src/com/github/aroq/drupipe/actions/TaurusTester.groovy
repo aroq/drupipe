@@ -45,8 +45,12 @@ ${action.pipeline.context.env.taurus_args}"""
             this.script.drupipeShell("${jmeterString}", action.params)
 
             this.script.archiveArtifacts artifacts: 'report/**'
-
-            // this.script.publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'report', reportFiles: 'index.html', reportName: 'JMeter', reportTitles: ''])
+            try {
+                this.script.publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'report', reportFiles: 'index.html', reportName: 'JMeter', reportTitles: ''])
+            }
+            catch (e) {
+                this.script.echo "Publish HTML plugin isn't installed."
+            }
         }
 
     }
