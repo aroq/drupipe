@@ -106,7 +106,7 @@ def processJob(jobs, currentFolder, config) {
                 println "pipelineScriptDirPath: ${pipelineScriptDirPath}"
                 pipelineJob(currentName) {
                     concurrentBuild(false)
-                    logRotator(-1, config.logRotatorNumToKeep)
+                    logRotator(-1, localConfig.logRotatorNumToKeep)
                     parameters {
                         config.docmanConfig.projects?.each { project ->
                             if (project.value.repo && project.value.type != 'root') {
@@ -197,7 +197,7 @@ def processJob(jobs, currentFolder, config) {
                         quietPeriod(config.quietPeriodSeconds)
                     }
                     concurrentBuild(false)
-                    logRotator(-1, config.logRotatorNumToKeep)
+                    logRotator(-1, localConfig.logRotatorNumToKeep)
                     parameters {
                         stringParam('projectName', 'master')
                         stringParam('simulate', '0')
@@ -361,7 +361,7 @@ def processJob(jobs, currentFolder, config) {
                 println "pipelineScriptDirPath: ${pipelineScriptDirPath}"
                 pipelineJob(currentName) {
                     concurrentBuild(false)
-                    logRotator(-1, config.logRotatorNumToKeep)
+                    logRotator(-1, localConfig.logRotatorNumToKeep)
                     parameters {
                         config.docmanConfig.projects?.each { project ->
                             if ((project.value.type == 'root' || project.value.type == 'root_chain' || project.value.type == 'single') && (project.value.repo || project.value.root_repo)) {
@@ -430,7 +430,7 @@ def processJob(jobs, currentFolder, config) {
 
                 pipelineJob("${currentName}") {
                     concurrentBuild(false)
-                    logRotator(-1, config.logRotatorNumToKeep)
+                    logRotator(-1, localConfig.logRotatorNumToKeep)
                     parameters {
                         if (config.config_version < 2) {
                             // TODO: check if it can be replaced by pipelinesRepo.
