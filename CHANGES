@@ -1,3 +1,7 @@
+Version 0.10.2:
+ - Merge pull request #138 from michael-molchanov/amaster
+ - Limit log max count and allow to adjust it in job configuratoion context.
+
 Version 0.10.1:
  - Merge pull request #136 from michael-molchanov/amaster
  - Allow to use different positive values in cleanup derective.
