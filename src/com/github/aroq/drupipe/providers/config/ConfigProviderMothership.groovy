@@ -24,6 +24,12 @@ class ConfigProviderMothership extends ConfigProviderBase {
             def mothershipConfig = getMothershipConfigFile(result)
             controller.drupipeLogger.debugLog(drupipeConfig.config, mothershipConfig, 'mothershipConfig', [debugMode: 'json'])
 
+            def envMothershipConfig = getEnvMothershipConfigFile(result)
+            controller.drupipeLogger.debugLog(drupipeConfig.config, envMothershipConfig, 'envMothershipConfig', [debugMode: 'json'])
+            if (envMothershipConfig) {
+                mothershipConfig = utils.merge(mothershipConfig, envMothershipConfig)
+            }
+
             drupipeConfig.projects = mothershipConfig
 
             def projectNames = drupipeConfig.projects.keySet() as ArrayList
@@ -84,6 +90,29 @@ class ConfigProviderMothership extends ConfigProviderBase {
             }
         }
         throw new Exception("getMothershipConfigFile: mothership config file not found.")
+    }
+
+    def getEnvMothershipConfigFile(params) {
+        def projectsFileName = 'projects'
+        def extensions = ['yaml', 'yml', 'json']
+        def dir = drupipeConfig.drupipeSourcesController.sourceDir(params, 'mothership')
+        for (extension in extensions) {
+            def projectsFile = "${dir}/${drupipeConfig.config.env.drupipeEnvironment}.${projectsFileName}.${extension}"
+            if (script.fileExists(projectsFile)) {
+                def file = script.readFile(projectsFile)
+                if (file) {
+                    if (extension in ['yaml', 'yml']) {
+                        return script.readYaml(text: file).projects
+                    } else if (extension == 'json') {
+                        return script.readJSON(text: file).projects
+                    }
+                }
+            }
+            else {
+                controller.drupipeLogger.log "getEnvMothershipConfigFile: file doesn't exist"
+            }
+        }
+        return null
     }
 
 }
