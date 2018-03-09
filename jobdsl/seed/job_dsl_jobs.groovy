@@ -132,6 +132,9 @@ def processJob(jobs, currentFolder, config) {
 							'PT_SINGLE_SELECT',
 							config.dslParamsHelper.activeChoiceGetChoicesScript(states_choices, default_state)
 						)
+                        job.value.params?.each { key, value ->
+                            stringParam(key, value)
+                        }
                         config.dslParamsHelper.drupipeParamsDefault(delegate, job, config)
                     }
                     definition {
@@ -205,6 +208,9 @@ def processJob(jobs, currentFolder, config) {
                         stringParam('type', 'branch')
                         stringParam('environment', buildEnvironment)
                         stringParam('version', jobBranch)
+                        job.value.params?.each { key, value ->
+                            stringParam(key, value)
+                        }
                         config.dslParamsHelper.drupipeParamsDefault(delegate, job, config)
                     }
                     definition {
@@ -374,6 +380,10 @@ def processJob(jobs, currentFolder, config) {
                                 }
 
                                 config.dslParamsHelper.drupipeParamOperationsCheckboxes(delegate, job, config)
+
+                                job.value.params?.each { key, value ->
+                                    stringParam(key, value)
+                                }
 
                                 stringParam('environment', job.value.env)
                             }
