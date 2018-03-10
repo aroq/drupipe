@@ -24,6 +24,33 @@ config_providers_list:
 #  - mothership
 #  - project
 #  - job
+uniconf:
+  keys:
+    include: scenarios
+    sources: scenarioSources
+    params: params
+    jobs: jobs
+    processors: processors
+  dirs:
+    sources: scenarios
+  files:
+    config_file_name: config.yaml
+  include:
+    prefix: .params.
+    separator: '|'
+
+cleanup_success_jobs_workspace: 1
+environment: ''
+debugEnabled: false
+docrootDir: docroot
+docmanDir: docman
+projectConfigPath: .unipipe/config
+projectConfigFile: docroot.config
+containerMode: docker
+configSeedType: docman
+defaultDocmanImage: michaeltigr/zebra-build-php-drush-docman:0.0.92
+logRotatorNumToKeep: 2
+drupipeDockerArgs: --user root:root --net=host
 
 processors:
   - className: DrupipeFromProcessor
@@ -240,3 +267,175 @@ config_providers:
 #              - actions:
 #                - from: .params.actions.Ssh.tunnel
 ##      post:
+  mothership:
+    class_name: ConfigProviderMothership
+  project:
+    class_name: ConfigProviderProject
+  job:
+    class_name: ConfigProviderJob
+
+jobs:
+  mothership:
+#    context:
+#      config_version: 2
+    type: mothership
+    pipeline:
+      pods:
+        - from: .params.pods.master
+          containers:
+            - from: .params.containers.common
+              blocks:
+                - actions:
+                  - from: .params.actions.JobDslSeed.perform
+                    dsl_params:
+                      lookupStrategy: JENKINS_ROOT
+                      jobsPattern: ['.unipipe/library/jobdsl/job_dsl_mothership.groovy']
+                      override: true
+                      removedJobAction: DELETE
+                      removedViewAction: DELETE
+                      additionalClasspath: ['.unipipe/library/src']
+
+  seed:
+    type: seed
+    pipeline:
+      pods:
+        - from: .params.pods.default
+          containers:
+            - from: .params.containers.common
+              blocks:
+                - actions:
+                  - from: .params.actions.JobDslSeed.info
+        - from: .params.pods.master
+          containers:
+            - from: .params.containers.common
+              blocks:
+                - actions:
+                  - from: .params.actions.JobDslSeed.prepare
+                  - from: .params.actions.JobDslSeed.perform
+
+params:
+  pipeline:
+    scripts_library:
+      url: https://github.com/aroq/drupipe.git
+      ref: master
+      type: branch
+
+  block:
+    nodeName: default
+    # TODO: remove it after configs update.
+    dockerImage: aroq/drudock:1.4.0
+
+  processors:
+      from:
+        # defines in which mode 'from' should be processed.
+        mode: config
+
+  jobs:
+    folder:
+      params:
+        type: folder
+      dev:
+        params:
+          branch: develop
+          # Context params will be merged into main pipeline context.
+          context:
+            environment: dev
+      preprod:
+        params:
+          branch: master
+          # Context params will be merged into main pipeline context.
+          context:
+            environment: preprod
+      prod:
+        params:
+          branch: master
+          # Context params will be merged into main pipeline context.
+          context:
+            environment: prod
+      mr:
+        params:
+          # Context params will be merged into main pipeline context.
+          context:
+            environment: mr
+    common:
+      params:
+        type: common
+
+  pipelines:
+    params:
+      name: default
+
+  pods:
+    params:
+      unipipe_retrieve_config: true
+      containerized: true
+
+    master:
+      params:
+        containerized: false
+        name: master
+
+    default:
+      params:
+        name: default
+
+  containers:
+    params:
+      execute: true
+      k8s:
+        ttyEnabled: true
+        command: cat
+        resourceRequestCpu: 50m
+        resourceLimitCpu: 500m
+        resourceRequestMemory: 200Mi
+        resourceLimitMemory: 1000Mi
+        alwaysPullImage: true
+    none:
+      params:
+        name: none
+    common:
+      params:
+        name: common
+        image: michaeltigr/zebra-build-php-drush-docman:0.0.92
+    options:
+      ssh_tunnel:
+        params:
+          pre_blocks:
+            - actions:
+              - from: .params.actions.Ssh.tunnel
+  options:
+    containers:
+      build:
+        tools:
+          params:
+            image: michaeltigr/zebra-build-php-drush-docman-tools:0.0.92
+      k8s:
+        small:
+          params:
+            k8s:
+              resourceRequestCpu: 50m
+              resourceLimitCpu: 500m
+              resourceRequestMemory: 250Mi
+              resourceLimitMemory: 1000Mi
+        medium:
+          params:
+            k8s:
+              resourceRequestCpu: 100m
+              resourceLimitCpu: 1000m
+              resourceRequestMemory: 500Mi
+              resourceLimitMemory: 1500Mi
+        large:
+          params:
+            k8s:
+              resourceRequestCpu: 500m
+              resourceLimitCpu: 2000m
+              resourceRequestMemory: 1000Mi
+              resourceLimitMemory: 2000Mi
+    actions:
+      pre:
+        ssh_tunnel:
+          params:
+            pre_blocks:
+              - actions:
+                - from: .params.actions.Ssh.tunnel
+#      post:

@@ -7,6 +7,10 @@ class TaurusTester extends BaseAction {
             this.script.deleteDir()
         }
 
+        this.script.dir("report") {
+            this.script.deleteDir()
+        }
+
         this.script.checkout this.script.scm
 
         def hold_for = (action.pipeline.context.env.taurus_hold_for && action.pipeline.context.env.taurus_hold_for.length() != 0) ? "-o execution.hold-for=${action.pipeline.context.env.taurus_hold_for}" : ''
@@ -30,6 +34,24 @@ ${action.pipeline.context.env.taurus_args}"""
         this.script.bzt "${bztString}"
 
         this.script.archiveArtifacts artifacts: 'logs/**'
+
+        if (this.script.fileExists("logs/trace.jtl")) {
+            def jmeterString = """\${JMETER_HOME}/bin/jmeter \
+-g logs/trace.jtl \
+-o report
+"""
+            this.script.echo "Execute JMeter report: ${jmeterString}"
+
+            this.script.drupipeShell("${jmeterString}", action.params)
+
+            this.script.archiveArtifacts artifacts: 'report/**'
+            try {
+                this.script.publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'report', reportFiles: 'index.html', reportName: 'JMeter', reportTitles: ''])
+            }
+            catch (e) {
+                this.script.echo "Publish HTML plugin isn't installed."
+            }
+        }
 
     }
 }

@@ -115,13 +115,14 @@ class DslParamsHelper {
     def drupipeParamSelectsRelease(context, job, config, name, project) {
         println "Project: ${project.value.name}"
         def projectRepo = project.value.repo
+        def releasePattern = job.value.containsKey('pattern') ? job.value.pattern : '*'
         println "Repo: ${projectRepo}"
         drupipeParamChoices(
             context,
             name,
             'Allows to select tag',
             'PT_SINGLE_SELECT',
-            activeChoiceGetReleasesChoicesScript(projectRepo, '*', 'x.y.z'),
+            activeChoiceGetReleasesChoicesScript(projectRepo, releasePattern, ''),
             false,
             true
         )
@@ -130,6 +131,7 @@ class DslParamsHelper {
     def drupipeParamTagsSelectsDeploy(context, job, config, name, project) {
         println "Project: ${project.value.name}"
         def releaseRepo
+        def releasePattern = job.value.source.containsKey('pattern') ? job.value.source.pattern : '*'
         if (job.value.containsKey('source') && job.value.source.containsKey('version_source')) {
             releaseRepo = job.value.source.version_source
         }
@@ -143,7 +145,7 @@ class DslParamsHelper {
                 name,
                 'Allows to select tag',
                 'PT_SINGLE_SELECT',
-                activeChoiceGetTagsChoicesScript(releaseRepo, '*', ''),
+                activeChoiceGetTagsChoicesScript(releaseRepo, releasePattern, ''),
                 false,
                 true
             )
@@ -153,6 +155,7 @@ class DslParamsHelper {
     def drupipeParamBranchesSelectsDeploy(context, job, config, name, project) {
         println "Project: ${project.value.name}"
         def releaseRepo
+        def releasePattern = job.value.source.containsKey('pattern') ? job.value.source.pattern : '*'
         if (job.value.containsKey('source') && job.value.source.containsKey('version_source')) {
             releaseRepo = job.value.source.version_source
         }
@@ -166,7 +169,7 @@ class DslParamsHelper {
                 name,
                 'Allows to select branch',
                 'PT_SINGLE_SELECT',
-                activeChoiceGetBranchesChoicesScript(releaseRepo, job.value.source.pattern),
+                activeChoiceGetBranchesChoicesScript(releaseRepo, releasePattern),
                 false,
                 true
             )
@@ -566,10 +569,10 @@ def getTags(GitClient gitClient, String gitUrl, tagPattern) {
     }
     return tagSet.sort().reverse();
 }
-def getBranches(GitClient gitClient, String gitUrl) {
+def getBranches(GitClient gitClient, String gitUrl, tagPattern) {
     def branchesSet = []
     try {
-        def branches = gitClient.getRemoteReferences(gitUrl, '*', true, false);
+        def branches = gitClient.getRemoteReferences(gitUrl, tagPattern, true, false);
         for (String branchName : branches.keySet()) {
             branchesSet << branchName.replaceFirst(".*refs/heads/", "");
         }
@@ -594,7 +597,7 @@ try {
     def gitRepoUrl = '${url}'
     def tagPattern = '${tagPattern}'
     def sortPattern = '${sort}'
-    def tagList = getTags(git, gitRepoUrl, '*')
+    def tagList = getTags(git, gitRepoUrl, tagPattern)
     if (sortPattern == 'x.y.z') {
         if (tagList) {
             tagList.sort{ tag -> Version.from(tag).toString() }.reverse()
@@ -605,7 +608,7 @@ try {
     else {
         tagList
     }
-    def branchesList = getBranches(git, gitRepoUrl)
+    def branchesList = getBranches(git, gitRepoUrl, tagPattern)
     branchesList.addAll(tagList)
     return branchesList
 } catch( e )  {

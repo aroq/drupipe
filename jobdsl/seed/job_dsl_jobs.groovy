@@ -106,7 +106,7 @@ def processJob(jobs, currentFolder, config) {
                 println "pipelineScriptDirPath: ${pipelineScriptDirPath}"
                 pipelineJob(currentName) {
                     concurrentBuild(false)
-                    logRotator(-1, config.logRotatorNumToKeep)
+                    logRotator(-1, localConfig.logRotatorNumToKeep)
                     parameters {
                         config.docmanConfig.projects?.each { project ->
                             if (project.value.repo && project.value.type != 'root') {
@@ -115,15 +115,26 @@ def processJob(jobs, currentFolder, config) {
                                 config.dslParamsHelper.drupipeParamSelectsRelease(delegate, job, config, project.value.name + '_version', project)
                             }
                         }
-                        ArrayList<String> states_choices = config.docmanConfig.getStates().keySet() as ArrayList
-                        String default_state = states_choices.first()
-                        config.dslParamsHelper.drupipeParamChoices(
-                            delegate,
-                            'state',
-                            'Alows to select release state.',
-                            'PT_SINGLE_SELECT',
-                            config.dslParamsHelper.activeChoiceGetChoicesScript(states_choices, default_state)
-                        )
+                        ArrayList<String> states_choices
+                        String default_state
+                        if (job.value.state) {
+                            states_choices = [job.value.state]
+                            default_state = job.value.state
+                        }
+                        else {
+							states_choices = config.docmanConfig.getStates().keySet() as ArrayList
+							default_state = states_choices.first()
+                        }
+						config.dslParamsHelper.drupipeParamChoices(
+							delegate,
+							'state',
+							'Alows to select release state.',
+							'PT_SINGLE_SELECT',
+							config.dslParamsHelper.activeChoiceGetChoicesScript(states_choices, default_state)
+						)
+                        job.value.params?.each { key, value ->
+                            stringParam(key, value)
+                        }
                         config.dslParamsHelper.drupipeParamsDefault(delegate, job, config)
                     }
                     definition {
@@ -189,7 +200,7 @@ def processJob(jobs, currentFolder, config) {
                         quietPeriod(config.quietPeriodSeconds)
                     }
                     concurrentBuild(false)
-                    logRotator(-1, config.logRotatorNumToKeep)
+                    logRotator(-1, localConfig.logRotatorNumToKeep)
                     parameters {
                         stringParam('projectName', 'master')
                         stringParam('simulate', '0')
@@ -197,6 +208,9 @@ def processJob(jobs, currentFolder, config) {
                         stringParam('type', 'branch')
                         stringParam('environment', buildEnvironment)
                         stringParam('version', jobBranch)
+                        job.value.params?.each { key, value ->
+                            stringParam(key, value)
+                        }
                         config.dslParamsHelper.drupipeParamsDefault(delegate, job, config)
                     }
                     definition {
@@ -353,7 +367,7 @@ def processJob(jobs, currentFolder, config) {
                 println "pipelineScriptDirPath: ${pipelineScriptDirPath}"
                 pipelineJob(currentName) {
                     concurrentBuild(false)
-                    logRotator(-1, config.logRotatorNumToKeep)
+                    logRotator(-1, localConfig.logRotatorNumToKeep)
                     parameters {
                         config.docmanConfig.projects?.each { project ->
                             if ((project.value.type == 'root' || project.value.type == 'root_chain' || project.value.type == 'single') && (project.value.repo || project.value.root_repo)) {
@@ -366,6 +380,10 @@ def processJob(jobs, currentFolder, config) {
                                 }
 
                                 config.dslParamsHelper.drupipeParamOperationsCheckboxes(delegate, job, config)
+
+                                job.value.params?.each { key, value ->
+                                    stringParam(key, value)
+                                }
 
                                 stringParam('environment', job.value.env)
                             }
@@ -401,47 +419,28 @@ def processJob(jobs, currentFolder, config) {
                 if (job.value.context) {
                     localConfig = config.dslHelper.merge(localConfig, job.value.context)
                 }
-//                println "Local config: ${localConfig}"
-                // Define repository that will be used for pipelines retrieve and execution.
-                String pipelinesRepo = localConfig.configRepo
-                // Define path to pipeline script.
-                String pipelineScriptPath
-                final MODE_CONFIG_ONLY_REPO = 1
-                final MODE_CONFIG_AND_PROJECT_REPO = 2
-                final MODE_PROJECT_ONLY_REPO = 3
-                String configMode = MODE_CONFIG_ONLY_REPO
-
-                println "LOCAL CONFIG pipelines_repo: ${localConfig.pipelines_repo}"
-                if (localConfig.pipelines_repo) {
-                    pipelinesRepo = localConfig.pipelines_repo
-                    pipelineScriptPath = "${pipelineScript}.groovy"
-                }
-                else {
-                    if (job.value.configRepo) {
-                        pipelinesRepo = job.value.configRepo
-                    }
-                }
+                def pipelineScriptName = config.dslHelper.getPipelineScriptName()
+                def pipelinesRepo = config.dslHelper.getPipelineRepo(localConfig, job)
+                def pipelineScriptDirPath = config.dslHelper.getPipelineScriptDirPath(localConfig, job)
+                def pipelineScriptPath
                 if (config.pipeline_script_full) {
-                    pipelineScriptPath = "${config.config_dir}/${config.pipeline_script_full}"
+                    pipelineScriptPath = "${config.pipeline_script_full}"
+                    println "config.pipeline_script_full: ${config.pipeline_script_full}"
                 }
                 else {
-                    if (pipelinesRepo == seedRepo) {
-//                    pipelineScriptPath = "${localConfig.projectConfigPath}/${pipelineScript}.groovy"
-                        pipelineScriptPath = "${pipelineScript}.groovy"
-                    }
-                    else {
-                        configMode = MODE_CONFIG_AND_PROJECT_REPO
-                        pipelineScriptPath = "${pipelineScript}.groovy"
-                    }
+                    def pipelineScriptPathParts = [pipelineScriptDirPath, pipelineScriptName]
+                    pipelineScriptPathParts.removeAll(['', null])
+                    pipelineScriptPath = pipelineScriptPathParts.join('/')
+                    println "pipelineScriptPathParts: ${pipelineScriptPathParts}"
                 }
                 println "pipelinesRepo: ${pipelinesRepo}"
+                println "pipelineScriptName: ${pipelineScriptName}"
+                println "pipelineScriptDirPath: ${pipelineScriptDirPath}"
                 println "pipelineScriptPath: ${pipelineScriptPath}"
-
-                def br = job.value.branch ? job.value.branch : 'master'
 
                 pipelineJob("${currentName}") {
                     concurrentBuild(false)
-                    logRotator(-1, config.logRotatorNumToKeep)
+                    logRotator(-1, localConfig.logRotatorNumToKeep)
                     parameters {
                         if (config.config_version < 2) {
                             // TODO: check if it can be replaced by pipelinesRepo.
@@ -461,15 +460,17 @@ def processJob(jobs, currentFolder, config) {
                                         url(pipelinesRepo)
                                         credentials(config.credentialsId)
                                     }
-                                    if (job.value.repoDir) {
+                                    if (pipelineScriptDirPath && pipelineScriptDirPath.length() > 0) {
                                         extensions {
-                                            relativeTargetDirectory(job.value.repoDir)
+                                            relativeTargetDirectory(pipelineScriptDirPath)
                                         }
                                     }
-                                    else if (!job.value.configRepo && config.config_version < 2) {
-                                        extensions {
-                                            relativeTargetDirectory(config.projectConfigPath)
-                                        }
+                                    def br = 'master'
+                                    if (job.value.branch) {
+                                        br = job.value.branch
+                                    }
+                                    else if (config.config_branch) {
+                                        br = config.config_branch
                                     }
                                     branch(br)
                                 }

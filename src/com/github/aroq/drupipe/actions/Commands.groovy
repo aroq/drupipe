@@ -29,20 +29,33 @@ class Commands extends BaseAction {
         }
 
         String chainCommand
+        def results = []
         for (command in commands) {
             action.pipeline.drupipeLogger.trace "Execute command: ${command}"
             chainCommand = command
-            if (action.params.containsKey('through_ssh_chain')) {
+            if (action.params.containsKey('through_ssh_chain') && action.params.through_ssh_chain instanceof ArrayList) {
                 int level = action.params.through_ssh_chain.size()
                 for (String sshChainItem in action.params.through_ssh_chain.reverse()) {
                     chainCommand = /${action.params.through_ssh_params.executable} ${action.params.through_ssh_params.options} ${sshChainItem} "${prepareSSHChainCommand(chainCommand, level)}"/
                     action.pipeline.drupipeLogger.trace "Level: ${level}, Command: ${chainCommand}"
                     level--
                 }
-
-                action.pipeline.drupipeLogger.trace "Execute command: ${chainCommand}"
-                script.drupipeShell(chainCommand, action.params)
             }
+			action.pipeline.drupipeLogger.trace "Execute command: ${chainCommand}"
+			if (action.params.store_result || action.pipeline.context.job.notify) {
+				results.add(script.drupipeShell(chainCommand, action.params << [return_stdout: true]))
+			}
+			else {
+				script.drupipeShell(chainCommand, action.params)
+			}
+        }
+
+        if (action.params.store_result || action.pipeline.context.job.notify) {
+            def result = [:]
+            results = results.collect {it -> it.stdout}
+            result.stdout = results.join("\n\n")
+            result.result = commands.join("\n")
+            return result
         }
     }
 }
