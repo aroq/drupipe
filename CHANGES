@@ -1,3 +1,8 @@
+Version 0.10.5:
+ - Merge pull request #141 from michael-molchanov/amaster
+ - Fix commands empty and execution dir not defined.
+ - Define default pod worker name.
+
 Version 0.10.4:
  - Merge pull request #140 from michael-molchanov/amaster
  - Allow to add params to release and state jobs.
