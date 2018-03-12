@@ -8,6 +8,10 @@ class Commands extends BaseAction {
         if (action.params.actions.size() == 0) {
             action.pipeline.drupipeLogger.error "Commands are not defined"
         }
+        else if (action.params.execution_dir == null) {
+            action.pipeline.drupipeLogger.error "Execution dir is null"
+        }
+        else {
 
 //        for (command in action.params.actions) {
 //            if (command instanceof HashMap) {
@@ -16,46 +20,47 @@ class Commands extends BaseAction {
 //            }
 //        }
 
-        if (action.params.aggregate_commands) {
-            commands.add("cd ${action.params.execution_dir}" + ' && ' + action.params.actions.join(' && '))
-        }
-        else {
-            commands = action.params.actions.collect {it -> "cd {$action.params.execution_dir} && ${it}"}
-        }
+            if (action.params.aggregate_commands) {
+                commands.add("cd ${action.params.execution_dir}" + ' && ' + action.params.actions.join(' && '))
+            }
+            else {
+                commands = action.params.actions.collect {it -> "cd {$action.params.execution_dir} && ${it}"}
+            }
 
-        def prepareSSHChainCommand = { String command, int level ->
-            command = command.replaceAll("\\\\", "\\\\\\\\")
-            return command.replaceAll("\"", "\\\\\"")
-        }
+            def prepareSSHChainCommand = { String command, int level ->
+                command = command.replaceAll("\\\\", "\\\\\\\\")
+                return command.replaceAll("\"", "\\\\\"")
+            }
 
-        String chainCommand
-        def results = []
-        for (command in commands) {
-            action.pipeline.drupipeLogger.trace "Execute command: ${command}"
-            chainCommand = command
-            if (action.params.containsKey('through_ssh_chain') && action.params.through_ssh_chain instanceof ArrayList) {
-                int level = action.params.through_ssh_chain.size()
-                for (String sshChainItem in action.params.through_ssh_chain.reverse()) {
-                    chainCommand = /${action.params.through_ssh_params.executable} ${action.params.through_ssh_params.options} ${sshChainItem} "${prepareSSHChainCommand(chainCommand, level)}"/
-                    action.pipeline.drupipeLogger.trace "Level: ${level}, Command: ${chainCommand}"
-                    level--
+            String chainCommand
+            def results = []
+            for (command in commands) {
+                action.pipeline.drupipeLogger.trace "Execute command: ${command}"
+                chainCommand = command
+                if (action.params.containsKey('through_ssh_chain') && action.params.through_ssh_chain instanceof ArrayList) {
+                    int level = action.params.through_ssh_chain.size()
+                    for (String sshChainItem in action.params.through_ssh_chain.reverse()) {
+                        chainCommand = /${action.params.through_ssh_params.executable} ${action.params.through_ssh_params.options} ${sshChainItem} "${prepareSSHChainCommand(chainCommand, level)}"/
+                        action.pipeline.drupipeLogger.trace "Level: ${level}, Command: ${chainCommand}"
+                        level--
+                    }
+                }
+                action.pipeline.drupipeLogger.trace "Execute command: ${chainCommand}"
+                if (action.params.store_result || action.pipeline.context.job.notify) {
+                    results.add(script.drupipeShell(chainCommand, action.params << [return_stdout: true]))
+                }
+                else {
+                    script.drupipeShell(chainCommand, action.params)
                 }
             }
-			action.pipeline.drupipeLogger.trace "Execute command: ${chainCommand}"
-			if (action.params.store_result || action.pipeline.context.job.notify) {
-				results.add(script.drupipeShell(chainCommand, action.params << [return_stdout: true]))
-			}
-			else {
-				script.drupipeShell(chainCommand, action.params)
-			}
-        }
 
-        if (action.params.store_result || action.pipeline.context.job.notify) {
-            def result = [:]
-            results = results.collect {it -> it.stdout}
-            result.stdout = results.join("\n\n")
-            result.result = commands.join("\n")
-            return result
+            if (action.params.store_result || action.pipeline.context.job.notify) {
+                def result = [:]
+                results = results.collect {it -> it.stdout}
+                result.stdout = results.join("\n\n")
+                result.result = commands.join("\n")
+                return result
+            }
         }
     }
 }
