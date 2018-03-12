@@ -47,6 +47,9 @@ class DrupipeConfig implements Serializable {
 
             config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
 
+            // TODO: Perform SCM checkout only when really needed.
+            this.script.checkout this.script.scm
+
             script.sshagent([this.script.env.credentialsId]) {
                 def uniconf = this.script.sh(returnStdout: true, script: "#!/bin/sh -e\n" + 'pwd; ls -al; ls -al .unipipe; /uniconf/uniconf context --name=job --id=dev.status')
                 this.script.echo uniconf
@@ -65,9 +68,6 @@ class DrupipeConfig implements Serializable {
             if (script.env.JOB_NAME == 'mothership') {
                 config.config_version = 2
             }
-
-            // TODO: Perform SCM checkout only when really needed.
-            this.script.checkout this.script.scm
 
             // Get config from config providers.
             for (def i = 0; i < config.config_providers_list.size(); i++) {
