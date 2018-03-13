@@ -52,7 +52,15 @@ class DrupipePod extends DrupipeBase {
         def script = controller.script
         controller.drupipeLogger.trace "DrupipePod execute - ${name}"
 
-        script.node(name) {
+        def workerName = name
+        if (!name && containerized == true) {
+            workerName = 'default'
+        }
+        else if (!name && containerized == false) {
+            workerName = 'master'
+        }
+
+        script.node(workerName) {
             if (unipipe_retrieve_config) {
                 controller.utils.getUnipipeConfig(controller)
             }
