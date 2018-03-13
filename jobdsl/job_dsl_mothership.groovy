@@ -98,6 +98,7 @@ projects.each { project ->
     if (config.servers) {
         jenkins_servers = config.servers
     }
+    println "jenkins_servers: ${jenkins_servers}"
     if (jenkins_servers && jenkins_servers.containsKey(config.env.drupipeEnvironment) && jenkins_servers[config.env.drupipeEnvironment].containsKey('tags') && jenkins_servers.intersect(jenkins_servers[config.env.drupipeEnvironment].tags)) {
         println "CONFIG projectConfigPath: ${config.projectConfigPath}"
         println "CONFIG mothership_job_name: ${config.mothership_job_name}"
