@@ -198,7 +198,7 @@ projects.each { project ->
                 else if (config.webhooksEnvironments) {
                     webhook_tags = config.webhooksEnvironments
                 }
-                if (!config.noHooks && webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                if (!config.noHooks && webhook_tags && config.servers.containsKey(config.env.drupipeEnvironment) && config.servers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.servers[config.env.drupipeEnvironment].tags)) {
                     triggers {
                         if (config.env.GITLAB_API_TOKEN_TEXT) {
                             gitlabPush {
@@ -228,7 +228,7 @@ projects.each { project ->
                     webhook_tags = config.webhooksEnvironments
                 }
                 println "Webhook Tags: ${webhook_tags}"
-                if (webhook_tags && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+                if (webhook_tags && config.servers.containsKey(config.env.drupipeEnvironment) && config.servers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.servers[config.env.drupipeEnvironment].tags)) {
                     def tag_servers = getServersByTags(webhook_tags, servers)
                     gitlabHelper.deleteWebhook(
                         config.configRepo,
