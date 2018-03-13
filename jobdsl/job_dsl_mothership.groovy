@@ -198,6 +198,7 @@ projects.each { project ->
                 else if (config.webhooksEnvironments) {
                     webhook_tags = config.webhooksEnvironments
                 }
+                println "webhook_tags: ${webhook_tags}"
                 if (!config.noHooks && webhook_tags && config.servers.containsKey(config.env.drupipeEnvironment) && config.servers[config.env.drupipeEnvironment].containsKey('tags') && webhook_tags.intersect(config.servers[config.env.drupipeEnvironment].tags)) {
                     triggers {
                         if (config.env.GITLAB_API_TOKEN_TEXT) {
