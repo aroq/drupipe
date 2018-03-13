@@ -168,8 +168,8 @@ projects.each { project ->
                 parameters {
                     stringParam('debugEnabled', '0')
                     stringParam('force', '0')
-                    stringParam('uniconf_context_name', 'job')
-                    stringParam('uniconf_context_id', jobName)
+                    stringParam('UNICONF_CONTEXT_NAME', 'job')
+                    stringParam('UNICONF_CONTEXT_ID', jobName)
                 }
                 definition {
                     cpsScm {
