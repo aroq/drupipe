@@ -23,11 +23,11 @@ if (config.tags && config.tags.contains('docman')) {
 }
 
 if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
-    if (config.jenkinsServers.size() == 0) {
+    if (config.servers.size() == 0) {
         println "Servers empty. Check configuration file servers.(yaml|yml)."
     }
 
-    println 'Servers: ' + config.jenkinsServers.keySet().join(', ')
+    println 'Servers: ' + config.servers.keySet().join(', ')
 
     config.gitlabHelper = new GitlabHelper(script: this, config: config)
 }
