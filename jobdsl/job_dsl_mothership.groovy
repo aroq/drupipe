@@ -95,7 +95,10 @@ projects.each { project ->
     if (config.params.jenkinsServers) {
         jenkins_servers = config.params.jenkinsServers
     }
-    if (jenkins_servers && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && jenkins_servers.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
+    if (config.servers) {
+        jenkins_servers = config.servers
+    }
+    if (jenkins_servers && jenkins_servers.containsKey(config.env.drupipeEnvironment) && jenkins_servers[config.env.drupipeEnvironment].containsKey('tags') && jenkins_servers.intersect(jenkins_servers[config.env.drupipeEnvironment].tags)) {
         println "CONFIG projectConfigPath: ${config.projectConfigPath}"
         println "CONFIG mothership_job_name: ${config.mothership_job_name}"
         println "CONFIG mothership_job_jenkinsfile: ${config.mothership_job_jenkinsfile}"
