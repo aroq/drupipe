@@ -53,7 +53,8 @@ class DrupipeConfig implements Serializable {
             script.sshagent([this.script.env.credentialsId]) {
                 this.script.echo this.script.sh(script: 'env|sort', returnStdout: true)
                 def uniconf = this.script.sh(returnStdout: true, script: "#!/bin/sh -e\n" + '/uniconf/uniconf context')
-                this.script.echo uniconf
+                this.script.echo "uniconf execution finished"
+//                this.script.echo uniconf
                 config = utils.merge(config, script.readYaml(text: uniconf))
             }
 
