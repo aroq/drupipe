@@ -13,7 +13,9 @@ class GitlabHelper {
     def config
 
     def setRepoProperties(repo) {
-        script.println "repo: ${repo}"
+        if (repo == null) {
+            script.println "GitlabHelper->setRepoProperties(): Repo is not provided"
+        }
         config.repoParams = [:]
         config.repoParams.gitlabAddress = repo.substring(repo.indexOf('@') + 1, repo.indexOf(':'));
         config.repoParams.groupName     = repo.substring(repo.indexOf(':') + 1, repo.indexOf('/'));

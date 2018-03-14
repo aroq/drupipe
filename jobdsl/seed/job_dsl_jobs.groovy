@@ -57,6 +57,7 @@ def processJob(jobs, currentFolder, config) {
         println "Job: ${job.value}"
         println "Type: ${job.value.type}"
         println "Current name: ${currentName}"
+        println "Config repo: ${config.configRepo}"
 
         job.value.params = job.value.params ? job.value.params : [:]
 //        job.value.params << (parentConfigParams << job.value.params)
