@@ -49,13 +49,15 @@ def processJob(jobs, currentFolder, config) {
 
 //        def parentConfigParams = [:]
 //        parentConfigParams << parentConfigParamsPassed
+        def currentName = currentFolder ? "${currentFolder}/${job.key}" : job.key
+
+        println "-" * 20
         println job
         println "Processing job: ${job.key}"
-        def currentName = currentFolder ? "${currentFolder}/${job.key}" : job.key
+        println "Job: ${job.value}"
         println "Type: ${job.value.type}"
         println "Current name: ${currentName}"
 
-        println "Job: ${job.value}"
         job.value.params = job.value.params ? job.value.params : [:]
 //        job.value.params << (parentConfigParams << job.value.params)
 //        println "Job params after parent params merge: ${job.value.params}"
