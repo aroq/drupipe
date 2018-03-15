@@ -111,6 +111,10 @@ params:
         params:
           state: stable
 
+    Platformsh:
+      params:
+        platformShDir: platformsh
+
     Gitlab:
       acceptMR:
         params:
