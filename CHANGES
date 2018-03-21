@@ -1,3 +1,8 @@
+Version 0.10.7:
+ - Merge pull request #143 from michael-molchanov/amaster
+ - Fix
+ - Add ansistrano copy.
+
 Version 0.10.6:
  - Merge pull request #142 from michael-molchanov/amaster
  - Add Platform.sh action.
