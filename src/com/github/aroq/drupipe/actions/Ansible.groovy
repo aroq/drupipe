@@ -66,6 +66,22 @@ class Ansible extends BaseAction {
         deployWithAnsistrano()
     }
 
+    def deployWithAnsistranoCopy() {
+        init()
+        script.echo(action.pipeline.context.builder.artifactParams.dir)
+        def makeArchiveCommand = """
+rm -rf ${action.pipeline.context.workspace}/${action.params.artifact_archive_dir}
+mkdir ${action.pipeline.context.workspace}/${action.params.artifact_archive_dir}
+tar -czf ${action.pipeline.context.workspace}/${action.params.artifact_archive_dir}/${action.params.artifact_archive_name}.tar.gz -C ${action.pipeline.context.workspace}/${action.pipeline.context.builder.artifactParams.dir} .
+"""
+        script.drupipeShell(makeArchiveCommand, action.params)
+        action.params.playbookParams << [
+            ansistrano_deploy_to:   action.pipeline.context.environmentParams.root,
+            ansistrano_deploy_from: action.pipeline.context.workspace + '/' + action.params.artifact_archive_dir + '/' + action.params.artifact_archive_name + '.tar.gz',
+        ]
+        deployWithAnsistrano()
+    }
+
     def deployWithAnsistrano() {
         installAnsistranoRole()
 
