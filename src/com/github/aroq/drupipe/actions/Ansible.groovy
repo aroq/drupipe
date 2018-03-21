@@ -77,7 +77,7 @@ tar -czf ${action.pipeline.context.workspace}/${action.params.artifact_archive_d
         script.drupipeShell(makeArchiveCommand, action.params)
         action.params.playbookParams << [
             ansistrano_deploy_to:   action.pipeline.context.environmentParams.root,
-            ansistrano_deploy_from: action.pipeline.context.workspace + '/' action.params.artifact_archive_dir + '/' + action.params.artifact_archive_name + '.tar.gz',
+            ansistrano_deploy_from: action.pipeline.context.workspace + '/' + action.params.artifact_archive_dir + '/' + action.params.artifact_archive_name + '.tar.gz',
         ]
         deployWithAnsistrano()
     }
