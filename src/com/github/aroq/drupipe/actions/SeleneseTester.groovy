@@ -32,5 +32,29 @@ class SeleneseTester extends BaseAction {
             reportName: "Selenese report"
         ])
     }
-}
 
+    def test2() {
+        def suites = action.pipeline.context.env.suites.split(",")
+        for (def i = 0; i < suites.size(); i++) {
+            try {
+                def command = """
+/opt/bin/entry_point.sh "${suites[i]}"
+"""
+                script.drupipeShell(command, action.params)
+            }
+            catch (e) {
+                script.currentBuild.result = "UNSTABLE"
+            }
+        }
+
+        this.script.archiveArtifacts artifacts: 'reports/**'
+        try {
+            this.script.publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'reports', reportFiles: 'index.html', reportName: 'Selenese', reportTitles: ''])
+        }
+        catch (e) {
+            this.script.echo "Publish HTML plugin isn't installed."
+        }
+
+    }
+
+}
