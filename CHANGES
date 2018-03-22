@@ -1,3 +1,8 @@
+Version 0.10.8:
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Merge pull request #144 from michael-molchanov/amaster
+ - Add selenese action.
+
 Version 0.10.7:
  - Merge pull request #143 from michael-molchanov/amaster
  - Fix
