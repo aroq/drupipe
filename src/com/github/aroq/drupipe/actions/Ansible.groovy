@@ -6,6 +6,7 @@ class Ansible extends BaseAction {
 
     def init() {
         if (!action.params.playbookParams) {
+            script.echo "ANSIBLE: no playbookParams defined in config."
             action.params.playbookParams = [:]
         }
         action.params.playbookParams <<  [
@@ -28,6 +29,7 @@ class Ansible extends BaseAction {
         init()
         script.echo(action.pipeline.context.builder.artifactParams.dir)
         def relativePath = utils.getRelativePath(action.pipeline.context, action.params.playbooksDir, action.pipeline.context.builder.artifactParams.dir)
+
         action.params.playbookParams << [
             ansistrano_deploy_to:   action.pipeline.context.environmentParams.root,
             ansistrano_deploy_from: relativePath + '/',

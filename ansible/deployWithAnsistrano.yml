@@ -3,7 +3,7 @@
   hosts: "{{ target }}"
   remote_user: "{{ user }}"
   vars:
-    ansistrano_keep_releases: 10
+    ansistrano_keep_releases: 5
     ansistrano_before_cleanup_tasks_file: ansistrano_before_cleanup.yml
   roles:
     - { role: carlosbuenosvinos.ansistrano-deploy }

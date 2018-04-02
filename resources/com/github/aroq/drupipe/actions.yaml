@@ -187,6 +187,7 @@ params:
       deployWithGit:
         params:
           playbook: deployWithGit.yml
+            ansistrano_keep_releases: 3
 
       deployWithAnsistrano:
         params:
@@ -194,12 +195,14 @@ params:
           playbookParams:
             ansistrano_deploy_via: rsync
             ansistrano_deploy_from: docroot/master
+            ansistrano_keep_releases: 3
 
       deployWithAnsistranoGit:
         params:
           playbook: deployWithAnsistrano.yml
           playbookParams:
             ansistrano_deploy_via: git
+            ansistrano_keep_releases: 3
 
       deployWithAnsistranoCopy:
         params:
@@ -208,6 +211,7 @@ params:
           playbook: deployWithAnsistrano.yml
           playbookParams:
             ansistrano_deploy_via: copy_unarchive
+            ansistrano_keep_releases: 3
 
     Common:
       confirm:
