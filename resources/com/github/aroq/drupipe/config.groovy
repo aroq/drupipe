@@ -112,6 +112,7 @@ defaultActionParams = [
         //hosts: 'docroot/config/ansible/inventory.ini',
         playbook: 'library/ansible/deployWithAnsistrano.yml',
         playbookParams: [
+            ansistrano_keep_releases: 3,
             ansistrano_deploy_via: 'rsync',
         ],
     ],
