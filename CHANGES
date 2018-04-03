@@ -1,3 +1,7 @@
+Version 0.7.7.3:
+ - Set ansistrano_keep_releases to 5
+ - Set verbose mode for ansible
+
 Version 0.7.7.2:
  - Set ansistrano_keep_releases to 3
  - Merge pull request #131 from michael-molchanov/v0.7.7-hotfix-artifact
