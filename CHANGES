@@ -1,3 +1,9 @@
+Version 0.10.9.1:
+ - Set verbose for ansible
+ - Set ansistrano_keep_releases to 5
+ - Set ansistrano_keep_releases for each action method
+ - Fix entrypoint for docker call
+
 Version 0.10.9:
  - 295685: Build failed with error: ERROR: The container started but didn't run the expected command
 
