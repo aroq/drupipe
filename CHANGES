@@ -1,3 +1,6 @@
+Version 0.10.9.3:
+ - Set modified file in ansistrano before cleanup; Disable installAnsistranoRole
+
 Version 0.10.9.1:
  - Set verbose for ansible
  - Set ansistrano_keep_releases to 5
