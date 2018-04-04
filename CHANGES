@@ -1,3 +1,7 @@
+Version 0.7.7.4:
+ - Switch off ansible verbose mode
+ - Set modified file in ansistrano before cleanup; Disable installAnsistranoRole
+
 Version 0.7.7.3:
  - Set ansistrano_keep_releases to 5
  - Set verbose mode for ansible
