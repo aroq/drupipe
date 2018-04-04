@@ -6,3 +6,6 @@
 - name: Change permissions for releases to be deleted
   command: chmod -R 777 "{{ item }}"
   with_items: "{{ releases.stdout_lines }}"
+
+- name: Set modified file so it could be sorted properly during cleanup
+  shell: ls -1d {{ ansistrano_releases_path }}/*  | sort | xargs -I{} sh -c 'date +%s >> {}/modified; sleep 2'

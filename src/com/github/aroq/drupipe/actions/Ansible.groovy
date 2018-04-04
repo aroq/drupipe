@@ -85,7 +85,7 @@ tar -czf ${action.pipeline.context.workspace}/${action.params.artifact_archive_d
     }
 
     def deployWithAnsistrano() {
-        installAnsistranoRole()
+//        installAnsistranoRole()
 
 //        if (action.params.playbookParams.ansistrano_deploy_via == 'git') {
 //            def version = readFile('docroot/master/VERSION')
