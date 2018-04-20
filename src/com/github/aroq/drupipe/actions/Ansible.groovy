@@ -13,6 +13,7 @@ class Ansible extends BaseAction {
             user: action.pipeline.context.environmentParams.user,
             drupipe_environment: action.pipeline.context.environment,
         ]
+        action.pipeline.drupipeLogger.debugLog(action.pipeline.context, action.pipeline.context.environmentParams, "Environment params", [debugMode: 'json'])
         if (!action.params.inventoryArgument) {
             script.echo('No inventory argument')
             if (action.params.inventory && action.pipeline.context.environmentParams.default_group) {
