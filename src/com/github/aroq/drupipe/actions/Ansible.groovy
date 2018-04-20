@@ -138,6 +138,8 @@ tar -czf ${action.pipeline.context.workspace}/${action.params.artifact_archive_d
 
         script.withCredentials(creds) {
             this.script.drupipeShell("""
+                pwd
+                ls -lah
                 cd ${this.action.params.workingDir}
                 ${command}
             """, this.action.params
