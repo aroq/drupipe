@@ -1,3 +1,13 @@
+Version 0.11.1:
+ - Merge branch 'sbm-master'
+ - Remove debug commands
+ - Debug ansible
+ - Debug ansible
+ - Debug ansible
+ - Debug ansible
+ - Debug ansible
+ - Debug ansible
+
 Version 0.11.0:
  - Merge pull request #145 from michael-molchanov/amaster
  - Docman 0.0.96.
