@@ -13,12 +13,16 @@ class Ansible extends BaseAction {
             user: action.pipeline.context.environmentParams.user,
             drupipe_environment: action.pipeline.context.environment,
         ]
+        action.pipeline.drupipeLogger.debugLog(action.pipeline.context, action.pipeline.context.environmentParams, "Environment params", [debugMode: 'json'], [], 'INFO')
         if (!action.params.inventoryArgument) {
+            script.echo('No inventory argument')
             if (action.params.inventory && action.pipeline.context.environmentParams.default_group) {
+                script.echo("Default group defined: ${action.pipeline.context.environmentParams.default_group}")
                 action.params.inventoryArgument = action.params.inventory.path
                 action.params.playbookParams.target = "${action.pipeline.context.environmentParams.default_group}"
             }
             else {
+                script.echo("Default group not defined, use host: ${action.pipeline.context.environmentParams.host}")
                 action.params.inventoryArgument = "${action.pipeline.context.environmentParams.host},"
                 action.params.playbookParams.target = "${action.pipeline.context.environmentParams.host}"
             }
