@@ -1,3 +1,9 @@
+Version 0.11.2:
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Merge pull request #146 from michael-molchanov/amaster
+ - Docman 0.0.97.
+ - Fix docman bump.
+
 Version 0.11.1:
  - Merge branch 'sbm-master'
  - Remove debug commands
