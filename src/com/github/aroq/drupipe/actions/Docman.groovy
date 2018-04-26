@@ -173,8 +173,39 @@ class Docman extends BaseAction {
     }
 
     def bumpStable() {
+        info()
         script.drupipeShell("git config --global user.email 'drupipe@github.com'; git config --global user.name 'Drupipe'", action.params)
-        script.drupipeShell("docman bump stable -n", action.params)
+        def docrootConfigJson = script.readFile("${action.pipeline.context.docmanDir}/config/${action.params.docmanJsonConfigFile}")
+        def docmanConfig = JsonSlurperClassic.newInstance().parseText(docrootConfigJson)
+        def projectName = 'master'
+        if (action.pipeline.context.jenkinsParams.containsKey('project_name') && action.pipeline.context.jenkinsParams.project_name != '') {
+            projectName = action.pipeline.context.jenkinsParams.project_name
+        }
+        def bump_params = [:]
+        bump_params['version'] = '-n'
+        if (action.pipeline.context.jenkinsParams.containsKey('tag') && action.pipeline.context.jenkinsParams.tag != '') {
+            bump_params['version'] = "--tag='${action.pipeline.context.jenkinsParams.tag}'"
+        }
+        bump_params['branch'] = '--branch=master'
+        if (action.pipeline.context.jenkinsParams.containsKey('branch') && action.pipeline.context.jenkinsParams.branch != '') {
+            bump_params['branch'] = "--branch='${action.pipeline.context.jenkinsParams.branch}'"
+        }
+        if (docmanConfig.projects.containsKey(projectName) && docmanConfig.projects[projectName].type != 'root') {
+            def clone_params = [
+                reference: 'master',
+                singleBranch: false,
+                depth: false,
+                dir: "${action.pipeline.context.docmanDir}/bump",
+                repoDirName: projectName,
+                repoAddress: docmanConfig.projects[projectName].repo,
+            ]
+            script.drupipeAction([action: "Git.clone", params: clone_params], action.pipeline)
+
+            script.drupipeShell("cd '${action.pipeline.context.docmanDir}/bump/${projectName}' && docman bump stable ${bump_params.values().join(' ')}", action.params)
+        }
+        else {
+            script.error "Project not found in config or has root type."
+        }
     }
 
     def getStable() {
