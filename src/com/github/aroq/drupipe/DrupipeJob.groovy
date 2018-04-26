@@ -19,6 +19,8 @@ class DrupipeJob extends DrupipeBase {
     HashMap source
 
     def pattern
+    
+    String cron
 
     def triggers
 
