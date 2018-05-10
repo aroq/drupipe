@@ -1,3 +1,23 @@
+Version 0.11.3:
+ - Merge pull request #147 from michael-molchanov/patch-1
+ - Fix cron not defined.
+
+Version 0.11.2:
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Merge pull request #146 from michael-molchanov/amaster
+ - Docman 0.0.97.
+ - Fix docman bump.
+
+Version 0.11.1:
+ - Merge branch 'sbm-master'
+ - Remove debug commands
+ - Debug ansible
+ - Debug ansible
+ - Debug ansible
+ - Debug ansible
+ - Debug ansible
+ - Debug ansible
+
 Version 0.11.0:
  - Merge pull request #145 from michael-molchanov/amaster
  - Docman 0.0.96.
