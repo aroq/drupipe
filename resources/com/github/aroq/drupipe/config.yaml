@@ -45,7 +45,7 @@ containerMode: docker
 configSeedType: docman
 defaultDocmanImage: michaeltigr/zebra-build-php-drush-docman:0.0.97
 logRotatorNumToKeep: 2
-drupipeDockerArgs: '--net=host --entrypoint=""'
+drupipeDockerArgs: '--user webadmin:webadmin --net=host --entrypoint=""'
 
 processors:
   - className: DrupipeFromProcessor
