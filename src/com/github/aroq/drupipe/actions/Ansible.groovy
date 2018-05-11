@@ -130,6 +130,8 @@ tar -czf ${action.pipeline.context.workspace}/${action.params.artifact_archive_d
             action.params.playbookParams << ['--check': null]
         }
 
+        script.echo "dryrun mode: ${action.pipeline.context.jenkinsParams.dryrun}"
+
         def command =
             """ANSIBLE_SSH_ARGS="-o ControlMaster=auto -o ControlPersist=60s -o ControlPath=/tmp/ansible-ssh-%h-%p-%r -o ForwardAgent=yes" ansible-playbook ${action.params.playbooksDir}/${action.params.playbook} \
             -i ${action.params.inventoryArgument} \
@@ -140,13 +142,13 @@ tar -czf ${action.pipeline.context.workspace}/${action.params.artifact_archive_d
 
         def creds = [script.file(credentialsId: 'ANSIBLE_VAULT_PASS_FILE', variable: 'ANSIBLE_VAULT_PASS_FILE')]
 
-        script.withCredentials(creds) {
-            this.script.drupipeShell("""
-                cd ${this.action.params.workingDir}
-                ${command}
-            """, this.action.params
-            )
-        }
+//        script.withCredentials(creds) {
+//            this.script.drupipeShell("""
+//                cd ${this.action.params.workingDir}
+//                ${command}
+//            """, this.action.params
+//            )
+//        }
 
     }
 
