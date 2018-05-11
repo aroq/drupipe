@@ -144,14 +144,13 @@ tar -czf ${action.pipeline.context.workspace}/${action.params.artifact_archive_d
 
         def creds = [script.file(credentialsId: 'ANSIBLE_VAULT_PASS_FILE', variable: 'ANSIBLE_VAULT_PASS_FILE')]
 
-//        script.withCredentials(creds) {
-//            this.script.drupipeShell("""
-//                cd ${this.action.params.workingDir}
-//                ${command}
-//            """, this.action.params
-//            )
-//        }
-
+        script.withCredentials(creds) {
+            this.script.drupipeShell("""
+                cd ${this.action.params.workingDir}
+                ${command}
+            """, this.action.params
+            )
+        }
     }
 
     @NonCPS
