@@ -126,7 +126,7 @@ tar -czf ${action.pipeline.context.workspace}/${action.params.artifact_archive_d
             vaultPassFile = "\${ANSIBLE_VAULT_PASS_FILE}"
         }
 
-        if (action.pipeline.context.jenkinsParams.dryrun == '1') {
+        if (action.pipeline.context.jenkinsParams.dryrun) {
             action.params.playbookParams << ['--check': null]
         }
 
