@@ -126,15 +126,17 @@ tar -czf ${action.pipeline.context.workspace}/${action.params.artifact_archive_d
             vaultPassFile = "\${ANSIBLE_VAULT_PASS_FILE}"
         }
 
+        def dryRunMode = ''
         if (action.pipeline.context.jenkinsParams.dryrun) {
             action.params.playbookParams << ['--check': null]
+            dryRunMode = '--check'
         }
 
         script.echo "dryrun mode: ${action.pipeline.context.jenkinsParams.dryrun}"
 
         def command =
             """ANSIBLE_SSH_ARGS="-o ControlMaster=auto -o ControlPersist=60s -o ControlPath=/tmp/ansible-ssh-%h-%p-%r -o ForwardAgent=yes" ansible-playbook ${action.params.playbooksDir}/${action.params.playbook} \
-            -i ${action.params.inventoryArgument} \
+            -i ${action.params.inventoryArgument} ${dryRunMode} \
             --vault-password-file ${vaultPassFile} \
             -e '${joinParams(action.params.playbookParams, 'json')}'"""
 
