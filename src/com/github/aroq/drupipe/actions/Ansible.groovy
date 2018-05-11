@@ -129,7 +129,7 @@ tar -czf ${action.pipeline.context.workspace}/${action.params.artifact_archive_d
         def dryRunMode = ''
         if (action.pipeline.context.jenkinsParams.dryrun) {
             action.params.playbookParams << ['--check': null]
-            dryRunMode = '--check'
+            dryRunMode = '--check --diff'
         }
 
         script.echo "dryrun mode: ${action.pipeline.context.jenkinsParams.dryrun}"
