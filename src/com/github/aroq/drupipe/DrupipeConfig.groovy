@@ -47,6 +47,8 @@ class DrupipeConfig implements Serializable {
 
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
             params.dryrun = params.dryrun && params.dryrun != '0' ? true : false
+
+            this.script.echo "DRYRUN: ${params.dryrun}"
 //            utils.dump(params, params, 'PIPELINE-PARAMS')
 
             config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
