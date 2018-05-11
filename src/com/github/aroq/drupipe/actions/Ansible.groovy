@@ -126,6 +126,10 @@ tar -czf ${action.pipeline.context.workspace}/${action.params.artifact_archive_d
             vaultPassFile = "\${ANSIBLE_VAULT_PASS_FILE}"
         }
 
+        if (action.pipeline.context.jenkinsParams.dryrun == '1') {
+            action.params.playbookParams << ['--check': null]
+        }
+
         def command =
             """ANSIBLE_SSH_ARGS="-o ControlMaster=auto -o ControlPersist=60s -o ControlPath=/tmp/ansible-ssh-%h-%p-%r -o ForwardAgent=yes" ansible-playbook ${action.params.playbooksDir}/${action.params.playbook} \
             -i ${action.params.inventoryArgument} \
@@ -151,7 +155,12 @@ tar -czf ${action.pipeline.context.workspace}/${action.params.artifact_archive_d
         params = params.findAll{k, v -> v != null}
         if (mode == 'plain') {
             params.inject([]) { result, entry ->
-                result << "${entry.key}=${entry.value.toString()}"
+                if (entry.value) {
+                    result << "${entry.key}=${entry.value.toString()}"
+                }
+                else {
+                    result << "${entry.key}"
+                }
             }.join(' ')
         }
         else if (mode == 'json') {

@@ -46,6 +46,7 @@ class DrupipeConfig implements Serializable {
             this.script.sh("mkdir -p .unipipe/temp")
 
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
+            params.dryrun = params.dryrun && params.dryrun != '0' ? true : false
 //            utils.dump(params, params, 'PIPELINE-PARAMS')
 
             config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
