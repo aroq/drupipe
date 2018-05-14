@@ -103,7 +103,7 @@ class DrupipeConfig implements Serializable {
                     }
                     // For compatibility:
                     if (config.environmentParams && config.environmentParams.defaultActionParams) {
-                        config.params.action = utils.merge(config.params.action, config.environmentParams.defaultActionParams)
+                        config.params.actions = utils.merge(config.params.actions, config.environmentParams.defaultActionParams)
                     }
 
                     controller.drupipeLogger.debugLog(config, config.environmentParams, 'ENVIRONMENT PARAMS')
