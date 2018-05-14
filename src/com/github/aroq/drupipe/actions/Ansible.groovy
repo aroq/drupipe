@@ -27,6 +27,7 @@ class Ansible extends BaseAction {
                 action.params.playbookParams.target = "${action.pipeline.context.environmentParams.host}"
             }
         }
+        action.pipeline.drupipeLogger.debugLog(this.params, action.params.inventory, "ANSIBLE ACTION PARAMS :: inventory", [debugMode: 'json'], [:], 'INFO')
     }
 
     def deploy() {
