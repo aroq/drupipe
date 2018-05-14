@@ -1,6 +1,6 @@
 #!groovy
 
-def call(shellCommand, actionParams = [shell_bash_login:true, return_stdout: false]) {
+def call(shellCommand, actionParams = [shell_bash_login:true, return_stdout: false, dryrun: false]) {
     if (env.KUBERNETES_PORT) {
         echo "Executing ssh with SSH_AUTH_SOCK manually set"
         if (actionParams.shell_bash_login) {
@@ -22,7 +22,7 @@ def call(shellCommand, actionParams = [shell_bash_login:true, return_stdout: fal
                 """
         }
     }
-    if (action.pipeline.context.jenkinsParams.dryrun) {
+    if (actionParams.dryrun) {
         echo "Executing shell command: ${shellCommand} in dry run (simulate) mode"
         [:]
     } else {
