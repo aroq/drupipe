@@ -46,6 +46,9 @@ class DrupipeConfig implements Serializable {
             this.script.sh("mkdir -p .unipipe/temp")
 
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
+            params.dryrun = params.dryrun && params.dryrun != '0' ? true : false
+
+            this.script.echo "DRYRUN: ${params.dryrun}"
 //            utils.dump(params, params, 'PIPELINE-PARAMS')
 
             config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
@@ -100,10 +103,14 @@ class DrupipeConfig implements Serializable {
                     }
                     // For compatibility:
                     if (config.environmentParams && config.environmentParams.defaultActionParams) {
-                        config.params.action = utils.merge(config.params.action, config.environmentParams.defaultActionParams)
+                        config.params.actions = utils.merge(config.params.actions, config.environmentParams.defaultActionParams)
+                        controller.drupipeLogger.debugLog(config, config.environmentParams, 'ENVIRONMENT PARAMS')
+                        controller.drupipeLogger.debugLog(config, config.params.actions, 'config.params.actions')
+                    }
+                    else {
+                        controller.drupipeLogger.warning "config.environmentParams.defaultActionParams is defined"
                     }
 
-                    controller.drupipeLogger.debugLog(config, config.environmentParams, 'ENVIRONMENT PARAMS')
                 }
                 else {
                     controller.drupipeLogger.warning "No context.environment is defined"

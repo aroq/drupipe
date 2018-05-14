@@ -660,6 +660,7 @@ def processJob(jobs, currentFolder, config) {
                                         condition("ALWAYS")
                                         parameters {
                                             predefinedProp('debugEnabled', '${debugEnabled}')
+                                            predefinedProp('dryrun', '${dryrun}')
                                             predefinedProp('configRepo', '${configRepo}')
                                             jobInFolder.value.params?.each { key, value ->
                                                 def job_prefix = jobInFolder.key.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()

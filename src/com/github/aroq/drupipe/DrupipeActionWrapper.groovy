@@ -98,6 +98,7 @@ class DrupipeActionWrapper implements Serializable {
                                 action: this,
                                 script: this.script,
                                 utils: utils,
+                                dryrun: pipeline.context.jenkinsParams.containsKey('dryrun') ? pipeline.context.jenkinsParams.dryrun : false,
                             )
                         }
                     }

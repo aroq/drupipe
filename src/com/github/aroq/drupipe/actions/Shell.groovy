@@ -5,7 +5,7 @@ class Shell extends BaseAction {
     def execute() {
         if (action.params.store_result) {
             this.script.echo "Return Shell output."
-            def result = script.drupipeShell(action.params.shellCommand, [return_stdout: true])
+            def result = script.drupipeShell(action.params.shellCommand, [return_stdout: true, dryrun: this.dryrun])
             result.result = action.params.shellCommand
             return result
         }

@@ -14,6 +14,7 @@ class Ansible extends BaseAction {
             drupipe_environment: action.pipeline.context.environment,
         ]
         action.pipeline.drupipeLogger.debugLog(action.pipeline.context, action.pipeline.context.environmentParams, "Environment params", [debugMode: 'json'], [], 'INFO')
+        action.pipeline.drupipeLogger.debugLog(action.pipeline.context, action.params, "actions params", [debugMode: 'json'], [], 'INFO')
         if (!action.params.inventoryArgument) {
             script.echo('No inventory argument')
             if (action.params.inventory && action.pipeline.context.environmentParams.default_group) {
@@ -27,6 +28,7 @@ class Ansible extends BaseAction {
                 action.params.playbookParams.target = "${action.pipeline.context.environmentParams.host}"
             }
         }
+        action.pipeline.drupipeLogger.debugLog(action.pipeline.context, action.params.inventory, "ANSIBLE ACTION PARAMS :: inventory", [debugMode: 'json'], [:], 'INFO')
     }
 
     def deploy() {
@@ -126,8 +128,16 @@ tar -czf ${action.pipeline.context.workspace}/${action.params.artifact_archive_d
             vaultPassFile = "\${ANSIBLE_VAULT_PASS_FILE}"
         }
 
+        def dryRunMode = ''
+        if (action.pipeline.context.jenkinsParams.dryrun) {
+            action.params.playbookParams << ['--check': null]
+            dryRunMode = '--check --diff'
+        }
+
+        script.echo "dryrun mode: ${action.pipeline.context.jenkinsParams.dryrun}"
+
         def command =
-            """ANSIBLE_SSH_ARGS="-o ControlMaster=auto -o ControlPersist=60s -o ControlPath=/tmp/ansible-ssh-%h-%p-%r -o ForwardAgent=yes" ansible-playbook ${action.params.playbooksDir}/${action.params.playbook} \
+            """ANSIBLE_SSH_ARGS="-o ControlMaster=auto -o ControlPersist=60s -o ControlPath=/tmp/ansible-ssh-%h-%p-%r -o ForwardAgent=yes" ansible-playbook ${dryRunMode} ${action.params.playbooksDir}/${action.params.playbook} \
             -i ${action.params.inventoryArgument} \
             --vault-password-file ${vaultPassFile} \
             -e '${joinParams(action.params.playbookParams, 'json')}'"""
@@ -139,11 +149,11 @@ tar -czf ${action.pipeline.context.workspace}/${action.params.artifact_archive_d
         script.withCredentials(creds) {
             this.script.drupipeShell("""
                 cd ${this.action.params.workingDir}
+                pwd; ls -lah
                 ${command}
             """, this.action.params
             )
         }
-
     }
 
     @NonCPS
@@ -151,7 +161,12 @@ tar -czf ${action.pipeline.context.workspace}/${action.params.artifact_archive_d
         params = params.findAll{k, v -> v != null}
         if (mode == 'plain') {
             params.inject([]) { result, entry ->
-                result << "${entry.key}=${entry.value.toString()}"
+                if (entry.value) {
+                    result << "${entry.key}=${entry.value.toString()}"
+                }
+                else {
+                    result << "${entry.key}"
+                }
             }.join(' ')
         }
         else if (mode == 'json') {

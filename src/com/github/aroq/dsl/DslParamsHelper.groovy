@@ -34,6 +34,7 @@ class DslParamsHelper {
 
         drupipeParameterSeparatorLevel2(context, 'Common parameters')
         drupipeParameterDebugEnabled(context)
+        drupipeParameterDryRun(context)
         drupipeParameterForce(context)
 
         drupipeParameterSeparatorLevel2(context, 'Block parameters')
@@ -83,6 +84,10 @@ class DslParamsHelper {
 
     def drupipeParameterDebugEnabled(context) {
         context.stringParam('debugEnabled', '0')
+    }
+
+    def drupipeParameterDryRun(context) {
+        context.stringParam('dryrun', '0')
     }
 
     def drupipeParameterForce(context) {

@@ -1,6 +1,6 @@
 #!groovy
 
-def call(shellCommand, actionParams = [shell_bash_login:true, return_stdout: false]) {
+def call(shellCommand, actionParams = [shell_bash_login:true, return_stdout: false, dryrun: false]) {
     if (env.KUBERNETES_PORT) {
         echo "Executing ssh with SSH_AUTH_SOCK manually set"
         if (actionParams.shell_bash_login) {
@@ -22,13 +22,19 @@ def call(shellCommand, actionParams = [shell_bash_login:true, return_stdout: fal
                 """
         }
     }
-    echo "Executing shell command: ${shellCommand} with returnStdout=${actionParams.return_stdout}"
-    def result = sh(returnStdout: actionParams.return_stdout, script: "#!/bin/sh -e\n" + shellCommand)
-    if (actionParams.return_stdout) {
-        echo "Command output: ${result}"
-        [stdout: result]
-    }
-    else {
+    if (actionParams.dryrun) {
+        echo "Executing shell command: ${shellCommand} in dry run (simulate) mode"
         [:]
+    } else {
+        echo "Executing shell command: ${shellCommand} with returnStdout=${actionParams.return_stdout}"
+        def result = sh(returnStdout: actionParams.return_stdout, script: "#!/bin/sh -e\n" + shellCommand)
+        if (actionParams.return_stdout) {
+            echo "Command output: ${result}"
+            [stdout: result]
+        }
+        else {
+            [:]
+        }
     }
+
 }

@@ -10,6 +10,8 @@ class BaseAction implements Serializable {
 
     public DrupipeActionWrapper action
 
+    public boolean dryrun
+
     def execute () {
         action.pipeline.drupipeLogger.warning "Please override base execute action"
     }
