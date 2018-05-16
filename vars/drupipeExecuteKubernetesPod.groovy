@@ -44,6 +44,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
     podTemplate(
         label: nodeName,
         containers: containersToExecute,
+        serviceAccount: 'zebra-cd-prod-jenkins',
     ) {
         node(nodeName) {
             if (unipipe_retrieve_config) {
