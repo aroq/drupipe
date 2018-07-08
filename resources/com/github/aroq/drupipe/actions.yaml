@@ -293,9 +293,8 @@ params:
           secret_values_file_id: ''
           secret_values_file: ''
           credentials:
-            secret_values_file:
-              type: file
-              id: ${action.params.secret_values_file_id}
+            k8s:
+              id: k8s
           full_command:
             - ${action.params.executable}
             - ${action.params.command}
