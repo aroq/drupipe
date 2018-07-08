@@ -147,7 +147,7 @@ class DrupipeActionWrapper implements Serializable {
                     }
                 }
             }
-            this.script.withCredentials([string(credentialsId: 'k8s')]) {
+            this.script.withCredentials([this.script.string(credentialsId: 'k8s')]) {
 //            this.script.withCredentials(credentials) {
                 def envParams = actionParams.env ? actionParams.env.collect{ k, v -> "$k=$v"} : []
                 script.withEnv(envParams) {
