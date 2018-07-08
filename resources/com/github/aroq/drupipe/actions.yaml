@@ -278,7 +278,7 @@ params:
 
     Skaffold:
       params:
-        executable: skaffold
+        executable: "gcloud auth list; skaffold"
         kubectl_config_file: .kubeconfig
         shell_bash_login: false
         namespace: ${action.params.chart_name}-${context.environment}
