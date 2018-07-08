@@ -278,7 +278,7 @@ params:
 
     Skaffold:
       params:
-        executable: "echo \\$KUBECONFIG; kubectl config view; skaffold"
+        executable: "echo \\$KUBECONFIG; kubectl get pods; kubectl config view; skaffold"
         kubectl_config_file: .kubeconfig
         shell_bash_login: false
         namespace: ${action.params.chart_name}-${context.environment}
