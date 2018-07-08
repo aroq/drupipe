@@ -298,8 +298,9 @@ params:
               type: file
               id: ${action.params.secret_values_file_id}
           full_command:
-            - ${action.params.executable}
-            - ${action.params.command}
+            - "kubectl get pods"
+#            - ${action.params.executable}
+#            - ${action.params.command}
 
       status:
         params:

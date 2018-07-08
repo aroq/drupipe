@@ -5,7 +5,7 @@ import com.github.aroq.drupipe.DrupipeActionWrapper
 class GCloud extends BaseAction {
 
     def auth() {
-//        if (action.pipeline.context.containerMode != 'kubernetes') {
+        if (action.pipeline.context.containerMode != 'kubernetes') {
 
             // TODO: Make it centralized.
             String access_key_file
@@ -36,7 +36,7 @@ ${action.params.executable} container clusters get-credentials ${action.params.c
 
             this.script.drupipeShell(command, action.params)
 
-//        }
+        }
 
     }
 
