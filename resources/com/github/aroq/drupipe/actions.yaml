@@ -287,13 +287,8 @@ params:
 
       run:
         params:
-          secret_values_file_id: ''
-          secret_values_file: ''
-          credentials:
-            secret_values_file:
-              type: file
-              id: ${action.params.secret_values_file_id}
-          full_command: skaffold run
+          full_command:
+          - "skaffold run"
 
       status:
         params:
