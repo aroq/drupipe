@@ -287,19 +287,13 @@ params:
 
       run:
         params:
-          hooks: ['process']
-          params_processing:
-            full_command: ['process']
-          command: run
           secret_values_file_id: ''
           secret_values_file: ''
           credentials:
             secret_values_file:
               type: file
               id: ${action.params.secret_values_file_id}
-          full_command:
-            - ${action.params.executable}
-            - ${action.params.command}
+          full_command: skaffold run
 
       status:
         params:
