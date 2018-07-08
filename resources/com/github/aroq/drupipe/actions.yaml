@@ -290,7 +290,7 @@ params:
           hooks: ['process']
           params_processing:
             full_command: ['process']
-          command: run -v debug
+          command: build -v debug
           secret_values_file_id: ''
           secret_values_file: ''
           credentials:
