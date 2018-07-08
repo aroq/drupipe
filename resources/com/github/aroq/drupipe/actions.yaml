@@ -278,12 +278,12 @@ params:
 
     Skaffold:
       params:
-        executable: "echo $KUBECONFIG; kubectl config view; skaffold"
+        executable: "kubectl config view; skaffold"
         kubectl_config_file: .kubeconfig
         shell_bash_login: false
         namespace: ${action.params.chart_name}-${context.environment}
-        env:
-          KUBECONFIG: ${context.drupipe_working_dir}/${action.params.kubectl_config_file}
+#        env:
+#          KUBECONFIG:${context.drupipe_working_dir}/${action.params.kubectl_config_file}
 
       run:
         params:
