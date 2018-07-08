@@ -111,6 +111,10 @@ params:
         params:
           state: stable
 
+    Platformsh:
+      params:
+        platformShDir: platformsh
+
     Gitlab:
       acceptMR:
         params:
@@ -178,7 +182,7 @@ params:
         playbook: deployWithAnsistrano.yml
         playbookParams:
           ansistrano_deploy_via: rsync
-          ansistrano_keep_releases: 3
+          ansistrano_keep_releases: 5
 
       deployWithGit:
         params:
@@ -196,6 +200,14 @@ params:
           playbook: deployWithAnsistrano.yml
           playbookParams:
             ansistrano_deploy_via: git
+
+      deployWithAnsistranoCopy:
+        params:
+          artifact_arvhive_dir: deploy
+          artifact_archive_name: master
+          playbook: deployWithAnsistrano.yml
+          playbookParams:
+            ansistrano_deploy_via: copy_unarchive
 
     Common:
       confirm:

@@ -6,18 +6,23 @@ class Ansible extends BaseAction {
 
     def init() {
         if (!action.params.playbookParams) {
+            script.echo "ANSIBLE: no playbookParams defined in config."
             action.params.playbookParams = [:]
         }
         action.params.playbookParams <<  [
             user: action.pipeline.context.environmentParams.user,
             drupipe_environment: action.pipeline.context.environment,
         ]
+        action.pipeline.drupipeLogger.debugLog(action.pipeline.context, action.pipeline.context.environmentParams, "Environment params", [debugMode: 'json'], [], 'INFO')
         if (!action.params.inventoryArgument) {
+            script.echo('No inventory argument')
             if (action.params.inventory && action.pipeline.context.environmentParams.default_group) {
+                script.echo("Default group defined: ${action.pipeline.context.environmentParams.default_group}")
                 action.params.inventoryArgument = action.params.inventory.path
                 action.params.playbookParams.target = "${action.pipeline.context.environmentParams.default_group}"
             }
             else {
+                script.echo("Default group not defined, use host: ${action.pipeline.context.environmentParams.host}")
                 action.params.inventoryArgument = "${action.pipeline.context.environmentParams.host},"
                 action.params.playbookParams.target = "${action.pipeline.context.environmentParams.host}"
             }
@@ -28,6 +33,7 @@ class Ansible extends BaseAction {
         init()
         script.echo(action.pipeline.context.builder.artifactParams.dir)
         def relativePath = utils.getRelativePath(action.pipeline.context, action.params.playbooksDir, action.pipeline.context.builder.artifactParams.dir)
+
         action.params.playbookParams << [
             ansistrano_deploy_to:   action.pipeline.context.environmentParams.root,
             ansistrano_deploy_from: relativePath + '/',
@@ -62,6 +68,22 @@ class Ansible extends BaseAction {
             ansistrano_git_repo: action.pipeline.context.builder.artifactParams.repoAddress,
             ansistrano_git_branch: action.pipeline.context.builder.artifactParams.reference,
             ansistrano_deploy_to: action.pipeline.context.environmentParams.root,
+        ]
+        deployWithAnsistrano()
+    }
+
+    def deployWithAnsistranoCopy() {
+        init()
+        script.echo(action.pipeline.context.builder.artifactParams.dir)
+        def makeArchiveCommand = """
+rm -rf ${action.pipeline.context.workspace}/${action.params.artifact_archive_dir}
+mkdir ${action.pipeline.context.workspace}/${action.params.artifact_archive_dir}
+tar -czf ${action.pipeline.context.workspace}/${action.params.artifact_archive_dir}/${action.params.artifact_archive_name}.tar.gz -C ${action.pipeline.context.workspace}/${action.pipeline.context.builder.artifactParams.dir} .
+"""
+        script.drupipeShell(makeArchiveCommand, action.params)
+        action.params.playbookParams << [
+            ansistrano_deploy_to:   action.pipeline.context.environmentParams.root,
+            ansistrano_deploy_from: action.pipeline.context.workspace + '/' + action.params.artifact_archive_dir + '/' + action.params.artifact_archive_name + '.tar.gz',
         ]
         deployWithAnsistrano()
     }

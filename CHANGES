@@ -1,3 +1,51 @@
+Version 0.11.5:
+ - Merge pull request #149 from michael-molchanov/patch-3
+ - Docman 0.0.98
+
+Version 0.11.3:
+ - Merge pull request #147 from michael-molchanov/patch-1
+ - Fix cron not defined.
+
+Version 0.11.2:
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Merge pull request #146 from michael-molchanov/amaster
+ - Docman 0.0.97.
+ - Fix docman bump.
+
+Version 0.11.1:
+ - Merge branch 'sbm-master'
+ - Remove debug commands
+ - Debug ansible
+ - Debug ansible
+ - Debug ansible
+ - Debug ansible
+ - Debug ansible
+ - Debug ansible
+
+Version 0.11.0:
+ - Merge pull request #145 from michael-molchanov/amaster
+ - Docman 0.0.96.
+ - Set ansistrano_keep_releases to 5
+ - Set ansistrano_keep_releases for each action method
+ - Fix entrypoint for docker call
+
+Version 0.10.9:
+ - 295685: Build failed with error: ERROR: The container started but didn't run the expected command
+
+Version 0.10.8:
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Merge pull request #144 from michael-molchanov/amaster
+ - Add selenese action.
+
+Version 0.10.7:
+ - Merge pull request #143 from michael-molchanov/amaster
+ - Fix
+ - Add ansistrano copy.
+
+Version 0.10.6:
+ - Merge pull request #142 from michael-molchanov/amaster
+ - Add Platform.sh action.
+
 Version 0.10.5:
  - Merge pull request #141 from michael-molchanov/amaster
  - Fix commands empty and execution dir not defined.
