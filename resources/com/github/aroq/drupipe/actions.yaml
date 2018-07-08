@@ -276,6 +276,45 @@ params:
           jenkins_address: ${action.params.jenkins_address_prefix}://${action.params.jenkins_address_host}
           jenkins_user_token: ''
 
+    Skaffold:
+      params:
+        executable: skaffold
+        kubectl_config_file: .kubeconfig
+        shell_bash_login: false
+        namespace: ${action.params.chart_name}-${context.environment}
+        env:
+          KUBECONFIG: ${context.drupipe_working_dir}/${action.params.kubectl_config_file}
+
+      run:
+        params:
+          hooks: ['process']
+          params_processing:
+            full_command: ['process']
+          command: run
+          secret_values_file_id: ''
+          secret_values_file: ''
+          credentials:
+            secret_values_file:
+              type: file
+              id: ${action.params.secret_values_file_id}
+          full_command:
+            - ${action.params.executable}
+            - ${action.params.command}
+
+      status:
+        params:
+          command: version
+          full_command:
+            - ${action.params.executable}
+            - ${action.params.command}
+
+      delete:
+        params:
+          command: delete
+          full_command:
+            - ${action.params.executable}
+            - ${action.params.command}
+
     Helm:
       params:
         executable: helm
