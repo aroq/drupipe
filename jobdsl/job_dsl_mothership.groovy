@@ -88,7 +88,7 @@ println 'Servers: ' + servers.keySet().join(', ')
 def gitlabHelper = new GitlabHelper(script: this, config: configMain)
 
 projects.each { project ->
-    println "PROJECT: ${project.value}"
+    println "PROJECT PARAMS: ${project.value}"
     def config = configMain.clone()
     config = merge(config, project.value)
     def jenkins_servers
