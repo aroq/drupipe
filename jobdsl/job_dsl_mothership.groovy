@@ -92,6 +92,7 @@ projects.each { project ->
     def config = configMain.clone()
     config = merge(config, project.value)
     def jenkins_servers
+    println "config params: ${config.params}"
     if (config.params.jenkinsServers) {
         jenkins_servers = config.params.jenkinsServers
         println "Jenkins servers: ${config.jenkins_servers}"
