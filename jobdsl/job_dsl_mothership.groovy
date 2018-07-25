@@ -90,6 +90,7 @@ def gitlabHelper = new GitlabHelper(script: this, config: configMain)
 projects.each { project ->
     println "PROJECT PARAMS: ${project.value}"
     def config = configMain.clone()
+    println "config params before: ${config.params}"
     config = merge(config, project.value)
     def jenkins_servers
     println "config params: ${config.params}"
