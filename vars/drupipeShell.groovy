@@ -17,7 +17,7 @@ def call(shellCommand, actionParams = [shell_bash_login:true, return_stdout: fal
     else {
         if (actionParams.shell_bash_login) {
             echo "With bash login session"
-            shellCommand = """#!/bin/bash -l -e
+            shellCommand = """#!/bin/bash -l
                 ${shellCommand}
                 """
         }

@@ -131,7 +131,7 @@ class Docman extends BaseAction {
 
         script.drupipeShell(
         """
-        mkdir -p ${action.pipeline.context.docmanDir}; rm -fR ${action.pipeline.context.docmanDir}
+        rm -fR ${action.pipeline.context.docmanDir}
         docman init ${action.pipeline.context.docmanDir} ${action.pipeline.context.configRepo} -s --branch=${configBranch} ${debugFlag()}
         """, action.params
         )
