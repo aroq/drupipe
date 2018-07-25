@@ -21,10 +21,14 @@ def call(shellCommand, actionParams = [shell_bash_login:true, return_stdout: fal
                 ${shellCommand}
                 """
         }
+        else {
+            shellCommand = """#!/bin/sh -e
+                ${shellCommand}
+                """
+        }
     }
     echo "Executing shell command: ${shellCommand} with returnStdout=${actionParams.return_stdout}"
-//    def result = sh(returnStdout: actionParams.return_stdout, script: "#!/bin/sh -e\n" + shellCommand)
-    sh shellCommand
+    def result = sh(returnStdout: actionParams.return_stdout, script: shellCommand)
     if (actionParams.return_stdout) {
         echo "Command output: ${result}"
         [stdout: result]
