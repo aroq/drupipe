@@ -122,7 +122,7 @@ class DslParamsHelper {
             name,
             'Allows to select tag',
             'PT_SINGLE_SELECT',
-            activeChoiceGetReleasesChoicesScript(projectRepo, releasePattern, ''),
+            activeChoiceGetReleasesChoicesScript(projectRepo, releasePattern, '', config.credentialsId),
             false,
             true
         )
@@ -169,7 +169,7 @@ class DslParamsHelper {
                 name,
                 'Allows to select branch',
                 'PT_SINGLE_SELECT',
-                activeChoiceGetBranchesChoicesScript(releaseRepo, releasePattern),
+                activeChoiceGetBranchesChoicesScript(releaseRepo, releasePattern, config.credentialsId),
                 false,
                 true
             )
@@ -270,7 +270,7 @@ choices
         script
     }
 
-    def activeChoiceGetTagsChoicesScript(String url, String tagPattern, String sort) {
+    def activeChoiceGetTagsChoicesScript(String url, String tagPattern, String sort, String credentialsId) {
         def script =
             """
 import jenkins.model.*
@@ -371,7 +371,7 @@ def getTags(GitClient gitClient, String gitUrl, tagPattern) {
     return tagSet.sort().reverse();
 }
 
-Credentials credentials = lookupSystemCredentials('zebra')
+Credentials credentials = lookupSystemCredentials('${credentialsId}')
 
 // get git executable on master
 EnvVars environment;
@@ -411,7 +411,7 @@ try {
         script
     }
 
-    def activeChoiceGetBranchesChoicesScript(String url, String branchesPattern) {
+    def activeChoiceGetBranchesChoicesScript(String url, String branchesPattern, String credentialsId) {
         def script =
             """
 import jenkins.model.*
@@ -458,7 +458,7 @@ def getTags(GitClient gitClient, String gitUrl, tagPattern) {
     return tagSet.sort().reverse();
 }
 
-Credentials credentials = lookupSystemCredentials('zebra')
+Credentials credentials = lookupSystemCredentials('${credentialsId}')
 
 // get git executable on master
 EnvVars environment;
@@ -476,7 +476,7 @@ return getTags(git, '${url}', '${branchesPattern}')
         script
     }
 
-    def activeChoiceGetReleasesChoicesScript(String url, String tagPattern, String sort) {
+    def activeChoiceGetReleasesChoicesScript(String url, String tagPattern, String sort, String credentialsId) {
         def script =
             """
 import jenkins.model.*
@@ -581,7 +581,7 @@ def getBranches(GitClient gitClient, String gitUrl, tagPattern) {
     }
     return branchesSet.sort().reverse();
 }
-Credentials credentials = lookupSystemCredentials('zebra')
+Credentials credentials = lookupSystemCredentials('${credentialsId}')
 // get git executable on master
 EnvVars environment;
 final Jenkins jenkins = Jenkins.getActiveInstance();
