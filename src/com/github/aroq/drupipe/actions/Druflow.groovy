@@ -19,13 +19,14 @@ class Druflow extends BaseAction {
     }
 
     def executeDruflowCommand(overrides = [:]) {
+        def docrootConfigDir = action.params.docrootConfigDir ? action.params.docrootConfigDir : action.pipeline.drupipeConfig.drupipeSourcesController.sourceDir(action.pipeline.drupipeConfig.config, 'project')
         def defaultParams = [
             debug: debugFlag(),
             executeCommand: action.params.executeCommand,
             workspace: action.pipeline.context.workspace,
             // TODO: review this parameter handling.
             docrootDir: action.params.docrootDir ? action.params.docrootDir : action.pipeline.context.docrootDir,
-            docrootConfigDir: action.pipeline.drupipeConfig.drupipeSourcesController.sourceDir(action.pipeline.drupipeConfig.config, 'project'),
+            docrootConfigDir: docrootConfigDir,
         ]
         // TODO: review it.
         if (action.pipeline.context.env.operationsMode) {
