@@ -9,7 +9,8 @@ class Druflow extends BaseAction {
 
     def deployFlow() {
         def executeEnvironment = action.params.executeEnvironment ? action.params.executeEnvironment : action.pipeline.context.environment
-        executeDruflowCommand([env: executeEnvironment, projectName: action.pipeline.context.projectName])
+        def projectName = action.params.projectName ? action.params.projectName : action.pipeline.context.projectName
+        executeDruflowCommand([env: executeEnvironment, projectName: projectName])
     }
 
     def deploy() {
