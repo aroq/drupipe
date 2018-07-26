@@ -145,7 +145,7 @@ class DslParamsHelper {
                 name,
                 'Allows to select tag',
                 'PT_SINGLE_SELECT',
-                activeChoiceGetTagsChoicesScript(releaseRepo, releasePattern, ''),
+                activeChoiceGetTagsChoicesScript(releaseRepo, releasePattern, '', config.credentialsId),
                 false,
                 true
             )
