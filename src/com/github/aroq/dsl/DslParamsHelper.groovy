@@ -571,7 +571,7 @@ def getTags(GitClient gitClient, String gitUrl, tagPattern) {
     } catch (GitException e) {
         tagSet = ['failed']
     }
-    return tagSet.sort().reverse();
+    return tagSet.sort()
 }
 def getBranches(GitClient gitClient, String gitUrl, tagPattern) {
     def branchesSet = []
@@ -604,7 +604,7 @@ try {
     def tagList = getTags(git, gitRepoUrl, tagPattern)
     if (sortPattern == 'x.y.z') {
         if (tagList) {
-            tagList.sort{ tag -> Version.from(tag).toString() }
+            tagList.sort{ tag -> Version.from(tag).toString() }.reverse()
         } else {
             [ 'master' ] // no tags in git repo
         }
