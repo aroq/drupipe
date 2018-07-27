@@ -613,8 +613,8 @@ try {
         tagList
     }
     def branchesList = getBranches(git, gitRepoUrl, tagPattern)
-    branchesList.addAll(tagList)
-    return branchesList
+    tagList.addAll(branchesList)
+    return tagList 
 } catch( e )  {
     [ e.toString() ]
 }
