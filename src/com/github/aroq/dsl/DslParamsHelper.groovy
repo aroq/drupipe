@@ -132,6 +132,8 @@ class DslParamsHelper {
 
     def drupipeParamTagsSelectsDeploy(context, job, config, name, project) {
         println "Project: ${project.value.name}"
+        println "Sorting: ${job.value.sort}"
+        String sort = job.value.sort ? job.value.sort : ''
         def releaseRepo
         def releasePattern = job.value.source.containsKey('pattern') ? job.value.source.pattern : '*'
         if (job.value.containsKey('source') && job.value.source.containsKey('version_source')) {
@@ -147,7 +149,7 @@ class DslParamsHelper {
                 name,
                 'Allows to select tag',
                 'PT_SINGLE_SELECT',
-                activeChoiceGetTagsChoicesScript(releaseRepo, releasePattern, '', config.credentialsId),
+                activeChoiceGetTagsChoicesScript(releaseRepo, releasePattern, sort, config.credentialsId),
                 false,
                 true
             )
