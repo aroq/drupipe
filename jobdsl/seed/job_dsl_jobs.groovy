@@ -112,7 +112,15 @@ def processJob(jobs, currentFolder, config) {
                             if (project.value.repo && project.value.type != 'root') {
                                 println "Project type: ${project.value.type}"
                                 println "Project repo: ${project.value.repo}"
-                                config.dslParamsHelper.drupipeParamSelectsRelease(delegate, job, config, project.value.name + '_version', project)
+                                if (job.value.source && job.value.source.type == 'tags') {
+                                    config.dslParamsHelper.drupipeParamTagsSelectsDeploy(delegate, job, config, project.value.name + '_version', project)
+                                }
+                                else if (job.value.source && job.value.source.type == 'branches') {
+                                    config.dslParamsHelper.drupipeParamBranchesSelectsDeploy(delegate, job, config, project.value.name + '_version', project)
+                                }
+                                else {
+                                    config.dslParamsHelper.drupipeParamSelectsRelease(delegate, job, config, project.value.name + '_version', project)
+                                }
                             }
                         }
                         ArrayList<String> states_choices
