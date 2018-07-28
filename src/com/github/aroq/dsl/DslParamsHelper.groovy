@@ -113,12 +113,9 @@ class DslParamsHelper {
     }
 
     def drupipeParamSelectsRelease(context, job, config, name, project) {
-        println "Project: ${project.value.name}"
-        println "Sorting: ${job.value.sort}"
-        String sort = job.value.sort ? job.value.sort : ''
+        String sort = (job.value.source && job.value.source.sort) ? job.value.source.sort : ''
         def projectRepo = project.value.repo
         def releasePattern = job.value.containsKey('pattern') ? job.value.pattern : '*'
-        println "Repo: ${projectRepo}"
         drupipeParamChoices(
             context,
             name,
@@ -131,9 +128,7 @@ class DslParamsHelper {
     }
 
     def drupipeParamTagsSelectsDeploy(context, job, config, name, project) {
-        println "Project: ${project.value.name}"
-        println "Sorting: ${job.value.sort}"
-        String sort = job.value.sort ? job.value.sort : ''
+        String sort = (job.value.source && job.value.source.sort) ? job.value.source.sort : ''
         def releaseRepo
         def releasePattern = job.value.source.containsKey('pattern') ? job.value.source.pattern : '*'
         if (job.value.containsKey('source') && job.value.source.containsKey('version_source')) {
@@ -142,7 +137,6 @@ class DslParamsHelper {
         else {
             releaseRepo = project.value.type == 'root' ? project.value.repo : project.value.root_repo
         }
-        println "Repo: ${releaseRepo}"
         if (releaseRepo) {
             drupipeParamChoices(
                 context,
@@ -157,7 +151,6 @@ class DslParamsHelper {
     }
 
     def drupipeParamBranchesSelectsDeploy(context, job, config, name, project) {
-        println "Project: ${project.value.name}"
         def releaseRepo
         def releasePattern = job.value.source.containsKey('pattern') ? job.value.source.pattern : '*'
         if (job.value.containsKey('source') && job.value.source.containsKey('version_source')) {
@@ -166,7 +159,6 @@ class DslParamsHelper {
         else {
             releaseRepo = project.value.type == 'root' ? project.value.repo : project.value.root_repo
         }
-        println "Repo: ${releaseRepo}"
         if (releaseRepo) {
             drupipeParamChoices(
                 context,
