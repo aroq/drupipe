@@ -44,7 +44,7 @@ projectConfigFile: docroot.config
 containerMode: docker
 configSeedType: docman
 defaultDocmanImage: michaeltigr/zebra-build-php-drush-docman:0.0.98
-logRotatorNumToKeep: 2
+logRotatorNumToKeep: 16
 drupipeDockerArgs: '--user root:root --net=host --entrypoint=""'
 
 processors:
