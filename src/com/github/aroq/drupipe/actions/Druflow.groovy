@@ -15,7 +15,19 @@ class Druflow extends BaseAction {
 
     def deploy() {
         def site = action.params.site ? action.params.site : 'default'
-        executeDruflowCommand([argument: "tags/${action.params.reference}", site: site, env: action.pipeline.context.environment, projectName: action.pipeline.context.projectName])
+        String reference
+        if (action.params.reference) {
+            reference = action.params.reference
+        }
+        else {
+            if (action.pipeline.context.jenkinsParams.release) {
+                reference = action.pipeline.context.jenkinsParams.release
+            }
+            else {
+                reference = action.pipeline.context.environmentParams.git_reference
+            }
+        }
+        executeDruflowCommand([argument: "tags/${reference}", site: site, env: action.pipeline.context.environment, projectName: action.pipeline.context.projectName])
     }
 
     def executeDruflowCommand(overrides = [:]) {
