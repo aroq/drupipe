@@ -1,3 +1,6 @@
+Version 0.12.2:
+ - Revert drupipeShell
+
 Version 0.12.1:
  - Merge pull request #151 from aroq/pipeline-stage-block
  - Add pipeline stage block to action calls
