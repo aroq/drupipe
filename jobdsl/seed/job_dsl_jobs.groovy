@@ -171,20 +171,16 @@ def processJob(jobs, currentFolder, config) {
                 def state = job.value.state
                 def buildEnvironment
                 def jobBranch
-                println "Set job params"
                 if (config.docmanConfig && config.docmanConfig.getType() != 'root') {
-                    println "config.docmanConfig && config.docmanConfig.getType() != 'root'"
                     buildEnvironment = config.docmanConfig.getEnvironmentByState(state)
                     jobBranch = config.docmanConfig.getVersionBranch('', state)
                 }
                 else if (config.tags && config.tags.contains('single') && config.components && config.states && config.states.containsKey(state) && config.components.containsKey('master') && config.components.master.containsKey('states') && config.components.master.states.containsKey(state) && config.components.master.states[state].containsKey('version')) {
-                    println "config.tags && config.tags.contains('single') && config.components && config.states && config.states.containsKey(state) && config.components.containsKey('master') && config.components.master.containsKey('states') && config.components.master.states.containsKey(state) && config.components.master.states[state].containsKey('version')"
                     buildEnvironment = config.states[state]
                     jobBranch = config.components.master.states[state].version
                 }
                 else {
                     // TODO: Check it.
-                    println "otherwise"
                     buildEnvironment = job.value.env
                     jobBranch = job.value.branch
                 }
