@@ -88,13 +88,12 @@ println 'Servers: ' + servers.keySet().join(', ')
 def gitlabHelper = new GitlabHelper(script: this, config: configMain)
 
 projects.each { project ->
-    println "PROJECT PARAMS: ${project.value}"
+    println "PROJECT: ${project.value}"
     def config = configMain.clone()
     config = merge(config, project.value)
     def jenkins_servers
     if (config.params.jenkinsServers) {
         jenkins_servers = config.params.jenkinsServers
-        println "Jenkins servers: ${config.jenkins_servers}"
     }
     if (jenkins_servers && config.jenkinsServers.containsKey(config.env.drupipeEnvironment) && config.jenkinsServers[config.env.drupipeEnvironment].containsKey('tags') && jenkins_servers.intersect(config.jenkinsServers[config.env.drupipeEnvironment].tags)) {
         println "CONFIG projectConfigPath: ${config.projectConfigPath}"
