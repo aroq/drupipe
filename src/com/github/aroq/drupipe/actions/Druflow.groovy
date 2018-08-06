@@ -9,22 +9,36 @@ class Druflow extends BaseAction {
 
     def deployFlow() {
         def executeEnvironment = action.params.executeEnvironment ? action.params.executeEnvironment : action.pipeline.context.environment
-        executeDruflowCommand([env: executeEnvironment, projectName: action.pipeline.context.projectName])
+        def projectName = action.params.projectName ? action.params.projectName : action.pipeline.context.projectName
+        executeDruflowCommand([env: executeEnvironment, projectName: projectName])
     }
 
     def deploy() {
         def site = action.params.site ? action.params.site : 'default'
-        executeDruflowCommand([argument: "tags/${action.params.reference}", site: site, env: action.pipeline.context.environment, projectName: action.pipeline.context.projectName])
+        String reference
+        if (action.params.reference) {
+            reference = action.params.reference
+        }
+        else {
+            if (action.pipeline.context.jenkinsParams.release) {
+                reference = action.pipeline.context.jenkinsParams.release
+            }
+            else {
+                reference = action.pipeline.context.environmentParams.git_reference
+            }
+        }
+        executeDruflowCommand([argument: "tags/${reference}", site: site, env: action.pipeline.context.environment, projectName: action.pipeline.context.projectName])
     }
 
     def executeDruflowCommand(overrides = [:]) {
+        def docrootConfigDir = action.params.docrootConfigDir ? action.params.docrootConfigDir : action.pipeline.drupipeConfig.drupipeSourcesController.sourceDir(action.pipeline.drupipeConfig.config, 'project')
         def defaultParams = [
             debug: debugFlag(),
             executeCommand: action.params.executeCommand,
             workspace: action.pipeline.context.workspace,
             // TODO: review this parameter handling.
             docrootDir: action.params.docrootDir ? action.params.docrootDir : action.pipeline.context.docrootDir,
-            docrootConfigDir: action.pipeline.drupipeConfig.drupipeSourcesController.sourceDir(action.pipeline.drupipeConfig.config, 'project'),
+            docrootConfigDir: docrootConfigDir,
         ]
         // TODO: review it.
         if (action.pipeline.context.env.operationsMode) {

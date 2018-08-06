@@ -17,13 +17,18 @@ def call(shellCommand, actionParams = [shell_bash_login:true, return_stdout: fal
     else {
         if (actionParams.shell_bash_login) {
             echo "With bash login session"
-            shellCommand = """#!/bin/bash -l -e
+            shellCommand = """#!/bin/bash -l
+                ${shellCommand}
+                """
+        }
+        else {
+            shellCommand = """#!/bin/sh -e
                 ${shellCommand}
                 """
         }
     }
     echo "Executing shell command: ${shellCommand} with returnStdout=${actionParams.return_stdout}"
-    def result = sh(returnStdout: actionParams.return_stdout, script: "#!/bin/sh -e\n" + shellCommand)
+    def result = sh(returnStdout: actionParams.return_stdout, script: shellCommand)
     if (actionParams.return_stdout) {
         echo "Command output: ${result}"
         [stdout: result]

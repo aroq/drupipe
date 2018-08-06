@@ -113,23 +113,22 @@ class DslParamsHelper {
     }
 
     def drupipeParamSelectsRelease(context, job, config, name, project) {
-        println "Project: ${project.value.name}"
+        String sort = (job.value.source && job.value.source.sort) ? job.value.source.sort : ''
         def projectRepo = project.value.repo
         def releasePattern = job.value.containsKey('pattern') ? job.value.pattern : '*'
-        println "Repo: ${projectRepo}"
         drupipeParamChoices(
             context,
             name,
             'Allows to select tag',
             'PT_SINGLE_SELECT',
-            activeChoiceGetReleasesChoicesScript(projectRepo, releasePattern, ''),
+            activeChoiceGetReleasesChoicesScript(projectRepo, releasePattern, sort, config.credentialsId),
             false,
             true
         )
     }
 
     def drupipeParamTagsSelectsDeploy(context, job, config, name, project) {
-        println "Project: ${project.value.name}"
+        String sort = (job.value.source && job.value.source.sort) ? job.value.source.sort : ''
         def releaseRepo
         def releasePattern = job.value.source.containsKey('pattern') ? job.value.source.pattern : '*'
         if (job.value.containsKey('source') && job.value.source.containsKey('version_source')) {
@@ -138,14 +137,13 @@ class DslParamsHelper {
         else {
             releaseRepo = project.value.type == 'root' ? project.value.repo : project.value.root_repo
         }
-        println "Repo: ${releaseRepo}"
         if (releaseRepo) {
             drupipeParamChoices(
                 context,
                 name,
                 'Allows to select tag',
                 'PT_SINGLE_SELECT',
-                activeChoiceGetTagsChoicesScript(releaseRepo, releasePattern, ''),
+                activeChoiceGetTagsChoicesScript(releaseRepo, releasePattern, sort, config.credentialsId),
                 false,
                 true
             )
@@ -153,7 +151,6 @@ class DslParamsHelper {
     }
 
     def drupipeParamBranchesSelectsDeploy(context, job, config, name, project) {
-        println "Project: ${project.value.name}"
         def releaseRepo
         def releasePattern = job.value.source.containsKey('pattern') ? job.value.source.pattern : '*'
         if (job.value.containsKey('source') && job.value.source.containsKey('version_source')) {
@@ -162,14 +159,13 @@ class DslParamsHelper {
         else {
             releaseRepo = project.value.type == 'root' ? project.value.repo : project.value.root_repo
         }
-        println "Repo: ${releaseRepo}"
         if (releaseRepo) {
             drupipeParamChoices(
                 context,
                 name,
                 'Allows to select branch',
                 'PT_SINGLE_SELECT',
-                activeChoiceGetBranchesChoicesScript(releaseRepo, releasePattern),
+                activeChoiceGetBranchesChoicesScript(releaseRepo, releasePattern, config.credentialsId),
                 false,
                 true
             )
@@ -270,7 +266,7 @@ choices
         script
     }
 
-    def activeChoiceGetTagsChoicesScript(String url, String tagPattern, String sort) {
+    def activeChoiceGetTagsChoicesScript(String url, String tagPattern, String sort, String credentialsId) {
         def script =
             """
 import jenkins.model.*
@@ -371,7 +367,7 @@ def getTags(GitClient gitClient, String gitUrl, tagPattern) {
     return tagSet.sort().reverse();
 }
 
-Credentials credentials = lookupSystemCredentials('zebra')
+Credentials credentials = lookupSystemCredentials('${credentialsId}')
 
 // get git executable on master
 EnvVars environment;
@@ -411,7 +407,7 @@ try {
         script
     }
 
-    def activeChoiceGetBranchesChoicesScript(String url, String branchesPattern) {
+    def activeChoiceGetBranchesChoicesScript(String url, String branchesPattern, String credentialsId) {
         def script =
             """
 import jenkins.model.*
@@ -458,7 +454,7 @@ def getTags(GitClient gitClient, String gitUrl, tagPattern) {
     return tagSet.sort().reverse();
 }
 
-Credentials credentials = lookupSystemCredentials('zebra')
+Credentials credentials = lookupSystemCredentials('${credentialsId}')
 
 // get git executable on master
 EnvVars environment;
@@ -476,7 +472,7 @@ return getTags(git, '${url}', '${branchesPattern}')
         script
     }
 
-    def activeChoiceGetReleasesChoicesScript(String url, String tagPattern, String sort) {
+    def activeChoiceGetReleasesChoicesScript(String url, String tagPattern, String sort, String credentialsId) {
         def script =
             """
 import jenkins.model.*
@@ -567,7 +563,7 @@ def getTags(GitClient gitClient, String gitUrl, tagPattern) {
     } catch (GitException e) {
         tagSet = ['failed']
     }
-    return tagSet.sort().reverse();
+    return tagSet.sort()
 }
 def getBranches(GitClient gitClient, String gitUrl, tagPattern) {
     def branchesSet = []
@@ -581,7 +577,7 @@ def getBranches(GitClient gitClient, String gitUrl, tagPattern) {
     }
     return branchesSet.sort().reverse();
 }
-Credentials credentials = lookupSystemCredentials('zebra')
+Credentials credentials = lookupSystemCredentials('${credentialsId}')
 // get git executable on master
 EnvVars environment;
 final Jenkins jenkins = Jenkins.getActiveInstance();
@@ -600,7 +596,7 @@ try {
     def tagList = getTags(git, gitRepoUrl, tagPattern)
     if (sortPattern == 'x.y.z') {
         if (tagList) {
-            tagList.sort{ tag -> Version.from(tag).toString() }.reverse()
+            tagList = tagList.sort{ tag -> Version.from(tag).toString() }.reverse()
         } else {
             [ 'master' ] // no tags in git repo
         }
@@ -609,8 +605,8 @@ try {
         tagList
     }
     def branchesList = getBranches(git, gitRepoUrl, tagPattern)
-    branchesList.addAll(tagList)
-    return branchesList
+    tagList.addAll(branchesList)
+    return tagList
 } catch( e )  {
     [ e.toString() ]
 }
