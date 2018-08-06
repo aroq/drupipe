@@ -89,12 +89,9 @@ def gitlabHelper = new GitlabHelper(script: this, config: configMain)
 
 projects.each { project ->
     println "PROJECT PARAMS: ${project.value}"
-    println "configMain2: ${configMain}"
     def config = configMain.clone()
-    println "config params before: ${config.params}"
     config = merge(config, project.value)
     def jenkins_servers
-    println "config params: ${config.params}"
     if (config.params.jenkinsServers) {
         jenkins_servers = config.params.jenkinsServers
         println "Jenkins servers: ${config.jenkins_servers}"
