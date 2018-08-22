@@ -39,7 +39,7 @@ class GitlabHelper {
         try {
             if (hook_id) {
                 data << [hook_id: hook_id]
-                http.request("https://${config.repoParams.gitlabAddress}/api/v3/projects/${config.repoParams.projectID}/hooks/${hook_id}", PUT, JSON) {
+                http.request("https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/hooks/${hook_id}", PUT, JSON) {
                     send URLENC, data
                     response.success = { resp, json ->
                         script.println "EDIT HOOK response: ${json}"
@@ -47,7 +47,7 @@ class GitlabHelper {
                 }
             }
             else {
-                http.request("https://${config.repoParams.gitlabAddress}/api/v3/projects/${config.repoParams.projectID}/hooks", POST, JSON) {
+                http.request("https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/hooks", POST, JSON) {
                     send URLENC, data
                     response.success = { resp, json ->
                         script.println "ADD HOOK response: ${json}"
@@ -88,7 +88,7 @@ class GitlabHelper {
                     try {
                         if (webhook.id) {
                             script.println "DELETE HOOK: ${config.repoParams.projectID} -> ${webhook.toString()}"
-                            http.request("https://${config.repoParams.gitlabAddress}/api/v3/projects/${config.repoParams.projectID}/hooks/${webhook.id}", DELETE, JSON) {
+                            http.request("https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/hooks/${webhook.id}", DELETE, JSON) {
                                 response.success = { resp, json ->
                                     script.println "DELETE HOOK response: ${json}"
                                 }
@@ -128,7 +128,7 @@ class GitlabHelper {
     def getWebhooks(String repo) {
         script.println "Get webhooks: ${repo}"
         setRepoProperties(repo)
-        def url = "https://${config.repoParams.gitlabAddress}/api/v3/projects/${config.repoParams.projectID}/hooks?private_token=${config.env.GITLAB_API_TOKEN_TEXT}"
+        def url = "https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/hooks?private_token=${config.env.GITLAB_API_TOKEN_TEXT}"
         def hooks = new groovy.json.JsonSlurper().parseText(new URL(url).text)
         hooks
     }
@@ -140,8 +140,8 @@ class GitlabHelper {
         println config
         try {
             def urls = [
-                "https://${config.repoParams.gitlabAddress}/api/v3/groups/${config.repoParams.groupName}/members?private_token=${config.env.GITLAB_API_TOKEN_TEXT}",
-                "https://${config.repoParams.gitlabAddress}/api/v3/projects/${config.repoParams.projectID}/members?private_token=${config.env.GITLAB_API_TOKEN_TEXT}",
+                "https://${config.repoParams.gitlabAddress}/api/v4/groups/${config.repoParams.groupName}/members?private_token=${config.env.GITLAB_API_TOKEN_TEXT}",
+                "https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/members?private_token=${config.env.GITLAB_API_TOKEN_TEXT}",
             ]
             urls.each { url ->
                 def gitlabUsers = new groovy.json.JsonSlurper().parseText(new URL(url).text)
