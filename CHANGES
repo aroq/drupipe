@@ -1,3 +1,7 @@
+Version 0.12.5:
+ - Merge branch 'gitlab-api-v4'
+ - Update mothership dsl to gitlab api v4
+
 Version 0.12.4:
  - Merge pull request #153 from michael-molchanov/patch-5
  - Add ssh keep alive to ssh config.
