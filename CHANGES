@@ -1,3 +1,9 @@
+Version 0.12.6:
+ - Merge branch 'ip-develop'
+ - Debug
+ - Debug
+ - Debug
+
 Version 0.12.5:
  - Merge branch 'gitlab-api-v4'
  - Update mothership dsl to gitlab api v4
