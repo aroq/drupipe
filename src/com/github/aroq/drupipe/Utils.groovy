@@ -76,6 +76,7 @@ def projectNameByGroupAndRepoName(script, docrootConfigJson, groupName, repoName
             }
         }
     }
+    script.echo "projectNameByGroupAndRepoName: PROJECT NAME: ${result}"
     result
 }
 
