@@ -394,7 +394,7 @@ try {
       }
     }
   else {
-    tagList
+    tagList.reverse()
   }
 
 } catch( e )  {
