@@ -1,3 +1,6 @@
+Version 0.12.7:
+ - Fix tag reverse
+
 Version 0.12.6:
  - Merge branch 'ip-develop'
  - Debug
