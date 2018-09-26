@@ -158,6 +158,9 @@ def processJob(jobs, currentFolder, config) {
                             }
                         }
                     }
+                    properties {
+                        disableConcurrentBuilds()
+                    }
                 }
 
             }
@@ -271,6 +274,7 @@ def processJob(jobs, currentFolder, config) {
                                 gitLabConnection('Gitlab')
                             }
                         }
+                        disableConcurrentBuilds()
                     }
                 }
                 if (config.docmanConfig) {
@@ -411,6 +415,9 @@ def processJob(jobs, currentFolder, config) {
                             }
                         }
                     }
+                    properties {
+                        disableConcurrentBuilds()
+                    }
                 }
             }
             else if (job.value.type == 'common') {
@@ -477,6 +484,9 @@ def processJob(jobs, currentFolder, config) {
                                 scriptPath(pipelineScriptPath)
                             }
                         }
+                    }
+                    properties {
+                        disableConcurrentBuilds()
                     }
 
                     // Configure triggers.
@@ -612,6 +622,9 @@ def processJob(jobs, currentFolder, config) {
                                 scriptPath("${config.projectConfigPath}/${pipelineScript}.groovy")
                             }
                         }
+                    }
+                    properties {
+                        disableConcurrentBuilds()
                     }
                 }
             }
