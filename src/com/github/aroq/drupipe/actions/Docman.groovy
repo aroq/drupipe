@@ -17,7 +17,7 @@ class Docman extends BaseAction {
 
         def docrootConfigJson = script.readFile("${action.pipeline.context.docmanDir}/config/${action.params.docmanJsonConfigFile}")
         if (action.pipeline.context.env.gitlabSourceNamespace) {
-            action.pipeline.context.projectName = utils.projectNameByGroupAndRepoName(script, docrootConfigJson, action.pipeline.context.env.gitlabSourceNamespace, action.pipeline.context.env.gitlabSourceRepoName)
+            action.pipeline.context.jenkinsParams.projectName = utils.projectNameByGroupAndRepoName(script, docrootConfigJson, action.pipeline.context.env.gitlabSourceNamespace, action.pipeline.context.env.gitlabSourceRepoName)
         }
         script.echo "PROJECT NAME: ${action.pipeline.context.jenkinsParams.projectName}"
         [:]
