@@ -691,9 +691,9 @@ def processJob(jobs, currentFolder, config) {
                 freeStyleJob("${currentName}") {
                     concurrentBuild(false)
                     logRotator(-1, config.logRotatorNumToKeep)
-                    wrappers {
-                        timestamps()
-                    }
+//                    wrappers {
+//                        timestamps()
+//                    }
                     parameters {
                         stringParam('debugEnabled', '0')
                         stringParam('configRepo', config.configRepo)

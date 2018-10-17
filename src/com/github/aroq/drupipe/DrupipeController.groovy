@@ -47,7 +47,7 @@ class DrupipeController implements Serializable {
             notification.level = 'build'
 
             try {
-                script.timestamps {
+//                script.timestamps {
                     init()
                     configuration()
                     if (configVersion() > 1) {
@@ -120,7 +120,7 @@ class DrupipeController implements Serializable {
                             script.deleteDir()
                         }
                     }
-                }
+//                }
             }
             catch (e) {
                 notification.status = 'FAILED'
