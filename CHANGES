@@ -1,3 +1,9 @@
+Version 0.13.2:
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Merge pull request #155 from michael-molchanov/patch-7
+ - Update Behat.groovy
+ - Add entrypoint to behat run.
+
 Version 0.13.1:
  - Merge pull request #154 from michael-molchanov/patch-6
  - Fix params and pathes in Behat action.
