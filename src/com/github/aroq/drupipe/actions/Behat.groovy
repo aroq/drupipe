@@ -26,7 +26,7 @@ class Behat extends BaseAction {
                 
                 this.script.archiveArtifacts artifacts: 'reports/**'
                 try {
-                    this.script.publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'reports', reportFiles: 'index.html', reportName: 'Selenese', reportTitles: ''])
+                    this.script.publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'reports', reportFiles: 'index.html', reportName: 'Behat', reportTitles: ''])
                 }
                 catch (e) {
                     this.script.echo "Publish HTML plugin isn't installed."
