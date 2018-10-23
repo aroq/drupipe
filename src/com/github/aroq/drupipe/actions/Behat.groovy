@@ -17,12 +17,20 @@ class Behat extends BaseAction {
         if (script.fileExists("${action.params.masterPath}/${action.params.behatExecutable}")) {
             if (script.fileExists("${action.params.masterPath}/${action.params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml")) {
                 script.drupipeShell(
-                    """
+                """
                 cd ${action.params.masterPath}
                 mkdir -p ${action.params.workspaceRelativePath}/reports
-                ${action.params.masterRelativePath}/${action.params.behatExecutable} --config=${action.params.masterRelativePath}/${action.params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml ${action.params.behat_args} --out=${action.params.workspaceRelativePath}/reports ${tags} ${features}
-            """, action.params
+                /opt/bin/entry_point.sh "${action.pipeline.context.workspace}/${action.params.behatExecutable} --config=${action.pipeline.context.workspace}/${action.params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml ${action.params.behat_args} --out=${action.pipeline.context.workspace}/reports ${tags} ${features}"
+                """, action.params
                 )
+                
+                this.script.archiveArtifacts artifacts: 'reports/**'
+                try {
+                    this.script.publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'reports', reportFiles: 'index.html', reportName: 'Behat', reportTitles: ''])
+                }
+                catch (e) {
+                    this.script.echo "Publish HTML plugin isn't installed."
+                }
             }
             else {
                 throw new Exception("Behat config file not found: ${action.params.masterPath}/${action.params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml")
