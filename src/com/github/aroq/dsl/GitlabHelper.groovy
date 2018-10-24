@@ -140,13 +140,29 @@ class GitlabHelper {
         println config
         try {
             def urls = [
-                "https://${config.repoParams.gitlabAddress}/api/v4/groups/${config.repoParams.groupName}/members?private_token=${config.env.GITLAB_API_TOKEN_TEXT}",
-                "https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/members?private_token=${config.env.GITLAB_API_TOKEN_TEXT}",
+                "https://${config.repoParams.gitlabAddress}/api/v4/groups/${config.repoParams.groupName}/members",
+                "https://${config.repoParams.gitlabAddress}/api/v4/projects/${config.repoParams.projectID}/members",
             ]
+            def http = new HTTPBuilder()
+            http.setHeaders(['PRIVATE-TOKEN': config.env.GITLAB_API_TOKEN_TEXT])
             urls.each { url ->
-                def gitlabUsers = new groovy.json.JsonSlurper().parseText(new URL(url).text)
-                users << gitlabUsers.collectEntries { user ->
-                    [(user.username): user.access_level]
+                def totalPages = 1
+                http.request("${url}?per_page=100&page=1", GET, JSON) {
+                    response.success = { resp, json ->
+                        totalPages = resp.getFirstHeader('X-Total-Pages').getValue().toInteger()
+                        users << json.collectEntries { user ->
+                            [(user.username): user.access_level]
+                        }
+                    }
+                }
+                for (def i = 2; i <= totalPages; i++){
+                    http.request("${url}?per_page=100&page=${i}", GET, JSON) {
+                        response.success = { resp, json ->
+                            users << json.collectEntries { user ->
+                                [(user.username): user.access_level]
+                            }
+                        }
+                    }
                 }
             }
         }
