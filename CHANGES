@@ -1,3 +1,8 @@
+Version 0.13.4:
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Merge pull request #157 from michael-molchanov/patch-8
+ - Fix reports mkdir.
+
 Version 0.13.3:
  - Merge pull request #156 from michael-molchanov/master
  - Allow to use paged gitlab api.
