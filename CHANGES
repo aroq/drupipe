@@ -1,3 +1,8 @@
+Version 0.13.5:
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Merge pull request #158 from michael-molchanov/patch-9
+ - Use try-catch to avoid artifact store skip.
+
 Version 0.13.4:
  - Merge branch 'master' of github.com:aroq/drupipe
  - Merge pull request #157 from michael-molchanov/patch-8
