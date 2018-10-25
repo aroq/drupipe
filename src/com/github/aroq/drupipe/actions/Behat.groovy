@@ -18,8 +18,8 @@ class Behat extends BaseAction {
             if (script.fileExists("${action.params.masterPath}/${action.params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml")) {
                 script.drupipeShell(
                 """
-                cd ${action.params.masterPath}
-                mkdir -p ${action.params.workspaceRelativePath}/reports
+                cd ${action.pipeline.context.workspace}
+                mkdir -p ${action.pipeline.context.workspace}/reports
                 /opt/bin/entry_point.sh "${action.pipeline.context.workspace}/${action.params.behatExecutable} --config=${action.pipeline.context.workspace}/${action.params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml ${action.params.behat_args} --out=${action.pipeline.context.workspace}/reports ${tags} ${features}"
                 """, action.params
                 )
