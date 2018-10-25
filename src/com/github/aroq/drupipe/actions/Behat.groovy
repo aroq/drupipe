@@ -16,13 +16,18 @@ class Behat extends BaseAction {
         // TODO: Add settings to exit with error on Behat errors.
         if (script.fileExists("${action.params.masterPath}/${action.params.behatExecutable}")) {
             if (script.fileExists("${action.params.masterPath}/${action.params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml")) {
-                script.drupipeShell(
-                """
-                cd ${action.pipeline.context.workspace}
-                mkdir -p ${action.pipeline.context.workspace}/reports
-                /opt/bin/entry_point.sh "${action.pipeline.context.workspace}/${action.params.behatExecutable} --config=${action.pipeline.context.workspace}/${action.params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml ${action.params.behat_args} --out=${action.pipeline.context.workspace}/reports ${tags} ${features}"
-                """, action.params
-                )
+                try {
+                    script.drupipeShell(
+                    """
+                    cd ${action.pipeline.context.workspace}
+                    mkdir -p ${action.pipeline.context.workspace}/reports
+                    /opt/bin/entry_point.sh "${action.pipeline.context.workspace}/${action.params.behatExecutable} --config=${action.pipeline.context.workspace}/${action.params.pathToEnvironmentConfig}/behat.${testEnvironment}.yml ${action.params.behat_args} --out=${action.pipeline.context.workspace}/reports ${tags} ${features}"
+                    """, action.params
+                    )
+                } 
+                catch (e) {
+                    script.currentBuild.result = "UNSTABLE"
+                }
                 
                 this.script.archiveArtifacts artifacts: 'reports/**'
                 try {
