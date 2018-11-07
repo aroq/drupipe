@@ -107,4 +107,14 @@ class DslHelper {
       }
       return config.configRepo
     }
+
+    def drupipeBlockOn(context, blockProjects, level = 'GLOBAL', scan = 'BUILDABLE') {
+        if (context.metaClass.respondsTo(context, 'blockOn', ArrayList)) {
+            context.blockOn(blockProjects) {
+                blockLevel(level)
+                scanQueueFor(scan)
+            }
+        }
+    }
+
 }
