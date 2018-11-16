@@ -1,3 +1,9 @@
+Version 0.13.6:
+ - Merge branch 'master' of github.com:aroq/drupipe
+ - Merge pull request #159 from michael-molchanov/master
+ - Add job property.
+ - Add block on support. Allow to set choices params for common jobs.
+
 Version 0.13.5:
  - Merge branch 'master' of github.com:aroq/drupipe
  - Merge pull request #158 from michael-molchanov/patch-9
