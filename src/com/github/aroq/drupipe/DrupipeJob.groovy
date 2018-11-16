@@ -19,7 +19,7 @@ class DrupipeJob extends DrupipeBase {
     HashMap source
 
     def pattern
-    
+
     String cron
 
     def triggers
@@ -29,6 +29,8 @@ class DrupipeJob extends DrupipeBase {
     def notify
 
     def webhooks
+
+    def block_on
 
     def context
 

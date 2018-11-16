@@ -106,6 +106,9 @@ def processJob(jobs, currentFolder, config) {
                 println "pipelineScriptDirPath: ${pipelineScriptDirPath}"
                 pipelineJob(currentName) {
                     concurrentBuild(false)
+                    if (job.value.containsKey('block_on')) {
+                        config.dslHelper.drupipeBlockOn(delegate, job.value.block_on)
+                    }
                     logRotator(-1, localConfig.logRotatorNumToKeep)
                     parameters {
                         config.docmanConfig.projects?.each { project ->
@@ -203,6 +206,9 @@ def processJob(jobs, currentFolder, config) {
                         quietPeriod(config.quietPeriodSeconds)
                     }
                     concurrentBuild(false)
+                    if (job.value.containsKey('block_on')) {
+                        config.dslHelper.drupipeBlockOn(delegate, job.value.block_on)
+                    }
                     logRotator(-1, localConfig.logRotatorNumToKeep)
                     parameters {
                         stringParam('projectName', 'master')
@@ -371,6 +377,9 @@ def processJob(jobs, currentFolder, config) {
                 println "pipelineScriptDirPath: ${pipelineScriptDirPath}"
                 pipelineJob(currentName) {
                     concurrentBuild(false)
+                    if (job.value.containsKey('block_on')) {
+                        config.dslHelper.drupipeBlockOn(delegate, job.value.block_on)
+                    }
                     logRotator(-1, localConfig.logRotatorNumToKeep)
                     parameters {
                         config.docmanConfig.projects?.each { project ->
@@ -448,13 +457,28 @@ def processJob(jobs, currentFolder, config) {
                 pipelineJob("${currentName}") {
                     concurrentBuild(false)
                     logRotator(-1, localConfig.logRotatorNumToKeep)
+                    if (job.value.containsKey('block_on')) {
+                        config.dslHelper.drupipeBlockOn(delegate, job.value.block_on)
+                    }
                     parameters {
                         if (config.config_version < 2) {
                             // TODO: check if it can be replaced by pipelinesRepo.
                             stringParam('configRepo', pipelinesRepo)
                         }
                         job.value.params?.each { key, value ->
-                            stringParam(key, value)
+                            println "PARAM ${key}: ${value}"
+                            if (value instanceof ArrayList) {
+                                config.dslParamsHelper.drupipeParamChoices(
+                                    delegate,
+                                    key,
+                                    '',
+                                    'PT_SINGLE_SELECT',
+                                    config.dslParamsHelper.activeChoiceGetChoicesScript(value, value.first().toString())
+                                )
+                            }
+                            else {
+                                stringParam(key, value)
+                            }
                         }
                         config.dslParamsHelper.drupipeParamsDefault(delegate, job, config)
                     }
@@ -587,6 +611,9 @@ def processJob(jobs, currentFolder, config) {
 
                 pipelineJob("${currentName}") {
                     concurrentBuild(false)
+                    if (job.value.containsKey('block_on')) {
+                        config.dslHelper.drupipeBlockOn(delegate, job.value.block_on)
+                    }
                     logRotator(-1, config.logRotatorNumToKeep)
                     parameters {
                         stringParam('configRepo', repo)
@@ -631,6 +658,9 @@ def processJob(jobs, currentFolder, config) {
             else if (job.value.type == 'trigger_all') {
                 freeStyleJob("${currentName}") {
                     concurrentBuild(false)
+                    if (job.value.containsKey('block_on')) {
+                        config.dslHelper.drupipeBlockOn(delegate, job.value.block_on)
+                    }
                     logRotator(-1, config.logRotatorNumToKeep)
                     parameters {
                         stringParam('debugEnabled', '0')
@@ -690,6 +720,9 @@ def processJob(jobs, currentFolder, config) {
             else if (job.value.type == 'multistep_all') {
                 freeStyleJob("${currentName}") {
                     concurrentBuild(false)
+                    if (job.value.containsKey('block_on')) {
+                        config.dslHelper.drupipeBlockOn(delegate, job.value.block_on)
+                    }
                     logRotator(-1, config.logRotatorNumToKeep)
                     wrappers {
                         timestamps()
