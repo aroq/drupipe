@@ -1,3 +1,7 @@
+Version 0.13.7:
+ - Merge pull request #160 from michael-molchanov/patch-10
+ - Update image version.
+
 Version 0.13.6:
  - Merge branch 'master' of github.com:aroq/drupipe
  - Merge pull request #159 from michael-molchanov/master
