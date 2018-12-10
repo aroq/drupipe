@@ -1,3 +1,8 @@
+Version 0.14.0:
+ - Merge pull request #161 from michael-molchanov/aroq_master
+ - Add pod name support and use it for node name.
+ - Add select params support to trigger and multistep.
+
 Version 0.13.7:
  - Merge pull request #160 from michael-molchanov/patch-10
  - Update image version.
