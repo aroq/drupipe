@@ -679,7 +679,18 @@ def processJob(jobs, currentFolder, config) {
                                 jobInFolder.value.params?.each { key, value ->
                                     def job_prefix = jobInFolder.key.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
                                     def prefixed_key = job_prefix + '_' + key
-                                    stringParam(prefixed_key, value)
+                                    if (value instanceof ArrayList) {
+                                        config.dslParamsHelper.drupipeParamChoices(
+                                            delegate,
+                                            prefixed_key,
+                                            '',
+                                            'PT_SINGLE_SELECT',
+                                            config.dslParamsHelper.activeChoiceGetChoicesScript(value, value.first().toString())
+                                        )
+                                    }
+                                    else {
+                                        stringParam(prefixed_key, value)
+                                    }
                                 }
                             }
                         }
@@ -730,8 +741,34 @@ def processJob(jobs, currentFolder, config) {
                     parameters {
                         stringParam('debugEnabled', '0')
                         stringParam('configRepo', config.configRepo)
-                        job.value.params?.each { key, value ->
-                            stringParam(key, value)
+                        for (jobInFolder in jobs)  {
+                            if (jobInFolder.value.jobs) {
+                                println "Skip job with chilldren."
+                            }
+                            else if (jobInFolder.value.type == 'trigger_all') {
+                                println "Skip trigger_all job."
+                            }
+                            else if (jobInFolder.value.type == 'multistep_all') {
+                                println "Skip multistep_all job."
+                            }
+                            else {
+                                jobInFolder.value.params?.each { key, value ->
+                                    def job_prefix = jobInFolder.key.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
+                                    def prefixed_key = job_prefix + '_' + key
+                                    if (value instanceof ArrayList) {
+                                        config.dslParamsHelper.drupipeParamChoices(
+                                            delegate,
+                                            prefixed_key,
+                                            '',
+                                            'PT_SINGLE_SELECT',
+                                            config.dslParamsHelper.activeChoiceGetChoicesScript(value, value.first().toString())
+                                        )
+                                    }
+                                    else {
+                                        stringParam(prefixed_key, value)
+                                    }
+                                }
+                            }
                         }
                     }
                     steps {
