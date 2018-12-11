@@ -1,3 +1,7 @@
+Version 0.14.2:
+ - Merge pull request #163 from michael-molchanov/patch-12
+ - Move def outside if.
+
 Version 0.14.1:
  - Merge pull request #162 from michael-molchanov/patch-11
  - Add define to nodeName variable.
