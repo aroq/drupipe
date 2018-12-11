@@ -5,13 +5,11 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
     DrupipeController controller = pod.controller
     controller.drupipeLogger.debug "Container mode: kubernetes"
     controller.drupipeLogger.debug "Pod name: ${pod.name}"
+    def nodeName = pod.name
     if (pod.name == null) {
         // SHA1 hash of job BUILD_TAG to make pod name unique.
         def sha = controller.utils.getSHA1(controller.context.env.BUILD_TAG)
-        def nodeName = "${controller.context.env.BUILD_TAG.take(45).replaceAll(/^[^a-zA-Z0-9]/, "").replaceAll(/[^a-zA-Z0-9]$/, "")}-${sha.take(8).replaceAll(/^[^a-zA-Z0-9]/, "").replaceAll(/[^a-zA-Z0-9]$/, "")}"
-    }
-    else {
-        def nodeName = pod.name
+        nodeName = "${controller.context.env.BUILD_TAG.take(45).replaceAll(/^[^a-zA-Z0-9]/, "").replaceAll(/[^a-zA-Z0-9]$/, "")}-${sha.take(8).replaceAll(/^[^a-zA-Z0-9]/, "").replaceAll(/[^a-zA-Z0-9]$/, "")}"
     }
     def containerNames = []
     def containersToExecute= []
