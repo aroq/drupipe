@@ -39,98 +39,98 @@ class DrupipeController implements Serializable {
     }
 
     def execute(body = null) {
-        script.ansiColor('xterm') {
-            context.jenkinsParams = params
-            utils = new com.github.aroq.drupipe.Utils()
+        script.lock('global-lock') {
+            script.ansiColor('xterm') {
+                context.jenkinsParams = params
+                utils = new com.github.aroq.drupipe.Utils()
 
-            notification.name = 'Build'
-            notification.level = 'build'
+                notification.name = 'Build'
+                notification.level = 'build'
 
-            try {
-                script.timestamps {
-                    init()
-                    configuration()
-                    if (configVersion() > 1) {
+                try {
+                    script.timestamps {
+                        init()
+                        configuration()
+                        if (configVersion() > 1) {
+                            script.node('master') {
+                                // TODO: Bring it back.
+                                // Secret option for emergency remove workspace.
+                                if (context.job) {
+                                    def jobConfig = context.job
+                                    archiveObjectJsonAndYaml(jobConfig, 'job')
+                                    script.echo "Configuration end"
+                                    drupipeLogger.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [], 'INFO')
+                                    job = new DrupipeJob(jobConfig)
+                                    job.controller = this
+                                }
+                            }
+                            job.execute()
+                        } else {
+                            // For version 1 configs.
+                            if (body) {
+                                body(this)
+                            }
+                            executeVersion1()
+                        }
+
+                        // Trigger other jobs if configured.
                         script.node('master') {
-                            // TODO: Bring it back.
-                            // Secret option for emergency remove workspace.
-                            if (context.job) {
-                                def jobConfig = context.job
-                                archiveObjectJsonAndYaml(jobConfig, 'job')
-                                script.echo "Configuration end"
-                                drupipeLogger.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [], 'INFO')
-                                job = new DrupipeJob(jobConfig)
-                                job.controller = this
-                            }
-                        }
-                        job.execute()
-                    }
-                    else {
-                        // For version 1 configs.
-                        if (body) {
-                            body(this)
-                        }
-                        executeVersion1()
-                    }
+                            script.echo "Trigger other jobs if configured"
+                            if (context.job && context.job.trigger) {
+                                for (def i = 0; i < context.job.trigger.size(); i++) {
+                                    def trigger_job = context.job.trigger[i]
 
-                    // Trigger other jobs if configured.
-                    script.node('master') {
-                        script.echo "Trigger other jobs if configured"
-                        if (context.job && context.job.trigger) {
-                            for (def i = 0; i < context.job.trigger.size(); i++) {
-                                def trigger_job = context.job.trigger[i]
-
-                                // Check disabled triggers.
-                                def disable_trigger = []
-                                if (utils.isTriggeredByUser() && context.jenkinsParams && context.jenkinsParams.disable_trigger && context.jenkinsParams.disable_trigger instanceof CharSequence) {
-                                    disable_trigger = context.jenkinsParams.disable_trigger.split(",")
-                                }
-                                if (trigger_job.name in disable_trigger) {
-                                    script.echo "Trigger job ${trigger_job.name} were disabled"
-                                }
-                                else {
-                                    script.echo "Triggering trigger name ${trigger_job.name} and job name ${trigger_job.job}"
-            //                        this.utils.dump(context, trigger_job, "TRIGGER JOB ${i}")
-
-                                    def params = []
-                                    def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
-
-                                    // Add default job params.
-                                    if (context.jenkinsParams) {
-                                        context.jenkinsParams.each { name, value ->
-                                            params << script.string(name: name, value: String.valueOf(value))
-                                        }
+                                    // Check disabled triggers.
+                                    def disable_trigger = []
+                                    if (utils.isTriggeredByUser() && context.jenkinsParams && context.jenkinsParams.disable_trigger && context.jenkinsParams.disable_trigger instanceof CharSequence) {
+                                        disable_trigger = context.jenkinsParams.disable_trigger.split(",")
                                     }
+                                    if (trigger_job.name in disable_trigger) {
+                                        script.echo "Trigger job ${trigger_job.name} were disabled"
+                                    } else {
+                                        script.echo "Triggering trigger name ${trigger_job.name} and job name ${trigger_job.job}"
+                                        //                        this.utils.dump(context, trigger_job, "TRIGGER JOB ${i}")
 
-                                    // Add trigger job params.
-                                    if (trigger_job.params) {
-                                        trigger_job.params.each { name, value ->
-                                            // Check trigger job param exists in job params, use config param otherwise.
-                                            def trigger_param_value = context.jenkinsParams[trigger_job_name_safe + '_' + name] ? context.jenkinsParams[trigger_job_name_safe + '_' + name] : value
-                                            params << script.string(name: name, value: String.valueOf(trigger_param_value))
+                                        def params = []
+                                        def trigger_job_name_safe = trigger_job.name.replaceAll(/^[^a-zA-Z_$]+/, '').replaceAll(/[^a-zA-Z0-9_]+/, "_").toLowerCase()
+
+                                        // Add default job params.
+                                        if (context.jenkinsParams) {
+                                            context.jenkinsParams.each { name, value ->
+                                                params << script.string(name: name, value: String.valueOf(value))
+                                            }
                                         }
-                                    }
 
-                                    script.build(job: trigger_job.job, wait: false, propagate: false, parameters: params)
+                                        // Add trigger job params.
+                                        if (trigger_job.params) {
+                                            trigger_job.params.each { name, value ->
+                                                // Check trigger job param exists in job params, use config param otherwise.
+                                                def trigger_param_value = context.jenkinsParams[trigger_job_name_safe + '_' + name] ? context.jenkinsParams[trigger_job_name_safe + '_' + name] : value
+                                                params << script.string(name: name, value: String.valueOf(trigger_param_value))
+                                            }
+                                        }
+
+                                        script.build(job: trigger_job.job, wait: false, propagate: false, parameters: params)
+                                    }
                                 }
                             }
-                        }
-                        if (context.cleanup_success_jobs_workspace == 1 || context.cleanup_success_jobs_workspace == '1' || context.cleanup_success_jobs_workspace == true || context.cleanup_success_jobs_workspace == 'true') {
-                            script.echo 'CLEANUP SUCCESS JOB WORKSPACE'
-                            script.deleteDir()
+                            if (context.cleanup_success_jobs_workspace == 1 || context.cleanup_success_jobs_workspace == '1' || context.cleanup_success_jobs_workspace == true || context.cleanup_success_jobs_workspace == 'true') {
+                                script.echo 'CLEANUP SUCCESS JOB WORKSPACE'
+                                script.deleteDir()
+                            }
                         }
                     }
                 }
-            }
-            catch (e) {
-                notification.status = 'FAILED'
-                throw e
-            }
-            finally {
-                if (notification.status != 'FAILED') {
-                    notification.status = 'SUCCESSFUL'
+                catch (e) {
+                    notification.status = 'FAILED'
+                    throw e
                 }
-                utils.pipelineNotify(context, notification)
+                finally {
+                    if (notification.status != 'FAILED') {
+                        notification.status = 'SUCCESSFUL'
+                    }
+                    utils.pipelineNotify(context, notification)
+                }
             }
         }
     }
