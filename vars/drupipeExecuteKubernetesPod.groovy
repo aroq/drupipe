@@ -47,6 +47,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
     podTemplate(
         label: nodeName,
         containers: containersToExecute,
+        idleMinutes: 10,
     ) {
         node(nodeName) {
             if (unipipe_retrieve_config) {
