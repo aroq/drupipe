@@ -50,27 +50,24 @@ class DrupipeController implements Serializable {
                 try {
                     script.timestamps {
                         init()
+                        script.lock('global-configuration') {
+                            configuration()
+                        }
                         if (configVersion() > 1) {
-                            script.lock('global-configuration') {
-                                configuration()
-                                script.node('master') {
-                                    // TODO: Bring it back.
-                                    // Secret option for emergency remove workspace.
-                                    if (context.job) {
-                                        def jobConfig = context.job
-                                        archiveObjectJsonAndYaml(jobConfig, 'job')
-                                        script.echo "Configuration end"
-                                        drupipeLogger.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [], 'INFO')
-                                        job = new DrupipeJob(jobConfig)
-                                        job.controller = this
-                                    }
+                            script.node('master') {
+                                // TODO: Bring it back.
+                                // Secret option for emergency remove workspace.
+                                if (context.job) {
+                                    def jobConfig = context.job
+                                    archiveObjectJsonAndYaml(jobConfig, 'job')
+                                    script.echo "Configuration end"
+                                    drupipeLogger.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [], 'INFO')
+                                    job = new DrupipeJob(jobConfig)
+                                    job.controller = this
                                 }
                             }
                             job.execute()
                         } else {
-                            script.lock('global-configuration') {
-                                configuration()
-                            }
                             // For version 1 configs.
                             if (body) {
                                 body(this)
