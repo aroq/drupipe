@@ -39,7 +39,7 @@ class DrupipeController implements Serializable {
     }
 
     def execute(body = null) {
-        script.lock('global-lock') {
+        script.lock(label: 'global', quantity: 1) {
             script.ansiColor('xterm') {
                 context.jenkinsParams = params
                 utils = new com.github.aroq.drupipe.Utils()
@@ -50,14 +50,18 @@ class DrupipeController implements Serializable {
                 try {
                     script.timestamps {
                         init()
-                        configuration()
+                        script.lock('global-configuration') {
+                            configuration()
+                        }
                         if (configVersion() > 1) {
                             script.node('master') {
                                 // TODO: Bring it back.
                                 // Secret option for emergency remove workspace.
                                 if (context.job) {
                                     def jobConfig = context.job
-                                    archiveObjectJsonAndYaml(jobConfig, 'job')
+                                    script.lock('global-configuration') {
+                                        archiveObjectJsonAndYaml(jobConfig, 'job')
+                                    }
                                     script.echo "Configuration end"
                                     drupipeLogger.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [], 'INFO')
                                     job = new DrupipeJob(jobConfig)
