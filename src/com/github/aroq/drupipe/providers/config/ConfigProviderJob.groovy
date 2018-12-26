@@ -55,7 +55,7 @@ class ConfigProviderJob extends ConfigProviderBase {
                 throw new Exception("ConfigProviderJob->provide: No config.jobs are defined")
             }
             script.sh("mkdir -p ${prefixPath}")
-            controller.archiveObject(jobConfigFileName, drupipeConfig.config)
+            controller.serializeObject(jobConfigFileName, drupipeConfig.config)
         }
         drupipeConfig.config
     }
