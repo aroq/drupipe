@@ -422,6 +422,7 @@ def deepGet(object, path) {
 }
 
 def serializeAndDeserialize(params, mode = 'yaml') {
+    echo "serializeAndDeserialize"
     def result = [:]
     def filePath = ".unipipe/temp/serializeAndDeserialize.${mode}"
     if (params) {
@@ -433,7 +434,6 @@ def serializeAndDeserialize(params, mode = 'yaml') {
             result = readYaml(file: filePath)
         }
         else if (mode == 'json') {
-
             def outJson = groovy.json.JsonOutput.toJson(params)
             writeFile file: filePath, text: outJson, encoding: 'UTF-8'
             result = readJSON(file: filePath)
