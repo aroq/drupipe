@@ -4,6 +4,14 @@ class ConfigProviderProject extends ConfigProviderBase {
 
     def provide() {
         def projectConfig
+        def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
+
+        def fileName = sourceDir + "/test/ConfigProviderProject.yaml"
+        if (this.script.fileExists(fileName)) {
+            script.echo "Cached ConfigProviderProject is found, loading..."
+            return script.readYaml(file: fileName)
+        }
+
         controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config.configRepo,"projectConfig repo: ${drupipeConfig.config.configRepo}", [:])
 
         if (drupipeConfig.config.project_type == 'single') {
@@ -38,7 +46,6 @@ class ConfigProviderProject extends ConfigProviderBase {
 
             def fileName = null
             controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.drupipeSourcesController.loadedSources, "loadedSources", [debugMode: 'json'])
-            def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
             controller.drupipeLogger.trace "PROJECTS SOURCE DIR: ${sourceDir}"
 
             def filesToCheck = [
