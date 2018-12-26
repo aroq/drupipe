@@ -20,43 +20,42 @@ class ConfigProviderJob extends ConfigProviderBase {
         }
 
 //        }
-        if (drupipeConfig.config.jobs) {
-            controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'context_unprocessed')
+        script.lock('ConfigProviderJob') {
+            if (drupipeConfig.config.jobs) {
+                controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'context_unprocessed')
 
-            String jobName = drupipeConfig.config.env.JOB_NAME != 'persistent/mothership' ? drupipeConfig.config.jenkinsJobName : 'mothership'
+                String jobName = drupipeConfig.config.env.JOB_NAME != 'persistent/mothership' ? drupipeConfig.config.jenkinsJobName : 'mothership'
 
-            if (jobName == 'mothership') {
-                drupipeConfig.config.config_version = 2
-            }
-            // Performed here as needed later for job processing.
-            controller.drupipeConfig.process()
-
-            drupipeConfig.config.jobs = processJobs(drupipeConfig.config.jobs)
-
-            if (jobName.contains('/')) {
-                drupipeConfig.config.job = jobName.tokenize('/').inject(drupipeConfig.config, { obj, prop ->
-                    obj.jobs[prop]
-                })
-            }
-            else {
-                drupipeConfig.config.job = drupipeConfig.config.jobs[jobName]
-//                drupipeConfig.config.config_version = 2
-            }
-
-            if (drupipeConfig.config.job) {
-                if (drupipeConfig.config.job.context) {
-                    drupipeConfig.config = utils.merge(drupipeConfig.config, drupipeConfig.config.job.context)
+                if (jobName == 'mothership') {
+                    drupipeConfig.config.config_version = 2
                 }
-                controller.drupipeLogger.jsonDump(drupipeConfig.config.job,'CONFIG JOB')
+                // Performed here as needed later for job processing.
+                controller.drupipeConfig.process()
+
+                drupipeConfig.config.jobs = processJobs(drupipeConfig.config.jobs)
+
+                if (jobName.contains('/')) {
+                    drupipeConfig.config.job = jobName.tokenize('/').inject(drupipeConfig.config, { obj, prop ->
+                        obj.jobs[prop]
+                    })
+                } else {
+                    drupipeConfig.config.job = drupipeConfig.config.jobs[jobName]
+                    //                drupipeConfig.config.config_version = 2
+                }
+
+                if (drupipeConfig.config.job) {
+                    if (drupipeConfig.config.job.context) {
+                        drupipeConfig.config = utils.merge(drupipeConfig.config, drupipeConfig.config.job.context)
+                    }
+                    controller.drupipeLogger.jsonDump(drupipeConfig.config.job, 'CONFIG JOB')
+                } else {
+                    throw new Exception("ConfigProviderJob->provide: No job is defined.")
+                }
+            } else {
+                throw new Exception("ConfigProviderJob->provide: No config.jobs are defined")
             }
-            else {
-                throw new Exception("ConfigProviderJob->provide: No job is defined.")
-            }
+            controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'ConfigProviderJob')
         }
-        else {
-            throw new Exception("ConfigProviderJob->provide: No config.jobs are defined")
-        }
-        controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'ConfigProviderJob')
         drupipeConfig.config
     }
 

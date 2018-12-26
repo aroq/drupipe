@@ -50,9 +50,9 @@ class DrupipeController implements Serializable {
                 try {
                     script.timestamps {
                         init()
-                        script.lock('global-configuration') {
+//                        script.lock('global-configuration') {
                             configuration()
-                        }
+//                        }
                         if (configVersion() > 1) {
                             script.node('master') {
                                 // TODO: Bring it back.

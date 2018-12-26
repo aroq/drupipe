@@ -41,75 +41,76 @@ class ConfigProviderProject extends ConfigProviderBase {
             script.echo "Cached ConfigProviderProject is not found: " + projectConfigFileName
         }
 
-        if (drupipeConfig.config.configRepo) {
-            projectConfig = drupipeConfig.drupipeSourcesController.sourceLoad(
-                sourceName: 'project',
-                configType: 'groovy',
-                configPath: drupipeConfig.config.projectConfigFile,
-            )
+        script.lock('ConfigProviderProject') {
+            if (drupipeConfig.config.configRepo) {
+                projectConfig = drupipeConfig.drupipeSourcesController.sourceLoad(
+                        sourceName: 'project',
+                        configType: 'groovy',
+                        configPath: drupipeConfig.config.projectConfigFile,
+                )
 
-            def fileName = null
-            controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.drupipeSourcesController.loadedSources, "loadedSources", [debugMode: 'json'])
-            controller.drupipeLogger.trace "PROJECTS SOURCE DIR: ${sourceDir}"
+                def fileName = null
+                controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.drupipeSourcesController.loadedSources, "loadedSources", [debugMode: 'json'])
+                controller.drupipeLogger.trace "PROJECTS SOURCE DIR: ${sourceDir}"
 
-            def filesToCheck = [
-                ".unipipe/config.yaml",
-                ".unipipe/config.yml",
-                ".drupipe/config.yaml",
-                ".drupipe/config.yml",
-                "config.yaml",
-                "config.yml"
-            ]
+                def filesToCheck = [
+                        ".unipipe/config.yaml",
+                        ".unipipe/config.yml",
+                        ".drupipe/config.yaml",
+                        ".drupipe/config.yml",
+                        "config.yaml",
+                        "config.yml"
+                ]
 
-            for (def ifc = 0; ifc < filesToCheck.size(); ifc++) {
-                def fileToCheck = filesToCheck[ifc]
-                def fileNameToCheck = sourceDir + '/' + fileToCheck
-                controller.drupipeLogger.trace "PROJECT FILE NAME TO CHECK: ${fileNameToCheck}"
-                if (this.script.fileExists(fileNameToCheck)) {
-                    controller.drupipeLogger.trace "SELECTING PROJECT FILE: ${fileNameToCheck}"
-                    fileName = fileToCheck
-                    break
-                }
-            }
-
-            if (fileName != null) {
-                projectConfig = utils.merge(projectConfig, drupipeConfig.drupipeSourcesController.sourceLoad(
-                    sourceName: 'project',
-                    configType: 'yaml',
-                    configPath: fileName,
-                ))
-            }
-
-            controller.drupipeLogger.debugLog(drupipeConfig.config, projectConfig, 'Project config', [debugMode: 'json'])
-
-            if (projectConfig.config_version && projectConfig.config_version > 1 || controller.configVersion() > 1) {
-                controller.drupipeLogger.log "Config version > 1"
-                projectConfig = utils.merge(controller.drupipeConfig.config_version2(), projectConfig)
-                controller.drupipeLogger.debugLog(drupipeConfig.config, projectConfig, 'Project config2', [debugMode: 'json'])
-            }
-
-            def projectConfigContext = utils.merge(drupipeConfig.config, projectConfig)
-
-            def sources = [:]
-            if (drupipeConfig.config.env.containsKey('UNIPIPE_SOURCES')) {
-                controller.drupipeLogger.log "Processing UNIPIPE_SOURCES"
-                def uniconfSourcesKey = utils.deepGet(projectConfigContext, 'uniconf.keys.sources')
-                sources[uniconfSourcesKey] = script.readJSON(text: drupipeConfig.config.env['UNIPIPE_SOURCES'])
-                if (projectConfig[uniconfSourcesKey]) {
-                    projectConfig[uniconfSourcesKey] << sources[uniconfSourcesKey]
-                }
-                else {
-                    projectConfig[uniconfSourcesKey] = sources[uniconfSourcesKey]
+                for (def ifc = 0; ifc < filesToCheck.size(); ifc++) {
+                    def fileToCheck = filesToCheck[ifc]
+                    def fileNameToCheck = sourceDir + '/' + fileToCheck
+                    controller.drupipeLogger.trace "PROJECT FILE NAME TO CHECK: ${fileNameToCheck}"
+                    if (this.script.fileExists(fileNameToCheck)) {
+                        controller.drupipeLogger.trace "SELECTING PROJECT FILE: ${fileNameToCheck}"
+                        fileName = fileToCheck
+                        break
+                    }
                 }
 
-                controller.drupipeLogger.debugLog(projectConfig, sources, 'UNIPIPE_SOURCES sources', ['debugMode': 'json'])
+                if (fileName != null) {
+                    projectConfig = utils.merge(projectConfig, drupipeConfig.drupipeSourcesController.sourceLoad(
+                            sourceName: 'project',
+                            configType: 'yaml',
+                            configPath: fileName,
+                    ))
+                }
+
+                controller.drupipeLogger.debugLog(drupipeConfig.config, projectConfig, 'Project config', [debugMode: 'json'])
+
+                if (projectConfig.config_version && projectConfig.config_version > 1 || controller.configVersion() > 1) {
+                    controller.drupipeLogger.log "Config version > 1"
+                    projectConfig = utils.merge(controller.drupipeConfig.config_version2(), projectConfig)
+                    controller.drupipeLogger.debugLog(drupipeConfig.config, projectConfig, 'Project config2', [debugMode: 'json'])
+                }
+
+                def projectConfigContext = utils.merge(drupipeConfig.config, projectConfig)
+
+                def sources = [:]
+                if (drupipeConfig.config.env.containsKey('UNIPIPE_SOURCES')) {
+                    controller.drupipeLogger.log "Processing UNIPIPE_SOURCES"
+                    def uniconfSourcesKey = utils.deepGet(projectConfigContext, 'uniconf.keys.sources')
+                    sources[uniconfSourcesKey] = script.readJSON(text: drupipeConfig.config.env['UNIPIPE_SOURCES'])
+                    if (projectConfig[uniconfSourcesKey]) {
+                        projectConfig[uniconfSourcesKey] << sources[uniconfSourcesKey]
+                    } else {
+                        projectConfig[uniconfSourcesKey] = sources[uniconfSourcesKey]
+                    }
+
+                    controller.drupipeLogger.debugLog(projectConfig, sources, 'UNIPIPE_SOURCES sources', ['debugMode': 'json'])
+                }
+
+                projectConfig = mergeScenariosConfigs(projectConfigContext, projectConfig, [:], 'project')
+
+                controller.drupipeLogger.debugLog(drupipeConfig.config, projectConfig, 'Project config after mergeScenariosConfigs', [debugMode: 'json'])
             }
-
-            projectConfig = mergeScenariosConfigs(projectConfigContext, projectConfig, [:], 'project')
-
-            controller.drupipeLogger.debugLog(drupipeConfig.config, projectConfig, 'Project config after mergeScenariosConfigs', [debugMode: 'json'])
+            controller.archiveObjectJsonAndYaml(projectConfig, 'ConfigProviderProject')
         }
-        controller.archiveObjectJsonAndYaml(projectConfig, 'ConfigProviderProject')
         projectConfig
     }
 
