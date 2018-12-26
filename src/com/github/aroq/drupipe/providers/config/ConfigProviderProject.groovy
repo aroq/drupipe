@@ -30,7 +30,7 @@ class ConfigProviderProject extends ConfigProviderBase {
             }
         }
 
-        sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(config, scenarioSourceName)
+        sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
 
         configCachePath = script.env.JENKINS_HOME + "/config_cache/PRHUB"
         configFileName = configCachePath + "/ConfigProviderProject.yaml"
