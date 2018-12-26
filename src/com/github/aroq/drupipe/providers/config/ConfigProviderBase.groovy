@@ -42,7 +42,9 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
     }
 
     def _finalize() {
-        script.sh("mkdir -p ${configCachePath}")
-        controller.serializeObject(configFileName, result)
+        if (configCachePath && configFileName) {
+            script.sh("mkdir -p ${configCachePath}")
+            controller.serializeObject(configFileName, result)
+        }
     }
 }
