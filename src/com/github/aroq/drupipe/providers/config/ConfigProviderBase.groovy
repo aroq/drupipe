@@ -22,8 +22,8 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
 
     def provide() {
         _init()
-        script.echo "FORCE: ${drupipeConfig.config.force}"
-        if (drupipeConfig.config.force != '1' && configFileName && this.script.fileExists(configFileName)) {
+        script.echo "FORCE: ${script.env.JENKINS_HOME}"
+        if (script.env.JENKINS_HOME != '1' && configFileName && this.script.fileExists(configFileName)) {
             script.echo "Cached Config is found, loading: " + configFileName
             result = script.readYaml(file: configFileName)
         }
