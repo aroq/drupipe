@@ -32,7 +32,7 @@ class ConfigProviderProject extends ConfigProviderBase {
         }
 
         def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
-        def projectConfigFileName = sourceDir + "/test/ConfigProviderProject.yaml"
+        def projectConfigFileName = sourceDir + "/scenarios/test/ConfigProviderProject.yaml"
         if (this.script.fileExists(projectConfigFileName)) {
             script.echo "Cached ConfigProviderProject is found, loading..."
             return script.readYaml(file: projectConfigFileName)
