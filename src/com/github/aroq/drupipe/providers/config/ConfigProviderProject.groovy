@@ -98,6 +98,7 @@ class ConfigProviderProject extends ConfigProviderBase {
 
             controller.drupipeLogger.debugLog(drupipeConfig.config, projectConfig, 'Project config after mergeScenariosConfigs', [debugMode: 'json'])
         }
+        controller.archiveObjectJsonAndYaml(projectConfig, 'ConfigProviderProject')
         projectConfig
     }
 

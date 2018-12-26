@@ -422,7 +422,6 @@ def deepGet(object, path) {
 }
 
 def serializeAndDeserialize(params, mode = 'yaml') {
-    echo "serializeAndDeserialize"
     def result = [:]
     def filePath = ".unipipe/temp/serializeAndDeserialize.${mode}"
     if (params) {
