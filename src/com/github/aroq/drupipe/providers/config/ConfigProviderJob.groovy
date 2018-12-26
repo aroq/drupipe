@@ -3,6 +3,7 @@ package com.github.aroq.drupipe.providers.config
 class ConfigProviderJob extends ConfigProviderBase {
 
     def _init() {
+        super._init()
         controller.drupipeLogger.log "ConfigProviderJob->provide()"
         controller.drupipeLogger.log "Initialising drupipeProcessorsController"
         controller.drupipeProcessorsController = controller.drupipeConfig.initProcessorsController(this, drupipeConfig.config.processors)

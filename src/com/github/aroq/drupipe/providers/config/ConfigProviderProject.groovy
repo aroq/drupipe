@@ -5,6 +5,7 @@ class ConfigProviderProject extends ConfigProviderBase {
     String sourceDir
 
     def _init() {
+        super._init()
         // TODO: Move into DrupipeConfig.
         if (drupipeConfig.config.project_type == 'single') {
             def source= [

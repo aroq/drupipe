@@ -18,6 +18,8 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
 
     def result
 
+    boolean saveCache
+
     def provide() {
         _init()
         if (configFileName && this.script.fileExists(configFileName)) {
@@ -27,6 +29,7 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
         else {
             script.echo "Cached Config is not found: " + configFileName
             result = _provide()
+            saveCache = true
         }
         _finalize()
 
@@ -34,6 +37,7 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
     }
 
     def _init() {
+        saveCache = false
         configCachePath = ""
         configFileName = ""
     }
@@ -42,7 +46,7 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
     }
 
     def _finalize() {
-        if (configCachePath && configFileName) {
+        if (saveCache && configCachePath && configFileName) {
             script.sh("mkdir -p ${configCachePath}")
             controller.serializeObject(configFileName, result)
         }
