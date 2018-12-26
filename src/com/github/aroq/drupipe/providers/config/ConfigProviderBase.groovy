@@ -13,8 +13,8 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
 
     public DrupipeController controller
 
-    String configCachePath
-    String configFileName
+    public String configCachePath
+    public String configFileName
 
     def result
 
