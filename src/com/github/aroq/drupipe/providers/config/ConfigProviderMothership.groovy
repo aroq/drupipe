@@ -2,7 +2,12 @@ package com.github.aroq.drupipe.providers.config
 
 class ConfigProviderMothership extends ConfigProviderBase {
 
-    def provide() {
+    def _init() {
+        configCachePath = script.env.JENKINS_HOME + "/config_cache"
+        configFileName = configCachePath + "/ConfigProviderMothership.yaml"
+    }
+
+    def _provide() {
         def result = [:]
         if (drupipeConfig.config.env.MOTHERSHIP_REPO) {
             def source = [

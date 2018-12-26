@@ -13,8 +13,36 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
 
     public DrupipeController controller
 
-    def provide() {
+    String configCachePath
+    String configFileName
 
+    def result
+
+    def provide() {
+        _init()
+        if (configFileName && this.script.fileExists(configFileName)) {
+            script.echo "Cached Config is found, loading: " + configFileName
+            result = script.readYaml(file: configFileName)
+        }
+        else {
+            script.echo "Cached Config is not found: " + configFileName
+            result = _provide()
+        }
+        _finalize()
+
+        return result
     }
 
+    def _init() {
+        configCachePath = ""
+        configFileName = ""
+    }
+
+    def _provide() {
+    }
+
+    def _finalize() {
+        script.sh("mkdir -p ${configCachePath}")
+        controller.serializeObject(configFileName, result)
+    }
 }

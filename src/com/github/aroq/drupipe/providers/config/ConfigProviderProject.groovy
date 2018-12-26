@@ -2,28 +2,25 @@ package com.github.aroq.drupipe.providers.config
 
 class ConfigProviderProject extends ConfigProviderBase {
 
-    def provide() {
-        def projectConfig
-
-        controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config.configRepo,"projectConfig repo: ${drupipeConfig.config.configRepo}", [:])
-
+    def _init() {
+        // TODO: Move into DrupipeConfig.
         if (drupipeConfig.config.project_type == 'single') {
             def source= [
-                name  : 'project',
-                path  : drupipeConfig.config.config_dir,
-                type  : 'dir',
+                    name  : 'project',
+                    path  : drupipeConfig.config.config_dir,
+                    type  : 'dir',
             ]
             drupipeConfig.drupipeSourcesController.sourceAdd(source)
         }
         else {
             if (drupipeConfig.config.configRepo) {
                 def source= [
-                    name  : 'project',
-                    path  : drupipeConfig.config.projectConfigPath,
-                    type  : 'git',
-                    url   : drupipeConfig.config.configRepo,
-                    branch: drupipeConfig.config.config_branch ? drupipeConfig.config.config_branch : 'master',
-                    mode  : 'shell',
+                        name  : 'project',
+                        path  : drupipeConfig.config.projectConfigPath,
+                        type  : 'git',
+                        url   : drupipeConfig.config.configRepo,
+                        branch: drupipeConfig.config.config_branch ? drupipeConfig.config.config_branch : 'master',
+                        mode  : 'shell',
                 ]
                 script.sshagent([drupipeConfig.config.credentialsId]) {
                     drupipeConfig.drupipeSourcesController.sourceAdd(source)
@@ -31,15 +28,14 @@ class ConfigProviderProject extends ConfigProviderBase {
             }
         }
 
-        def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
-        String projectConfigFileName = sourceDir + "/scenarios/test/ConfigProviderProject.yaml"
-        if (this.script.fileExists(projectConfigFileName)) {
-            script.echo "Cached ConfigProviderProject is found, loading..."
-            return script.readYaml(file: projectConfigFileName)
-        }
-        else {
-            script.echo "Cached ConfigProviderProject is not found: " + projectConfigFileName
-        }
+        configCachePath = script.env.JENKINS_HOME + "/config_cache/PRHUB"
+        configFileName = configCachePath + "/ConfigProviderProject.yaml"
+    }
+
+    def _provide() {
+        def projectConfig
+
+        controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config.configRepo,"projectConfig repo: ${drupipeConfig.config.configRepo}", [:])
 
         script.lock('ConfigProviderProject') {
             if (drupipeConfig.config.configRepo) {
@@ -109,7 +105,6 @@ class ConfigProviderProject extends ConfigProviderBase {
 
                 controller.drupipeLogger.debugLog(drupipeConfig.config, projectConfig, 'Project config after mergeScenariosConfigs', [debugMode: 'json'])
             }
-            controller.archiveObjectJsonAndYaml(projectConfig, 'ConfigProviderProject')
         }
         projectConfig
     }
