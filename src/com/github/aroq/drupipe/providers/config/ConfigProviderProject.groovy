@@ -2,6 +2,8 @@ package com.github.aroq.drupipe.providers.config
 
 class ConfigProviderProject extends ConfigProviderBase {
 
+    String sourceDir
+
     def _init() {
         // TODO: Move into DrupipeConfig.
         if (drupipeConfig.config.project_type == 'single') {
@@ -27,6 +29,8 @@ class ConfigProviderProject extends ConfigProviderBase {
                 }
             }
         }
+
+        sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(config, scenarioSourceName)
 
         configCachePath = script.env.JENKINS_HOME + "/config_cache/PRHUB"
         configFileName = configCachePath + "/ConfigProviderProject.yaml"
@@ -187,7 +191,6 @@ class ConfigProviderProject extends ConfigProviderBase {
 
                         def fileName = null
 
-                        def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(config, scenarioSourceName)
 
                         // TODO: recheck it.
                         def filesToCheck = [
