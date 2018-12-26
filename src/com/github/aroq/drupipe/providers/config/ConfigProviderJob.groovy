@@ -4,6 +4,11 @@ class ConfigProviderJob extends ConfigProviderBase {
 
     // TODO: check if this is needed as Config Provider or Processor.
     def provide() {
+        controller.drupipeLogger.log "ConfigProviderJob->provide()"
+//        if (drupipeConfig.config.config_version > 1) {
+        controller.drupipeLogger.log "Initialising drupipeProcessorsController"
+        controller.drupipeProcessorsController = controller.drupipeConfig.initProcessorsController(this, drupipeConfig.config.processors)
+
         def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
         String jobConfigFileName = sourceDir + "/scenarios/test/ConfigProviderJob.yaml"
         if (this.script.fileExists(jobConfigFileName)) {
@@ -14,10 +19,6 @@ class ConfigProviderJob extends ConfigProviderBase {
             script.echo "Cached ConfigProviderJob is not found: " + jobConfigFileName
         }
 
-        controller.drupipeLogger.log "ConfigProviderJob->provide()"
-//        if (drupipeConfig.config.config_version > 1) {
-        controller.drupipeLogger.log "Initialising drupipeProcessorsController"
-        controller.drupipeProcessorsController = controller.drupipeConfig.initProcessorsController(this, drupipeConfig.config.processors)
 //        }
         if (drupipeConfig.config.jobs) {
             controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'context_unprocessed')
