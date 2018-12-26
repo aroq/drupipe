@@ -10,8 +10,7 @@ class ConfigProviderJob extends ConfigProviderBase {
         controller.drupipeProcessorsController = controller.drupipeConfig.initProcessorsController(this, drupipeConfig.config.processors)
 
         String prefixPath = script.env.JENKINS_HOME + "/config_cache/" + script.env.JOB_NAME
-        String jobConfigFileBaseName = prefixPath + "/ConfigProviderJob"
-        String jobConfigFileName = jobConfigFileBaseName + ".yaml"
+        String jobConfigFileName = prefixPath + "/ConfigProviderJob.yaml"
         if (this.script.fileExists(jobConfigFileName)) {
             script.echo "Cached ConfigProviderJob is found, loading: " + jobConfigFileName
             return script.readYaml(file: jobConfigFileName)
@@ -56,7 +55,7 @@ class ConfigProviderJob extends ConfigProviderBase {
                 throw new Exception("ConfigProviderJob->provide: No config.jobs are defined")
             }
             script.sh("mkdir -p ${prefixPath}")
-            controller.archiveObject(jobConfigFileBaseName, drupipeConfig.config)
+            controller.archiveObject(jobConfigFileName, drupipeConfig.config)
         }
         drupipeConfig.config
     }
