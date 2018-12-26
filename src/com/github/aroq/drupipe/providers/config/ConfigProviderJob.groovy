@@ -45,7 +45,8 @@ class ConfigProviderJob extends ConfigProviderBase {
         else {
             throw new Exception("ConfigProviderJob->provide: No config.jobs are defined")
         }
-       drupipeConfig.config
+        controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'ConfigProviderJob')
+        drupipeConfig.config
     }
 
     def processJobs(jobs, parentParams = [:]) {
