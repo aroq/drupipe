@@ -5,6 +5,7 @@ class ConfigProviderMothership extends ConfigProviderBase {
     def _init() {
         super._init()
         if (script.env.JOB_NAME == 'mothership') {
+            configCachePath = script.env.JENKINS_HOME + "/config_cache"
             // Clear cached config.
             script.sh("rm -fR ${configCachePath}")
             configCachePath = ""
