@@ -58,6 +58,12 @@ class DrupipeConfig implements Serializable {
             if (script.env.JOB_NAME == 'mothership') {
                 config.config_version = 2
             }
+            else if (script.env.JOB_NAME.contains('seed')) {
+                // TODO: Clear config on project level only
+                // Clear cached config.
+                String configCachePath = script.env.JENKINS_HOME + "/config_cache/"
+                script.sh("rm -fR ${configCachePath}")
+            }
 
             // TODO: Perform SCM checkout only when really needed.
             this.script.checkout this.script.scm
