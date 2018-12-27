@@ -33,6 +33,8 @@ class ConfigProviderProject extends ConfigProviderBase {
 
         sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
 
+        script.echo "drupipeConfig.config['jenkinsJobName']: " + drupipeConfig.config['jenkinsJobName']
+        script.echo "drupipeConfig.config['jenkinsFolderName']: " + drupipeConfig.config['jenkinsFolderName']
         if (drupipeConfig.config['jenkinsJobName'] == 'seed' && drupipeConfig.config['jenkinsFolderName']) {
             // Clear cached config.
             String projectCachePath = script.env.JENKINS_HOME + "/config_cache/" + drupipeConfig['jenkinsFolderName']
