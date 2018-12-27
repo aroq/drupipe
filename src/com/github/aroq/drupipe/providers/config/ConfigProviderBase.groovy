@@ -22,7 +22,6 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
 
     def provide() {
         _init()
-        script.echo "FORCE: ${script.env.force}"
         if (script.env.force != '1' && configFileName && this.script.fileExists(configFileName)) {
             script.echo "Cached Config is found, loading: " + configFileName
             result = script.readYaml(file: configFileName)
