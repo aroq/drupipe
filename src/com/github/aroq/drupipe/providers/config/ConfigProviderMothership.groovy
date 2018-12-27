@@ -5,7 +5,6 @@ class ConfigProviderMothership extends ConfigProviderBase {
     def _init() {
         super._init()
         if (script.env.JOB_NAME == 'mothership') {
-            config.config_version = 2
             // Clear cached config.
             script.sh("rm -fR ${configCachePath}")
             configCachePath = ""
