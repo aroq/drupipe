@@ -4,6 +4,7 @@ class ConfigProviderJob extends ConfigProviderBase {
 
     def _init() {
         super._init()
+
         controller.drupipeLogger.log "ConfigProviderJob->provide()"
         controller.drupipeLogger.log "Initialising drupipeProcessorsController"
         controller.drupipeProcessorsController = controller.drupipeConfig.initProcessorsController(this, drupipeConfig.config.processors)
@@ -15,10 +16,15 @@ class ConfigProviderJob extends ConfigProviderBase {
     // TODO: check if this is needed as Config Provider or Processor.
     def _provide() {
         script.lock('ConfigProviderJob') {
+            def projectNames = drupipeConfig.projects.keySet() as ArrayList
+            String jobName = script.env.JOB_NAME
+            drupipeConfig.config['jenkinsFolderName'] = utils.getJenkinsFolderName(jobName, projectNames)
+            drupipeConfig.config['jenkinsJobName'] = utils.getJenkinsJobName(jobName, projectNames)
+
             if (drupipeConfig.config.jobs) {
                 controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'context_unprocessed')
 
-                String jobName = drupipeConfig.config.env.JOB_NAME != 'persistent/mothership' ? drupipeConfig.config.jenkinsJobName : 'mothership'
+//                String jobName = drupipeConfig.config.env.JOB_NAME != 'persistent/mothership' ? drupipeConfig.config.jenkinsJobName : 'mothership'
 
                 if (jobName == 'mothership') {
                     drupipeConfig.config.config_version = 2

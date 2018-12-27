@@ -47,10 +47,6 @@ class ConfigProviderMothership extends ConfigProviderBase {
 
             drupipeConfig.projects = mothershipConfig
 
-            def projectNames = drupipeConfig.projects.keySet() as ArrayList
-            String jobName = script.env.JOB_NAME
-            result['jenkinsFolderName'] = utils.getJenkinsFolderName(jobName, projectNames)
-            result['jenkinsJobName'] = utils.getJenkinsJobName(jobName, projectNames)
 
             def mothershipServers = getMothershipServersFile(result)
             controller.drupipeLogger.debugLog(drupipeConfig.config, mothershipServers, 'mothershipServers', [debugMode: 'json'])
