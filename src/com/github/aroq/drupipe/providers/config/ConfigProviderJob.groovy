@@ -20,8 +20,9 @@ class ConfigProviderJob extends ConfigProviderBase {
             if (drupipeConfig.config.jobs) {
                 controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'context_unprocessed')
 
-                // TODO: check if it is needed.
-                if (drupipeConfig.config.jenkinsJobName == 'mothership') {
+                String jobName = drupipeConfig.config.env.JOB_NAME != 'persistent/mothership' ? drupipeConfig.config.jenkinsJobName : 'mothership'
+
+                if (jobName == 'mothership') {
                     drupipeConfig.config.config_version = 2
                 }
                 // Performed here as needed later for job processing.
