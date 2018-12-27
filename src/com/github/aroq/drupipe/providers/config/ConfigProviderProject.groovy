@@ -33,10 +33,9 @@ class ConfigProviderProject extends ConfigProviderBase {
 
         sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
 
-        def projectNames = drupipeConfig.projects.keySet() as ArrayList
         String jobName = script.env.JOB_NAME
-        config['jenkinsFolderName'] = utils.getJenkinsFolderName(jobName, projectNames)
-        config['jenkinsJobName'] = utils.getJenkinsJobName(jobName, projectNames)
+        config['jenkinsFolderName'] = utils.getJenkinsFolderName(jobName, drupipeConfig.config.projectNames)
+        config['jenkinsJobName'] = utils.getJenkinsJobName(jobName, drupipeConfig.config.projectNames)
 
         script.echo "drupipeConfig.config['jenkinsJobName']: " + config['jenkinsJobName']
         script.echo "drupipeConfig.config['jenkinsFolderName']: " + config['jenkinsFolderName']
