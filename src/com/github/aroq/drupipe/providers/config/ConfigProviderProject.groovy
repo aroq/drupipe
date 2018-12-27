@@ -33,8 +33,17 @@ class ConfigProviderProject extends ConfigProviderBase {
 
         sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
 
-        configCachePath = script.env.JENKINS_HOME + "/config_cache/" + script.env.JOB_NAME
-        configFileName = configCachePath + "/ConfigProviderProject.yaml"
+        if (drupipeConfig['jenkinsJobName'] == 'seed' && drupipeConfig['jenkinsFolderName']) {
+            // Clear cached config.
+            String projectCachePath = script.env.JENKINS_HOME + "/config_cache/" + drupipeConfig['jenkinsFolderName']
+            script.sh("rm -fR ${projectCachePath}")
+            configCachePath = ""
+            configFileName = ""
+        }
+        else {
+            configCachePath = script.env.JENKINS_HOME + "/config_cache/" + script.env.JOB_NAME
+            configFileName = configCachePath + "/ConfigProviderProject.yaml"
+        }
     }
 
     def _provide() {
