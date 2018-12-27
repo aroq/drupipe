@@ -20,6 +20,8 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
 
     boolean saveCache
 
+    public config
+
     def provide() {
         _init()
         if (script.env.force != '1' && configFileName && this.script.fileExists(configFileName)) {

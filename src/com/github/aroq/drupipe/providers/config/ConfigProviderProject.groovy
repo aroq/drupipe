@@ -19,7 +19,7 @@ class ConfigProviderProject extends ConfigProviderBase {
             if (drupipeConfig.config.configRepo) {
                 def source= [
                         name  : 'project',
-                        path  : drupipeConfig.config.projectConfigPath,
+                        path  : drupipeConfig.config.configPath,
                         type  : 'git',
                         url   : drupipeConfig.config.configRepo,
                         branch: drupipeConfig.config.config_branch ? drupipeConfig.config.config_branch : 'master',
@@ -33,11 +33,16 @@ class ConfigProviderProject extends ConfigProviderBase {
 
         sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
 
-        script.echo "drupipeConfig.config['jenkinsJobName']: " + drupipeConfig.config['jenkinsJobName']
-        script.echo "drupipeConfig.config['jenkinsFolderName']: " + drupipeConfig.config['jenkinsFolderName']
-        if (drupipeConfig.config['jenkinsJobName'] == 'seed' && drupipeConfig.config['jenkinsFolderName']) {
+        def projectNames = drupipeConfig.projects.keySet() as ArrayList
+        String jobName = script.env.JOB_NAME
+        config['jenkinsFolderName'] = utils.getJenkinsFolderName(jobName, projectNames)
+        config['jenkinsJobName'] = utils.getJenkinsJobName(jobName, projectNames)
+
+        script.echo "drupipeConfig.config['jenkinsJobName']: " + config['jenkinsJobName']
+        script.echo "drupipeConfig.config['jenkinsFolderName']: " + config['jenkinsFolderName']
+        if (config['jenkinsJobName'] == 'seed' && config['jenkinsFolderName']) {
             // Clear cached config.
-            String projectCachePath = script.env.JENKINS_HOME + "/config_cache/" + drupipeConfig['jenkinsFolderName']
+            String projectCachePath = script.env.JENKINS_HOME + "/config_cache/" + config['jenkinsFolderName']
             script.sh("rm -fR ${projectCachePath}")
             configCachePath = ""
             configFileName = ""
@@ -49,20 +54,14 @@ class ConfigProviderProject extends ConfigProviderBase {
     }
 
     def _provide() {
-        def projectConfig
-        controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config.configRepo,"projectConfig repo: ${drupipeConfig.config.configRepo}", [:])
-
-        def projectNames = drupipeConfig.projects.keySet() as ArrayList
-        String jobName = script.env.JOB_NAME
-        projectConfig['jenkinsFolderName'] = utils.getJenkinsFolderName(jobName, projectNames)
-        projectConfig['jenkinsJobName'] = utils.getJenkinsJobName(jobName, projectNames)
+        controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config.configRepo,"config repo: ${drupipeConfig.config.configRepo}", [:])
 
         script.lock('ConfigProviderProject') {
             if (drupipeConfig.config.configRepo) {
-                projectConfig = drupipeConfig.drupipeSourcesController.sourceLoad(
+                config = drupipeConfig.drupipeSourcesController.sourceLoad(
                         sourceName: 'project',
                         configType: 'groovy',
-                        configPath: drupipeConfig.config.projectConfigFile,
+                        configPath: drupipeConfig.config.configFile,
                 )
 
                 def fileName = null
@@ -90,43 +89,43 @@ class ConfigProviderProject extends ConfigProviderBase {
                 }
 
                 if (fileName != null) {
-                    projectConfig = utils.merge(projectConfig, drupipeConfig.drupipeSourcesController.sourceLoad(
+                    config = utils.merge(config, drupipeConfig.drupipeSourcesController.sourceLoad(
                             sourceName: 'project',
                             configType: 'yaml',
                             configPath: fileName,
                     ))
                 }
 
-                controller.drupipeLogger.debugLog(drupipeConfig.config, projectConfig, 'Project config', [debugMode: 'json'])
+                controller.drupipeLogger.debugLog(drupipeConfig.config, config, 'Project config', [debugMode: 'json'])
 
-                if (projectConfig.config_version && projectConfig.config_version > 1 || controller.configVersion() > 1) {
+                if (config.config_version && config.config_version > 1 || controller.configVersion() > 1) {
                     controller.drupipeLogger.log "Config version > 1"
-                    projectConfig = utils.merge(controller.drupipeConfig.config_version2(), projectConfig)
-                    controller.drupipeLogger.debugLog(drupipeConfig.config, projectConfig, 'Project config2', [debugMode: 'json'])
+                    config = utils.merge(controller.drupipeConfig.config_version2(), config)
+                    controller.drupipeLogger.debugLog(drupipeConfig.config, config, 'Project config2', [debugMode: 'json'])
                 }
 
-                def projectConfigContext = utils.merge(drupipeConfig.config, projectConfig)
+                def configContext = utils.merge(drupipeConfig.config, config)
 
                 def sources = [:]
                 if (drupipeConfig.config.env.containsKey('UNIPIPE_SOURCES')) {
                     controller.drupipeLogger.log "Processing UNIPIPE_SOURCES"
-                    def uniconfSourcesKey = utils.deepGet(projectConfigContext, 'uniconf.keys.sources')
+                    def uniconfSourcesKey = utils.deepGet(configContext, 'uniconf.keys.sources')
                     sources[uniconfSourcesKey] = script.readJSON(text: drupipeConfig.config.env['UNIPIPE_SOURCES'])
-                    if (projectConfig[uniconfSourcesKey]) {
-                        projectConfig[uniconfSourcesKey] << sources[uniconfSourcesKey]
+                    if (config[uniconfSourcesKey]) {
+                        config[uniconfSourcesKey] << sources[uniconfSourcesKey]
                     } else {
-                        projectConfig[uniconfSourcesKey] = sources[uniconfSourcesKey]
+                        config[uniconfSourcesKey] = sources[uniconfSourcesKey]
                     }
 
-                    controller.drupipeLogger.debugLog(projectConfig, sources, 'UNIPIPE_SOURCES sources', ['debugMode': 'json'])
+                    controller.drupipeLogger.debugLog(config, sources, 'UNIPIPE_SOURCES sources', ['debugMode': 'json'])
                 }
 
-                projectConfig = mergeScenariosConfigs(projectConfigContext, projectConfig, [:], 'project')
+                config = mergeScenariosConfigs(configContext, config, [:], 'project')
 
-                controller.drupipeLogger.debugLog(drupipeConfig.config, projectConfig, 'Project config after mergeScenariosConfigs', [debugMode: 'json'])
+                controller.drupipeLogger.debugLog(drupipeConfig.config, config, 'Project config after mergeScenariosConfigs', [debugMode: 'json'])
             }
         }
-        projectConfig
+        config
     }
 
     def mergeScenariosConfigs(context, config, tempContext = [:], currentScenarioSourceName = null) {
