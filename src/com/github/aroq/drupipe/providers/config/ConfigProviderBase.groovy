@@ -39,6 +39,7 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
     }
 
     def _init() {
+        config = [:]
         saveCache = false
         configCachePath = ""
         configFileName = ""
