@@ -50,8 +50,12 @@ class ConfigProviderProject extends ConfigProviderBase {
 
     def _provide() {
         def projectConfig
-
         controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config.configRepo,"projectConfig repo: ${drupipeConfig.config.configRepo}", [:])
+
+        def projectNames = drupipeConfig.projects.keySet() as ArrayList
+        String jobName = script.env.JOB_NAME
+        projectConfig['jenkinsFolderName'] = utils.getJenkinsFolderName(jobName, projectNames)
+        projectConfig['jenkinsJobName'] = utils.getJenkinsJobName(jobName, projectNames)
 
         script.lock('ConfigProviderProject') {
             if (drupipeConfig.config.configRepo) {
