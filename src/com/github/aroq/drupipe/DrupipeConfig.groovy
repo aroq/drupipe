@@ -51,7 +51,7 @@ class DrupipeConfig implements Serializable {
             config = utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
             config.jenkinsParams = params
 
-            controller.drupipeLogger = new DrupipeLogger(utils: utils, logLevels: config.log_levels, logLevelWeight : config.log_levels[config.log_level].weight)
+            controller.drupipeLogger = new DrupipeLogger(utils: utils, logLevels: config.log_levels, logLevelWeight : script.env.debugEnabled)
 
             // TODO: remove it when all configs are updated to version 2.
             if (script.env.JOB_NAME == 'mothership') {
