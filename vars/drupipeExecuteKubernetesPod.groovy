@@ -50,7 +50,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
         idleMinutes: 10,
     ) {
         node(nodeName) {
-            utils.echoMessage '[COLLAPSED-START] POD'
+            controller.utils.echoMessage '[COLLAPSED-START] POD'
             if (unipipe_retrieve_config) {
                 controller.utils.getUnipipeConfig(controller)
             }
@@ -64,14 +64,14 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
                     sshagent([controller.context.credentialsId]) {
                         // To have k8s envVars & secretEnvVars as well.
                         controller.context.env = controller.utils.merge(controller.context.env, controller.utils.envToMap())
-                        utils.echoMessage '[COLLAPSED-END]'
+                        controller.utils.echoMessage '[COLLAPSED-END]'
                         pod.containers[i].executeBlocks()
-                        utils.echoMessage '[COLLAPSED-START] POD'
+                        controller.utils.echoMessage '[COLLAPSED-START] POD'
                     }
                 }
             }
             controller.utils.stashList(controller, stash)
-            utils.echoMessage '[COLLAPSED-END]'
+            controller.utils.echoMessage '[COLLAPSED-END]'
         }
     }
 
