@@ -15,7 +15,7 @@ class ConfigProviderMothership extends ConfigProviderBase {
     }
 
     def _provide() {
-        result = [:]
+        def result = [:]
         controller.drupipeLogger.trace "ConfigProviderMothership _provide()"
         controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config,"drupipeConfig.config: ${drupipeConfig.config}", [:])
         if (drupipeConfig.config.env.MOTHERSHIP_REPO) {
