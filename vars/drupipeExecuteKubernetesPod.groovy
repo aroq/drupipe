@@ -50,6 +50,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
         idleMinutes: 10,
     ) {
         node(nodeName) {
+            controller.utils.echoMessage '[COLLAPSED-END]'
             controller.utils.echoMessage '[COLLAPSED-START] POD'
             if (unipipe_retrieve_config) {
                 controller.utils.getUnipipeConfig(controller)
