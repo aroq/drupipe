@@ -28,20 +28,20 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
         if (script.env.force != '1') {
             if (configFileName) {
                 if (this.script.fileExists(configFileName)) {
-                    controller.drupipeLogger.trace "${this.class.name}: Cached Config is found, loading: " + configFileName
+                    controller.drupipeLogger.log "${this.class.name}: Cached Config is found, loading: " + configFileName
                     result = script.readYaml(file: configFileName)
                     needProvide = false
                 }
                 else {
-                    controller.drupipeLogger.trace "${this.class.name}: Cached Config is not found: " + configFileName
+                    controller.drupipeLogger.log "${this.class.name}: Cached Config is not found: " + configFileName
                 }
             }
             else {
-                controller.drupipeLogger.trace "${this.class.name}: Cached Config is not loaded because configFileName is not set"
+                controller.drupipeLogger.log "${this.class.name}: Cached Config is not loaded because configFileName is not set"
             }
         }
         else {
-            controller.drupipeLogger.trace "${this.class.name}: Cached Config is not loaded because of FORCE mode enabled"
+            controller.drupipeLogger.log "${this.class.name}: Cached Config is not loaded because of FORCE mode enabled"
         }
         if (needProvide) {
             result = _provide()
