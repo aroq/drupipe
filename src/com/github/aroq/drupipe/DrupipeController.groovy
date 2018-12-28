@@ -67,14 +67,12 @@ class DrupipeController implements Serializable {
                                     job.controller = this
                                 }
                             }
-                            utils.echoMessage '[COLLAPSED-END]'
                             job.execute()
                         } else {
                             // For version 1 configs.
                             if (body) {
                                 body(this)
                             }
-                            utils.echoMessage '[COLLAPSED-END]'
                             executeVersion1()
                         }
 
