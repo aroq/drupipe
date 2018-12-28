@@ -3,7 +3,7 @@ package com.github.aroq.drupipe.providers.config
 class ConfigProviderEnv extends ConfigProviderBase {
 
     def _init() {
-        script.trace "ConfigProviderEnv _init()"
+        controller.drupipeLogger.trace "ConfigProviderEnv _init()"
     }
 
     def _provide() {

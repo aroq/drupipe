@@ -6,7 +6,7 @@ class ConfigProviderProject extends ConfigProviderBase {
 
     def _init() {
         super._init()
-        script.trace "ConfigProviderProject _init()"
+        controller.drupipeLogger.trace "ConfigProviderProject _init()"
         // TODO: Move into DrupipeConfig.
         if (drupipeConfig.config.project_type == 'single') {
             def source= [
@@ -44,8 +44,7 @@ class ConfigProviderProject extends ConfigProviderBase {
             // Clear cached config.
             String projectCachePath = script.env.JENKINS_HOME + "/config_cache/" + config['jenkinsFolderName']
             script.sh("rm -fR ${projectCachePath}")
-            configCachePath = ""
-            configFileName = ""
+            controller.drupipeLogger.debug "ConfigProviderProject _init() - Delete ${projectCachePath} directory"
         }
         else {
             configCachePath = script.env.JENKINS_HOME + "/config_cache/" + script.env.JOB_NAME
