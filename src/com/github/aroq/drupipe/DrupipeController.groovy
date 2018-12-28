@@ -78,7 +78,7 @@ class DrupipeController implements Serializable {
 
                         // Trigger other jobs if configured.
                         script.node('master') {
-                            script.echo "Trigger other jobs if configured"
+                            drupipeLogger.debug "Trigger other jobs if configured"
                             if (context.job && context.job.trigger) {
                                 for (def i = 0; i < context.job.trigger.size(); i++) {
                                     def trigger_job = context.job.trigger[i]
