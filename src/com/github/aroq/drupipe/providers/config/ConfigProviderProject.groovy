@@ -55,8 +55,8 @@ class ConfigProviderProject extends ConfigProviderBase {
     def _provide() {
         def result = config
         result = utils.merge(result, config)
-        controller.drupipeLogger.debugLog(drupipeConfig.config, result,"result: ${result}", [:])
-        controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config,"drupipeConfig.config: ${drupipeConfig.config}", [:])
+        controller.drupipeLogger.debugLog(drupipeConfig.config, result,"result", [:])
+        controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config,"drupipeConfig.config", [:])
 
         script.lock('ConfigProviderProject') {
             if (drupipeConfig.config.configRepo) {

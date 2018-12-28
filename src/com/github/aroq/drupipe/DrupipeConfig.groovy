@@ -51,7 +51,10 @@ class DrupipeConfig implements Serializable {
             config = utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
             config.jenkinsParams = params
 
-            int debugParam = script.env.debugEnabled.toInteger()
+            int debugParam = 0
+            if (script.env.debugEnabled) {
+                debugParam = script.env.debugEnabled.toInteger()
+            }
             if (debugParam < 2) {
                debugParam = config.log_levels[config.log_level].weight
             }
