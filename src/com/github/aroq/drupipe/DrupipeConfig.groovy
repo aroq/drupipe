@@ -42,7 +42,7 @@ class DrupipeConfig implements Serializable {
     def config(params, parent) {
         drupipeSourcesController = new DrupipeSourcesController(script: script, utils: utils, controller: controller)
         script.node('master') {
-            controller.drupipeLogger.collapsedStart("CONFIG")
+            utils.echoMessage '[COLLAPSED-START] CONFIG'
 
             this.script.sh("mkdir -p .unipipe")
             this.script.sh("mkdir -p .unipipe/temp")
