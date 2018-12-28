@@ -66,12 +66,14 @@ class DrupipeController implements Serializable {
                                     job.controller = this
                                 }
                             }
+                            controller.drupipeLogger.collapsedEnd("CONFIG")
                             job.execute()
                         } else {
                             // For version 1 configs.
                             if (body) {
                                 body(this)
                             }
+                            controller.drupipeLogger.collapsedEnd("CONFIG")
                             executeVersion1()
                         }
 
@@ -117,7 +119,7 @@ class DrupipeController implements Serializable {
                                 }
                             }
                             if (context.cleanup_success_jobs_workspace == 1 || context.cleanup_success_jobs_workspace == '1' || context.cleanup_success_jobs_workspace == true || context.cleanup_success_jobs_workspace == 'true') {
-                                script.echo 'CLEANUP SUCCESS JOB WORKSPACE'
+                                drupipeLogger.debug 'CLEANUP SUCCESS JOB WORKSPACE'
                                 script.deleteDir()
                             }
                         }
