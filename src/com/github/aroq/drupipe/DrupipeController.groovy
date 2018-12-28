@@ -66,7 +66,7 @@ class DrupipeController implements Serializable {
                                     job.controller = this
                                 }
                             }
-                            controller.drupipeLogger.collapsedEnd("CONFIG")
+                            drupipeLogger.collapsedEnd("CONFIG")
                             job.execute()
                         } else {
                             // For version 1 configs.
