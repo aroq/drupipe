@@ -232,7 +232,7 @@ class DrupipeActionWrapper implements Serializable {
 //                pipeline.archiveObjectJsonAndYaml(pipeline.context.results, 'context_results')
                 }
 
-                pipeline.drupipeLogger.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
+//                pipeline.drupipeLogger.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
                 pipeline.drupipeLogger.collapsedEnd()
                 pipeline.drupipeLogger.logLevelWeight = globalLogLevelWeight
                 this.result
