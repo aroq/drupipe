@@ -24,16 +24,16 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
 
     def provide() {
         _init()
+        boolean needProvide = true
         if (script.env.force != '1') {
             if (configFileName) {
                 if (this.script.fileExists(configFileName)) {
                     controller.drupipeLogger.trace "${this.class.name}: Cached Config is found, loading: " + configFileName
                     result = script.readYaml(file: configFileName)
+                    needProvide = false
                 }
                 else {
                     controller.drupipeLogger.trace "${this.class.name}: Cached Config is not found: " + configFileName
-                    result = _provide()
-                    saveCache = true
                 }
             }
             else {
@@ -42,6 +42,10 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
         }
         else {
             controller.drupipeLogger.trace "${this.class.name}: Cached Config is not loaded because of FORCE mode enabled"
+        }
+        if (needProvide) {
+            result = _provide()
+            saveCache = true
         }
         _finalize()
 
