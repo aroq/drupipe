@@ -53,12 +53,13 @@ class ConfigProviderProject extends ConfigProviderBase {
     }
 
     def _provide() {
+        result = [:]
         controller.drupipeLogger.trace "ConfigProviderProject _provide()"
         controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config,"drupipeConfig.config: ${drupipeConfig.config}", [:])
 
         script.lock('ConfigProviderProject') {
             if (drupipeConfig.config.configRepo) {
-                config = drupipeConfig.drupipeSourcesController.sourceLoad(
+                result = drupipeConfig.drupipeSourcesController.sourceLoad(
                         sourceName: 'project',
                         configType: 'groovy',
                         configPath: drupipeConfig.config.configFile,
@@ -89,43 +90,43 @@ class ConfigProviderProject extends ConfigProviderBase {
                 }
 
                 if (fileName != null) {
-                    config = utils.merge(config, drupipeConfig.drupipeSourcesController.sourceLoad(
+                    result = utils.merge(config, drupipeConfig.drupipeSourcesController.sourceLoad(
                             sourceName: 'project',
                             configType: 'yaml',
                             configPath: fileName,
                     ))
                 }
 
-                controller.drupipeLogger.debugLog(drupipeConfig.config, config, 'Project config', [debugMode: 'json'])
+                controller.drupipeLogger.debugLog(drupipeConfig.config, result, 'Project config', [debugMode: 'json'])
 
-                if (config.config_version && config.config_version > 1 || controller.configVersion() > 1) {
+                if (result.config_version && result.config_version > 1 || controller.configVersion() > 1) {
                     controller.drupipeLogger.log "Config version > 1"
-                    config = utils.merge(controller.drupipeConfig.config_version2(), config)
-                    controller.drupipeLogger.debugLog(drupipeConfig.config, config, 'Project config2', [debugMode: 'json'])
+                    result = utils.merge(controller.drupipeConfig.config_version2(), result)
+                    controller.drupipeLogger.debugLog(drupipeConfig.config, result, 'Project config2', [debugMode: 'json'])
                 }
 
-                def configContext = utils.merge(drupipeConfig.config, config)
+                def configContext = utils.merge(drupipeConfig.config, result)
 
                 def sources = [:]
                 if (drupipeConfig.config.env.containsKey('UNIPIPE_SOURCES')) {
                     controller.drupipeLogger.log "Processing UNIPIPE_SOURCES"
                     def uniconfSourcesKey = utils.deepGet(configContext, 'uniconf.keys.sources')
                     sources[uniconfSourcesKey] = script.readJSON(text: drupipeConfig.config.env['UNIPIPE_SOURCES'])
-                    if (config[uniconfSourcesKey]) {
-                        config[uniconfSourcesKey] << sources[uniconfSourcesKey]
+                    if (result[uniconfSourcesKey]) {
+                        result[uniconfSourcesKey] << sources[uniconfSourcesKey]
                     } else {
-                        config[uniconfSourcesKey] = sources[uniconfSourcesKey]
+                        result[uniconfSourcesKey] = sources[uniconfSourcesKey]
                     }
 
-                    controller.drupipeLogger.debugLog(config, sources, 'UNIPIPE_SOURCES sources', ['debugMode': 'json'])
+                    controller.drupipeLogger.debugLog(result, sources, 'UNIPIPE_SOURCES sources', ['debugMode': 'json'])
                 }
 
-                config = mergeScenariosConfigs(configContext, config, [:], 'project')
+                result = mergeScenariosConfigs(configContext, result, [:], 'project')
 
-                controller.drupipeLogger.debugLog(drupipeConfig.config, config, 'Project config after mergeScenariosConfigs', [debugMode: 'json'])
+                controller.drupipeLogger.debugLog(drupipeConfig.config, result, 'Project config after mergeScenariosConfigs', [debugMode: 'json'])
             }
         }
-        config
+       result
     }
 
     def mergeScenariosConfigs(context, config, tempContext = [:], currentScenarioSourceName = null) {
