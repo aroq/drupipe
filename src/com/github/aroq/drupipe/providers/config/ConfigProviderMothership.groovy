@@ -17,6 +17,8 @@ class ConfigProviderMothership extends ConfigProviderBase {
     def _provide() {
         controller.drupipeLogger.trace "ConfigProviderMothership _provide()"
         controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config,"drupipeConfig.config: ${drupipeConfig.config}", [:])
+
+        // Add mothership config as the source and load it.
         if (drupipeConfig.config.env.MOTHERSHIP_REPO) {
             def source = [
                 name:          'mothership',
@@ -55,7 +57,6 @@ class ConfigProviderMothership extends ConfigProviderBase {
             // TODO: move into project config provider.
             def mothershipProjectConfig = mothershipConfig[config.jenkinsFolderName]
             script.echo "mothershipProjectConfig: ${mothershipProjectConfig}"
-
             config = utils.merge(config, mothershipProjectConfig)
             controller.drupipeLogger.debugLog(drupipeConfig.config, config, 'mothershipServer config after merge', [debugMode: 'json'])
 
