@@ -2,7 +2,7 @@
 
 def call(shellCommand, actionParams = [shell_bash_login:true, return_stdout: false]) {
     if (env.KUBERNETES_PORT) {
-        echo "Executing ssh with SSH_AUTH_SOCK manually set"
+//        echo "Executing ssh with SSH_AUTH_SOCK manually set"
         if (actionParams.shell_bash_login) {
 //            echo "With bash login session"
             shellCommand = """#!/bin/bash -l -e

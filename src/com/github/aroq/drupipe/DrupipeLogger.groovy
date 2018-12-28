@@ -69,7 +69,7 @@ class DrupipeLogger implements Serializable {
         }
     }
 
-    def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], String logLevel = 'DEBUG') {
+    def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], String logLevel = 'TRACE') {
         if (checkLogLevelWeight(logLevel)) {
             if (path) {
                 value = path.inject(value, { obj, prop ->
