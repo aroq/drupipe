@@ -4,6 +4,7 @@ class ConfigProviderJob extends ConfigProviderBase {
 
     def _init() {
         super._init()
+        script.trace "ConfigProviderJob _init()"
 
         controller.drupipeLogger.log "ConfigProviderJob->provide()"
         controller.drupipeLogger.log "Initialising drupipeProcessorsController"

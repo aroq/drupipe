@@ -4,6 +4,7 @@ class ConfigProviderMothership extends ConfigProviderBase {
 
     def _init() {
         super._init()
+        script.trace "ConfigProviderMothership _init()"
         configCachePath = script.env.JENKINS_HOME + "/config_cache"
         configFileName = configCachePath + "/ConfigProviderMothership.yaml"
         if (script.env.JOB_NAME == 'mothership') {
