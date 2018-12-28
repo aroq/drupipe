@@ -15,6 +15,7 @@ class ConfigProviderJob extends ConfigProviderBase {
 
     // TODO: check if this is needed as Config Provider or Processor.
     def _provide() {
+        controller.drupipeLogger.trace "ConfigProviderJob _provide()"
         script.lock('ConfigProviderJob') {
 
             if (drupipeConfig.config.jobs) {

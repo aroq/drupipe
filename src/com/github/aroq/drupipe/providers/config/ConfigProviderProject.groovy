@@ -53,7 +53,8 @@ class ConfigProviderProject extends ConfigProviderBase {
     }
 
     def _provide() {
-        controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config.configRepo,"config repo: ${drupipeConfig.config.configRepo}", [:])
+        controller.drupipeLogger.trace "ConfigProviderProject _provide()"
+        controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config,"drupipeConfig.config: ${drupipeConfig.config}", [:])
 
         script.lock('ConfigProviderProject') {
             if (drupipeConfig.config.configRepo) {

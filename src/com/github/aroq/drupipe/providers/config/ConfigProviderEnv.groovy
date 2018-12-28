@@ -8,6 +8,8 @@ class ConfigProviderEnv extends ConfigProviderBase {
     }
 
     def _provide() {
+        controller.drupipeLogger.trace "ConfigProviderEnv _provide()"
+        controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config,"drupipeConfig.config: ${drupipeConfig.config}", [:])
         config.workspace = script.pwd()
         config.env = utils.envToMap()
 
