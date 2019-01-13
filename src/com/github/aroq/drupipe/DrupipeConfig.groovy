@@ -51,6 +51,7 @@ class DrupipeConfig implements Serializable {
             config = utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
             config.jenkinsParams = params
 
+            // TODO: Handle debug params in a uniform way.
             int debugParam = 0
             if (script.env.debugEnabled) {
                 debugParam = script.env.debugEnabled.toInteger()
