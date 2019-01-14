@@ -26,7 +26,6 @@ class ConfigProviderProject extends ConfigProviderBase {
                         branch: drupipeConfig.config.config_branch ? drupipeConfig.config.config_branch : 'master',
                         mode  : 'shell',
                 ]
-                controller.drupipeLogger.info "drupipeConfig.config.configPath: ${drupipeConfig.config.configPath}"
 
                 script.sshagent([drupipeConfig.config.credentialsId]) {
                     drupipeConfig.drupipeSourcesController.sourceAdd(source)
@@ -63,7 +62,7 @@ class ConfigProviderProject extends ConfigProviderBase {
                 config = drupipeConfig.drupipeSourcesController.sourceLoad(
                         sourceName: 'project',
                         configType: 'groovy',
-                        configPath: drupipeConfig.config.configFile,
+                        configPath: drupipeConfig.config.projectConfigFile,
                 )
 
                 def fileName = null
