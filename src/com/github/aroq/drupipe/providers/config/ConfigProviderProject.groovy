@@ -26,7 +26,7 @@ class ConfigProviderProject extends ConfigProviderBase {
                         branch: drupipeConfig.config.config_branch ? drupipeConfig.config.config_branch : 'master',
                         mode  : 'shell',
                 ]
-                controller.drupipeLogger.info "drupipeConfig.config.configRepo: ${drupipeConfig.config.configRepo}"
+                controller.drupipeLogger.info "drupipeConfig.config.configPath: ${drupipeConfig.config.configPath}"
 
                 script.sshagent([drupipeConfig.config.credentialsId]) {
                     drupipeConfig.drupipeSourcesController.sourceAdd(source)
