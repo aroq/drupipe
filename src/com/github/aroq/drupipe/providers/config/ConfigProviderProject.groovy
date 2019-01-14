@@ -20,7 +20,7 @@ class ConfigProviderProject extends ConfigProviderBase {
             if (drupipeConfig.config.configRepo) {
                 def source= [
                         name  : 'project',
-                        path  : drupipeConfig.config.configPath,
+                        path  : drupipeConfig.config.projectConfigPath,
                         type  : 'git',
                         url   : drupipeConfig.config.configRepo,
                         branch: drupipeConfig.config.config_branch ? drupipeConfig.config.config_branch : 'master',
