@@ -23,6 +23,7 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
     public config
 
     def provide() {
+        controller.drupipeLogger.log "ConfigProviderBase->provide() START"
         _init()
         boolean needProvide = true
         if (script.env.force != '1') {
@@ -49,6 +50,7 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
         }
         _finalize()
 
+        controller.drupipeLogger.log "ConfigProviderBase->provide() END"
         return result
     }
 
@@ -63,9 +65,11 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
     }
 
     def _finalize() {
+        controller.drupipeLogger.log "ConfigProviderBase->_finalize() START"
         if (saveCache && configCachePath && configFileName) {
             script.sh("mkdir -p ${configCachePath}")
             controller.serializeObject(configFileName, result)
         }
+        controller.drupipeLogger.log "ConfigProviderBase->_finalize() END"
     }
 }
