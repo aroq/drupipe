@@ -80,7 +80,7 @@ class DrupipeConfig implements Serializable {
             }
             for (def i = 0; i < configProviders.size(); i++) {
                 ConfigProvider configProvider = configProviders[i]
-                controller.drupipeLogger.log "DrupipeConfig->config(): Config Provider class name: ${className} call"
+                controller.drupipeLogger.log "DrupipeConfig->config(): Config Provider class name: ${config.config_providers_list[i]].class_name} call"
                 config = utils.merge(config, configProvider.provide())
             }
 
