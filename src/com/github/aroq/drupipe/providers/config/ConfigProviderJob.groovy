@@ -9,8 +9,8 @@ class ConfigProviderJob extends ConfigProviderBase {
         controller.drupipeLogger.log "Initialising drupipeProcessorsController"
         controller.drupipeProcessorsController = controller.drupipeConfig.initProcessorsController(this, drupipeConfig.config.processors)
 
-        configCachePath = script.env.JENKINS_HOME + "/config_cache/" + script.env.JOB_NAME
-        configFileName = configCachePath + "/ConfigProviderJob.yaml"
+//        configCachePath = script.env.JENKINS_HOME + "/config_cache/" + script.env.JOB_NAME
+//        configFileName = configCachePath + "/ConfigProviderJob.yaml"
     }
 
     // TODO: check if this is needed as Config Provider or Processor.
