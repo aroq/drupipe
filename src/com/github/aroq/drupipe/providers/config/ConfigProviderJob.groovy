@@ -44,7 +44,7 @@ class ConfigProviderJob extends ConfigProviderBase {
                     if (drupipeConfig.config.job.context) {
                         drupipeConfig.config = utils.merge(drupipeConfig.config, drupipeConfig.config.job.context)
                     }
-                    controller.drupipeLogger.jsonDump(drupipeConfig.config.job, 'CONFIG JOB', 'INFO')
+                    controller.drupipeLogger.jsonDump(drupipeConfig.config.job, 'CONFIG JOB')
                 } else {
                     throw new Exception("ConfigProviderJob->provide: No job is defined.")
                 }
