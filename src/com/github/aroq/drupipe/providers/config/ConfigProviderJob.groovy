@@ -10,18 +10,17 @@ class ConfigProviderJob extends ConfigProviderBase {
         controller.drupipeProcessorsController = controller.drupipeConfig.initProcessorsController(this, drupipeConfig.config.processors)
 
 //        String prefixPath = script.env.JENKINS_HOME + "/config_cache/" + script.env.JOB_NAME
-        String prefixPath = script.env.JENKINS_HOME + "/config_cache/cicd-k8s-infra/seed"
-//        String jobConfigFileName = prefixPath + "/ConfigProviderJob.yaml"
-        def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
-        String jobConfigFileName = prefixPath + "/scenarios/test/ConfigProviderJob.yaml"
 
-        if (this.script.fileExists(jobConfigFileName)) {
-            script.echo "Cached ConfigProviderJob is found, loading..."
-            return script.readYaml(file: jobConfigFileName)
-        }
-        else {
-            script.echo "Cached ConfigProviderJob is not found: " + jobConfigFileName
-        }
+        def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
+        String jobConfigFileName = sourceDir + "/scenarios/test/ConfigProviderJob.yaml"
+
+//        if (this.script.fileExists(jobConfigFileName)) {
+//            script.echo "Cached ConfigProviderJob is found, loading..."
+//            return script.readYaml(file: jobConfigFileName)
+//        }
+//        else {
+//            script.echo "Cached ConfigProviderJob is not found: " + jobConfigFileName
+//        }
 
 //        }
         script.lock('ConfigProviderJob') {
@@ -59,8 +58,8 @@ class ConfigProviderJob extends ConfigProviderBase {
                 throw new Exception("ConfigProviderJob->provide: No config.jobs are defined")
             }
 //            controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'ConfigProviderJob')
-            script.sh("mkdir -p ${prefixPath}")
-            controller.archiveObject(jobConfigFileName, drupipeConfig.config)
+//            script.sh("mkdir -p ${prefixPath}")
+//            controller.archiveObject(jobConfigFileName, drupipeConfig.config)
         }
         drupipeConfig.config
     }
