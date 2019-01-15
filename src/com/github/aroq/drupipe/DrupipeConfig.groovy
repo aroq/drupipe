@@ -23,21 +23,21 @@ class DrupipeConfig implements Serializable {
 
     def projects
 
-    def get(String path, params = [:]) {
-        LinkedHashMap defaultParam = [
-            override_with_env_vars: true
-        ]
-
-        params = defaultParam << params
-
-        def param = utils.deepGet(controller.context, path)
-
-        if (params.override_with_env_vars) {
-            def envVarName = envVarPrefix + path.join('_').toUpperCase()
-            controller.drupipeLogger.debug "envVarName: ${envVarName}"
-            controller.drupipeProcessorsController.drupipeParamProcessor.overrideWithEnvVar(param, controller.context, envVarName)
-        }
-    }
+//    def get(String path, params = [:]) {
+//        LinkedHashMap defaultParam = [
+//            override_with_env_vars: true
+//        ]
+//
+//        params = defaultParam << params
+//
+//        def param = utils.deepGet(controller.context, path)
+//
+//        if (params.override_with_env_vars) {
+//            def envVarName = envVarPrefix + path.join('_').toUpperCase()
+//            controller.drupipeLogger.debug "envVarName: ${envVarName}"
+//            controller.drupipeProcessorsController.drupipeParamProcessor.overrideWithEnvVar(param, controller.context, envVarName)
+//        }
+//    }
 
     def config(params, parent) {
         drupipeSourcesController = new DrupipeSourcesController(script: script, utils: utils, controller: controller)
