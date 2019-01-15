@@ -61,7 +61,7 @@ class ConfigProviderJob extends ConfigProviderBase {
 //            controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'ConfigProviderJob')
 
             script.sh("mkdir -p ${prefixPath}")
-            controller.archiveObject(jobConfigFileName, drupipeConfig.config)
+//            controller.archiveObject(jobConfigFileName, drupipeConfig.config)
         }
         drupipeConfig.config
     }
