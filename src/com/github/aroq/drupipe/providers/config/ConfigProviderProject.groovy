@@ -120,12 +120,14 @@ class ConfigProviderProject extends ConfigProviderBase {
                     }
                     controller.drupipeLogger.log "Processing UNIPIPE_SOURCES start3"
 
-                    controller.drupipeLogger.debugLog(config, sources, 'UNIPIPE_SOURCES sources', ['debugMode': 'json'])
+                    controller.drupipeLogger.jsonDump(sources, 'UNIPIPE_SOURCES sources')
+//                    controller.drupipeLogger.debugLog(config, sources, 'UNIPIPE_SOURCES sources', ['debugMode': 'json'])
                 }
 
                 config = mergeScenariosConfigs(configContext, config, [:], 'project')
 
-                controller.drupipeLogger.debugLog(drupipeConfig.config, config, 'Project config after mergeScenariosConfigs', [debugMode: 'json'])
+                controller.drupipeLogger.jsonDump(config, 'Project config after mergeScenariosConfigs')
+//                controller.drupipeLogger.debugLog(drupipeConfig.config, config, 'Project config after mergeScenariosConfigs', [debugMode: 'json'])
             }
         }
         config
