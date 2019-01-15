@@ -109,7 +109,7 @@ class ConfigProviderProject extends ConfigProviderBase {
 
                 def sources = [:]
                 if (drupipeConfig.config.env.containsKey('UNIPIPE_SOURCES')) {
-                    controller.drupipeLogger.log "Processing UNIPIPE_SOURCES"
+                    controller.drupipeLogger.log "Processing UNIPIPE_SOURCES start"
                     def uniconfSourcesKey = utils.deepGet(configContext, 'uniconf.keys.sources')
                     sources[uniconfSourcesKey] = script.readJSON(text: drupipeConfig.config.env['UNIPIPE_SOURCES'])
                     if (config[uniconfSourcesKey]) {
