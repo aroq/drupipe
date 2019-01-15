@@ -80,8 +80,9 @@ class DrupipeConfig implements Serializable {
             }
             for (def i = 0; i < configProviders.size(); i++) {
                 ConfigProvider configProvider = configProviders[i]
-                controller.drupipeLogger.log "DrupipeConfig->config(): Config Provider class name: ${configProvider.class.name} call"
+                controller.drupipeLogger.log "DrupipeConfig->config(): Config Provider class name: ${configProvider.class.name} BEFORE call"
                 config = utils.merge(config, configProvider.provide())
+                controller.drupipeLogger.log "DrupipeConfig->config(): Config Provider class name: ${configProvider.class.name} AFTER call"
             }
 
             // TODO: remove it when all configs are updated to version 2.
