@@ -2,7 +2,7 @@ package com.github.aroq.drupipe.providers.config
 
 class ConfigProviderProject extends ConfigProviderBase {
 
-    def provide() {
+    def _provide() {
         def projectConfig
 
         controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config.configRepo,"projectConfig repo: ${drupipeConfig.config.configRepo}", [:])

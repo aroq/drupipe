@@ -2,7 +2,7 @@ package com.github.aroq.drupipe.providers.config
 
 class ConfigProviderMothership extends ConfigProviderBase {
 
-    def provide() {
+    def _provide() {
         def result = [:]
         if (drupipeConfig.config.env.MOTHERSHIP_REPO) {
             def source = [

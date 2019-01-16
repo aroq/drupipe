@@ -3,7 +3,7 @@ package com.github.aroq.drupipe.providers.config
 class ConfigProviderJob extends ConfigProviderBase {
 
     // TODO: check if this is needed as Config Provider or Processor.
-    def provide() {
+    def _provide() {
         controller.drupipeLogger.log "ConfigProviderJob->provide()"
 //        if (drupipeConfig.config.config_version > 1) {
         controller.drupipeLogger.log "Initialising drupipeProcessorsController"
