@@ -2,26 +2,20 @@ package com.github.aroq.drupipe.providers.config
 
 class ConfigProviderEnv extends ConfigProviderBase {
 
-    def _init() {
-        super._init()
-        controller.drupipeLogger.trace "ConfigProviderEnv _init()"
-    }
-
-    def _provide() {
-        controller.drupipeLogger.trace "ConfigProviderEnv _provide()"
-        controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config,"drupipeConfig.config: ${drupipeConfig.config}", [:])
-        config.workspace = script.pwd()
-        config.env = utils.envToMap()
+    def provide() {
+        def result = [:]
+        result.workspace = script.pwd()
+        result.env = utils.envToMap()
 
         // TODO: Use env vars pattern to override.
-        config.credentialsId = config.env.credentialsId
-        config.environment = config.env.environment
-        config.configRepo = config.env.configRepo
+        result.credentialsId = result.env.credentialsId
+        result.environment = result.env.environment
+        result.configRepo = result.env.configRepo
 
         if (script.env.KUBERNETES_PORT) {
-          config.containerMode = 'kubernetes'
+          result.containerMode = 'kubernetes'
         }
-        utils.serializeAndDeserialize(config)
+        utils.serializeAndDeserialize(result)
     }
 
 }
