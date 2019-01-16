@@ -5,6 +5,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
     DrupipeController controller = pod.controller
     controller.drupipeLogger.debug "Container mode: kubernetes"
     controller.drupipeLogger.log "Pod name: ${pod.name}"
+
     def nodeName = pod.name
     if (pod.name == null) {
         // SHA1 hash of job BUILD_TAG to make pod name unique.
@@ -47,7 +48,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
     podTemplate(
         label: nodeName,
         containers: containersToExecute,
-        idleMinutes: 10,
+        idleMinutes: pod.idleMinutes,
     ) {
         node(nodeName) {
             controller.utils.echoMessage '[COLLAPSED-END]'
