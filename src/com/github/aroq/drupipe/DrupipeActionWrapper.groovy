@@ -173,7 +173,7 @@ class DrupipeActionWrapper implements Serializable {
                                 this.script.timeout(action_timeout) {
                                     utils.echoMessage '[COLLAPSED-END]'
                                     this.result = actionInstance."${this.methodName}"()
-                                    utils.echoMessage'[COLLAPSED-START] ...'
+                                    utils.echoMessage "[COLLAPSED-START] ${this.name}.${this.methodName} ^^^"
                                 }
                             }
                             catch (err) {
