@@ -24,7 +24,7 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
 
     def provide() {
         controller.drupipeLogger.log "${this.class.name}: ConfigProviderBase->provide() START"
-//        _init()
+        _init()
         boolean needProvide = true
         if (script.env.force != '1') {
             if (configFileName) {
@@ -48,7 +48,7 @@ class ConfigProviderBase implements ConfigProvider, Serializable {
             result = _provide()
             saveCache = true
         }
-//        _finalize()
+        _finalize()
 
         controller.drupipeLogger.log "${this.class.name}: ConfigProviderBase->provide() END"
         return result
