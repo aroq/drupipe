@@ -31,10 +31,9 @@ class ConfigProviderProject extends ConfigProviderBase {
                 }
             }
         }
-    }
 
-    def _provide() {
         sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
+
         String projectConfigFileName = sourceDir + "/scenarios/test/ConfigProviderProject.yaml"
         if (this.script.fileExists(projectConfigFileName)) {
             script.echo "Cached ConfigProviderProject is found, loading..."
@@ -43,6 +42,11 @@ class ConfigProviderProject extends ConfigProviderBase {
         else {
             script.echo "Cached ConfigProviderProject is not found: " + projectConfigFileName
         }
+    }
+
+    def _provide() {
+        controller.drupipeLogger.debugLog(drupipeConfig.config, config,"config", [:])
+        controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config,"drupipeConfig.config", [:])
 
         script.lock('ConfigProviderProject') {
             if (drupipeConfig.config.configRepo) {
