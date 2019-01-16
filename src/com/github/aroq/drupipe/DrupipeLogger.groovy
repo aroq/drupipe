@@ -50,11 +50,11 @@ class DrupipeLogger implements Serializable {
     }
 
     def collapsedStart(String message) {
-        utils.echoMessage '[COLLAPSED-START] ' + message
+        //utils.echoMessage '[COLLAPSED-START] ' + message
     }
 
     def collapsedEnd() {
-        utils.echoMessage '[COLLAPSED-END]'
+        //utils.echoMessage '[COLLAPSED-END]'
     }
 
     def jsonDump(value, String dumpName = '', String logLevel = 'DEBUG') {
@@ -69,7 +69,7 @@ class DrupipeLogger implements Serializable {
         }
     }
 
-    def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], String logLevel = 'DEBUG') {
+    def debugLog(params, value, dumpName = '', debugParams = [:], path = [:], String logLevel = 'TRACE') {
         if (checkLogLevelWeight(logLevel)) {
             if (path) {
                 value = path.inject(value, { obj, prop ->

@@ -433,7 +433,6 @@ def serializeAndDeserialize(params, mode = 'yaml') {
             result = readYaml(file: filePath)
         }
         else if (mode == 'json') {
-
             def outJson = groovy.json.JsonOutput.toJson(params)
             writeFile file: filePath, text: outJson, encoding: 'UTF-8'
             result = readJSON(file: filePath)

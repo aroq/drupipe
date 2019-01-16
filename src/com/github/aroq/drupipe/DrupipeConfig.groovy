@@ -46,13 +46,20 @@ class DrupipeConfig implements Serializable {
             this.script.sh("mkdir -p .unipipe/temp")
 
             params.debugEnabled = params.debugEnabled && params.debugEnabled != '0' ? true : false
-//            utils.dump(params, params, 'PIPELINE-PARAMS')
 
             config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
             config = utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
             config.jenkinsParams = params
 
-            controller.drupipeLogger = new DrupipeLogger(utils: utils, logLevels: config.log_levels, logLevelWeight : config.log_levels[config.log_level].weight)
+            // TODO: Handle debug params in a uniform way.
+            int debugParam = 0
+            if (script.env.debugEnabled) {
+                debugParam = script.env.debugEnabled.toInteger()
+            }
+            if (debugParam < 2) {
+               debugParam = config.log_levels[config.log_level].weight
+            }
+            controller.drupipeLogger = new DrupipeLogger(utils: utils, logLevels: config.log_levels, logLevelWeight : debugParam)
 
             // TODO: remove it when all configs are updated to version 2.
             if (script.env.JOB_NAME == 'mothership') {
@@ -66,7 +73,7 @@ class DrupipeConfig implements Serializable {
             for (def i = 0; i < config.config_providers_list.size(); i++) {
                 def properties = [script: script, utils: utils, drupipeConfig: this, controller: controller]
                 def className = "com.github.aroq.drupipe.providers.config.${config.config_providers[config.config_providers_list[i]].class_name}"
-                script.echo "Config Provider class name: ${className}"
+                controller.drupipeLogger.debug "Config Provider class name: ${className}"
                 configProviders.add(parent.class.classLoader.loadClass(className, true, false)?.newInstance(
                     properties
                 ))

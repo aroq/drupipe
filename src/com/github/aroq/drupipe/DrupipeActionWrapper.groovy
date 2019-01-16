@@ -87,14 +87,14 @@ class DrupipeActionWrapper implements Serializable {
 
                 def actionInstance
 
-                pipeline.drupipeLogger.log "classNames: ${classNames.reverse()}"
+                pipeline.drupipeLogger.debug "classNames: ${classNames.reverse()}"
 
                 try {
                     for (className in classNames.reverse()) {
                         className = "com.github.aroq.drupipe.actions.${className}"
                         try {
                             if (!actionInstance) {
-                                pipeline.drupipeLogger.log "Try to create class ${className}"
+                                pipeline.drupipeLogger.debug "Try to create class ${className}"
                                 actionInstance = this.class.classLoader.loadClass(className, true, false)?.newInstance(
                                         action: this,
                                         script: this.script,
@@ -103,7 +103,7 @@ class DrupipeActionWrapper implements Serializable {
                             }
                         }
                         catch (ClassNotFoundException e) {
-                            pipeline.drupipeLogger.log "Class ${className} does not exist"
+                            pipeline.drupipeLogger.debug "Class ${className} does not exist"
                         }
                     }
                 }
@@ -232,7 +232,7 @@ class DrupipeActionWrapper implements Serializable {
 //                pipeline.archiveObjectJsonAndYaml(pipeline.context.results, 'context_results')
                 }
 
-                pipeline.drupipeLogger.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
+//                pipeline.drupipeLogger.echoDelimiter "-----> DrupipeStage: ${drupipeStageName} | DrupipeActionWrapper name: ${this.fullName} end <-"
                 pipeline.drupipeLogger.collapsedEnd()
                 pipeline.drupipeLogger.logLevelWeight = globalLogLevelWeight
                 this.result

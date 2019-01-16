@@ -18,7 +18,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
         def container = pod.containers[i]
         def containerName = container.name.replaceAll('\\.','-').replaceAll('_','-').take(30).replaceAll(/^[^a-zA-Z0-9]/, "").replaceAll(/[^a-zA-Z0-9]$/, "")
         if (!containerNames.contains(containerName)) {
-            controller.drupipeLogger.info "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
+            controller.drupipeLogger.debug "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
             containerNames += containerName
             containersToExecute.add(containerTemplate(
                 name:                  containerName,
@@ -47,8 +47,11 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
     podTemplate(
         label: nodeName,
         containers: containersToExecute,
+        idleMinutes: 10,
     ) {
         node(nodeName) {
+            controller.utils.echoMessage '[COLLAPSED-END]'
+            controller.utils.echoMessage '[COLLAPSED-START] POD'
             if (unipipe_retrieve_config) {
                 controller.utils.getUnipipeConfig(controller)
             }
@@ -62,11 +65,14 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
                     sshagent([controller.context.credentialsId]) {
                         // To have k8s envVars & secretEnvVars as well.
                         controller.context.env = controller.utils.merge(controller.context.env, controller.utils.envToMap())
+                        controller.utils.echoMessage '[COLLAPSED-END]'
                         pod.containers[i].executeBlocks()
+                        controller.utils.echoMessage '[COLLAPSED-START] POD'
                     }
                 }
             }
             controller.utils.stashList(controller, stash)
+            controller.utils.echoMessage '[COLLAPSED-END]'
         }
     }
 
