@@ -74,9 +74,9 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
                     sshagent([controller.context.credentialsId]) {
                         // To have k8s envVars & secretEnvVars as well.
                         controller.context.env = controller.utils.merge(controller.context.env, controller.utils.envToMap())
-                        controller.utils.echoMessage '[COLLAPSED-END]'
+//                        controller.utils.echoMessage '[COLLAPSED-END]'
                         pod.containers[i].executeBlocks()
-                        controller.utils.echoMessage '[COLLAPSED-START] ...'
+//                        controller.utils.echoMessage '[COLLAPSED-START] ...'
                     }
                 }
             }
