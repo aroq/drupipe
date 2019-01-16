@@ -1,3 +1,6 @@
+Version 0.15.0:
+ - Add Lockable, caches, debug changes (#167)
+
 Version 0.14.2:
  - Merge pull request #163 from michael-molchanov/patch-12
  - Move def outside if.
