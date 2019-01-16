@@ -26,6 +26,7 @@ class ConfigProviderProject extends ConfigProviderBase {
                         branch: drupipeConfig.config.config_branch ? drupipeConfig.config.config_branch : 'master',
                         mode  : 'shell',
                 ]
+
                 script.sshagent([drupipeConfig.config.credentialsId]) {
                     drupipeConfig.drupipeSourcesController.sourceAdd(source)
                 }
@@ -34,13 +35,21 @@ class ConfigProviderProject extends ConfigProviderBase {
 
         sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
 
-        String projectConfigFileName = sourceDir + "/scenarios/test/ConfigProviderProject.yaml"
-        if (this.script.fileExists(projectConfigFileName)) {
-            script.echo "Cached ConfigProviderProject is found, loading..."
-            return script.readYaml(file: projectConfigFileName)
+        String jobName = script.env.JOB_NAME
+        config['jenkinsFolderName'] = utils.getJenkinsFolderName(jobName, drupipeConfig.config.projectNames)
+        config['jenkinsJobName'] = utils.getJenkinsJobName(jobName, drupipeConfig.config.projectNames)
+
+        script.echo "drupipeConfig.config['jenkinsJobName']: " + config['jenkinsJobName']
+        script.echo "drupipeConfig.config['jenkinsFolderName']: " + config['jenkinsFolderName']
+        if (config['jenkinsJobName'] == 'seed' && config['jenkinsFolderName']) {
+            // Clear cached config.
+            String projectCachePath = script.env.JENKINS_HOME + "/config_cache/" + config['jenkinsFolderName']
+            script.sh("rm -fR ${projectCachePath}")
+            controller.drupipeLogger.debug "ConfigProviderProject _init() - Delete ${projectCachePath} directory"
         }
         else {
-            script.echo "Cached ConfigProviderProject is not found: " + projectConfigFileName
+            configCachePath = script.env.JENKINS_HOME + "/config_cache/" + script.env.JOB_NAME
+            configFileName = configCachePath + "/ConfigProviderProject.yaml"
         }
     }
 
@@ -116,9 +125,8 @@ class ConfigProviderProject extends ConfigProviderBase {
 
                 controller.drupipeLogger.debugLog(drupipeConfig.config, config, 'Project config after mergeScenariosConfigs', [debugMode: 'json'])
             }
-            controller.archiveObjectJsonAndYaml(config, 'ConfigProviderProject')
         }
-        config
+       config
     }
 
     def mergeScenariosConfigs(context, config, tempContext = [:], currentScenarioSourceName = null) {
@@ -199,6 +207,8 @@ class ConfigProviderProject extends ConfigProviderBase {
 
                         def fileName = null
 
+                        def scenarioSourceDir = drupipeConfig.drupipeSourcesController.sourceDir(config, scenarioSourceName)
+
                         // TODO: recheck it.
                         def filesToCheck = [
                             "/.unipipe/scenarios/${scenario.name}/config.yaml",
@@ -211,8 +221,8 @@ class ConfigProviderProject extends ConfigProviderBase {
 
                         for (def ifc = 0; ifc < filesToCheck.size(); ifc++) {
                             def fileToCheck = filesToCheck[ifc]
-                            if (script.fileExists(sourceDir + fileToCheck)) {
-                                fileName = sourceDir + fileToCheck
+                            if (script.fileExists(scenarioSourceDir + fileToCheck)) {
+                                fileName = scenarioSourceDir + fileToCheck
                                 break
                             }
                         }
