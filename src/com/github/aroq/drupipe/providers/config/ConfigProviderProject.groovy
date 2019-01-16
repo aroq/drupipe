@@ -207,6 +207,7 @@ class ConfigProviderProject extends ConfigProviderBase {
 
                         def fileName = null
 
+                        def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(config, scenarioSourceName)
 
                         // TODO: recheck it.
                         def filesToCheck = [
