@@ -4,7 +4,7 @@ import com.github.aroq.drupipe.DrupipePod
 def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_retrieve_config = false) {
     DrupipeController controller = pod.controller
     controller.drupipeLogger.debug "Container mode: kubernetes"
-    controller.drupipeLogger.debug "Pod name: ${pod.name}"
+    controller.drupipeLogger.log "Pod name: ${pod.name}"
     def nodeName = pod.name
     if (pod.name == null) {
         // SHA1 hash of job BUILD_TAG to make pod name unique.
