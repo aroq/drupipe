@@ -2,36 +2,39 @@ package com.github.aroq.drupipe.providers.config
 
 class ConfigProviderProject extends ConfigProviderBase {
 
-    def _provide() {
-//        def config
+    String sourceDir
 
-        controller.drupipeLogger.debugLog(drupipeConfig.config, drupipeConfig.config.configRepo,"config repo: ${drupipeConfig.config.configRepo}", [:])
-
+    def _init() {
+        super._init()
+        controller.drupipeLogger.trace "ConfigProviderProject _init()"
+        // TODO: Move into DrupipeConfig.
         if (drupipeConfig.config.project_type == 'single') {
             def source= [
-                name  : 'project',
-                path  : drupipeConfig.config.config_dir,
-                type  : 'dir',
+                    name  : 'project',
+                    path  : drupipeConfig.config.config_dir,
+                    type  : 'dir',
             ]
             drupipeConfig.drupipeSourcesController.sourceAdd(source)
         }
         else {
             if (drupipeConfig.config.configRepo) {
                 def source= [
-                    name  : 'project',
-                    path  : drupipeConfig.config.projectConfigPath,
-                    type  : 'git',
-                    url   : drupipeConfig.config.configRepo,
-                    branch: drupipeConfig.config.config_branch ? drupipeConfig.config.config_branch : 'master',
-                    mode  : 'shell',
+                        name  : 'project',
+                        path  : drupipeConfig.config.projectConfigPath,
+                        type  : 'git',
+                        url   : drupipeConfig.config.configRepo,
+                        branch: drupipeConfig.config.config_branch ? drupipeConfig.config.config_branch : 'master',
+                        mode  : 'shell',
                 ]
                 script.sshagent([drupipeConfig.config.credentialsId]) {
                     drupipeConfig.drupipeSourcesController.sourceAdd(source)
                 }
             }
         }
+    }
 
-        def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
+    def _provide() {
+        sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(drupipeConfig.config, 'project')
         String projectConfigFileName = sourceDir + "/scenarios/test/ConfigProviderProject.yaml"
         if (this.script.fileExists(projectConfigFileName)) {
             script.echo "Cached ConfigProviderProject is found, loading..."
