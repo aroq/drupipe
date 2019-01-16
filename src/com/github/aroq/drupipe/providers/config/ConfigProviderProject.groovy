@@ -92,12 +92,12 @@ class ConfigProviderProject extends ConfigProviderBase {
                     controller.drupipeLogger.debugLog(drupipeConfig.config, config, 'Project config2', [debugMode: 'json'])
                 }
 
-                def projectConfigContext = utils.merge(drupipeConfig.config, config)
+                def configContext = utils.merge(drupipeConfig.config, config)
 
                 def sources = [:]
                 if (drupipeConfig.config.env.containsKey('UNIPIPE_SOURCES')) {
                     controller.drupipeLogger.log "Processing UNIPIPE_SOURCES"
-                    def uniconfSourcesKey = utils.deepGet(projectConfigContext, 'uniconf.keys.sources')
+                    def uniconfSourcesKey = utils.deepGet(configContext, 'uniconf.keys.sources')
                     sources[uniconfSourcesKey] = script.readJSON(text: drupipeConfig.config.env['UNIPIPE_SOURCES'])
                     if (config[uniconfSourcesKey]) {
                         config[uniconfSourcesKey] << sources[uniconfSourcesKey]
@@ -108,7 +108,7 @@ class ConfigProviderProject extends ConfigProviderBase {
                     controller.drupipeLogger.debugLog(config, sources, 'UNIPIPE_SOURCES sources', ['debugMode': 'json'])
                 }
 
-                config = mergeScenariosConfigs(projectConfigContext, config, [:], 'project')
+                config = mergeScenariosConfigs(configContext, config, [:], 'project')
 
                 controller.drupipeLogger.debugLog(drupipeConfig.config, config, 'Project config after mergeScenariosConfigs', [debugMode: 'json'])
             }
