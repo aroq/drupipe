@@ -116,9 +116,8 @@ class ConfigProviderProject extends ConfigProviderBase {
 
                 controller.drupipeLogger.debugLog(drupipeConfig.config, config, 'Project config after mergeScenariosConfigs', [debugMode: 'json'])
             }
-            controller.archiveObjectJsonAndYaml(config, 'ConfigProviderProject')
         }
-        config
+       config
     }
 
     def mergeScenariosConfigs(context, config, tempContext = [:], currentScenarioSourceName = null) {
@@ -198,8 +197,6 @@ class ConfigProviderProject extends ConfigProviderBase {
                         }
 
                         def fileName = null
-
-                        def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(config, scenarioSourceName)
 
                         // TODO: recheck it.
                         def filesToCheck = [
