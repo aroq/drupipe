@@ -56,7 +56,7 @@ class DrupipeController implements Serializable {
                                     archiveObjectJsonAndYaml(jobConfig, 'job')
                                     script.echo "Configuration end"
                                     utils.echoMessage '[COLLAPSED-START] CONFIG'
-                                    drupipeLogger.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'], [], 'INFO')
+                                    drupipeLogger.debugLog(context, jobConfig, 'JOB', [debugMode: 'json'])
                                     job = new DrupipeJob(jobConfig)
                                     job.controller = this
                                 }

@@ -18,7 +18,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
         def container = pod.containers[i]
         def containerName = container.name.replaceAll('\\.','-').replaceAll('_','-').take(30).replaceAll(/^[^a-zA-Z0-9]/, "").replaceAll(/[^a-zA-Z0-9]$/, "")
         if (!containerNames.contains(containerName)) {
-            controller.drupipeLogger.info "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
+            controller.drupipeLogger.debug "Create k8s containerTemplate for container: ${container.name}, image: ${container.image}"
             containerNames += containerName
             containersToExecute.add(containerTemplate(
                 name:                  containerName,
