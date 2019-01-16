@@ -2,25 +2,22 @@ package com.github.aroq.drupipe.providers.config
 
 class ConfigProviderJob extends ConfigProviderBase {
 
-    // TODO: check if this is needed as Config Provider or Processor.
-    def _provide() {
-        controller.drupipeLogger.log "ConfigProviderJob->provide()"
-//        if (drupipeConfig.config.config_version > 1) {
+    def _init() {
+        super._init()
+        controller.drupipeLogger.trace "ConfigProviderJob _init()"
+
         controller.drupipeLogger.log "Initialising drupipeProcessorsController"
         controller.drupipeProcessorsController = controller.drupipeConfig.initProcessorsController(this, drupipeConfig.config.processors)
 
-        String prefixPath = script.env.JENKINS_HOME + "/config_cache/" + script.env.JOB_NAME
-        String jobConfigFileName = prefixPath + "/ConfigProviderJob.yaml"
-        if (this.script.fileExists(jobConfigFileName)) {
-            script.echo "Cached ConfigProviderJob is found, loading: " + jobConfigFileName
-            return script.readYaml(file: jobConfigFileName)
-        }
-        else {
-            script.echo "Cached ConfigProviderJob is not found: " + jobConfigFileName
-        }
+        configCachePath = script.env.JENKINS_HOME + "/config_cache/" + script.env.JOB_NAME
+        configFileName = configCachePath + "/ConfigProviderJob.yaml"
+    }
 
-//        }
+    // TODO: check if this is needed as Config Provider or Processor.
+    def _provide() {
+        controller.drupipeLogger.trace "ConfigProviderJob _provide()"
         script.lock('ConfigProviderJob') {
+
             if (drupipeConfig.config.jobs) {
                 controller.archiveObjectJsonAndYaml(drupipeConfig.config, 'context_unprocessed')
 
@@ -54,8 +51,6 @@ class ConfigProviderJob extends ConfigProviderBase {
             } else {
                 throw new Exception("ConfigProviderJob->provide: No config.jobs are defined")
             }
-            script.sh("mkdir -p ${prefixPath}")
-            controller.serializeObject(jobConfigFileName, drupipeConfig.config)
         }
         drupipeConfig.config
     }
