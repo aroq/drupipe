@@ -171,7 +171,9 @@ class DrupipeActionWrapper implements Serializable {
                             try {
                                 def action_timeout = this.params.action_timeout ? this.params.action_timeout : 120
                                 this.script.timeout(action_timeout) {
+                                    utils.echoMessage '[COLLAPSED-END]'
                                     this.result = actionInstance."${this.methodName}"()
+                                    utils.echoMessage "[COLLAPSED-START] ${this.name}.${this.methodName} ^^^"
                                 }
                             }
                             catch (err) {

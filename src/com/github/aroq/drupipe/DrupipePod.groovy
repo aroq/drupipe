@@ -2,6 +2,8 @@ package com.github.aroq.drupipe
 
 class DrupipePod extends DrupipeBase {
 
+    Integer idleMinutes = 0
+
     String name
 
     ArrayList unstash = []

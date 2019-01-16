@@ -5,6 +5,17 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
     DrupipeController controller = pod.controller
     controller.drupipeLogger.debug "Container mode: kubernetes"
     controller.drupipeLogger.debug "Pod name: ${pod.name}"
+    controller.drupipeLogger.debug "Pod idleMinutes: ${pod.idleMinutes}"
+
+    String podTitle = "POD, Idle minutes: ${pod.idleMinutes}"
+
+    if (pod.name) {
+        podTitle = "POD: ${pod.name}, Idle minutes: ${pod.idleMinutes}"
+    }
+
+    controller.utils.echoMessage '[COLLAPSED-END]'
+    controller.utils.echoMessage "[COLLAPSED-START] ${podTitle}"
+
     def nodeName = pod.name
     if (pod.name == null) {
         // SHA1 hash of job BUILD_TAG to make pod name unique.
@@ -47,11 +58,9 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
     podTemplate(
         label: nodeName,
         containers: containersToExecute,
-        idleMinutes: 10,
+        idleMinutes: pod.idleMinutes,
     ) {
         node(nodeName) {
-            controller.utils.echoMessage '[COLLAPSED-END]'
-            controller.utils.echoMessage '[COLLAPSED-START] POD'
             if (unipipe_retrieve_config) {
                 controller.utils.getUnipipeConfig(controller)
             }
@@ -65,9 +74,9 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
                     sshagent([controller.context.credentialsId]) {
                         // To have k8s envVars & secretEnvVars as well.
                         controller.context.env = controller.utils.merge(controller.context.env, controller.utils.envToMap())
-                        controller.utils.echoMessage '[COLLAPSED-END]'
+//                        controller.utils.echoMessage '[COLLAPSED-END]'
                         pod.containers[i].executeBlocks()
-                        controller.utils.echoMessage '[COLLAPSED-START] POD'
+//                        controller.utils.echoMessage '[COLLAPSED-START] ...'
                     }
                 }
             }
