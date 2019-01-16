@@ -5,6 +5,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
     DrupipeController controller = pod.controller
     controller.drupipeLogger.debug "Container mode: kubernetes"
     controller.drupipeLogger.log "Pod name: ${pod.name}"
+    controller.drupipeLogger.log "Pod idleMinutes: ${pod.idleMinutes}"
 
     def nodeName = pod.name
     if (pod.name == null) {
