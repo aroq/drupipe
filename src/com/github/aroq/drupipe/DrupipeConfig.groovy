@@ -54,7 +54,11 @@ class DrupipeConfig implements Serializable {
             // TODO: Handle debug params in a uniform way.
             int debugParam = 0
             if (script.env.debugEnabled) {
-                debugParam = script.env.debugEnabled.toInteger()
+                try {
+                    debugParam = script.env.debugEnabled.toInteger()
+                }
+                catch(e) {
+                }
             }
             if (debugParam < 2) {
                debugParam = config.log_levels[config.log_level].weight
