@@ -1,3 +1,6 @@
+Version 0.15.2:
+ - Revert  michaeltigr/zebra-build-php-drush-docman-tools from 0.0.98.2 to 0.0.98.1
+
 Version 0.15.1:
  - Pod retention time & Change collapsed sections (#168)
 
