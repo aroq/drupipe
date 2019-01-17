@@ -1,3 +1,6 @@
+Version 0.15.4:
+ - Fix debugEnable=false case
+
 Version 0.15.3:
  - Merge pull request #164 from michael-molchanov/amaster
  - To save space use publish or artifact, not both.
