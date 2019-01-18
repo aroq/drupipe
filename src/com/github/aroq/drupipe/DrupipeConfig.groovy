@@ -87,6 +87,9 @@ class DrupipeConfig implements Serializable {
                 config = utils.merge(config, configProvider.provide())
             }
 
+            // To make sure that cached params are not used.
+            config.jenkinsParams = params
+
             // TODO: remove it when all configs are updated to version 2.
             // For compatibility:
             if (config.defaultActionParams) {
