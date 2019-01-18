@@ -163,7 +163,6 @@ projects.each { project ->
             }
 
             pipelineJob("${project.key}/${jobName}") {
-                concurrentBuild(false)
                 logRotator(-1, config.logRotatorNumToKeep)
                 parameters {
                     stringParam('debugEnabled', '0')
@@ -215,6 +214,7 @@ projects.each { project ->
                             gitLabConnection('Gitlab')
                         }
                     }
+                    disableConcurrentBuilds()
                 }
             }
             if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {

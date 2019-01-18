@@ -105,7 +105,6 @@ def processJob(jobs, currentFolder, config) {
                 println "pipelineScriptPath: ${pipelineScriptPath}"
                 println "pipelineScriptDirPath: ${pipelineScriptDirPath}"
                 pipelineJob(currentName) {
-                    concurrentBuild(false)
                     if (job.value.containsKey('block_on')) {
                         config.dslHelper.drupipeBlockOn(delegate, job.value.block_on)
                     }
@@ -205,7 +204,6 @@ def processJob(jobs, currentFolder, config) {
                     if (config.quietPeriodSeconds) {
                         quietPeriod(config.quietPeriodSeconds)
                     }
-                    concurrentBuild(false)
                     if (job.value.containsKey('block_on')) {
                         config.dslHelper.drupipeBlockOn(delegate, job.value.block_on)
                     }
@@ -376,7 +374,6 @@ def processJob(jobs, currentFolder, config) {
                 println "pipelineScriptPath: ${pipelineScriptPath}"
                 println "pipelineScriptDirPath: ${pipelineScriptDirPath}"
                 pipelineJob(currentName) {
-                    concurrentBuild(false)
                     if (job.value.containsKey('block_on')) {
                         config.dslHelper.drupipeBlockOn(delegate, job.value.block_on)
                     }
@@ -455,7 +452,6 @@ def processJob(jobs, currentFolder, config) {
                 println "pipelineScriptPath: ${pipelineScriptPath}"
 
                 pipelineJob("${currentName}") {
-                    concurrentBuild(false)
                     logRotator(-1, localConfig.logRotatorNumToKeep)
                     if (job.value.containsKey('block_on')) {
                         config.dslHelper.drupipeBlockOn(delegate, job.value.block_on)
@@ -610,7 +606,6 @@ def processJob(jobs, currentFolder, config) {
                 }
 
                 pipelineJob("${currentName}") {
-                    concurrentBuild(false)
                     if (job.value.containsKey('block_on')) {
                         config.dslHelper.drupipeBlockOn(delegate, job.value.block_on)
                     }
@@ -657,7 +652,6 @@ def processJob(jobs, currentFolder, config) {
             }
             else if (job.value.type == 'trigger_all') {
                 freeStyleJob("${currentName}") {
-                    concurrentBuild(false)
                     if (job.value.containsKey('block_on')) {
                         config.dslHelper.drupipeBlockOn(delegate, job.value.block_on)
                     }
@@ -730,7 +724,6 @@ def processJob(jobs, currentFolder, config) {
             }
             else if (job.value.type == 'multistep_all') {
                 freeStyleJob("${currentName}") {
-                    concurrentBuild(false)
                     if (job.value.containsKey('block_on')) {
                         config.dslHelper.drupipeBlockOn(delegate, job.value.block_on)
                     }
