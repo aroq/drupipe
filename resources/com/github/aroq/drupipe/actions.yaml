@@ -209,6 +209,12 @@ params:
           playbookParams:
             ansistrano_deploy_via: copy_unarchive
 
+    Artifact:
+      params:
+        artifact_path: reports
+        artifact_name: HTML
+        artifact_files: index.html
+
     Common:
       confirm:
         params:
@@ -573,6 +579,7 @@ params:
       params:
         actions: []
         aggregate_commands: true
+        retries: 1
         through_ssh_params:
           executable: ssh
           options: -T
