@@ -45,12 +45,21 @@ class Commands extends BaseAction {
                         level--
                     }
                 }
+
                 action.pipeline.drupipeLogger.trace "Execute command: ${chainCommand}"
-                if (action.params.store_result || action.pipeline.context.job.notify) {
-                    results.add(script.drupipeShell(chainCommand, action.params << [return_stdout: true]))
-                }
-                else {
-                    script.drupipeShell(chainCommand, action.params)
+                script.retry(action.params.retries) {
+                    if (action.params.store_result || action.pipeline.context.job.notify) {
+                        try {
+                            results.add(script.drupipeShell(chainCommand, action.params << [return_stdout: true]))
+                        }
+                        catch (e) {
+                            results.add(e.toString())
+                            throw e
+                        }
+                    }
+                    else {
+                        script.drupipeShell(chainCommand, action.params)
+                    }
                 }
             }
 
