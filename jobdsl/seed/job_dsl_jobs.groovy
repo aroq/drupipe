@@ -720,6 +720,11 @@ def processJob(jobs, currentFolder, config) {
                             }
                         }
                     }
+                    if (job.value.containsKey('cron') && job.value.cron instanceof CharSequence) {
+                        triggers {
+                            cron(job.value.cron)
+                        }
+                    }
                 }
             }
             else if (job.value.type == 'multistep_all') {
@@ -791,6 +796,11 @@ def processJob(jobs, currentFolder, config) {
                                     }
                                 }
                             }
+                        }
+                    }
+                    if (job.value.containsKey('cron') && job.value.cron instanceof CharSequence) {
+                        triggers {
+                            cron(job.value.cron)
                         }
                     }
                 }
