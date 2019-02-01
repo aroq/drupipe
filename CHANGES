@@ -1,3 +1,9 @@
+Version 0.15.7:
+ - Merge pull request #169 from michael-molchanov/aroq_master
+ - Add cron support for triggers.
+ - Add retries support, send exception in notification.
+ - Add artifact action.
+
 Version 0.15.6:
 
 
