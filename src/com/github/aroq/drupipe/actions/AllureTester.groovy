@@ -18,6 +18,6 @@ class AllureTester extends BaseAction {
 
         script.allure includeProperties: false, jdk: '', properties: [], reportBuildPolicy: 'ALWAYS', report: "${report_dir}/generated-report", results: [[path: report_dir]]
 
-        script.archiveArtifacts artifacts: "${report_dir}/**"
+        // script.archiveArtifacts artifacts: "${report_dir}/**"
     }
 }

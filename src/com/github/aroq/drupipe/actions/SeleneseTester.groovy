@@ -47,12 +47,12 @@ class SeleneseTester extends BaseAction {
             }
         }
 
-        this.script.archiveArtifacts artifacts: 'reports/**'
         try {
             this.script.publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'reports', reportFiles: 'index.html', reportName: 'Selenese', reportTitles: ''])
         }
         catch (e) {
-            this.script.echo "Publish HTML plugin isn't installed."
+            this.script.echo "Publish HTML plugin isn't installed. Use artifact instead."
+            this.script.archiveArtifacts artifacts: 'reports/**'
         }
 
     }
