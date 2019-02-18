@@ -321,7 +321,7 @@ def pipelineNotify(context, event) {
                     if (params.slack && params.slackChannel) {
                         try {
                             echo 'Notifications: Send message to Slack'
-                            slackSend (color: colorCode, message: summary, channel: params.slackChannel)
+                            slackSend (color: colorCode, message: summary, channel: params.slackChannel, baseUrl: params.slackBaseUrl, token: params.slackToken, teamDomain: params.slackTeamDomain)
                         }
                         catch (e) {
                             echo 'Notifications: Unable to sent Slack notification'
