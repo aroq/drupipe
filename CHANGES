@@ -1,3 +1,7 @@
+Version 0.13.6.1:
+ - Merge pull request #172 from michael-molchanov/v0.13.6-fix
+ - Fix slack send notification.
+
 Version 0.13.6:
  - Merge branch 'master' of github.com:aroq/drupipe
  - Merge pull request #159 from michael-molchanov/master
