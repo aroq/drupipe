@@ -210,10 +210,23 @@ params:
             ansistrano_deploy_via: copy_unarchive
 
     Artifact:
-      params:
-        artifact_path: reports
-        artifact_name: HTML
-        artifact_files: index.html
+      artifact:
+        params:
+          artifact_path: reports
+
+      publishHtml:
+        params:
+          artifact_path: reports
+          artifact_name: HTML
+          artifact_files: html
+
+      s3Upload:
+        params:
+          s3_credentials_id: ''
+          s3_region: ''
+          s3_bucket: ''
+          s3_path: ''
+          artifact_path: reports
 
     Common:
       confirm:
