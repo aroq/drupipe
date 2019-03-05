@@ -38,7 +38,7 @@ class Artifact extends BaseAction {
             }
         }
         catch (e) {
-            this.script.echo ex.getMessage()
+            this.script.echo e.getMessage()
             this.script.archiveArtifacts artifacts: "${artifact_path}/**"
         }
 
