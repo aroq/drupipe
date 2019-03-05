@@ -209,6 +209,25 @@ params:
           playbookParams:
             ansistrano_deploy_via: copy_unarchive
 
+    Artifact:
+      artifact:
+        params:
+          artifact_path: reports
+
+      publishHtml:
+        params:
+          artifact_path: reports
+          artifact_name: HTML
+          artifact_files: html
+
+      s3Upload:
+        params:
+          s3_credentials_id: ''
+          s3_region: ''
+          s3_bucket: ''
+          s3_path: ''
+          artifact_path: reports
+
     Common:
       confirm:
         params:
@@ -573,6 +592,7 @@ params:
       params:
         actions: []
         aggregate_commands: true
+        retries: 1
         through_ssh_params:
           executable: ssh
           options: -T
