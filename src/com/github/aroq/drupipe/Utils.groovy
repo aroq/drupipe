@@ -321,7 +321,7 @@ def pipelineNotify(context, event) {
                     if (params.slack && params.slackChannel) {
                         try {
                             echo 'Notifications: Send message to Slack'
-                            slackSend (color: colorCode, message: summary, channel: params.slackChannel)
+                            slackSend (color: colorCode, message: summary, channel: params.slackChannel, baseUrl: params.slackBaseUrl, token: params.slackToken, teamDomain: params.slackTeamDomain)
                         }
                         catch (e) {
                             echo 'Notifications: Unable to sent Slack notification'
@@ -433,6 +433,7 @@ def serializeAndDeserialize(params, mode = 'yaml') {
             result = readYaml(file: filePath)
         }
         else if (mode == 'json') {
+
             def outJson = groovy.json.JsonOutput.toJson(params)
             writeFile file: filePath, text: outJson, encoding: 'UTF-8'
             result = readJSON(file: filePath)
