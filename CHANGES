@@ -1,3 +1,7 @@
+Version 0.15.9:
+ - Merge pull request #174 from michael-molchanov/patch-13
+ - Update Artifact.groovy
+
 Version 0.15.8:
  - Merge pull request #171 from michael-molchanov/aroq_master
  - Add s3upload action.
