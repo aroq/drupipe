@@ -462,8 +462,74 @@ def processJob(jobs, currentFolder, config) {
                             stringParam('configRepo', pipelinesRepo)
                         }
                         job.value.params?.each { key, value ->
-                            println "PARAM ${key}: ${value}"
-                            if (value instanceof ArrayList) {
+															println "PARAM ${key}: ${value} -> ${value.getClass()}"
+                            if (value instanceof Map) {
+                                if (value.containsKey('type')) {
+                                    switch (value.type) {
+                                        case 'script_lib':
+                                            if (value.containsKey('name') && config.dslParamsHelper.respondsTo(value.name)) {
+                                                config.dslParamsHelper.drupipeParamChoices(
+                                                    delegate,
+                                                    key,
+                                                    '',
+                                                    value.containsKey('choices_type') ? value.choices_type : 'PT_SINGLE_SELECT',
+																										config.dslParamsHelper."$value.name"(value.arguments),
+                                                    value.containsKey('sandbox') ? value.sandbox : true,
+                                                    value.containsKey('filterable') ? value.filterable : false,
+                                                    value.containsKey('filter_length') ? value.filter_length : 0
+                                                )
+                                            }
+                                            break;
+                                        case 'script_file':
+                                            if(value.containsKey('path') && fileExists(config.dslHelper.sourcePath(delegate, 'project', value.path))) {
+                                                config.dslParamsHelper.drupipeParamChoices(
+                                                    delegate,
+                                                    key,
+                                                    '',
+                                                    value.containsKey('choices_type') ? value.choices_type : 'PT_SINGLE_SELECT',
+                                                    readFile(config.dslHelper.sourcePath(delegate, 'project', value.path)),
+                                                    value.containsKey('sandbox') ? value.sandbox : true,
+                                                    value.containsKey('filterable') ? value.filterable : false,
+                                                    value.containsKey('filter_length') ? value.filter_length : 0
+                                                )
+                                            }
+                                            else {
+                                                println "Script file not found."
+                                            }
+                                            break;
+                                        case 'script':
+                                            config.dslParamsHelper.drupipeParamChoices(
+                                                delegate,
+                                                key,
+                                                '',
+                                                value.containsKey('choices_type') ? value.choices_type : 'PT_SINGLE_SELECT',
+                                                value.script,
+                                                value.containsKey('sandbox') ? value.sandbox : true,
+                                                value.containsKey('filterable') ? value.filterable : false,
+                                                value.containsKey('filter_length') ? value.filter_length : 0
+                                            )
+                                            break;
+                                        case 'choice':
+                                            config.dslParamsHelper.drupipeParamChoices(
+                                                delegate,
+                                                key,
+                                                '',
+                                                value.containsKey('choices_type') ? value.choices_type : 'PT_SINGLE_SELECT',
+                                                config.dslParamsHelper.activeChoiceGetChoicesScript(value.choices, value.chices.first().toString()),
+                                                value.containsKey('sandbox') ? value.sandbox : true,
+                                                value.containsKey('filterable') ? value.filterable : false,
+                                                value.containsKey('filter_length') ? value.filter_length : 0
+                                            )
+                                            break;
+                                        default:
+                                            stringParam(key, value)
+                                    }
+                                }
+                                else {
+                                    stringParam(key, value)
+                                }
+                            }
+                            else if (value instanceof ArrayList) {
                                 config.dslParamsHelper.drupipeParamChoices(
                                     delegate,
                                     key,
