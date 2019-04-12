@@ -39,7 +39,7 @@ class DrupipeConfig implements Serializable {
         }
     }
 
-    def config(params, parent) {
+    def config(params, env, parent) {
         drupipeSourcesController = new DrupipeSourcesController(script: script, utils: utils, controller: controller)
         script.node('master') {
             this.script.sh("mkdir -p .unipipe")
@@ -50,6 +50,10 @@ class DrupipeConfig implements Serializable {
             config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
             config = utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
             config.jenkinsParams = params
+            config.jenkinsParams = utils.merge(config.jenkinsParams, config.jenkinsParams.collectEntries {k, v -> ["variant_${k}": v]})
+            config.jenkinsParams = utils.merge(config.jenkinsParams, config.jenkinsParams.collectEntries {k, v -> ["${k.toUpperCase()}": v]})
+            config.env = utils.merge(config.env, config.jenkinsParams)
+            config.jenkinsParams.each {k, v -> env."$k" = v}
 
             // TODO: Handle debug params in a uniform way.
             int debugParam = 0
@@ -89,6 +93,10 @@ class DrupipeConfig implements Serializable {
 
             // To make sure that cached params are not used.
             config.jenkinsParams = params
+            config.jenkinsParams = utils.merge(config.jenkinsParams, config.jenkinsParams.collectEntries {k, v -> ["variant_${k}": v]})
+            config.jenkinsParams = utils.merge(config.jenkinsParams, config.jenkinsParams.collectEntries {k, v -> ["${k.toUpperCase()}": v]})
+            config.env = utils.merge(config.env, config.jenkinsParams)
+            config.jenkinsParams.each {k, v -> env."$k" = v}
 
             // TODO: remove it when all configs are updated to version 2.
             // For compatibility:

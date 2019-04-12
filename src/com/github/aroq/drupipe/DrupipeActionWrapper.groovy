@@ -150,7 +150,13 @@ class DrupipeActionWrapper implements Serializable {
                 }
 
                 this.script.withCredentials(credentials) {
-                    def envParams = actionParams.env ? actionParams.env.collect{ k, v -> "$k=$v"} : []
+                    def actionParamsEnv = []
+                    if (actionParams.containsKey('env')) {
+                        actionParamsEnv = actionParams.env
+                        actionParamsEnv = utils.merge(actionParamsEnv, actionParamsEnv.collectEntries {k, v -> ["variant_${k}": v]})
+                        actionParamsEnv = utils.merge(actionParamsEnv, actionParamsEnv.collectEntries {k, v -> ["${k.toUpperCase()}": v]})
+                    }
+                    def envParams = actionParamsEnv.collect{ k, v -> "$k=$v"}
                     script.withEnv(envParams) {
                         // Execute action from file if exist in sources...
                         if (pipeline.context.sourcesList) {

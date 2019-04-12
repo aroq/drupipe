@@ -10,6 +10,8 @@ class DrupipeController implements Serializable {
 
     LinkedHashMap params = [:]
 
+    org.jenkinsci.plugins.workflow.cps.EnvActionImpl env = [:]
+
     HashMap notification = [:]
 
     def config = [:]
@@ -31,14 +33,12 @@ class DrupipeController implements Serializable {
     DrupipeProcessorsController drupipeProcessorsController
 
     def _init() {
-        context.jenkinsParams = params
         utils = new com.github.aroq.drupipe.Utils()
-
         notification.name = 'Build'
         notification.level = 'build'
 
         drupipeConfig = new DrupipeConfig(controller: this, script: script, utils: utils)
-        context = drupipeConfig.config(params, this)
+        context = drupipeConfig.config(params, env, this)
     }
 
     def execute(body = null) {
