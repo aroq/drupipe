@@ -24,28 +24,26 @@ class DrupipeContainer extends DrupipeBase {
 
     def execute(body = null) {
         controller.script.echo "DrupipeContainer execute - ${name}"
+        controller.script.echo "Force: ${controller.script.env.force}"
+        if (controller.script.env.force == '111') {
+            controller.script.echo 'FORCE REMOVE DIR ON WORKER'
+            controller.script.deleteDir()
+            controller.script.drupipeShell("pwd; ls -lah", [])
+        } else {
+            def dockerImage
 
-        def dockerImage
-
-        if (pod.containerized && controller.context.containerMode != 'kubernetes') {
-            if (controller.context.dockerfile) {
-                dockerImage = controller.script.docker.build(controller.context.dockerfile, controller.context.projectConfigPath)
-            }
-            else {
-                dockerImage = controller.script.docker.image(this.image)
-                dockerImage.pull()
-            }
-            def drupipeDockerArgs = controller.context.drupipeDockerArgs
-            dockerImage.inside(drupipeDockerArgs) {
-                controller.context.workspace = controller.script.pwd()
-                controller.script.sshagent([controller.context.credentialsId]) {
-                    controller.script.echo "Force: ${controller.script.env.force}"
-                    if (controller.script.env.force == '111') {
-                        controller.script.echo 'FORCE REMOVE DIR ON WORKER'
-                        controller.script.deleteDir()
-                        controller.script.drupipeShell("ls -lah", [])
-//                        controller.script.drupipeShell("rm -fR ./.", [])
-                    } else {
+            if (pod.containerized && controller.context.containerMode != 'kubernetes') {
+                if (controller.context.dockerfile) {
+                    dockerImage = controller.script.docker.build(controller.context.dockerfile, controller.context.projectConfigPath)
+                }
+                else {
+                    dockerImage = controller.script.docker.image(this.image)
+                    dockerImage.pull()
+                }
+                def drupipeDockerArgs = controller.context.drupipeDockerArgs
+                dockerImage.inside(drupipeDockerArgs) {
+                    controller.context.workspace = controller.script.pwd()
+                    controller.script.sshagent([controller.context.credentialsId]) {
                         if (body) {
                             body(controller.context)
                         }
@@ -53,9 +51,9 @@ class DrupipeContainer extends DrupipeBase {
                     }
                 }
             }
-        }
-        else {
-            executeBlocks()
+            else {
+                executeBlocks()
+            }
         }
     }
 
