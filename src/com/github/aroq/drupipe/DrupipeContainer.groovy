@@ -24,25 +24,25 @@ class DrupipeContainer extends DrupipeBase {
 
     def execute(body = null) {
         controller.script.echo "DrupipeContainer execute - ${name}"
-        controller.script.echo "Force: ${controller.script.env.force}"
-        if (controller.script.env.force == '111') {
-            controller.script.echo 'FORCE REMOVE DIR ON WORKER'
-            controller.script.drupipeShell("pwd; ls -lah /home/jenkins/workspace/allopneus/backend/seed/docman/config/config.json", [return_stdout: false])
-            controller.script.deleteDir()
-            controller.script.drupipeShell("pwd; ls -lah", [])
-        } else {
-            def dockerImage
-
-            if (pod.containerized && controller.context.containerMode != 'kubernetes') {
-                if (controller.context.dockerfile) {
-                    dockerImage = controller.script.docker.build(controller.context.dockerfile, controller.context.projectConfigPath)
-                }
-                else {
-                    dockerImage = controller.script.docker.image(this.image)
-                    dockerImage.pull()
-                }
-                def drupipeDockerArgs = controller.context.drupipeDockerArgs
-                dockerImage.inside(drupipeDockerArgs) {
+        def dockerImage
+        if (pod.containerized && controller.context.containerMode != 'kubernetes') {
+            if (controller.context.dockerfile) {
+                dockerImage = controller.script.docker.build(controller.context.dockerfile, controller.context.projectConfigPath)
+            }
+            else {
+                dockerImage = controller.script.docker.image(this.image)
+                dockerImage.pull()
+            }
+            def drupipeDockerArgs = controller.context.drupipeDockerArgs
+            dockerImage.inside(drupipeDockerArgs) {
+                controller.script.echo "Force: ${controller.script.env.force}"
+                if (controller.script.env.force == '111') {
+                    controller.script.echo 'FORCE REMOVE DIR ON WORKER'
+                    controller.script.drupipeShell("pwd;whoami; ls -lah /home/jenkins/workspace/allopneus/backend/seed/docman/config/config.json", [return_stdout: false])
+                    controller.script.drupipeShell("rm -fR ./.", [return_stdout: false])
+                    controller.script.drupipeShell("ls -lah", [return_stdout: false])
+//                    controller.script.deleteDir()
+                } else {
                     controller.context.workspace = controller.script.pwd()
                     controller.script.sshagent([controller.context.credentialsId]) {
                         if (body) {
@@ -52,9 +52,9 @@ class DrupipeContainer extends DrupipeBase {
                     }
                 }
             }
-            else {
-                executeBlocks()
-            }
+        }
+        else {
+            executeBlocks()
         }
     }
 
