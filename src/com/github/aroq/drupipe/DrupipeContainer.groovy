@@ -27,6 +27,7 @@ class DrupipeContainer extends DrupipeBase {
         controller.script.echo "Force: ${controller.script.env.force}"
         if (controller.script.env.force == '111') {
             controller.script.echo 'FORCE REMOVE DIR ON WORKER'
+            controller.script.drupipeShell("pwd; ls -lah /home/jenkins/workspace/allopneus/backend/seed/docman/config/config.json", [])
             controller.script.deleteDir()
             controller.script.drupipeShell("pwd; ls -lah", [])
         } else {
