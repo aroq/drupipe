@@ -24,7 +24,7 @@ class Docman extends BaseAction {
     }
 
     def info() {
-        script.drupipeShell("git config --list --show-origin", action.params)
+        script.drupipeShell("whoami", action.params)
         script.drupipeShell("git config --list --show-origin; git config --global user.email 'drupipe@github.com'; git config --global user.name 'Drupipe'", action.params)
         script.echo "Config repo: ${action.pipeline.context.configRepo}"
         prepare()
