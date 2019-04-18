@@ -39,6 +39,7 @@ class DrupipeContainer extends DrupipeBase {
             dockerImage.inside(drupipeDockerArgs) {
                 controller.context.workspace = controller.script.pwd()
                 controller.script.sshagent([controller.context.credentialsId]) {
+                    controller.script.echo "Force: ${controller.context.force}"
                     if (controller.context.force == '111') {
                         controller.script.echo 'FORCE REMOVE DIR ON WORKER'
                         controller.script.deleteDir()
