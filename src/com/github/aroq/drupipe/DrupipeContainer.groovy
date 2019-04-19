@@ -34,17 +34,13 @@ class DrupipeContainer extends DrupipeBase {
                 dockerImage.pull()
             }
             def drupipeDockerArgs = controller.context.drupipeDockerArgs
-            controller.script.echo "Force: ${controller.script.env.force}"
-
-            controller.script.echo "Force: ${controller.script.env.force}"
-            if (controller.script.env.force == '111') {
-                dockerImage.inside(drupipeDockerArgs + " --user root:root") {
+            dockerImage.inside(drupipeDockerArgs) {
+                controller.script.echo "Force: ${controller.script.env.force}"
+                if (controller.script.env.force == '111') {
                     controller.script.echo 'FORCE REMOVE DIR ON WORKER'
                     controller.script.drupipeShell("rm -rf ..?* .[!.]* *", [return_stdout: false])
                     controller.script.drupipeShell("ls -lah", [return_stdout: false])
                 }
-            }
-            dockerImage.inside(drupipeDockerArgs) {
                 controller.context.workspace = controller.script.pwd()
                 controller.script.sshagent([controller.context.credentialsId]) {
                     if (body) {
