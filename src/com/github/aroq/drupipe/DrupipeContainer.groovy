@@ -39,7 +39,7 @@ class DrupipeContainer extends DrupipeBase {
                 if (controller.script.env.force == '111') {
                     controller.script.echo 'FORCE REMOVE DIR ON WORKER'
                     controller.script.drupipeShell("rm -rf ..?* .[!.]* *", [return_stdout: false])
-                    controller.script.drupipeShell("ls -lah", [return_stdout: false])
+                    controller.script.drupipeShell("ls -lah; whoami", [return_stdout: false])
                 }
                 controller.context.workspace = controller.script.pwd()
                 controller.script.sshagent([controller.context.credentialsId]) {
