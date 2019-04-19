@@ -46,7 +46,7 @@ class DrupipeContainer extends DrupipeBase {
             }
             dockerImage.inside(drupipeDockerArgs) {
                 controller.context.workspace = controller.script.pwd()
-                controller.script.drupipeShell("whoami; docker ps", [return_stdout: false])
+                controller.script.drupipeShell("whoami", [return_stdout: false])
                 controller.script.sshagent([controller.context.credentialsId]) {
                     if (body) {
                         body(controller.context)
