@@ -50,7 +50,7 @@ class DrupipeConfig implements Serializable {
             config = script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/config.yaml'))
             config = utils.merge(config, script.readYaml(text: script.libraryResource('com/github/aroq/drupipe/actions.yaml')))
             config.jenkinsParams = params
-            config.jenkinsParams = utils.merge(config.jenkinsParams, config.jenkinsParams.collectEntries {k, v -> ["variant_${k}": v]})
+            config.jenkinsParams = utils.merge(config.jenkinsParams, config.jenkinsParams.collectEntries {k, v -> ["VARIANT_${k}": v]})
             config.jenkinsParams = utils.merge(config.jenkinsParams, config.jenkinsParams.collectEntries {k, v -> ["${k.toUpperCase()}": v]})
             config.env = utils.merge(config.env, config.jenkinsParams)
             config.jenkinsParams.each {k, v -> env."$k" = v}
@@ -93,7 +93,7 @@ class DrupipeConfig implements Serializable {
 
             // To make sure that cached params are not used.
             config.jenkinsParams = params
-            config.jenkinsParams = utils.merge(config.jenkinsParams, config.jenkinsParams.collectEntries {k, v -> ["variant_${k}": v]})
+            config.jenkinsParams = utils.merge(config.jenkinsParams, config.jenkinsParams.collectEntries {k, v -> ["VARIANT_${k}": v]})
             config.jenkinsParams = utils.merge(config.jenkinsParams, config.jenkinsParams.collectEntries {k, v -> ["${k.toUpperCase()}": v]})
             config.env = utils.merge(config.env, config.jenkinsParams)
             config.jenkinsParams.each {k, v -> env."$k" = v}

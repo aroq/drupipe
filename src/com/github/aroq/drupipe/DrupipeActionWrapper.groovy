@@ -153,7 +153,7 @@ class DrupipeActionWrapper implements Serializable {
                     def actionParamsEnv = []
                     if (actionParams.containsKey('env')) {
                         actionParamsEnv = actionParams.env
-                        actionParamsEnv = utils.merge(actionParamsEnv, actionParamsEnv.collectEntries {k, v -> ["variant_${k}": v]})
+                        actionParamsEnv = utils.merge(actionParamsEnv, actionParamsEnv.collectEntries {k, v -> ["VARIANT_${k}": v]})
                         actionParamsEnv = utils.merge(actionParamsEnv, actionParamsEnv.collectEntries {k, v -> ["${k.toUpperCase()}": v]})
                     }
                     def envParams = actionParamsEnv.collect{ k, v -> "$k=$v"}
