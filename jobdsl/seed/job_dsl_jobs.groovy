@@ -110,13 +110,7 @@ def processJob(jobs, currentFolder, config) {
                     }
                     logRotator(-1, localConfig.logRotatorNumToKeep)
                     parameters {
-                        config.docmanConfig.projects?.each { project ->
-                            if (project.value.repo && project.value.type != 'root') {
-                                println "Project type: ${project.value.type}"
-                                println "Project repo: ${project.value.repo}"
-                                config.dslParamsHelper.drupipeParamSelectsRelease(delegate, job, config, project.value.name + '_version', project)
-                            }
-                        }
+                        config.dslParamsHelper.drupipeParamComponentsVersions(delegate, job, config, config.docmanConfig.projects)
                         ArrayList<String> states_choices
                         String default_state
                         if (job.value.state) {
@@ -460,6 +454,13 @@ def processJob(jobs, currentFolder, config) {
                         if (config.config_version < 2) {
                             // TODO: check if it can be replaced by pipelinesRepo.
                             stringParam('configRepo', pipelinesRepo)
+                        }
+                        job.value.params?.each { item ->
+                            if (item instanceof String) {
+                                if (item == 'components-version') {
+                                    config.dslParamsHelper.drupipeParamComponentsVersions(delegate, job, config, config.docmanConfig.projects)
+                                }
+                            }
                         }
                         job.value.params?.each { key, value ->
 															println "PARAM ${key}: ${value} -> ${value.getClass()}"
