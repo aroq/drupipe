@@ -110,7 +110,7 @@ def processJob(jobs, currentFolder, config) {
                     }
                     logRotator(-1, localConfig.logRotatorNumToKeep)
                     parameters {
-                        config.dslParamsHelper.drupipeParamComponentsVersions(delegate, job, config, config.docmanConfig.projects)
+                        config.dslParamsHelper.drupipeParamComponentsVersions(delegate, job, config, config.docmanConfig.projects, '', '_version')
                         ArrayList<String> states_choices
                         String default_state
                         if (job.value.state) {
@@ -118,16 +118,16 @@ def processJob(jobs, currentFolder, config) {
                             default_state = job.value.state
                         }
                         else {
-							states_choices = config.docmanConfig.getStates().keySet() as ArrayList
-							default_state = states_choices.first()
+                          states_choices = config.docmanConfig.getStates().keySet() as ArrayList
+                          default_state = states_choices.first()
                         }
-						config.dslParamsHelper.drupipeParamChoices(
-							delegate,
-							'state',
-							'Alows to select release state.',
-							'PT_SINGLE_SELECT',
-							config.dslParamsHelper.activeChoiceGetChoicesScript(states_choices, default_state)
-						)
+                        config.dslParamsHelper.drupipeParamChoices(
+                          delegate,
+                          'state',
+                          'Alows to select release state.',
+                          'PT_SINGLE_SELECT',
+                          config.dslParamsHelper.activeChoiceGetChoicesScript(states_choices, default_state)
+                        )
                         job.value.params?.each { key, value ->
                             stringParam(key, value)
                         }
@@ -455,11 +455,10 @@ def processJob(jobs, currentFolder, config) {
                             // TODO: check if it can be replaced by pipelinesRepo.
                             stringParam('configRepo', pipelinesRepo)
                         }
+                        println "LIB_PARAMS: ${job.value.lib_params}"
                         job.value.lib_params?.each { item ->
-                            if (item instanceof String) {
-                                if (item == 'components-version') {
-                                    config.dslParamsHelper.drupipeParamComponentsVersions(delegate, job, config, config.docmanConfig.projects)
-                                }
+                            if (item == 'components-versions') {
+                                config.dslParamsHelper.drupipeParamComponentsVersions(delegate, job, config, config.docmanConfig.projects, 'component_version_', '')
                             }
                         }
                         job.value.params?.each { key, value ->
