@@ -455,7 +455,7 @@ def processJob(jobs, currentFolder, config) {
                             // TODO: check if it can be replaced by pipelinesRepo.
                             stringParam('configRepo', pipelinesRepo)
                         }
-                        job.value.params?.each { item ->
+                        job.value.lib_params?.each { item ->
                             if (item instanceof String) {
                                 if (item == 'components-version') {
                                     config.dslParamsHelper.drupipeParamComponentsVersions(delegate, job, config, config.docmanConfig.projects)
