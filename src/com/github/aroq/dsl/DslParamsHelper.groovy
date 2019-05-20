@@ -127,12 +127,16 @@ class DslParamsHelper {
         )
     }
 
-    def drupipeParamComponentsVersions(context, job, config, projects, prefix = "", suffix = "") {
+    def drupipeParamComponentsVersions(context, job, config, projects, prefix = "", suffix = "", upperCase = false) {
         projects?.each { project ->
             if (project.value.repo && project.value.type != 'root') {
                 println "Project type: ${project.value.type}"
                 println "Project repo: ${project.value.repo}"
-                drupipeParamSelectsRelease(context, job, config, prefix + project.value.name + suffix, project)
+                def name = prefix + project.value.name + suffix
+                if (upperCase == true) {
+                    name = name.toUpperCase()
+                }
+                drupipeParamSelectsRelease(context, job, config, name, project)
             }
         }
     }
