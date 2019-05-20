@@ -458,7 +458,7 @@ def processJob(jobs, currentFolder, config) {
                         println "LIB_PARAMS: ${job.value.lib_params}"
                         job.value.lib_params?.each { item ->
                             if (item == 'components-versions') {
-                                config.dslParamsHelper.drupipeParamComponentsVersions(delegate, job, config, config.docmanConfig.projects, 'component_version_', '')
+                                config.dslParamsHelper.drupipeParamComponentsVersions(delegate, job, config, config.docmanConfig.projects, 'component_', '_version', true)
                             }
                         }
                         job.value.params?.each { key, value ->
