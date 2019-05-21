@@ -1,3 +1,8 @@
+Version 0.16.1:
+ - Merge pull request #177 from michael-molchanov/aroq_master
+ - Release deploy provider.
+ - Fix mothership crash.
+
 Version 0.16.0:
  - Merge pull request #176 from michael-molchanov/aroq_master
  - Rename params.
