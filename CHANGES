@@ -1,3 +1,16 @@
+Version 0.16.0:
+ - Merge pull request #176 from michael-molchanov/aroq_master
+ - Rename params.
+ - Rename params.
+ - Fix var name.
+ - Fix type.
+ - Add job lib_params property.
+ - Fix param name.
+ - Move projects script to helper.
+ - Fix case.
+ - Add jenkins params normalization.
+ - Add script param support to common job type.
+
 Version 0.15.9:
  - Merge pull request #174 from michael-molchanov/patch-13
  - Update Artifact.groovy
