@@ -34,7 +34,7 @@ class DrupipeJob extends DrupipeBase {
 
     def context
 
-    ArrayList lib_params
+    ArrayList param_providers
 
     HashMap params
 
