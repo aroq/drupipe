@@ -455,9 +455,9 @@ def processJob(jobs, currentFolder, config) {
                             // TODO: check if it can be replaced by pipelinesRepo.
                             stringParam('configRepo', pipelinesRepo)
                         }
-                        println "LIB_PARAMS: ${job.value.lib_params}"
-                        job.value.lib_params?.each { item ->
-                            if (item == 'components-versions') {
+                        println "PARAM_PROVIDERS: ${job.value.param_providers}"
+                        job.value.param_providers?.each { item ->
+                            if (item == 'component-versions') {
                                 config.dslParamsHelper.drupipeParamComponentsVersions(delegate, job, config, config.docmanConfig.projects, 'component_', '_version', true)
                             }
                         }
