@@ -127,6 +127,16 @@ class DslParamsHelper {
         )
     }
 
+    def drupipeParamComponentsVersions(context, job, config, projects, prefix = "", suffix = "") {
+        projects?.each { project ->
+            if (project.value.repo && project.value.type != 'root') {
+                println "Project type: ${project.value.type}"
+                println "Project repo: ${project.value.repo}"
+                drupipeParamSelectsRelease(context, job, config, prefix + project.value.name + suffix, project)
+            }
+        }
+    }
+
     def drupipeParamTagsSelectsDeploy(context, job, config, name, project) {
         String sort = (job.value.source && job.value.source.sort) ? job.value.source.sort : ''
         def releaseRepo

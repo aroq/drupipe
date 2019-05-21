@@ -110,13 +110,7 @@ def processJob(jobs, currentFolder, config) {
                     }
                     logRotator(-1, localConfig.logRotatorNumToKeep)
                     parameters {
-                        config.docmanConfig.projects?.each { project ->
-                            if (project.value.repo && project.value.type != 'root') {
-                                println "Project type: ${project.value.type}"
-                                println "Project repo: ${project.value.repo}"
-                                config.dslParamsHelper.drupipeParamSelectsRelease(delegate, job, config, project.value.name + '_version', project)
-                            }
-                        }
+                        config.dslParamsHelper.drupipeParamComponentsVersions(delegate, job, config, config.docmanConfig.projects, '', '_version')
                         ArrayList<String> states_choices
                         String default_state
                         if (job.value.state) {
@@ -124,16 +118,16 @@ def processJob(jobs, currentFolder, config) {
                             default_state = job.value.state
                         }
                         else {
-							states_choices = config.docmanConfig.getStates().keySet() as ArrayList
-							default_state = states_choices.first()
+                          states_choices = config.docmanConfig.getStates().keySet() as ArrayList
+                          default_state = states_choices.first()
                         }
-						config.dslParamsHelper.drupipeParamChoices(
-							delegate,
-							'state',
-							'Alows to select release state.',
-							'PT_SINGLE_SELECT',
-							config.dslParamsHelper.activeChoiceGetChoicesScript(states_choices, default_state)
-						)
+                        config.dslParamsHelper.drupipeParamChoices(
+                          delegate,
+                          'state',
+                          'Alows to select release state.',
+                          'PT_SINGLE_SELECT',
+                          config.dslParamsHelper.activeChoiceGetChoicesScript(states_choices, default_state)
+                        )
                         job.value.params?.each { key, value ->
                             stringParam(key, value)
                         }
@@ -461,9 +455,81 @@ def processJob(jobs, currentFolder, config) {
                             // TODO: check if it can be replaced by pipelinesRepo.
                             stringParam('configRepo', pipelinesRepo)
                         }
+                        println "PARAM_PROVIDERS: ${job.value.param_providers}"
+                        job.value.param_providers?.each { item ->
+                            if (item == 'component-versions') {
+                                config.dslParamsHelper.drupipeParamComponentsVersions(delegate, job, config, config.docmanConfig.projects, 'component_', '_version', true)
+                            }
+                        }
                         job.value.params?.each { key, value ->
-                            println "PARAM ${key}: ${value}"
-                            if (value instanceof ArrayList) {
+															println "PARAM ${key}: ${value} -> ${value.getClass()}"
+                            if (value instanceof Map) {
+                                if (value.containsKey('type')) {
+                                    switch (value.type) {
+                                        case 'script_lib':
+                                            if (value.containsKey('name') && config.dslParamsHelper.respondsTo(value.name)) {
+                                                config.dslParamsHelper.drupipeParamChoices(
+                                                    delegate,
+                                                    key,
+                                                    '',
+                                                    value.containsKey('choices_type') ? value.choices_type : 'PT_SINGLE_SELECT',
+																										config.dslParamsHelper."$value.name"(value.arguments),
+                                                    value.containsKey('sandbox') ? value.sandbox : true,
+                                                    value.containsKey('filterable') ? value.filterable : false,
+                                                    value.containsKey('filter_length') ? value.filter_length : 0
+                                                )
+                                            }
+                                            break;
+                                        case 'script_file':
+                                            if(value.containsKey('path') && fileExists(config.dslHelper.sourcePath(delegate, 'project', value.path))) {
+                                                config.dslParamsHelper.drupipeParamChoices(
+                                                    delegate,
+                                                    key,
+                                                    '',
+                                                    value.containsKey('choices_type') ? value.choices_type : 'PT_SINGLE_SELECT',
+                                                    readFile(config.dslHelper.sourcePath(delegate, 'project', value.path)),
+                                                    value.containsKey('sandbox') ? value.sandbox : true,
+                                                    value.containsKey('filterable') ? value.filterable : false,
+                                                    value.containsKey('filter_length') ? value.filter_length : 0
+                                                )
+                                            }
+                                            else {
+                                                println "Script file not found."
+                                            }
+                                            break;
+                                        case 'script':
+                                            config.dslParamsHelper.drupipeParamChoices(
+                                                delegate,
+                                                key,
+                                                '',
+                                                value.containsKey('choices_type') ? value.choices_type : 'PT_SINGLE_SELECT',
+                                                value.script,
+                                                value.containsKey('sandbox') ? value.sandbox : true,
+                                                value.containsKey('filterable') ? value.filterable : false,
+                                                value.containsKey('filter_length') ? value.filter_length : 0
+                                            )
+                                            break;
+                                        case 'choice':
+                                            config.dslParamsHelper.drupipeParamChoices(
+                                                delegate,
+                                                key,
+                                                '',
+                                                value.containsKey('choices_type') ? value.choices_type : 'PT_SINGLE_SELECT',
+                                                config.dslParamsHelper.activeChoiceGetChoicesScript(value.choices, value.chices.first().toString()),
+                                                value.containsKey('sandbox') ? value.sandbox : true,
+                                                value.containsKey('filterable') ? value.filterable : false,
+                                                value.containsKey('filter_length') ? value.filter_length : 0
+                                            )
+                                            break;
+                                        default:
+                                            stringParam(key, value)
+                                    }
+                                }
+                                else {
+                                    stringParam(key, value)
+                                }
+                            }
+                            else if (value instanceof ArrayList) {
                                 config.dslParamsHelper.drupipeParamChoices(
                                     delegate,
                                     key,
