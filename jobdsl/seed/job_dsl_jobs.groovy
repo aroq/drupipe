@@ -374,21 +374,12 @@ def processJob(jobs, currentFolder, config) {
                     logRotator(-1, localConfig.logRotatorNumToKeep)
                     parameters {
                         config.docmanConfig.projects?.each { project ->
+                            config.dslParamsHelper.drupipeParamSelectsDeploy(delegate, job, config, config.docmanConfig.projects)
                             if ((project.value.type == 'root' || project.value.type == 'root_chain' || project.value.type == 'single') && (project.value.repo || project.value.root_repo)) {
-
-                                if (job.value.source.type == 'tags') {
-                                    config.dslParamsHelper.drupipeParamTagsSelectsDeploy(delegate, job, config, 'release', project)
-                                }
-                                else if (job.value.source.type == 'branches') {
-                                    config.dslParamsHelper.drupipeParamBranchesSelectsDeploy(delegate, job, config, 'release', project)
-                                }
-
                                 config.dslParamsHelper.drupipeParamOperationsCheckboxes(delegate, job, config)
-
                                 job.value.params?.each { key, value ->
                                     stringParam(key, value)
                                 }
-
                                 stringParam('environment', job.value.env)
                             }
                         }
@@ -460,9 +451,11 @@ def processJob(jobs, currentFolder, config) {
                             if (item == 'component-versions') {
                                 config.dslParamsHelper.drupipeParamComponentsVersions(delegate, job, config, config.docmanConfig.projects, 'component_', '_version', true)
                             }
+                            if (item == 'deploy-release') {
+                                config.dslParamsHelper.drupipeParamSelectsDeploy(delegate, job, config, config.docmanConfig.projects, '', '', true)
+                            }
                         }
                         job.value.params?.each { key, value ->
-															println "PARAM ${key}: ${value} -> ${value.getClass()}"
                             if (value instanceof Map) {
                                 if (value.containsKey('type')) {
                                     switch (value.type) {
@@ -473,7 +466,7 @@ def processJob(jobs, currentFolder, config) {
                                                     key,
                                                     '',
                                                     value.containsKey('choices_type') ? value.choices_type : 'PT_SINGLE_SELECT',
-																										config.dslParamsHelper."$value.name"(value.arguments),
+                                                    config.dslParamsHelper."$value.name"(value.arguments),
                                                     value.containsKey('sandbox') ? value.sandbox : true,
                                                     value.containsKey('filterable') ? value.filterable : false,
                                                     value.containsKey('filter_length') ? value.filter_length : 0

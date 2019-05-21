@@ -137,6 +137,23 @@ class DslParamsHelper {
         }
     }
 
+    def drupipeParamSelectsDeploy(context, job, config, projects, prefix = "", suffix = "", upperCase = false) {
+        def name = prefix + 'release' + suffix
+        if (upperCase == true) {
+            name = name.toUpperCase()
+        }
+        config.docmanConfig.projects?.each { project ->
+            if ((project.value.type == 'root' || project.value.type == 'root_chain' || project.value.type == 'single') && (project.value.repo || project.value.root_repo)) {
+                if (job.value.source.type == 'tags') {
+                    config.dslParamsHelper.drupipeParamTagsSelectsDeploy(context, job, config, name, project)
+                }
+                else if (job.value.source.type == 'branches') {
+                    config.dslParamsHelper.drupipeParamBranchesSelectsDeploy(context, job, config, name, project)
+                }
+            }
+        }
+    }
+
     def drupipeParamTagsSelectsDeploy(context, job, config, name, project) {
         String sort = (job.value.source && job.value.source.sort) ? job.value.source.sort : ''
         def releaseRepo
