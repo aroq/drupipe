@@ -69,18 +69,18 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         utils.yamlFileLoad(filePath)
     }
 
-    def processFromItem(context, result, String fromArg, String parent, String key = 'params') {
-        def fromValues = fromArg.tokenize("|")
-        String overrideMode
-        String from
-        if (fromValues.size() > 1) {
-            from = fromValues[0]
-            overrideMode = fromValues[1]
-        }
-        else {
-            from = fromValues[0]
-            overrideMode = "general"
-        }
+    def processFromItem(context, result, String from, String parent, String key = 'params') {
+//        def fromValues = fromArg.tokenize("|")
+//        String overrideMode
+//        String from
+//        if (fromValues.size() > 1) {
+//            from = fromValues[0]
+//            overrideMode = fromValues[1]
+//        }
+//        else {
+//            from = fromValues[0]
+//            overrideMode = "general"
+//        }
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         def logResult = false
         if (from == 'debugValue') {
