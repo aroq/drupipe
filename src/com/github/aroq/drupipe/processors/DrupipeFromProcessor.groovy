@@ -52,19 +52,9 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                 }
             }
 
-            def logResult = false
-            if (path == 'params.job_templates.lighthouse.mobile') {
-                logResult = true
-            }
             def from = getFromPathItem(object, pathItem, key)
             if (from) {
-                if (logResult) {
-                    drupipeLogger.debugLog(object, from, 'collectKeyParamsFromJsonPath() - from', [debugMode: 'json'], [], 'INFO')
-                }
                 result = utils.merge(result, from)
-                if (logResult) {
-                    drupipeLogger.debugLog(object, result, 'collectKeyParamsFromJsonPath() - result', [debugMode: 'json'], [], 'INFO')
-                }
             }
             else {
                 drupipeLogger.trace "getFromPathItem is null for pathItem: ${pathItem} in path: ${path}, key: ${key}"
@@ -162,7 +152,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                         fromObject.remove('name')
                     }
                     fromObject = process(context, fromObject, parent, key)
-                    result = utils.merge(result, fromObject)
+                    result = utils.merge(fromObject, result)
                     result.from_processed = true
                     result.from_processed_mode = this.mode
                     result.from_source = from
