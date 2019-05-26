@@ -57,7 +57,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
             if (from) {
                 result = utils.merge(result, from)
                 if (logResult) {
-                    drupipeLogger.debugLog(context, result, 'collectKeyParamsFromJsonPath() - result', [debugMode: 'json'], [], 'INFO')
+                    drupipeLogger.debugLog(object, result, 'collectKeyParamsFromJsonPath() - result', [debugMode: 'json'], [], 'INFO')
                 }
             }
             else {
