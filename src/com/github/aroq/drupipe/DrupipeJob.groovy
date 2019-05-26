@@ -36,7 +36,7 @@ class DrupipeJob extends DrupipeBase {
 
     ArrayList param_providers
 
-    HashMap params
+    HashMap parameters
 
     DrupipePipeline pipeline
 
