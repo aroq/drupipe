@@ -70,7 +70,6 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def processFromItem(context, result, String fromArg, String parent, String key = 'params') {
-        drupipeLogger.info "Process fromArg: ${fromArg}"
         def fromValues = fromArg.tokenize("|")
         String overrideMode
         String from
@@ -82,7 +81,6 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
             from = fromValues[0]
             overrideMode = "general"
         }
-        drupipeLogger.info "Process from: ${from}"
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         def logResult = false
         if (from == 'debugValue') {
@@ -166,7 +164,8 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                     }
                     fromObject = process(context, fromObject, parent, key)
                     if (overrideMode == "override") {
-                        result = utils.merge(fromObject, result)
+//                        result = utils.merge(fromObject, result)
+                        result = utils.merge(result, fromObject)
                     }
                     else {
                         result = utils.merge(result, fromObject)
