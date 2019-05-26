@@ -71,7 +71,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     def processFromItem(context, result, String fromArg, String parent, String key = 'params') {
         drupipeLogger.info "Process fromArg: ${fromArg}"
-        def fromValues = fromArg.split("|")
+        def fromValues = fromArg.tokenize("|")
         String overrideMode
         String from
         if (fromValues.size() > 1) {
