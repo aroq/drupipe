@@ -69,7 +69,19 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         utils.yamlFileLoad(filePath)
     }
 
-    def processFromItem(context, result, String from, String parent, String key = 'params') {
+    def processFromItem(context, result, String fromArg, String parent, String key = 'params') {
+        def values = fromArg.split("|")
+        String overrideMode
+        String from
+        if (values.size() > 1) {
+            from = values[0]
+            overrideMode = values[1]
+        }
+        else {
+            scenarioSourceName = currentScenarioSourceName
+            from = values[0]
+            overrideMode = "general"
+        }
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         def logResult = false
         if (from == 'params.job_templates.lighthouse.mobile') {
@@ -152,7 +164,12 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                         fromObject.remove('name')
                     }
                     fromObject = process(context, fromObject, parent, key)
-                    result = utils.merge(fromObject, result)
+                    if (overrideMode == "override") {
+                        result = utils.merge(fromObject, result)
+                    }
+                    else {
+                        result = utils.merge(result, fromObject)
+                    }
                     result.from_processed = true
                     result.from_processed_mode = this.mode
                     result.from_source = from
