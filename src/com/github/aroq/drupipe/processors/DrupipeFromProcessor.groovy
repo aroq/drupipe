@@ -163,13 +163,14 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                         fromObject.remove('name')
                     }
                     fromObject = process(context, fromObject, parent, key)
-                    if (overrideMode == "override") {
-//                        result = utils.merge(fromObject, result)
-                        result = utils.merge(result, fromObject)
-                    }
-                    else {
-                        result = utils.merge(result, fromObject)
-                    }
+                    result = utils.merge(result, fromObject)
+//                    if (overrideMode == "override") {
+////                        result = utils.merge(fromObject, result)
+//                        result = utils.merge(result, fromObject)
+//                    }
+//                    else {
+//                        result = utils.merge(result, fromObject)
+//                    }
                     result.from_processed = true
                     result.from_processed_mode = this.mode
                     result.from_source = from
