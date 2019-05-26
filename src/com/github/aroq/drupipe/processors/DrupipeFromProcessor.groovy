@@ -52,9 +52,13 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                 }
             }
 
+            def logResult = true
             def from = getFromPathItem(object, pathItem, key)
             if (from) {
                 result = utils.merge(result, from)
+                if (logResult) {
+                    drupipeLogger.debugLog(context, result, 'collectKeyParamsFromJsonPath() - result', [debugMode: 'json'], [], 'INFO')
+                }
             }
             else {
                 drupipeLogger.trace "getFromPathItem is null for pathItem: ${pathItem} in path: ${path}, key: ${key}"
