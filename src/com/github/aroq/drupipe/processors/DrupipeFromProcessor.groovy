@@ -70,21 +70,20 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
     }
 
     def processFromItem(context, result, String fromArg, String parent, String key = 'params') {
-        def values = fromArg.split("|")
+        def fromValues = fromArg.split("|")
         String overrideMode
         String from
-        if (values.size() > 1) {
-            from = values[0]
-            overrideMode = values[1]
+        if (fromValues.size() > 1) {
+            from = fromValues[0]
+            overrideMode = fromValues[1]
         }
         else {
-            scenarioSourceName = currentScenarioSourceName
-            from = values[0]
+            from = fromValues[0]
             overrideMode = "general"
         }
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         def logResult = false
-        if (from == 'params.job_templates.lighthouse.mobile') {
+        if (from == 'debugValue') {
             logResult = true
         }
         if (processorParams) {
