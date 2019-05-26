@@ -71,6 +71,10 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
 
     def processFromItem(context, result, String from, String parent, String key = 'params') {
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
+        def logResult = false
+        if (from == 'params.job_templates.lighthouse.mobile') {
+            logResult = true
+        }
         if (processorParams) {
             drupipeLogger.debugLog(context, processorParams, 'processFromItem->processorParams', [debugMode: 'json'])
             def keyMode = utils.deepGet(processorParams, "${this.include_key}.mode")
@@ -100,10 +104,8 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                 drupipeLogger.trace "Process from: ${from}"
                 drupipeLogger.trace "Process mode: ${mode}"
 
-                def logResult = false
-                if (from == '.params.containers.common.artifact.${context.container_types.artifact.release-deploy-preprod.type}.release-deploy-preprod') {
+                if (logResult) {
                     drupipeLogger.debugLog(context, tempContext, 'processFromItem() - tempContext', [debugMode: 'json'], [], 'INFO')
-                    logResult = true
                 }
 
                 try {
