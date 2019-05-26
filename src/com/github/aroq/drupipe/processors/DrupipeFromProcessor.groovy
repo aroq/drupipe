@@ -52,9 +52,15 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                 }
             }
 
-            def logResult = true
+            def logResult = false
+            if (path == 'params.job_templates.lighthouse.mobile') {
+                logResult = true
+            }
             def from = getFromPathItem(object, pathItem, key)
             if (from) {
+                if (logResult) {
+                    drupipeLogger.debugLog(object, from, 'collectKeyParamsFromJsonPath() - from', [debugMode: 'json'], [], 'INFO')
+                }
                 result = utils.merge(result, from)
                 if (logResult) {
                     drupipeLogger.debugLog(object, result, 'collectKeyParamsFromJsonPath() - result', [debugMode: 'json'], [], 'INFO')
