@@ -455,7 +455,7 @@ def processJob(jobs, currentFolder, config) {
                                 config.dslParamsHelper.drupipeParamSelectsDeploy(delegate, job, config, config.docmanConfig.projects, '', '', true)
                             }
                         }
-                        job.value.params?.each { key, value ->
+                        job.value.parameters?.each { key, value ->
                             if (value instanceof Map) {
                                 if (value.containsKey('type')) {
                                     switch (value.type) {
