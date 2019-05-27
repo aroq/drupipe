@@ -83,7 +83,7 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         }
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         def logResult = false
-        if (from == 'debugValue') {
+        if (from == 'params.job_templates.lighthouse.mobile') {
             logResult = true
         }
         if (processorParams) {
@@ -165,10 +165,22 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                     fromObject = process(context, fromObject, parent, key)
                     result = utils.merge(result, fromObject)
                     if (overrideMode == "override") {
+                        if (logResult) {
+                            drupipeLogger.debugLog(context, result, 'processFromItem() - result (override, before merge)', [debugMode: 'json'], [], 'INFO')
+                        }
                         result = utils.merge(fromObject, result)
+                        if (logResult) {
+                            drupipeLogger.debugLog(context, result, 'processFromItem() - result (override, after merge)', [debugMode: 'json'], [], 'INFO')
+                        }
                     }
                     else {
+                        if (logResult) {
+                            drupipeLogger.debugLog(context, result, 'processFromItem() - result (before merge)', [debugMode: 'json'], [], 'INFO')
+                        }
                         result = utils.merge(result, fromObject)
+                        if (logResult) {
+                            drupipeLogger.debugLog(context, result, 'processFromItem() - result (before after merge)', [debugMode: 'json'], [], 'INFO')
+                        }
                     }
                     result.from_processed = true
                     result.from_processed_mode = this.mode
