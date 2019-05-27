@@ -69,18 +69,18 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         utils.yamlFileLoad(filePath)
     }
 
-    def processFromItem(context, result, String from, String parent, String key = 'params') {
-//        def fromValues = fromArg.tokenize("|")
-//        String overrideMode
-//        String from
-//        if (fromValues.size() > 1) {
-//            from = fromValues[0]
-//            overrideMode = fromValues[1]
-//        }
-//        else {
-//            from = fromValues[0]
-//            overrideMode = "general"
-//        }
+    def processFromItem(context, result, String fromArg, String parent, String key = 'params') {
+        def fromValues = fromArg.tokenize("|")
+        String overrideMode
+        String from
+        if (fromValues.size() > 1) {
+            from = fromValues[0]
+            overrideMode = fromValues[1]
+        }
+        else {
+            from = fromValues[0]
+            overrideMode = "general"
+        }
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
         def logResult = false
         if (from == 'debugValue') {
@@ -164,13 +164,12 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                     }
                     fromObject = process(context, fromObject, parent, key)
                     result = utils.merge(result, fromObject)
-//                    if (overrideMode == "override") {
-////                        result = utils.merge(fromObject, result)
-//                        result = utils.merge(result, fromObject)
-//                    }
-//                    else {
-//                        result = utils.merge(result, fromObject)
-//                    }
+                    if (overrideMode == "override") {
+                        result = utils.merge(fromObject, result)
+                    }
+                    else {
+                        result = utils.merge(result, fromObject)
+                    }
                     result.from_processed = true
                     result.from_processed_mode = this.mode
                     result.from_source = from
