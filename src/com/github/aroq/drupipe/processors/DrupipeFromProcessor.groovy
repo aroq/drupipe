@@ -163,7 +163,6 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                         fromObject.remove('name')
                     }
                     fromObject = process(context, fromObject, parent, key)
-                    result = utils.merge(result, fromObject)
                     if (overrideMode == "override") {
                         if (logResult) {
                             drupipeLogger.debugLog(context, result, 'processFromItem() - result (override, before merge)', [debugMode: 'json'], [], 'INFO')
