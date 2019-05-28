@@ -69,8 +69,23 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
         utils.yamlFileLoad(filePath)
     }
 
-    def processFromItem(context, result, String from, String parent, String key = 'params') {
+    def processFromItem(context, result, String fromArg, String parent, String key = 'params') {
+        def fromValues = fromArg.tokenize("|")
+        String overrideMode
+        String from
+        if (fromValues.size() > 1) {
+            from = fromValues[0]
+            overrideMode = fromValues[1]
+        }
+        else {
+            from = fromValues[0]
+            overrideMode = "general"
+        }
         def processorParams = collectKeyParamsFromJsonPath(context, from, 'processors')
+        def logResult = false
+        if (from == 'debug.from') {
+            logResult = true
+        }
         if (processorParams) {
             drupipeLogger.debugLog(context, processorParams, 'processFromItem->processorParams', [debugMode: 'json'])
             def keyMode = utils.deepGet(processorParams, "${this.include_key}.mode")
@@ -100,10 +115,8 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                 drupipeLogger.trace "Process from: ${from}"
                 drupipeLogger.trace "Process mode: ${mode}"
 
-                def logResult = false
-                if (from == '.params.containers.common.artifact.${context.container_types.artifact.release-deploy-preprod.type}.release-deploy-preprod') {
+                if (logResult) {
                     drupipeLogger.debugLog(context, tempContext, 'processFromItem() - tempContext', [debugMode: 'json'], [], 'INFO')
-                    logResult = true
                 }
 
                 try {
@@ -150,7 +163,24 @@ class DrupipeFromProcessor implements Serializable, DrupipeProcessor {
                         fromObject.remove('name')
                     }
                     fromObject = process(context, fromObject, parent, key)
-                    result = utils.merge(result, fromObject)
+                    if (overrideMode == "override") {
+                        if (logResult) {
+                            drupipeLogger.debugLog(context, result, 'processFromItem() - result (override, before merge)', [debugMode: 'json'], [], 'INFO')
+                        }
+                        result = utils.merge(fromObject, result)
+                        if (logResult) {
+                            drupipeLogger.debugLog(context, result, 'processFromItem() - result (override, after merge)', [debugMode: 'json'], [], 'INFO')
+                        }
+                    }
+                    else {
+                        if (logResult) {
+                            drupipeLogger.debugLog(context, result, 'processFromItem() - result (before merge)', [debugMode: 'json'], [], 'INFO')
+                        }
+                        result = utils.merge(result, fromObject)
+                        if (logResult) {
+                            drupipeLogger.debugLog(context, result, 'processFromItem() - result (before after merge)', [debugMode: 'json'], [], 'INFO')
+                        }
+                    }
                     result.from_processed = true
                     result.from_processed_mode = this.mode
                     result.from_source = from

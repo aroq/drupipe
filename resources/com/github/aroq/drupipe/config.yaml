@@ -225,6 +225,13 @@ params:
               resourceLimitCpu: 2000m
               resourceRequestMemory: 1000Mi
               resourceLimitMemory: 2000Mi
+        xlarge:
+          params:
+            k8s:
+              resourceRequestCpu: 1000m
+              resourceLimitCpu: 4000m
+              resourceRequestMemory: 2000Mi
+              resourceLimitMemory: 4000Mi
     actions:
       pre:
         ssh_tunnel:
