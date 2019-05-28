@@ -1,3 +1,6 @@
+Version 0.16.3:
+ - Common job parameters (#179)
+
 Version 0.16.2:
  - Merge pull request #178 from michael-molchanov/aroq_master
  - Fix case.
