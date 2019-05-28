@@ -38,6 +38,9 @@ class DrupipeJob extends DrupipeBase {
 
     HashMap parameters
 
+    // For back-compatibility.
+    HashMap params
+
     DrupipePipeline pipeline
 
     DrupipeController controller
