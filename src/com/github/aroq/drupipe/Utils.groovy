@@ -248,7 +248,7 @@ def paramsMarkdownTable(jenkinsParams) {
         table = table + "|:---|:---|\n"
 
         jenkinsParams.each {param, value ->
-            if (!(param =~ $/^(separator|variant)/$)) {
+            if (!(param =~ $/(?i)^(separator|variant)/$)) {
                 table = table + "|${param}|`${value}`|\n"
             }
         }
