@@ -593,6 +593,7 @@ params:
         actions: []
         aggregate_commands: true
         retries: 1
+        through_ssh_chain: []
         through_ssh_params:
           executable: ssh
           options: -T
