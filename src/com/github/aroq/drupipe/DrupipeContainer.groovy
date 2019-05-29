@@ -22,6 +22,10 @@ class DrupipeContainer extends DrupipeBase {
 
     LinkedHashMap k8s
 
+    ArrayList<DrupipeActionWrapper> pre_actions = []
+    ArrayList<DrupipeActionWrapper> actions = []
+    ArrayList<DrupipeActionWrapper> post_actions = []
+
     def execute(body = null) {
         controller.script.echo "DrupipeContainer execute - ${name}"
 
@@ -48,6 +52,15 @@ class DrupipeContainer extends DrupipeBase {
         }
         else {
             executeBlocks()
+        }
+
+        if (pre_actions || actions || post_actions) {
+            DrupipeContainerBlock block = new DrupipeContainerBlock()
+            block.name = "Default"
+            block.pre_actions = actions
+            block.actions = actions
+            block.post_actions = post_actions
+            block.execute()
         }
     }
 
