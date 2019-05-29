@@ -184,6 +184,34 @@ params:
         resourceRequestMemory: 200Mi
         resourceLimitMemory: 1000Mi
         alwaysPullImage: true
+    small:
+      params:
+        k8s:
+          resourceRequestCpu: 50m
+          resourceLimitCpu: 500m
+          resourceRequestMemory: 250Mi
+          resourceLimitMemory: 1000Mi
+    medium:
+      params:
+        k8s:
+          resourceRequestCpu: 100m
+          resourceLimitCpu: 1000m
+          resourceRequestMemory: 500Mi
+          resourceLimitMemory: 1500Mi
+    large:
+      params:
+        k8s:
+          resourceRequestCpu: 500m
+          resourceLimitCpu: 2000m
+          resourceRequestMemory: 1000Mi
+          resourceLimitMemory: 2000Mi
+    xlarge:
+      params:
+        k8s:
+          resourceRequestCpu: 1000m
+          resourceLimitCpu: 4000m
+          resourceRequestMemory: 2000Mi
+          resourceLimitMemory: 4000Mi
     none:
       params:
         name: none
@@ -203,6 +231,7 @@ params:
         tools:
           params:
             image: michaeltigr/zebra-build-php-drush-docman-tools:0.0.98.1
+      # For back-compatibility.
       k8s:
         small:
           params:
