@@ -30,6 +30,8 @@ class DrupipeJob extends DrupipeBase {
 
     def webhooks
 
+    def webhook_trigger
+
     def context
 
     HashMap params
