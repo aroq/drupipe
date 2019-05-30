@@ -100,10 +100,8 @@ class DslHelper {
       if (localConfig.pipelines_repo) {
           return localConfig.pipelines_repo
       }
-      else {
-          if (job.value.configRepo) {
-              return job.value.configRepo
-          }
+      else if (job.value.configRepo) {
+          return job.value.configRepo
       }
       return config.configRepo
     }

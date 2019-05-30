@@ -412,7 +412,6 @@ def processJob(jobs, currentFolder, config) {
                 }
             }
             else if (job.value.type == 'common') {
-                def seedRepo = config.configRepo
                 def localConfig = config.clone()
                 if (job.value.context) {
                     localConfig = config.dslHelper.merge(localConfig, job.value.context)
