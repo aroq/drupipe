@@ -44,7 +44,12 @@ def processJob(jobs, currentFolder, config) {
             job.value.job_type = job.value.type
         }
         if (!job.value.job_type) {
-            job.value.job_type = "common"
+            if (job.value.pipeline) {
+                job.value.job_type = "common"
+            }
+            else {
+                job.value.job_type = "folder"
+            }
         }
         println job
         println "Processing job: ${job.key}"
