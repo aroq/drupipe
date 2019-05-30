@@ -58,7 +58,7 @@ class DrupipeContainer extends DrupipeBase {
             DrupipeContainerBlock block = new DrupipeContainerBlock()
             block.name = "Default"
             block.controller = controller
-            block.pre_actions = actions
+            block.pre_actions = pre_actions
             block.actions = actions
             block.post_actions = post_actions
             block.execute()
