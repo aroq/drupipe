@@ -57,6 +57,7 @@ class DrupipeContainer extends DrupipeBase {
         if (pre_actions || actions || post_actions) {
             DrupipeContainerBlock block = new DrupipeContainerBlock()
             block.name = "Default"
+            block.controller = controller
             block.pre_actions = actions
             block.actions = actions
             block.post_actions = post_actions
