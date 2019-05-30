@@ -36,25 +36,20 @@ if (config.jobs) {
 
 def processJob(jobs, currentFolder, config) {
     def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipelines/pipeline'
-
     for (job in jobs) {
         if (job.key == 'seed' || !job.value) {
             continue
         }
-
+        if (job.value.type) {
+            job.value."type" = "common"
+        }
         println job
         println "Processing job: ${job.key}"
         def currentName = currentFolder ? "${currentFolder}/${job.key}" : job.key
         println "Type: ${job.value.type}"
         println "Current name: ${currentName}"
-
         println "Job: ${job.value}"
         job.value.params = job.value.params ? job.value.params : [:]
-
-        if (!job.value.type) {
-            job.value.type = "common"
-        }
-
         if (job.value.type == 'folder') {
             folder(currentName) {
                 if (config.gitlabHelper) {
