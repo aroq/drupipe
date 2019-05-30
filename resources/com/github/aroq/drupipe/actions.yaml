@@ -601,6 +601,7 @@ params:
         params:
           aggregate_commands: false
           store_result: false
+          execution_dir: '.'
 
     Cap:
       params:
