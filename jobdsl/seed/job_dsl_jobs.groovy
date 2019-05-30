@@ -37,7 +37,7 @@ if (config.jobs) {
 def processJob(jobs, currentFolder, config) {
     def pipelineScript = config.pipeline_script ? config.pipeline_script : 'pipelines/pipeline'
     for (job in jobs) {
-        if (job.key == 'seed' || !job.value || job.key.startsWith('_')) {
+        if (job.key == 'seed' || !job.value) {
             continue
         }
         if (!job.value.type) {
