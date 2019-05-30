@@ -42,6 +42,7 @@ def processJob(jobs, currentFolder, config) {
         }
         println job
         println "Processing job: ${job.key}"
+        def currentName = currentFolder ? "${currentFolder}/${job.key}" : job.key
         println "Current name: ${currentName}"
         println "Job: ${job.value}"
         if (!job.value.type) {
@@ -53,7 +54,6 @@ def processJob(jobs, currentFolder, config) {
             }
         }
         println "Type: ${job.value.type}"
-        def currentName = currentFolder ? "${currentFolder}/${job.key}" : job.key
         job.value.params = job.value.params ? job.value.params : [:]
         if (job.value.type == 'folder') {
             folder(currentName) {
