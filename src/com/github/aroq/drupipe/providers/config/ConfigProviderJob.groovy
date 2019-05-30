@@ -60,9 +60,6 @@ class ConfigProviderJob extends ConfigProviderBase {
         for (job in jobs) {
             // For compatibility with previous config versions.
             if (job.value) {
-                if (job.value.type) {
-                    job.value.job_type = job.value.type
-                }
                 if (job.value.children) {
                     job.value.jobs = job.value.remove('children')
                 }

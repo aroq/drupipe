@@ -40,6 +40,9 @@ def processJob(jobs, currentFolder, config) {
         if (job.key == 'seed' || !job.value) {
             continue
         }
+        if (job.value.type) {
+            job.value.job_type = job.value.type
+        }
         if (!job.value.job_type) {
             job.value.job_type = "common"
         }

@@ -4,10 +4,7 @@ class DrupipeJob extends DrupipeBase {
 
     String name
 
-    // For back-compatibility.
     String type
-
-    String job_type
 
     String from
 
