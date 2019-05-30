@@ -58,11 +58,11 @@ class ConfigProviderJob extends ConfigProviderBase {
     def processJobs(jobs, parentParams = [:]) {
         def result = jobs
         for (job in jobs) {
-            if (job.type) {
-                job.job_type = job.type
-            }
             // For compatibility with previous config versions.
             if (job.value) {
+                if (job.value.type) {
+                    job.value.job_type = job.value.type
+                }
                 if (job.value.children) {
                     job.value.jobs = job.value.remove('children')
                 }
