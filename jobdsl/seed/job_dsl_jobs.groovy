@@ -3,10 +3,6 @@ import com.github.aroq.dsl.GitlabHelper
 import com.github.aroq.dsl.DslHelper
 import com.github.aroq.dsl.DslParamsHelper
 
-println "Subjobs Job DSL processing"
-
-//def config = ConfigSlurper.newInstance().parse(readFileFromWorkspace('config.dump.groovy'))
-
 def dslHelper = new DslHelper(script: this)
 def config = dslHelper.readJson(this, '.unipipe/temp/context_processed.json')
 dslHelper.config = config
@@ -32,7 +28,6 @@ if (config.env.GITLAB_API_TOKEN_TEXT && !config.noHooks) {
     config.gitlabHelper = new GitlabHelper(script: this, config: config)
 }
 
-//config.dslHelper = new DslHelper(script: this, config: config)
 config.dslParamsHelper = new DslParamsHelper(script: this, config: config)
 
 if (config.jobs) {
@@ -47,8 +42,6 @@ def processJob(jobs, currentFolder, config) {
             continue
         }
 
-//        def parentConfigParams = [:]
-//        parentConfigParams << parentConfigParamsPassed
         println job
         println "Processing job: ${job.key}"
         def currentName = currentFolder ? "${currentFolder}/${job.key}" : job.key
@@ -57,11 +50,12 @@ def processJob(jobs, currentFolder, config) {
 
         println "Job: ${job.value}"
         job.value.params = job.value.params ? job.value.params : [:]
-//        job.value.params << (parentConfigParams << job.value.params)
-//        println "Job params after parent params merge: ${job.value.params}"
+
+        if (!job.value.type) {
+            job.value.type = "common"
+        }
 
         if (job.value.type == 'folder') {
-//            parentConfigParams << job.value.params
             folder(currentName) {
                 if (config.gitlabHelper) {
                     users = config.gitlabHelper.getUsers(config.configRepo)
@@ -81,14 +75,12 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
             }
-//            currentFolder = currentName
         }
         else {
             if (job.value.pipeline && job.value.pipeline.repo_type && job.value.pipeline.repo_type == 'config') {
                 repo = config.configRepo
             }
             if (job.value.type == 'release-build') {
-                def seedRepo = config.configRepo
                 def localConfig = config.clone()
                 if (job.value.context) {
                     localConfig = config.dslHelper.merge(localConfig, job.value.context)
@@ -161,12 +153,10 @@ def processJob(jobs, currentFolder, config) {
 
             }
             else if (job.value.type == 'state') {
-                def seedRepo = config.configRepo
                 def localConfig = config.clone()
                 if (job.value.context) {
                     localConfig = config.dslHelper.merge(localConfig, job.value.context)
                 }
-//                println "Local config: ${localConfig}"
                 def state = job.value.state
                 def buildEnvironment
                 def jobBranch
@@ -351,7 +341,6 @@ def processJob(jobs, currentFolder, config) {
                 }
             }
             else if (job.value.type == 'release-deploy') {
-                def seedRepo = config.configRepo
                 def localConfig = config.clone()
                 if (job.value.context) {
                     localConfig = config.dslHelper.merge(localConfig, job.value.context)
@@ -658,7 +647,6 @@ def processJob(jobs, currentFolder, config) {
 
             }
             else if (job.value.type == 'selenese') {
-//                def repo = config.params.action.SeleneseTester.repoAddress
                 def b = config.params.action.SeleneseTester.reference ? config.params.action.SeleneseTester.reference : 'master'
 
                 if (config.env.GITLAB_API_TOKEN_TEXT) {
@@ -869,7 +857,6 @@ def processJob(jobs, currentFolder, config) {
         }
 
         if (job.value.jobs) {
-//            println "Parent config params: ${parentConfigParams}"
             processJob(job.value.jobs, currentName, config)
         }
     }
