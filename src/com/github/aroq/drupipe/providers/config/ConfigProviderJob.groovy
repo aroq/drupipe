@@ -37,7 +37,6 @@ class ConfigProviderJob extends ConfigProviderBase {
                     })
                 } else {
                     drupipeConfig.config.job = drupipeConfig.config.jobs[jobName]
-                    //                drupipeConfig.config.config_version = 2
                 }
 
                 if (drupipeConfig.config.job) {
@@ -69,7 +68,9 @@ class ConfigProviderJob extends ConfigProviderBase {
                     job.value.jobs = processJobs(job.value.jobs, params)
                 }
                 if (parentParams) {
+                    String jobType = job.value.type
                     result[job.key] = utils.merge(parentParams, job.value)
+                    result[job.key].type = jobType
                 }
                 else {
                     result[job.key] = job.value
