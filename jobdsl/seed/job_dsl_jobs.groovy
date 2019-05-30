@@ -48,9 +48,11 @@ def processJob(jobs, currentFolder, config) {
         if (!job.value.type) {
             println "Job value type BEFORE processing: ${job.value.type}"
             if (job.value.pipeline) {
+                println "Job value pipeline is set: ${job.value.pipeline}"
                 job.value.type = "common"
             }
             else {
+                println "Job value pipeline is not set: ${job.value.pipeline}"
                 job.value.type = "folder"
             }
         }
