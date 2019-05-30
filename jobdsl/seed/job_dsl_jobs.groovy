@@ -46,6 +46,7 @@ def processJob(jobs, currentFolder, config) {
         println "Current name: ${currentName}"
         println "Job: ${job.value}"
         if (!job.value.type) {
+            println "Job value type BEFORE processing: ${job.value.type}"
             if (job.value.pipeline) {
                 job.value.type = "common"
             }
