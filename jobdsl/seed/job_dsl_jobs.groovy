@@ -40,25 +40,22 @@ def processJob(jobs, currentFolder, config) {
         if (job.key == 'seed' || !job.value) {
             continue
         }
-        if (job.value.type) {
-            job.value.job_type = job.value.type
-        }
-        if (!job.value.job_type) {
+        if (!job.value.type) {
             if (job.value.pipeline) {
-                job.value.job_type = "common"
+                job.value.type = "common"
             }
             else {
-                job.value.job_type = "folder"
+                job.value.type = "folder"
             }
         }
         println job
         println "Processing job: ${job.key}"
         def currentName = currentFolder ? "${currentFolder}/${job.key}" : job.key
-        println "Type: ${job.value.job_type}"
+        println "Type: ${job.value.type}"
         println "Current name: ${currentName}"
         println "Job: ${job.value}"
         job.value.params = job.value.params ? job.value.params : [:]
-        if (job.value.job_type == 'folder') {
+        if (job.value.type == 'folder') {
             folder(currentName) {
                 if (config.gitlabHelper) {
                     users = config.gitlabHelper.getUsers(config.configRepo)
@@ -83,7 +80,7 @@ def processJob(jobs, currentFolder, config) {
             if (job.value.pipeline && job.value.pipeline.repo_type && job.value.pipeline.repo_type == 'config') {
                 repo = config.configRepo
             }
-            if (job.value.job_type == 'release-build') {
+            if (job.value.type == 'release-build') {
                 def localConfig = config.clone()
                 if (job.value.context) {
                     localConfig = config.dslHelper.merge(localConfig, job.value.context)
@@ -155,7 +152,7 @@ def processJob(jobs, currentFolder, config) {
                 }
 
             }
-            else if (job.value.job_type == 'state') {
+            else if (job.value.type == 'state') {
                 def localConfig = config.clone()
                 if (job.value.context) {
                     localConfig = config.dslHelper.merge(localConfig, job.value.context)
@@ -343,7 +340,7 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
             }
-            else if (job.value.job_type == 'release-deploy') {
+            else if (job.value.type == 'release-deploy') {
                 def localConfig = config.clone()
                 if (job.value.context) {
                     localConfig = config.dslHelper.merge(localConfig, job.value.context)
@@ -403,7 +400,7 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
             }
-            else if (job.value.job_type == 'common') {
+            else if (job.value.type == 'common') {
                 def localConfig = config.clone()
                 if (job.value.context) {
                     localConfig = config.dslHelper.merge(localConfig, job.value.context)
@@ -649,7 +646,7 @@ def processJob(jobs, currentFolder, config) {
                 }
 
             }
-            else if (job.value.job_type == 'selenese') {
+            else if (job.value.type == 'selenese') {
                 def b = config.params.action.SeleneseTester.reference ? config.params.action.SeleneseTester.reference : 'master'
 
                 if (config.env.GITLAB_API_TOKEN_TEXT) {
@@ -702,7 +699,7 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
             }
-            else if (job.value.job_type == 'trigger_all') {
+            else if (job.value.type == 'trigger_all') {
                 freeStyleJob("${currentName}") {
                     if (job.value.containsKey('block_on')) {
                         config.dslHelper.drupipeBlockOn(delegate, job.value.block_on)
@@ -715,10 +712,10 @@ def processJob(jobs, currentFolder, config) {
                             if (jobInFolder.value.jobs) {
                                 println "Skip job with chilldren."
                             }
-                            else if (jobInFolder.value.job_type == 'trigger_all') {
+                            else if (jobInFolder.value.type == 'trigger_all') {
                                 println "Skip trigger_all job."
                             }
-                            else if (jobInFolder.value.job_type == 'multistep_all') {
+                            else if (jobInFolder.value.type == 'multistep_all') {
                                 println "Skip multistep_all job."
                             }
                             else {
@@ -747,10 +744,10 @@ def processJob(jobs, currentFolder, config) {
                                 if (jobInFolder.value.jobs) {
                                     println "Skip job with chilldren."
                                 }
-                                else if (jobInFolder.value.job_type == 'trigger_all') {
+                                else if (jobInFolder.value.type == 'trigger_all') {
                                     println "Skip trigger_all job."
                                 }
-                                else if (jobInFolder.value.job_type == 'multistep_all') {
+                                else if (jobInFolder.value.type == 'multistep_all') {
                                     println "Skip multistep_all job."
                                 }
                                 else {
@@ -779,7 +776,7 @@ def processJob(jobs, currentFolder, config) {
                     }
                 }
             }
-            else if (job.value.job_type == 'multistep_all') {
+            else if (job.value.type == 'multistep_all') {
                 freeStyleJob("${currentName}") {
                     if (job.value.containsKey('block_on')) {
                         config.dslHelper.drupipeBlockOn(delegate, job.value.block_on)
@@ -795,10 +792,10 @@ def processJob(jobs, currentFolder, config) {
                             if (jobInFolder.value.jobs) {
                                 println "Skip job with chilldren."
                             }
-                            else if (jobInFolder.value.job_type == 'trigger_all') {
+                            else if (jobInFolder.value.type == 'trigger_all') {
                                 println "Skip trigger_all job."
                             }
-                            else if (jobInFolder.value.job_type == 'multistep_all') {
+                            else if (jobInFolder.value.type == 'multistep_all') {
                                 println "Skip multistep_all job."
                             }
                             else {
@@ -827,10 +824,10 @@ def processJob(jobs, currentFolder, config) {
                                 if (jobInFolder.value.jobs) {
                                     println "Skip job with chilldren."
                                 }
-                                else if (jobInFolder.value.job_type == 'trigger_all') {
+                                else if (jobInFolder.value.type == 'trigger_all') {
                                     println "Skip trigger_all job."
                                 }
-                                else if (jobInFolder.value.job_type == 'multistep_all') {
+                                else if (jobInFolder.value.type == 'multistep_all') {
                                     println "Skip multistep_all job."
                                 }
                                 else {
