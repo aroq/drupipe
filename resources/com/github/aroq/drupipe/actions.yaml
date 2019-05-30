@@ -597,6 +597,10 @@ params:
         through_ssh_params:
           executable: ssh
           options: -T
+      default:
+        params:
+          aggregate_commands: false
+          store_result: false
 
     Cap:
       params:
