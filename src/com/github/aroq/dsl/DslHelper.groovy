@@ -87,8 +87,7 @@ class DslHelper {
     }
 
     def getPipelineScriptDirPath(localConfig, job) {
-        def dirParts = []
-        if (job.value.configRepo || localConfig.project_type == 'single') {
+        if (job.value.configRepo || localConfig.project_type == 'single'  || job.value.type == 'common') {
             return ""
         }
         else {
