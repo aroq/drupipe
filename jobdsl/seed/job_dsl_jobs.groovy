@@ -40,6 +40,10 @@ def processJob(jobs, currentFolder, config) {
         if (job.key == 'seed' || !job.value) {
             continue
         }
+        println job
+        println "Processing job: ${job.key}"
+        println "Current name: ${currentName}"
+        println "Job: ${job.value}"
         if (!job.value.type) {
             if (job.value.pipeline) {
                 job.value.type = "common"
@@ -48,12 +52,8 @@ def processJob(jobs, currentFolder, config) {
                 job.value.type = "folder"
             }
         }
-        println job
-        println "Processing job: ${job.key}"
-        def currentName = currentFolder ? "${currentFolder}/${job.key}" : job.key
         println "Type: ${job.value.type}"
-        println "Current name: ${currentName}"
-        println "Job: ${job.value}"
+        def currentName = currentFolder ? "${currentFolder}/${job.key}" : job.key
         job.value.params = job.value.params ? job.value.params : [:]
         if (job.value.type == 'folder') {
             folder(currentName) {
