@@ -218,7 +218,8 @@ class ConfigProviderProject extends ConfigProviderBase {
                             "/.drupipe/scenarios/${scenario.name}/config.yaml",
                             "/.drupipe/scenarios/${scenario.name}/config.yml",
                             "/scenarios/${scenario.name}/config.yaml",
-                            "/scenarios/${scenario.name}/config.yml"
+                            "/scenarios/${scenario.name}/config.yml",
+                            "/${scenario.name}"
                         ]
 
                         for (def ifc = 0; ifc < filesToCheck.size(); ifc++) {
