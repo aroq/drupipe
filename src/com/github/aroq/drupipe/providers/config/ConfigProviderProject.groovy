@@ -70,6 +70,8 @@ class ConfigProviderProject extends ConfigProviderBase {
                 controller.drupipeLogger.trace "PROJECTS SOURCE DIR: ${sourceDir}"
 
                 def filesToCheck = [
+                        ".drupipe.yml",
+                        ".drupipe.yaml",
                         ".unipipe/config.yaml",
                         ".unipipe/config.yml",
                         ".drupipe/config.yaml",
