@@ -211,22 +211,27 @@ class ConfigProviderProject extends ConfigProviderBase {
 
                         def sourceDir = drupipeConfig.drupipeSourcesController.sourceDir(config, scenarioSourceName)
 
-                        // TODO: recheck it.
                         def filesToCheck = [
-                            "/.unipipe/scenarios/${scenario.name}/config.yaml",
-                            "/.unipipe/scenarios/${scenario.name}/config.yml",
-                            "/.drupipe/scenarios/${scenario.name}/config.yaml",
-                            "/.drupipe/scenarios/${scenario.name}/config.yml",
-                            "/scenarios/${scenario.name}/config.yaml",
-                            "/scenarios/${scenario.name}/config.yml",
-                            "/${scenario.name}"
+                                "${scenario.name}"
                         ]
-
+                        if (!scenario.name.startsWith("/")) {
+                            filesToCheck = [
+                                    "/.unipipe/scenarios/${scenario.name}/config.yaml",
+                                    "/.unipipe/scenarios/${scenario.name}/config.yml",
+                                    "/.drupipe/scenarios/${scenario.name}/config.yaml",
+                                    "/.drupipe/scenarios/${scenario.name}/config.yml",
+                                    "/scenarios/${scenario.name}/config.yaml",
+                                    "/scenarios/${scenario.name}/config.yml",
+                            ]
+                        }
                         for (def ifc = 0; ifc < filesToCheck.size(); ifc++) {
-                            def fileToCheck = filesToCheck[ifc]
+                            String fileToCheck = filesToCheck[ifc]
                             if (script.fileExists(sourceDir + fileToCheck)) {
+                                controller.drupipeLogger.trace "Scenario ${sourceDir + fileToCheck} exists"
                                 fileName = sourceDir + fileToCheck
                                 break
+                            } else {
+                                controller.drupipeLogger.trace "Scenario ${sourceDir + fileToCheck} not exists"
                             }
                         }
 
