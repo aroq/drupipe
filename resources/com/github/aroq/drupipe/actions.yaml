@@ -84,6 +84,19 @@ params:
         workspaceRelativePath: ../../..
         behat_args: --format=pretty --out=std --format=junit
 
+    Notification:
+      email:
+        params:
+          subject: ''
+          body: ''
+          attach_log: false
+          attachments_pattern: ''
+          compress_log: true
+          from: ''
+          mime_type: ''
+          reply_to: ''
+          to: ''
+
     Terraform:
       params:
         infraSourceName: infra-config
