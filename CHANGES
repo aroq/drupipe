@@ -1,3 +1,6 @@
+Version 0.16.6:
+
+
 Version 0.16.5:
  - Merge pull request #181 from michael-molchanov/aroq_master
  - Fix technical params filter for notifications.
