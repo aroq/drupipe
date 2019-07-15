@@ -87,15 +87,15 @@ params:
     Notification:
       email:
         params:
-          subject: ''
-          body: ''
-          attach_log: false
-          attachments_pattern: ''
-          compress_log: true
-          from: ''
-          mime_type: ''
-          reply_to: ''
-          to: ''
+          email_subject: ''
+          email_body: ''
+          email_attach_log: false
+          email_attachments_pattern: ''
+          email_compress_log: true
+          email_from: ''
+          email_mime_type: ''
+          email_reply_to: ''
+          email_to: ''
 
     Terraform:
       params:
