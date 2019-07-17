@@ -5,9 +5,9 @@ class Notification extends BaseAction {
     def email() {
         def email_subject = (action.params.email_subject && action.params.email_subject.length() != 0) ? "${action.params.email_subject}" : ""
         def email_body = (action.params.email_body && action.params.email_body.length() != 0) ? "${action.params.email_body}" : ""
-        def email_attach_log = (action.params.email_attach_log && action.params.email_attach_log.length() != 0) ? "${action.params.email_attach_log}" : ""
+        def email_attach_log = (action.params.email_attach_log) ? action.params.email_attach_log : false
         def email_attachments_pattern = (action.params.email_attachments_pattern && action.params.email_attachments_pattern.length() != 0) ? "${action.params.email_attachments_pattern}" : ""
-        def email_compress_log = action.params.email_compress_log
+        def email_compress_log = (action.params.email_compress_log) ? action.params.email_compress_log : false
         def email_from = (action.params.email_from && action.params.email_from.length() != 0) ? "${action.params.email_from}" : ""
         def email_mime_type = (action.params.email_mime_type && action.params.email_mime_type.length() != 0) ? "${action.params.email_mime_type}" : ""
         def email_reply_to = (action.params.email_reply_to && action.params.email_reply_to.length() != 0) ? "${action.params.email_reply_to}" : ""
