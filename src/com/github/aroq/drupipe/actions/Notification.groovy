@@ -16,7 +16,10 @@ class Notification extends BaseAction {
             this.script.emailext subject: email_subject, body: email_body, attachLog: email_attach_log, attachmentsPattern: email_attachments_pattern, compressLog: email_compress_log, from: email_from, mimeType: email_mime_type, replyTo: email_reply_to, to: email_to
         }
         catch (e) {
-            this.script.echo "Email-Ext plugin isn't installed. Use artifact instead."
+            this.script.echo "Email-Ext plugin isn't installed."
+            this.script.echo e.toString()
+            this.script.echo e.getMessage()
+            this.script.echo e.getStackTrace()
         }
     }
 
