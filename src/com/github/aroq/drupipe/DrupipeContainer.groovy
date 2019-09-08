@@ -47,13 +47,17 @@ class DrupipeContainer extends DrupipeBase {
                         body(controller.context)
                     }
                     executeBlocks()
+                    executeActions()
                 }
             }
         }
         else {
             executeBlocks()
+            executeActions()
         }
+    }
 
+    def executeActions() {
         if (pre_actions || actions || post_actions) {
             DrupipeContainerBlock block = new DrupipeContainerBlock()
             block.name = "Default"
