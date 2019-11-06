@@ -1,7 +1,7 @@
 import com.github.aroq.drupipe.DrupipeController
 import com.github.aroq.drupipe.DrupipePod
 import org.csanchez.jenkins.plugins.kubernetes.model.SecretEnvVar;
-import io.fabric8.kubernetes.api.model.EnvVar;
+import org.csanchez.jenkins.plugins.kubernetes.model.KeyValueEnvVar;
 
 
 def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_retrieve_config = false) {
@@ -30,8 +30,8 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
 
 
     def env_vars = []
-    env_vars << new EnvVar('TF_VAR_consul_address', controller.context.env.TF_VAR_consul_address, null)
-    env_vars <<  new EnvVar('UNIPIPE_SOURCES', controller.context.env.UNIPIPE_SOURCES, null)
+    env_vars << new KeyValueEnvVar('TF_VAR_consul_address', controller.context.env.TF_VAR_consul_address)
+    env_vars <<  new KeyValueEnvVar('UNIPIPE_SOURCES', controller.context.env.UNIPIPE_SOURCES)
     env_vars <<  new SecretEnvVar('DIGITALOCEAN_TOKEN', 'zebra-keys', 'zebra_do_token')
     env_vars <<  new SecretEnvVar('ANSIBLE_VAULT_PASS_FILE', 'zebra-keys', 'zebra_ansible_vault_pass')
     env_vars <<  new SecretEnvVar('GITLAB_API_TOKEN_TEXT', 'zebra-keys', 'zebra_gitlab_api_token')
