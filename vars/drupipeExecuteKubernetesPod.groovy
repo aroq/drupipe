@@ -42,7 +42,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
         controller.drupipeLogger.jsonDump(s, 'secretEnvVar', 'WARNING')
         controller.utils.echoMessage "${s.name}, ${s.secret_name}, ${s.secret_key}"
 //        env_vars.add(secretEnvVar(key: s.name, secretName: s.secret_name, secretKey: s.secret_key))
-        env_vars.add(secretEnvVar(key: "test-${i}", secretName: s.secret_name, secretKey: s.secret_key))
+        env_vars.add(secretEnvVar(key: s.name, secretName: s.secret_name, secretKey: s.secret_key))
     }
 
     for (def i = 0; i < pod.containers.size(); i++) {
