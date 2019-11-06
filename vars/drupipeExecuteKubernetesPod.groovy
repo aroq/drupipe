@@ -29,7 +29,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
     def containersToExecute= []
 
 
-    def env_vars
+    def env_vars = []
     env_vars << new EnvVar('TF_VAR_consul_address', controller.context.env.TF_VAR_consul_address, null)
     env_vars <<  new EnvVar('UNIPIPE_SOURCES', controller.context.env.UNIPIPE_SOURCES, null)
     env_vars <<  new SecretEnvVar(key: 'DIGITALOCEAN_TOKEN', secretName: 'zebra-keys', secretKey: 'zebra_do_token')
