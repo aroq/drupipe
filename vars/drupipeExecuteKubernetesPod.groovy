@@ -39,6 +39,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
     env_vars << new SecretEnvVar('HELM_ZEBRA_SECRETS_FILE', 'zebra-keys', 'zebra_cicd_helm_secret_values')
     for (def i = 0; pod.secretEnvVars.size(); i++) {
         def secretEnvVar = pod.secretEnvVars[i]
+        controller.drupipeLogger.jsonDump(secretEnvVar, 'secretEnvVar', 'WARNING')
         controller.utils.echoMessage "${secretEnvVar.name}, ${secretEnvVar.secret_name}, ${secretEnvVar.secret_key}"
         env_vars << new SecretEnvVar(secretEnvVar.name, secretEnvVar.secret_name, secretEnvVar.secret_key)
     }
