@@ -41,7 +41,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
         def secretEnvVar = pod.secretEnvVars[i]
         controller.drupipeLogger.jsonDump(secretEnvVar, 'secretEnvVar', 'WARNING')
         controller.utils.echoMessage "${secretEnvVar.name}, ${secretEnvVar.secret_name}, ${secretEnvVar.secret_key}"
-        env_vars << new SecretEnvVar(secretEnvVar.name, secretEnvVar.secret_name, secretEnvVar.secret_key)
+        env_vars.add(secretEnvVar(key: secretEnvVar.name, secretName: secretEnvVar.secret_name, secretKey: secretEnvVar.secret_key))
     }
 
     for (def i = 0; i < pod.containers.size(); i++) {
@@ -61,7 +61,6 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
                 resourceLimitMemory:   container.k8s.resourceLimitMemory,
                 alwaysPullImage:       container.k8s.alwaysPullImage,
                 // TODO: move in configs.
-                envVars:  env_vars,
             ))
         }
     }
@@ -70,6 +69,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
         label: nodeName,
         containers: containersToExecute,
         idleMinutes: pod.idleMinutes,
+        envVars:  env_vars,
     ) {
         node(nodeName) {
             if (unipipe_retrieve_config) {
