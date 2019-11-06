@@ -15,6 +15,8 @@ class DrupipePod extends DrupipeBase {
     ArrayList<DrupipeContainer> post_containers = []
     ArrayList<DrupipeContainer> final_containers = []
 
+    ArrayList<DrupipeSecretEnvVar> secretEnvVars = []
+
     ArrayList phases = ['pre_containers', 'containers', 'post_containers', 'final_containers']
 
     boolean containerized = true
