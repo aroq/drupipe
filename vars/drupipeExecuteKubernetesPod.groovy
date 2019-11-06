@@ -42,7 +42,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
         controller.drupipeLogger.jsonDump(s, 'secretEnvVar', 'WARNING')
         controller.utils.echoMessage "${s.name}, ${s.secret_name}, ${s.secret_key}"
 //        env_vars.add(secretEnvVar(key: s.name, secretName: s.secret_name, secretKey: s.secret_key))
-        env_vars.add(secretEnvVar(key: "test-${i}", secretName: "zebra-keys", secretKey: "zebra_cicd_helm_secret_values"))
+        env_vars.add(secretEnvVar(key: "test-${i}", secretName: "aws-secrets-chamber", secretKey: "zebra_cicd_helm_secret_values"))
     }
 
     for (def i = 0; i < pod.containers.size(); i++) {
