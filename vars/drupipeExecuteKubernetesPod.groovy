@@ -41,7 +41,8 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
         def s = pod.secretEnvVars[i]
         controller.drupipeLogger.jsonDump(s, 'secretEnvVar', 'WARNING')
         controller.utils.echoMessage "${s.name}, ${s.secret_name}, ${s.secret_key}"
-        env_vars.add(secretEnvVar(key: s.name, secretName: s.secret_name, secretKey: s.secret_key))
+//        env_vars.add(secretEnvVar(key: s.name, secretName: s.secret_name, secretKey: s.secret_key))
+        env_vars.add(secretEnvVar(key: "test-${i}", secretName: "zebra-keys", secretKey: "zebra_cicd_helm_secret_values"))
     }
 
     for (def i = 0; i < pod.containers.size(); i++) {
@@ -60,7 +61,6 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
                 resourceRequestMemory: container.k8s.resourceRequestMemory,
                 resourceLimitMemory:   container.k8s.resourceLimitMemory,
                 alwaysPullImage:       container.k8s.alwaysPullImage,
-                // TODO: move in configs.
             ))
         }
     }
