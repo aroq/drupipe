@@ -71,13 +71,13 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
         envVars:  env_vars,
     ) {
         node(nodeName) {
-//            if (unipipe_retrieve_config) {
-//                controller.utils.getUnipipeConfig(controller)
-//            }
-//            else {
-//                controller.drupipeLogger.warning "Retrieve config disabled in config."
-//            }
-            checkout scm
+            if (unipipe_retrieve_config) {
+                controller.utils.getUnipipeConfig(controller)
+            }
+            else {
+                controller.drupipeLogger.warning "Retrieve config disabled in config."
+            }
+//            checkout scm
             controller.utils.unstashList(controller, unstash)
             controller.context.workspace = pwd()
             for (def i = 0; i < pod.containers.size(); i++) {

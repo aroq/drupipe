@@ -320,23 +320,23 @@ class DrupipeController implements Serializable {
     }
 
     def scmCheckout(scm = null) {
-        drupipeLogger.collapsedStart "Pipeline scm checkout"
+//        drupipeLogger.collapsedStart "Pipeline scm checkout"
         if (scm) {
-            this.script.echo "Pipeline scm checkout: set SCM"
+//            this.script.echo "Pipeline scm checkout: set SCM"
             this.scm = scm
         }
         else {
-            this.script.echo "Pipeline scm checkout: is not set"
+//            this.script.echo "Pipeline scm checkout: is not set"
             if (this.scm) {
-                this.script.echo "Pipeline scm checkout: use stored SCM from pipeline"
+//                this.script.echo "Pipeline scm checkout: use stored SCM from pipeline"
             }
             else {
-                this.script.echo "Pipeline scm checkout: use job's SCM"
+//                this.script.echo "Pipeline scm checkout: use job's SCM"
                 this.scm = script.scm
             }
         }
         this.script.checkout this.scm
-        drupipeLogger.collapsedEnd()
+//        drupipeLogger.collapsedEnd()
     }
 
     def scripts_library_load() {
