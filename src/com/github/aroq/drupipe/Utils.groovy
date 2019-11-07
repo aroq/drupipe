@@ -470,7 +470,7 @@ def stashList(controller, stash) {
 }
 
 def getUnipipeConfig(controller) {
-    if (controller.context.containsKey('tags') && controller.context.tags.contains('single')) {
+    if (controller.context.containsKey('tags') && (controller.context.tags.contains('single') || controller.context.tags.contains('checkout_on_worker'))) {
         controller.scmCheckout()
     }
     else {
