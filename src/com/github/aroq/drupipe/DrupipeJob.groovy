@@ -39,6 +39,7 @@ class DrupipeJob extends DrupipeBase {
     ArrayList param_providers
 
     HashMap parameters
+    HashMap variables
 
     // For back-compatibility.
     HashMap params

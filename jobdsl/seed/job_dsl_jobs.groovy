@@ -446,6 +446,9 @@ def processJob(jobs, currentFolder, config) {
                         if (job.value.params) {
                             job.value.parameters = job.value.params
                         }
+                        if (job.value.variables) {
+                            job.value.parameters = job.value.variables
+                        }
                         job.value.parameters?.each { key, value ->
                             if (value instanceof Map) {
                                 if (value.containsKey('type')) {
