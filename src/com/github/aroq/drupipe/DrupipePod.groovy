@@ -16,6 +16,7 @@ class DrupipePod extends DrupipeBase {
     ArrayList<DrupipeContainer> final_containers = []
 
     ArrayList<DrupipeSecretEnvVar> secretEnvVars = []
+    ArrayList<DrupipeVolume> volumes = []
 
     ArrayList phases = ['pre_containers', 'containers', 'post_containers', 'final_containers']
 

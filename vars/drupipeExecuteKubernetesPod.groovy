@@ -30,6 +30,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
 
 
     def env_vars = []
+    def volumes = []
 //    env_vars << new KeyValueEnvVar('TF_VAR_consul_address', controller.context.env.TF_VAR_consul_address)
 //    env_vars <<  new KeyValueEnvVar('UNIPIPE_SOURCES', controller.context.env.UNIPIPE_SOURCES)
 //    env_vars <<  new SecretEnvVar('DIGITALOCEAN_TOKEN', 'zebra-keys', 'zebra_do_token')
@@ -42,6 +43,13 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
 //        controller.drupipeLogger.jsonDump(s, 'secretEnvVar', 'WARNING')
 //        controller.utils.echoMessage "${s.name}, ${s.secret_name}, ${s.secret_key}"
         env_vars.add(secretEnvVar(key: s.name, secretName: s.secret_name, secretKey: s.secret_key))
+    }
+
+    for (def i = 0; i < pod.volumes.size(); i++) {
+        def v = pod.volumes[i]
+        if (v.volume_type == "secret") {
+            volumes.add(secretVolume(mountPath: v.mount_path, secretName: v.secret_name))
+        }
     }
 
     for (def i = 0; i < pod.containers.size(); i++) {
@@ -69,6 +77,7 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
         containers: containersToExecute,
         idleMinutes: pod.idleMinutes,
         envVars:  env_vars,
+        volumes:  volumes,
     ) {
         node(nodeName) {
             if (unipipe_retrieve_config) {
