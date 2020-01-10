@@ -72,12 +72,13 @@ def call(DrupipePod pod, ArrayList unstash = [], ArrayList stash = [], unipipe_r
         }
     }
 
+    volumes[volumes]
+
     podTemplate(
         label: nodeName,
         containers: containersToExecute,
         idleMinutes: pod.idleMinutes,
         envVars:  env_vars,
-        volumes:  volumes,
     ) {
         node(nodeName) {
             if (unipipe_retrieve_config) {
