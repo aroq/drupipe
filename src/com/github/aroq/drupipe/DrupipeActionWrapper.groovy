@@ -170,7 +170,7 @@ class DrupipeActionWrapper implements Serializable {
                         if (!actionFile) {
                             try {
                                 def action_timeout = this.params.action_timeout ? this.params.action_timeout : 120
-                                this.script.timeout(action_timeout) {
+                                this.script.timeout(time: action_timeout, activity: true) {
                                     this.result = actionInstance."${this.methodName}"()
                                 }
                             }
