@@ -502,7 +502,7 @@ def processJob(jobs, currentFolder, config) {
                                                 key,
                                                 '',
                                                 value.containsKey('choices_type') ? value.choices_type : 'PT_SINGLE_SELECT',
-                                                config.dslParamsHelper.activeChoiceGetChoicesScript(value.choices, value.chices.first().toString()),
+                                                config.dslParamsHelper.activeChoiceGetChoicesScript(value.choices, value.choices.first().toString()),
                                                 value.containsKey('sandbox') ? value.sandbox : true,
                                                 value.containsKey('filterable') ? value.filterable : false,
                                                 value.containsKey('filter_length') ? value.filter_length : 0

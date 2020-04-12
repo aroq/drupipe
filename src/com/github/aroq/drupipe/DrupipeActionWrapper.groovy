@@ -146,6 +146,10 @@ class DrupipeActionWrapper implements Serializable {
                             v.variable_name = v.variable_name ? v.variable_name : v.id
                             credentials << this.script.file(credentialsId: v.id, variable: v.variable_name)
                         }
+                        if (v.type == 'string') {
+                            v.variable_name = v.variable_name ? v.variable_name : v.id
+                            credentials << this.script.string(credentialsId: v.id, variable: v.variable_name)
+                        }
                     }
                 }
 
