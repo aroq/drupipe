@@ -143,11 +143,11 @@ class DrupipeActionWrapper implements Serializable {
                 if (actionParams.credentials && pipeline.context.containerMode != 'kubernetes') {
                     actionParams.credentials.each { k, v ->
                         cred_type = v.type ? v.type : "string"
-                        if (v.type == 'file') {
+                        if (cred_type == 'file') {
                             v.variable_name = v.variable_name ? v.variable_name : v.id
                             credentials << this.script.file(credentialsId: v.id, variable: v.variable_name)
                         }
-                        if (v.type == 'string') {
+                        if (cred_type == 'string') {
                             v.variable_name = v.variable_name ? v.variable_name : v.id
                             credentials << this.script.string(credentialsId: v.id, variable: v.variable_name)
                         }
