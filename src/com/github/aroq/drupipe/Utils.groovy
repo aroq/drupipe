@@ -459,7 +459,7 @@ def stashList(controller, stash) {
             def exclude = parts[2] ? parts[2] : null
             if (name && path) {
                 exclude = exclude == null ? '' : exclude
-                controller.script.stash name: name, includes: path, excludes: exclude
+                controller.script.stash allowEmpty: true, name: name, includes: path, excludes: exclude
             }
             else {
                 controller.script.echo("Stash item should have form like name:path or name:path:exclude")
