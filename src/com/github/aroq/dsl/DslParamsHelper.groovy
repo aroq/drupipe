@@ -627,7 +627,7 @@ try {
     def tagList = getTags(git, gitRepoUrl, tagPattern)
     if (sortPattern == 'x.y.z') {
         if (tagList) {
-            tagList = tagList.sort{ tag -> Version.from(tag).toString() }.reverse()
+            tagList = tagList.sort{ tag -> Version.from(tag).toString() }
         } else {
             [ 'master' ] // no tags in git repo
         }
