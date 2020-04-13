@@ -627,13 +627,13 @@ try {
     def tagList = getTags(git, gitRepoUrl, tagPattern)
     if (sortPattern == 'x.y.z') {
         if (tagList) {
-            tagList = tagList.sort{ tag -> Version.from(tag).toString() }
+            tagList = tagList.sort{ tag -> Version.from(tag).toString() }.reverse()
         } else {
             [ 'master' ] // no tags in git repo
         }
     }
     else {
-        tagList
+        tagList.reverse()
     }
     def branchesList = getBranches(git, gitRepoUrl, tagPattern)
     tagList.addAll(branchesList)
