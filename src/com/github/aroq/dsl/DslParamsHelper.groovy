@@ -594,7 +594,7 @@ def getTags(GitClient gitClient, String gitUrl, tagPattern) {
     } catch (GitException e) {
         tagSet = ['failed']
     }
-    return tagSet.sort()
+    return tagSet.sort().reverse()
 }
 def getBranches(GitClient gitClient, String gitUrl, tagPattern) {
     def branchesSet = []
@@ -633,7 +633,7 @@ try {
         }
     }
     else {
-        tagList.reverse()
+        tagList
     }
     def branchesList = getBranches(git, gitRepoUrl, tagPattern)
     tagList.addAll(branchesList)
